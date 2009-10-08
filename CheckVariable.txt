@@ -1,0 +1,20 @@
+Function CheckVariable(strVarName)
+	'
+	' Returns True or False depending on whether the variable exists or not
+	'
+	Dim objWMIService
+	Dim colItems
+	Dim objItem
+	Dim blnFound
+	
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+	Set colItems = objWMIService.ExecQuery("Select * from Win32_Environment")
+	
+		For Each objItem in colItems
+			If objItem.Name = strVarName Then
+				blnFound = vbTrue
+			End If
+		Next
+	
+		CheckVariable = blnFound
+End Function

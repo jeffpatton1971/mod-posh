@@ -1,0 +1,18 @@
+Sub DisconnectPrinters
+	' Disconnect network printers
+	'
+	' http://www.microsoft.com/technet/scriptcenter/resources/qanda/nov07/hey1102.mspx
+	'
+	Dim objWMIService
+	Dim colInstalledPrinters
+	Dim objPrinter
+	
+	On Error Resume Next
+	Set objWMIService = GetObject("winmgmts:\\" & strComputerName & "\root\cimv2")
+	Set colInstalledPrinters = objWMIService.ExecQuery("SELECT * FROM Win32_Printer WHERE Network = True")
+	
+		For Each objPrinter In colInstalledPrinters
+			objPrinter.Delete_
+		Next
+
+End Sub

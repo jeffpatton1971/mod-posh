@@ -1,0 +1,18 @@
+Function CheckRam(strComputer)
+'
+' Returns the amount of installed RAM
+'
+	Dim objWMIService
+	Dim colItems
+	Dim objItem
+	Dim intClientRAM
+
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
+	Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_LogicalMemoryConfiguration",,48) 
+
+	For Each objItem in colItems 
+		intClientRAM = (objItem.TotalPhysicalMemory \1024)
+	Next
+
+	CheckRam = intClientRAM
+End Function

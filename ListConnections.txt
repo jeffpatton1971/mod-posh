@@ -1,0 +1,23 @@
+Function UserConnections(strComputer, strShare)
+	'
+	' This function conntects to the remost server and counts the number
+	' of users connected to the provided share.
+	'
+	Dim objWMIService
+	Dim objItem
+	Dim colItems
+	Dim intCount
+
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
+	Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_ServerConnection",,48) 
+
+	For Each objItem in colItems 
+		If objItem.ShareName <> strShare Then
+		Else
+			intCount = intCount + 1
+		End If
+	
+	Next
+
+	UserConnections = intCount
+End Function

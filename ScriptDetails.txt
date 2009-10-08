@@ -1,0 +1,35 @@
+Function ScriptDetails(strComputer)
+	'
+	' Return information about who, what, where
+	'
+	On Error Resume Next
+	Dim strScriptName
+	Dim strScriptPath
+	Dim strUserName
+	Dim objWMIService
+	Dim colProcesslist
+	Dim objProcess
+	Dim colProperties
+	Dim strNameOfUser
+	Dim struserDomain
+	
+	strScriptName = Wscript.ScriptName
+	strScriptPath = Wscript.ScriptFullName
+	
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+	Set colProcessList = objWMIService.ExecQuery("Select * from Win32_Process Where Name = 'cscript.exe' or Name = 'wscript.exe'")
+	
+		For Each objProcess in colProcessList
+			If InStr(objProcess.CommandLine, strScriptName) Then
+				colProperties = objProcess.GetOwner(strNameOfUser,strUserDomain)
+				If Err <> 0 Then
+					Call LogData(1, "Error Number: " & vbTab & Err.Number & vbCrLf & "Error Description: " & vbTab & Err.Description)
+					Err.Clear
+					Exit For
+				End If
+				strUserName = strUserDomain & "\" & strNameOfUser
+			End If
+		Next
+	
+		ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
+End Function

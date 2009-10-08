@@ -1,0 +1,11 @@
+Sub VariableLogic(strComputer, strUserName, strVarName, strVarValue)
+	'
+	' This procedure determines if we should update or create a given ENV variable
+	' based on whether or not it already exists.
+	'
+	If CheckVariable(strVarName) = vbTrue Then
+		Call VariableWork(strComputer, strUserName, strVarName, strVarValue, "UPDATE")
+	Else
+		Call VariableWork(strComputer, strUserName, strVarName, strVarValue, "CREATE")
+	End If
+End Sub

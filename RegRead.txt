@@ -1,0 +1,19 @@
+Sub RegRead(strComputer, strKeyPath)
+	On Error Resume Next
+	'
+	' This procedure reads the subkeys within a parent key
+	'
+	' http://msdn.microsoft.com/en-us/library/293bt9hh(VS.85).aspx
+	'
+	Dim objRegistry
+	Dim arrSubKeys
+	Dim objSubKey
+	
+	Set objRegistry = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\default:StdRegProv")
+	
+		objRegistry.EnumKey HKEY_LOCAL_MACHINE, strKeyPath, arrSubKeys
+	
+		For Each objSubKey In arrSubKeys
+			Call DelReg(strKeyPath & "\" & objSubKey)
+		Next
+End Sub

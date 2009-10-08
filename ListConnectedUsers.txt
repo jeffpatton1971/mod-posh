@@ -1,0 +1,15 @@
+Sub ListConnectedUsers(strComputer, strShare)
+	'
+	' This procedure returns the users connected to a given share
+	'
+	Dim objWMIService
+	Dim colItems
+	Dim objItem
+
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
+	Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_ServerConnection WHERE ShareName = '" & strShare & "'",,48) 
+
+	For Each objItem in colItems 
+		Wscript.Echo "UserName: " & objItem.UserName
+	Next
+End Sub

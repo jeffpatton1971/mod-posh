@@ -1,0 +1,22 @@
+Sub BuildOUs(strUrl)
+	'
+	' Parse URL into smaller URLs
+	'
+	Dim strBaseUrl
+	Dim strVLANUrl
+	Dim strBuildingUrl
+	Dim strRoomUrl
+	
+	strRoomUrl = strUrl
+	Call DiscoverObjects(strRoomUrl)
+	
+	strBuildingUrl = Right(strRoomUrl, (Len(strRoomUrl) -Instr(strRoomUrl, ",")))
+	Call DiscoverObjects(strBuildingUrl)
+	
+	strVLANUrl = Right(strBuildingUrl , (Len(strBuildingUrl) -Instr(strBuildingUrl, ",")))
+	Call DiscoverObjects(strVLANUrl)
+	
+	strBaseUrl = Right(strVLANUrl , (Len(strVLANUrl) -Instr(strVLANUrl, ",")))
+	Call DiscoverObjects(strBaseUrl)
+
+End Sub

@@ -1,0 +1,20 @@
+Sub BuildReport(strFileName, strFilePath)
+	'
+	' Create the output file 
+	'
+	Dim objFSO
+	Dim strFile
+	
+	Set objFSO = CreateObject("Scripting.FileSystemObject")
+	
+		If (objFSO.FolderExists(strFilePath)) Then
+			Set strFile = objFSO.CreateTextFile(strFilePath & "\" & strFileName , True)
+	
+			strFile.WriteLine("Data to be written")
+			strFile.Close
+		Else
+			Call LogData(1, strFilePath & " doesn't exist exiting script.")
+			Exit Sub
+		End If
+
+End Sub

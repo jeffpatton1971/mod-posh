@@ -1,0 +1,40 @@
+Sub DisplayEvents(strComputerName, strDomain, strLogFile, strEventType, strEventCode)
+	'
+	' Display events from specified log
+	'
+	' strDomain = "HOME"
+	' strLogFile = "Security"
+	' strEventType = 4
+	' strEventCode = 528
+	'
+	Dim strEventMessage
+	Dim objWMIService
+	Dim colLoggedEvents
+	Dim arrFirst
+	Dim finalArr
+	Dim dtmDate
+	Dim objEvent
+	Dim strDomain
+	Dim strUser
+	Dim strLogFile
+	Dim strEventType
+	Dim strEventeCode
+
+	Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate,(Security)}!\\" & strComputerName & ".soecs.ku.edu\root\cimv2")
+	Set colLoggedEvents = objWMIService.ExecQuery("Select * FROM Win32_NTLogEvent WHERE Logfile = '" & strLogFile & "' AND EventType = " & strEventType & " AND EventCode = " & strEventCode & ")
+
+		For Each objEvent In colLoggedEvents
+			strEventMessage = Trim(objEvent.Message)
+			arrFirst = split(strEventMessage, vbCrLf)
+			strEventMessage = join(arrFirst, ":")
+			arrFinal = split(strEventMessage, ":")
+			dtmDate = Left(objEvent.TimeWritten,8)
+
+			If UCase(replace(Trim(arrFinal(7)),vbTab,"")) = strDomain  and Replace(Trim(arrFinal(13)),vbTab,"") = 2 And dtmDate > 20090421 Then
+				strUser = replace(Trim(arrFinal(4)),vbTab,"")
+				'Wscript.Echo "Domain:" & replace(Trim(arrFinal(7)),vbTab,"")
+				Wscript.Echo strComputerName & ", " & strUser & ", " & dtmDate
+			End If
+		Next
+
+End Sub

@@ -1,0 +1,11 @@
+Sub AddRegVal(strRegistry, strValueName, szValue)
+	'
+	' Add registry value
+	'
+	Const HKEY_LOCAL_MACHINE = &H80000002
+	Dim objRegistry
+
+	Set objRegistry = GetObject("winmgmts:\\.\root\default:StdRegProv")
+
+	objRegistry.SetStringValue HKEY_LOCAL_MACHINE, strRegistry, strValueName, szValue
+End Sub
