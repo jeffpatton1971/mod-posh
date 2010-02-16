@@ -1,0 +1,23 @@
+Function AccountEnabled(strUserName, strComputer)
+	'
+	' This function returns True if the specified account is found and enabled.
+	'
+	Dim locUsers
+	Dim objUser
+	Dim strUser
+	
+	Set locUsers = GetObject("WinNT://" & strComputer & "")
+	locUsers.Filter = Array("user")
+	
+	For Each objUser In locUsers
+		strUser = objUser.Name
+		Select Case strUser
+			Case strUserName
+				AccountEnabled = vbFalse
+				If objUser.AccountDisabled = 0 Then
+					AccountEnabled = vbTrue
+				End If
+			Case Else
+		End Select
+	Next
+End Function
