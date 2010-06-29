@@ -1,23 +1,23 @@
 Function GetMac(strComputer, strSubNet)
-'
-' Get MAC Address of the computer
-'
-Dim strMacAddress
-Dim objWMIService
-Dim colItems
-Dim objItem
-Dim strIPAddress
+	'
+	' Get MAC Address of the computer
+	'
+	Dim strMacAddress
+	Dim objWMIService
+	Dim colItems
+	Dim objItem
+	Dim strIPAddress
 
-Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
-Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration Where IPEnabled = True",,48) 
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
+	Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration Where IPEnabled = True",,48) 
 
-	For Each objItem in colItems
-		strIPAddress = Join(objItem.IPAddress, ",")
-		If InStr(strIPAddress, strSubNet) Then
-			strMacAddress = objItem.MACAddress
-			Exit For
-		End If
-	Next
+		For Each objItem in colItems
+			strIPAddress = Join(objItem.IPAddress, ",")
+			If InStr(strIPAddress, strSubNet) Then
+				strMacAddress = objItem.MACAddress
+				Exit For
+			End If
+		Next
 
-GetMac = strMacAddress
+	GetMac = strMacAddress
 End Function

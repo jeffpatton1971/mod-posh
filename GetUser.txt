@@ -1,22 +1,22 @@
 Function GetUser(strComputer)
-'
-' Get username of currently logged on user
-'
-Dim strUserName
-Dim objWMIService
-Dim colItems
-Dim objItem
+	'
+	' Get username of currently logged on user
+	'
+	Dim strUserName
+	Dim objWMIService
+	Dim colItems
+	Dim objItem
 
-Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
-Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_ComputerSystem",,48) 
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
+	Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_ComputerSystem",,48) 
 
-	For Each objItem in colItems
-		If IsNull(objItem.UserName) Then
-			strUserName = "FREE"
-		Else
-			strUserName = objItem.UserName
-		End If
-	Next
+		For Each objItem in colItems
+			If IsNull(objItem.UserName) Then
+				strUserName = "FREE"
+			Else
+				strUserName = objItem.UserName
+			End If
+		Next
 
-GetUser = strUserName
+	GetUser = strUserName
 End Function
