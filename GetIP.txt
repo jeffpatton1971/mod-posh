@@ -5,6 +5,7 @@ Function GetIP(strComputer, strMACAddress)
 Dim objWMIService
 Dim colItems
 Dim objItem
+Dim strIP
 Dim strIPAddress
 
 Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
@@ -14,12 +15,13 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfig
 		If objItem.MACAddress = strMACAddress Then
 			strIPAddress = Join(objItem.IPAddress, ",")
 			Exit For
+		End If
 	Next
 
 	If InStr(strIPAddress, ",") Then
 			strIPAddress = Split(strIPAddress, ",")
-			strIPAddress = strIPAddress(0)
+			strIP = strIPAddress(0)
 		Else
 	End If
-GetIP = strIPAddress
+GetIP = strIP
 End Function
