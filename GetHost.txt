@@ -14,5 +14,5 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfig
 		strHost = objItem.DNSHostName
 	Next
 
-GetMac = strHost
+GetHost = strHost
 End Function
