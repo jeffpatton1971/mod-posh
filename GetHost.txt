@@ -1,0 +1,18 @@
+Function GetHost(strComputer)
+'
+' Get host name of the computer
+'
+Dim objWMIService
+Dim colItems
+Dim objItem
+Dim strHost
+
+Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
+Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration Where IPEnabled = True",,48) 
+
+	For Each objItem in colItems
+		strHost = objItem.DNSHostName
+	Next
+
+GetMac = strHost
+End Function
