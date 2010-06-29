@@ -1,4 +1,4 @@
-Function GetMac(strComputer)
+Function GetMac(strComputer, strSubNet)
 '
 ' Get MAC Address of the computer
 '
@@ -12,17 +12,11 @@ Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
 Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration Where IPEnabled = True",,48) 
 
 	For Each objItem in colItems
-		If isNull(objItem.IPAddress) Then
-		Else
 		strIPAddress = Join(objItem.IPAddress, ",")
-		If InStr(strIPAddress, "192.168") Then
-			If IsNull(objItem.MACAddress) Then
-			Else
+		If InStr(strIPAddress, strSubNet) Then
 			strMacAddress = objItem.MACAddress
 			Exit For
-			End If
 		End If
-	End If
 	Next
 
 GetMac = strMacAddress
