@@ -1,0 +1,25 @@
+Function GetIP(strComputer, strMACAddress)
+'
+' Get IP Address of the computer
+'
+Dim objWMIService
+Dim colItems
+Dim objItem
+Dim strIPAddress
+
+Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
+Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration Where IPEnabled = True",,48) 
+
+	For Each objItem in colItems
+		If objItem.MACAddress = strMACAddress Then
+			strIPAddress = Join(objItem.IPAddress, ",")
+			Exit For
+	Next
+
+	If InStr(strIPAddress, ",") Then
+			strIPAddress = Split(strIPAddress, ",")
+			strIPAddress = strIPAddress(0)
+		Else
+	End If
+GetIP = strIPAddress
+End Function
