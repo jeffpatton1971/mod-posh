@@ -1,0 +1,50 @@
+Function GetHostData(strSubNet)
+	'
+	' The purpose of this function is to build the data
+	' that is passed to other functions. It  will return
+	' information via WMI from the localhost. 
+	' Currently all that's needed is:
+	'    Bios serialnumber
+	'    IP address
+	'    MAC address
+	'    hostname
+	'
+	' I do plan on gathering information about the OS
+	' and logged on user.
+	'
+	' This code has been reworked from the previous 
+	' release, source:trunk/client/winmon-client.vbs
+	'
+	' In this release I have moved several things out 
+	' to separate functions.
+	'
+	' Declare variables that are pulled from WMI
+	'
+	Dim strSerialNumber
+	Dim strMACAddress
+	Dim strIPAddress
+	Dim strHostName
+	'
+	' Declare variables that get built
+	'
+	Dim strDate
+	Dim strFieldValues
+	'
+	' Assign values to variables by calling functions
+	'
+	strSerialNumber = GetSerial(".")
+	strMACAddress = GetMac(".", strSubNet)
+	strIPAddress = GetIP(".", strMACAddress)
+	strHostName = GetHost(".")
+	'
+	' Build the remaining required variables
+	'
+	strDate = ""
+	strDate = Year(Date) & "-" & Month(Date) & "-" & Day(Date) & " " & Hour(Now) & ":" & Minute(Now) & ":" & Second(Now)
+	strFieldValues = ""
+	strFieldValues = "'" & strSerialNumber & "','" & strHostName & "','" & strIPAddress & "','" & strMACAddress & "','" & strDate & "'"
+	'
+	' Assign the string to GetHostData
+	'
+	GetHostData = strFieldValues
+End Function
