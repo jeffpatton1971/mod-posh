@@ -19,7 +19,7 @@ Function GetWMIData(strComputer, WMIClass, WMIProperty)
 		If Err <> 0 Then 
 			Call HandleError(Err.Number, Err.Description)
 		End If
-	Set colItems = objWMIService.ExecQuery("SELECT " & WMIProperty & " FROM " & WMIClass & ",,48) 
+	Set colItems = objWMIService.ExecQuery("SELECT " & WMIProperty & " FROM " & WMIClass,,48) 
 		If Err <> 0 Then 
 			Call HandleError(Err.Number, Err.Description)
 		End If
@@ -34,6 +34,8 @@ Function GetWMIData(strComputer, WMIClass, WMIProperty)
 				strReturnVal = objItem.SerialNumber
 			Case "dnshostname"
 				strReturnVal = objItem.DNSHostName
+			Case "csname"
+				strReturnVal = objItem.CSName
 			Case Else
 				Call LogData(1, "Unable to find " & WMIProperty & " in " & WMIClass & vbCrLf & "Please submit a ticket at http://code.patton-tech.com/winmon/newticket")
 		End Select
