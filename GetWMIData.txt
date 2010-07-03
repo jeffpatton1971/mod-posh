@@ -1,0 +1,43 @@
+Function GetWMIData(strComputer, WMIClass, WMIProperty)
+	'
+	' This function replaces more or less any WMI Call 
+	' that returns a single value. You could potentially
+	' tweak it to handle more complicated returns like
+	' IPAddress.
+	'
+	' The function is passed three arguments:
+	'     strComputer = Computer to run WMI call against
+	'     WMIClass = The WMI Class that we're querying
+	'     WMIProperty = The WMI property that we're looking for
+	'
+	Dim objWMIService
+	Dim colItems
+	Dim objItem
+	Dim strReturnVal
+
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
+		If Err <> 0 Then 
+			Call HandleError(Err.Number, Err.Description)
+		End If
+	Set colItems = objWMIService.ExecQuery("SELECT " & WMIProperty & " FROM " & WMIClass & ",,48) 
+		If Err <> 0 Then 
+			Call HandleError(Err.Number, Err.Description)
+		End If
+	
+	For Each objItem In colItems
+		Select Case lcase(WMIProperty)
+			Case "caption"
+				strReturnVal = objItem.Caption
+			Case "csdversion"
+				strReturnVal = objItem.CSDVersion
+			Case "serialnumber"
+				strReturnVal = objItem.SerialNumber
+			Case "dnshostname"
+				strReturnVal = objItem.DNSHostName
+			Case Else
+				Call LogData(1, "Unable to find " & WMIProperty & " in " & WMIClass & vbCrLf & "Please submit a ticket at http://code.patton-tech.com/winmon/newticket")
+		End Select
+	Next
+	
+	GetWMIData = strReturnVal
+End Function
