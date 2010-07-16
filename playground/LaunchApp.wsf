@@ -1,0 +1,123 @@
+<job>
+
+<script language="VBScript">
+
+'---------------------------------------------------------
+
+' This sample launches the application as interactive user.
+
+'---------------------------------------------------------
+
+' A constant that specifies a registration trigger.
+
+const TriggerTypeRegistration = 7
+
+' A constant that specifies an executable action.
+
+const ActionTypeExecutable = 0
+
+' A constant that specifies the flag in RegisterTaskDefinition.
+
+const FlagTaskCreate = 2
+
+' A constant that specifies an executable action.
+
+const LogonTypeInteractive = 3
+
+If WScript.Arguments.Length <> 1 Then
+
+WScript.Echo "Usage: cscript launchapp.wsf <AppPath>"
+
+WScript.Quit
+
+End If
+
+strAppPath = WScript.Arguments(0)
+
+'********************************************************
+
+' Create the TaskService object.
+
+'********************************************************
+
+Set service = CreateObject("Schedule.Service")
+
+call service.Connect()
+
+strTaskName = "Launch App As Interactive User"
+
+'********************************************************
+
+' Get a folder to create a task definition in.
+
+'********************************************************
+
+Dim rootFolder
+
+Set rootFolder = service.GetFolder("\")
+
+'Delete the task if already present
+
+On Error Resume Next
+
+call rootFolder.DeleteTask(strTaskName, 0)
+
+Err.Clear
+
+'********************************************************
+
+' Create the new task
+
+'********************************************************
+
+Dim taskDefinition
+
+Set taskDefinition = service.NewTask(0)
+
+'********************************************************
+
+' Create a registration trigger.
+
+'********************************************************
+
+Dim triggers
+
+Set triggers = taskDefinition.Triggers
+
+Dim trigger
+
+Set trigger = triggers.Create(TriggerTypeRegistration)
+
+'***********************************************************
+
+' Create the action for the task to execute.
+
+'***********************************************************
+
+' Add an action to the task. The action executes the app.
+
+Dim Action
+
+Set Action = taskDefinition.Actions.Create( ActionTypeExecutable )
+
+Action.Path = strAppPath
+
+WScript.Echo "Task definition created. About to submit the task..."
+
+'***********************************************************
+
+' Register (create) the task.
+
+'***********************************************************
+
+call rootFolder.RegisterTaskDefinition( _
+
+strTaskName, taskDefinition, FlagTaskCreate, _
+
+,, LogonTypeInteractive)
+
+WScript.Echo "Task submitted."
+
+</script>
+
+</job>
