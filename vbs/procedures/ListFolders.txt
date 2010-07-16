@@ -1,0 +1,43 @@
+Sub ListFolders(strComputer, strPath)
+	On Error Resume Next
+	'
+	' Retrieves a list of subfolders from a specified parent folder
+	'
+	' http://www.microsoft.com/technet/scriptcenter/scripts/storage/folders/stfovb18.mspx?mfr=true
+	' 
+	Dim objWMIService
+	Dim colSubfolders
+	Dim objFolder
+	Dim intIndex
+	Dim objFSO
+	
+	Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
+	Set colSubfolders = objWMIService.ExecQuery("Associators of {Win32_Directory.Name='" & strPath & "'} Where AssocClass = Win32_Subdirectory ResultRole = PartComponent")
+	
+	Set objFSO = CreateObject("Scripting.FileSystemObject")
+	
+		If objFSO.FolderExists(strPath) Then
+			For Each objFolder in colSubfolders
+				intIndex = intIndex + 1
+			Next
+	
+			ReDim arrFolders(intIndex)
+			intIndex = 0
+	
+			For Each objFolder in colSubfolders
+				Select Case LCase(objFolder.Name)
+					Case LCase(strPath & "\all users")
+					Case LCase(strPath & "\default user")
+					Case LCase(strPath & "\localservice")
+					Case LCase(strPath & "\networkservice")
+					Case LCase(strPath & "\Student")
+					Case LCase(strPath & "\ops")
+					Case Else
+						arrFolders(intIndex) = objFolder.Name
+						intIndex = intIndex + 1
+				End Select
+			Next
+		Else
+			Call LogData(1, "Folder not found: " & strPath)
+		End If
+End Sub

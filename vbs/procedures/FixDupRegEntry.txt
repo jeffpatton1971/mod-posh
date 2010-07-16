@@ -1,0 +1,29 @@
+Sub FixDupRegEntry(strRegistry, strRegValue)
+	' Fix update service sid issue
+	'
+	' http://www.microsoft.com/technet/scriptcenter/guide/sas_wsh_oiuk.mspx
+	'
+	' Provide the registry key that might have the duplicate entry
+	' Provide the entry in question
+	' Provide the complete registry key to delete
+	'
+	On Error Resume Next
+	Dim objShell
+	Dim strCurrentRegValue
+
+	Set objShell = Wscript.CreateObject("Wscript.Shell")
+
+		strCurrentRegValue = objShell.RegRead(strRegistry)
+
+		If strCurrentRegValue = strRegValue Then
+			Call LogData(1, "Found duplicate registry entry")
+			objShell.RegDelete(strRegistry)
+			If Err <> 0 Then
+				Call LogData(1, "Error Number: " & vbTab & Err.Number & vbCrLf & "Error Description: " & vbTab & Err.Description)
+				Err.Clear
+				Exit Sub
+			End If
+			Call Logdata(0, "Deleted duplicate registry entry, client will show up on next reboot.")
+		Else
+		End If
+End Sub

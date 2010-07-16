@@ -1,0 +1,16 @@
+Sub ConnectPrinters(strPrintServer, strPrinter, bolDefault)
+	Dim objNetwork
+	
+	On Error Resume Next
+	Set objNetwork = CreateObject("Wscript.Network")
+	
+		objNetwork.AddWindowsPrinterConnection "\\" & strPrintServer & "\" & strPrinter
+		If Err <> 0 Then
+			Call LogData(1, "Error Number: " & Err.Number & vbCrLf & "Error Description: " & err.Description)
+			Err.Clear
+		End If
+	
+		If bolDefault = vbTrue Then
+			objNetwork.SetDefaultPrinter "\\" & strPrintServer & "\" & strPrinter
+		End If
+End Sub

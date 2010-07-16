@@ -1,0 +1,19 @@
+Sub RegDel(strRegistryKey)
+	On Error Resume Next
+	'
+	' This procedure deletes a registry out of the Windows registry
+	'
+	' http://msdn.microsoft.com/en-us/library/293bt9hh(VS.85).aspx
+	'
+	Dim objRegistry
+ 	
+	Set objRegistry=GetObject("winmgmts:\\.\root\default:StdRegProv")
+	
+		objRegistry.DeleteKey HKEY_LOCAL_MACHINE, strRegistryKey
+		If Err <> 0 Then
+			Call LogData(1, "Unable to delete the following registry key: " & vbCrLf & strRegistryKey & vbCrLf & Err.Number & vbCrLf & Err.Description)
+			Err.Clear
+		Else
+			call Logdata(0, "Deleted the following registry key: " & vbCrLf & strRegistryKey)
+		End If
+End Sub
