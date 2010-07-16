@@ -30,8 +30,6 @@ Sub ListFolders(strComputer, strPath)
 					Case LCase(strPath & "\default user")
 					Case LCase(strPath & "\localservice")
 					Case LCase(strPath & "\networkservice")
-					Case LCase(strPath & "\Student")
-					Case LCase(strPath & "\ops")
 					Case Else
 						arrFolders(intIndex) = objFolder.Name
 						intIndex = intIndex + 1

@@ -15,7 +15,7 @@
 '	Empty the TEMP and SCRATCH directories
 '	Set Environment Variables through the registry
 '	Define local administrators
-'	Set local ops password
+'	Set local Administrator password
 '
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Started: " & Now())
 	Call Main
@@ -37,8 +37,8 @@ Sub Main
 	If InStr("OU=Labs", RetrieveOU) Then Call AddGroup(".", "Administrators", "LabsAdmin")
 	If InStr("OU=People", RetrieveOU) Then Call AddGroup(".", "Administrators", "PeopleAdmin")
 
-	' Set the local ops password
-	Call ChangePass(".", "ops", WScript.Arguments(0))
+	' Set the local Administrator password
+	Call ChangePass(".", "Administrator", WScript.Arguments(0))
 
 	' Check if the folders are there
 	'	if false, create them

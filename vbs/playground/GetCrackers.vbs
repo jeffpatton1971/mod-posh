@@ -60,14 +60,7 @@ Sub ListMembership(strComputer, strGroup)
 	For Each objMember In objGroup.Members
 		strUser = objMember.Name
 	Select Case strUser
-		Case "ENGR Student Staff"
-		Case "ops"
 		Case "Domain Admins"
-		Case "ops.admin"
-		Case "aeadmin"
-		Case "meadmin"
-		Case "admin"
-		Case "ae430"
 		Case Else
 			Call LogData(2,"Computer: " & strComputer & vbTab & "Found User: " & strUser)
 			Call DelMembers(strComputer, strGroup, strUser)
