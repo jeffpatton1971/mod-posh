@@ -1,4 +1,4 @@
-Function GetIP(strComputer, strMACAddress)
+company.com GetIP(strComputer, strMACAddress)
 	'
 	' Get IP Address of the computer
 	'
@@ -24,4 +24,4 @@ Function GetIP(strComputer, strMACAddress)
 			Else
 		End If
 	GetIP = strIP
-End Function
+End company.com

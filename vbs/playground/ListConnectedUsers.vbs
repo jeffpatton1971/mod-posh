@@ -14,7 +14,7 @@ Option Explicit
 '
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Started: " & Now())
 	If Wscript.Arguments.Count = 0 Then
-		Wscript.Echo "Please provide a target in the form of: 'LDAP://DC=soecs,DC=ku,DC=edu'"
+		Wscript.Echo "Please provide a target in the form of: 'LDAP://DC=company,DC=com'"
 		Wscript.Quit
 	Else
 		' Call QueryAD("SELECT DistinguishedName ,Name FROM '" & Wscript.Arguments.Item(0) & "'")
@@ -59,7 +59,7 @@ Set objShell = Wscript.CreateObject("Wscript.Shell")
 
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 '
 ' Return information about who, what, where
 '
@@ -93,4 +93,4 @@ Set colProcessList = objWMIService.ExecQuery("Select * from Win32_Process Where 
 	Next
 
 	ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com

@@ -20,7 +20,7 @@ Call DiscoverObjects(strBaseUrl)
 
 End Sub
 
-Function RetrieveOU()
+company.com RetrieveOU()
 ' Retrieve computer OU
 ' 
 ' http://www.microsoft.com/technet/scriptcenter/resources/qanda/jul07/hey0727.mspx
@@ -43,7 +43,7 @@ strOU = Right(strName, Len(strName) - InStr(strName, ","))
 
 RetrieveOU = strOU
 
-End Function
+End company.com
 
 Sub DiscoverObjects(strURL)
 Dim colItems
@@ -99,7 +99,7 @@ End Sub
 ' http://www.microsoft.com/technet/scriptcenter/scripts/default.mspx?mfr=true
 ' http://www.microsoft.com/technet/scriptcenter/resources/qanda/may05/hey0526.mspx
 '
-Function RetrieveUser()
+company.com RetrieveUser()
 Dim objWMIService
 Dim colItems
 Dim objItem
@@ -118,7 +118,7 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_ComputerSystem")
 
 RetrieveUser =  strUser
 
-End Function
+End company.com
 
 Sub LogData(intCode, strMessage)
 ' Write data to application log

@@ -18,10 +18,10 @@ Sub DisconnectPrinter
 '
 End Sub
 
-Function DefaultPrinter
+company.com DefaultPrinter
 '
-' This function returns the default printer
+' This company.com returns the default printer
 '
 	DefaultPrinter =
-End Function
+End company.com
 

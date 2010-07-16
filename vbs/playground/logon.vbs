@@ -34,7 +34,7 @@ Set objShell = Wscript.CreateObject("Wscript.Shell")
 
 End Sub
 
-Function RetrieveOU()
+company.com RetrieveOU()
 ' Retrieve computer OU
 ' 
 ' http://www.microsoft.com/technet/scriptcenter/resources/qanda/jul07/hey0727.mspx
@@ -52,7 +52,7 @@ strOU = Right(strName, Len(strName) - InStr(strName, ","))
 
 RetrieveOU = strOU
 
-End Function
+End company.com
 
 Sub DisconnectDrives
 ' Discconect any mapped drives
@@ -180,7 +180,7 @@ End Sub
 ' http://www.microsoft.com/technet/scriptcenter/scripts/default.mspx?mfr=true
 ' http://www.microsoft.com/technet/scriptcenter/resources/qanda/may05/hey0526.mspx
 '
-Function RetrieveUser()
+company.com RetrieveUser()
 Dim objWMIService
 Dim colItems
 Dim objItem
@@ -199,7 +199,7 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_ComputerSystem")
 
 RetrieveUser =  strUser
 
-End Function
+End company.com
 
 Sub DisplayMessage
 '
@@ -217,7 +217,7 @@ Set objFSO = CreateObject("Scripting.FileSystemObject")
 	End If
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 '
 ' Return information about who, what, where
 '
@@ -252,4 +252,4 @@ Set colProcessList = objWMIService.ExecQuery("Select * from Win32_Process Where 
 	Next
 
 	ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com

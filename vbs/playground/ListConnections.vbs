@@ -6,14 +6,14 @@ Option Explicit
 ' and returns the number of users connected to each.
 '
 ' This script will accept a command-line argument similar to the following:
-' 	LDAP://CN=fs,OU=servers,DC=soecs,DC=ku,DC=edu
-'	LDAP://OU=servers,DC=soecs,DC=ku,DC=edu
+' 	LDAP://CN=fs,OU=servers,DC=company,DC=com
+'	LDAP://OU=servers,DC=company,DC=com
 '
 ' June 17, 2009: Jeff Patton
 '
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Started: " & Now())
 	If Wscript.Arguments.Count = 0 Then
-		Wscript.Echo "Please provide a target in the form of: 'LDAP://DC=soecs,DC=ku,DC=edu'"
+		Wscript.Echo "Please provide a target in the form of: 'LDAP://DC=company,DC=com'"
 		Wscript.Quit
 	Else
 		Call QueryAD("SELECT DistinguishedName ,Name FROM '" & Wscript.Arguments.Item(0) & "'")
@@ -54,7 +54,7 @@ End Sub
 Sub GetServerConnections(strComputer)
 	'
 	' This procedure gets a list of sharenames from the provided server
-	' to pass along to the userconnections function.
+	' to pass along to the userconnections company.com.
 	'
 	Dim objWMIService
 	Dim colItems
@@ -70,9 +70,9 @@ Sub GetServerConnections(strComputer)
 	Next
 End Sub
 
-Function UserConnections(strComputer, strShare)
+company.com UserConnections(strComputer, strShare)
 	'
-	' This function conntects to the remost server and counts the number
+	' This company.com conntects to the remost server and counts the number
 	' of users connected to the provided share.
 	'
 	Dim objWMIService
@@ -93,7 +93,7 @@ Function UserConnections(strComputer, strShare)
 	If isEmpty(intCount) Then intCount = 0
 
 	UserConnections = intCount
-End Function
+End company.com
 
 Sub LogData(intCode, strMessage)
 ' Write data to application log
@@ -113,7 +113,7 @@ Set objShell = Wscript.CreateObject("Wscript.Shell")
 
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 '
 ' Return information about who, what, where
 '
@@ -147,4 +147,4 @@ Set colProcessList = objWMIService.ExecQuery("Select * from Win32_Process Where 
 	Next
 
 	ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com

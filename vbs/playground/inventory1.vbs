@@ -15,7 +15,7 @@ objConnection.Provider = "ADsDSOObject"
 objConnection.Open "Active Directory Provider"
 Set objCommand.ActiveConnection = objConnection
 objCommand.CommandText = _
-    "SELECT Name, Location FROM 'LDAP://DC=soecs,DC=ku,DC=edu' " _
+    "SELECT Name, Location FROM 'LDAP://DC=company,DC=com' " _
         & "WHERE objectClass='computer'"
 objCommand.Properties("Page Size") = 1000
 objCommand.Properties("Timeout") = 30

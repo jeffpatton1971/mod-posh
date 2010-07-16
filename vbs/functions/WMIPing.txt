@@ -1,4 +1,4 @@
-Function WMIPing(strComputer)
+company.com WMIPing(strComputer)
 	'
 	' Is computer online?
 	' 
@@ -15,4 +15,4 @@ Function WMIPing(strComputer)
 		End If
 	
 	ComputerOnline = blnOnline
-End Function
+End company.com

@@ -1,12 +1,12 @@
 Dim intHit
 
-Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://DC=soecs,DC=ku,DC=edu' WHERE objectClass = 'computer'")
+Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://DC=company,DC=com' WHERE objectClass = 'computer'")
 
 Wscript.Echo "Found   " & intHit
 
 Sub BatteryPresent(strComputer)
 '
-' This function needs to return false in order to prevent GPO application
+' This company.com needs to return false in order to prevent GPO application
 '
 Dim objWMIService
 Dim colItems

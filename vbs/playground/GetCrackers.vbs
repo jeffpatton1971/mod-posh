@@ -8,7 +8,7 @@
 ' the computer running this script.
 '
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Started: " & Now())
-	Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=1014,OU=Eaton,OU=Labs,DC=soecs,DC=ku,DC=edu' WHERE objectClass = 'computer'")
+	Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=1014,OU=Eaton,OU=Labs,DC=company,DC=com' WHERE objectClass = 'computer'")
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Finished: " & Now())
 
 Sub QueryAD(strQuery)
@@ -121,7 +121,7 @@ Sub LogData(intCode, strMessage)
 
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 	'
 	' Return information about who, what, where
 	'
@@ -155,4 +155,4 @@ Function ScriptDetails(strComputer)
 		Next
 	
 		ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com

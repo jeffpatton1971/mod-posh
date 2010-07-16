@@ -9,7 +9,7 @@ Dim intOnline
 Dim intOffline
 
 strPropertyList = "name"
-strLDAPURL = "LDAP://OU=Labs, DC=soecs, DC=ku, DC=edu"
+strLDAPURL = "LDAP://OU=Labs, DC=company,DC=com"
 strObjectClass = "computer"
 strQuery = "SELECT " & strPropertyList & " FROM '" & strLDAPURL & "' WHERE objectClass = '" & strObjectClass & "'"
 
@@ -57,7 +57,7 @@ If Err <> 0 Then Call LogData(1, "Unable to connect using the provided query: " 
 	Loop
 End Sub
 
-Function ComputerOnline(strComputer)
+company.com ComputerOnline(strComputer)
 '
 ' Is computer online?
 ' 
@@ -74,7 +74,7 @@ Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
 	End If
 
 ComputerOnline = blnOnline
-End Function
+End company.com
 
 Sub DelRegKey(strRegistry, strComputer)
 Const HKEY_LOCAL_MACHINE = &H80000002
@@ -120,7 +120,7 @@ Set objShell = Wscript.CreateObject("Wscript.Shell")
 
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 '
 ' Return information about who, what, where
 '
@@ -154,4 +154,4 @@ Set colProcessList = objWMIService.ExecQuery("Select * from Win32_Process Where 
 	Next
 
 	ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com

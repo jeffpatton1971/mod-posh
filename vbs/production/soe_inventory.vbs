@@ -15,7 +15,7 @@ Dim strObjectClass
 Dim strQuery
 
 strPropertyList = "DistinguishedName, Name"
-strLDAPURL = "LDAP://dc=soecs,dc=ku,dc=edu"
+strLDAPURL = "LDAP://DC=company,DC=com"
 strObjectClass = "computer"
 strQuery = "SELECT " & strPropertyList & " FROM '" & strLDAPURL & "' WHERE objectClass = '" & strObjectClass & "'"
 
@@ -67,7 +67,7 @@ Set objADObject = GetObject("LDAP://" & strADSPath)
 
 End Sub
 
-Function GetProp(strADSPath, strProperty)
+company.com GetProp(strADSPath, strProperty)
 On Error Resume Next
 '
 ' Get the specified property from the requested AD object
@@ -87,7 +87,7 @@ objProperty = objComputer.Get(strProperty)
 	End If
 
 	GetProp = strStatus
-End Function
+End company.com
 
 Sub QueryAD(strQuery)
     'On Error Resume Next
@@ -126,7 +126,7 @@ If Err <> 0 Then Call LogData(1, "Unable to connect using the provided query: " 
 	Loop
 End Sub
 
-Function GetUser(strComputer)
+company.com GetUser(strComputer)
 '
 ' Get username of currently logged on user
 '
@@ -147,9 +147,9 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_ComputerSystem",,48)
 	Next
 
 GetUser = strUserName
-End Function
+End company.com
 
-Function GetSerial(strComputer)
+company.com GetSerial(strComputer)
 '
 ' Get serial number from the BIOS
 '
@@ -166,9 +166,9 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_BIOS",,48)
 	Next
 
 GetSerial = strSerial
-End Function
+End company.com
 
-Function GetMac(strComputer)
+company.com GetMac(strComputer)
 '
 ' Get MAC Address of the computer
 '
@@ -196,9 +196,9 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfig
 	Next
 
 GetMac = strMacAddress
-End Function
+End company.com
 
-Function ComputerOnline(strComputer)
+company.com ComputerOnline(strComputer)
 '
 ' Is computer online?
 ' 
@@ -217,7 +217,7 @@ Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
 	End If
 
 ComputerOnline = blnOnline
-End Function
+End company.com
 
 Sub LogData(intCode, strMessage)
 ' Write data to application log
@@ -237,7 +237,7 @@ Set objShell = Wscript.CreateObject("Wscript.Shell")
 
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 '
 ' Return information about who, what, where
 '
@@ -271,4 +271,4 @@ Set colProcessList = objWMIService.ExecQuery("Select * from Win32_Process Where 
 	Next
 
 	ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com

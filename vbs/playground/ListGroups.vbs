@@ -9,7 +9,7 @@ Dim strObjectClass
 Dim strQuery
 
 strPropertyList = "distinguishedName, Name"
-strLDAPUrl = "LDAP://dc=soecs,dc=ku,dc=edu"
+strLDAPUrl = "LDAP://DC=company,DC=com"
 strObjectClass = "group"
 
 strQuery = "SELECT " & strPropertyList & " FROM '" & strLDAPUrl & "' WHERE objectClass = '" & strObjectClass & "'"
@@ -129,7 +129,7 @@ Set objShell = Wscript.CreateObject("Wscript.Shell")
 
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 '
 ' Return information about who, what, where
 '
@@ -163,4 +163,4 @@ Set colProcessList = objWMIService.ExecQuery("Select * from Win32_Process Where 
 	Next
 
 	ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com

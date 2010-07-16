@@ -4,7 +4,7 @@ Option Explicit
 '
 
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Started: " & Now())
-	Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=1137,OU=Learned,OU=Labs,DC=soecs,DC=ku,DC=edu' WHERE objectClass = 'computer'")	
+	Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=1137,OU=Learned,OU=Labs,DC=company,DC=com' WHERE objectClass = 'computer'")	
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Finished: " & Now())
 
 Sub QueryAD(strQuery)
@@ -77,7 +77,7 @@ Set objShell = Wscript.CreateObject("Wscript.Shell")
 
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 '
 ' Return information about who, what, where
 '
@@ -111,4 +111,4 @@ Set colProcessList = objWMIService.ExecQuery("Select * from Win32_Process Where 
 	Next
 
 	ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com

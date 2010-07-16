@@ -1,4 +1,4 @@
-Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=Labs,DC=soecs,DC=ku,DC=edu' WHERE objectClass = 'computer'")
+Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=Labs,DC=company,DC=com' WHERE objectClass = 'computer'")
 
 Sub QueryAD(strQuery)
 On Error Resume Next

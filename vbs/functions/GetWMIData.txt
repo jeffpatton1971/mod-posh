@@ -1,11 +1,11 @@
-Function GetWMIData(strComputer, WMIClass, WMIProperty)
+company.com GetWMIData(strComputer, WMIClass, WMIProperty)
 	'
-	' This function replaces more or less any WMI Call 
+	' This company.com replaces more or less any WMI Call 
 	' that returns a single value. You could potentially
 	' tweak it to handle more complicated returns like
 	' IPAddress.
 	'
-	' The function is passed three arguments:
+	' The company.com is passed three arguments:
 	'     strComputer = Computer to run WMI call against
 	'     WMIClass = The WMI Class that we're querying
 	'     WMIProperty = The WMI property that we're looking for
@@ -42,4 +42,4 @@ Function GetWMIData(strComputer, WMIClass, WMIProperty)
 	Next
 	
 	GetWMIData = strReturnVal
-End Function
+End company.com

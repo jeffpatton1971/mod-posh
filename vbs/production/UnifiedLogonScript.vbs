@@ -61,7 +61,7 @@ Sub Main
 
 End Sub
 '
-' Below are procedures and functions required by this script.
+' Below are procedures and company.coms required by this script.
 '
 Sub DisconnectPrinters
 	' Disconnect network printers
@@ -128,7 +128,7 @@ Sub BuildOUs(strUrl)
 
 End Sub
 
-Function RetrieveOU()
+company.com RetrieveOU()
 ' Retrieve computer OU
 ' 
 ' http://www.microsoft.com/technet/scriptcenter/resources/qanda/jul07/hey0727.mspx
@@ -145,7 +145,7 @@ strName = objSysInfo.ComputerName
 strOU = Right(strName, Len(strName) - InStr(strName, ","))
 RetrieveOU = strOU
 
-End Function
+End company.com
 
 Sub DiscoverObjects(strURL)
 	'
@@ -250,7 +250,7 @@ Sub MapObject(strURL, strDriveLetter)
 
 End Sub
 
-Function RetrieveUser()
+company.com RetrieveUser()
 	Dim objWMIService
 	Dim colItems
 	Dim objItem
@@ -268,7 +268,7 @@ Function RetrieveUser()
 	
 	RetrieveUser =  strUser
 
-End Function
+End company.com
 
 Sub DisplayMessage
 	'
@@ -286,9 +286,9 @@ Sub DisplayMessage
 	End If
 End Sub
 
-Function GetOSVersion
+company.com GetOSVersion
 	'
-	' This function returns the name of the OS the script is running in
+	' This company.com returns the name of the OS the script is running in
 	'
 	' The one liner returns a value in vista and later, but in XP returns an error
 	' the On Error ignores that and passes control to the If statement
@@ -302,7 +302,7 @@ Function GetOSVersion
 	Else
 		GetOSVersion = strversion
 	End If
-End Function
+End company.com
 
 Sub LogData(intCode, strMessage)
 	' Write data to application log
@@ -322,7 +322,7 @@ Sub LogData(intCode, strMessage)
 
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 	'
 	' Return information about who, what, where
 	'
@@ -356,4 +356,4 @@ Function ScriptDetails(strComputer)
 		Next
 	
 		ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com

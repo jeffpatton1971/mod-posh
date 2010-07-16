@@ -1,4 +1,4 @@
-Function GetHost(strComputer)
+company.com GetHost(strComputer)
 	'
 	' Get host name of the computer
 	'
@@ -15,4 +15,4 @@ Function GetHost(strComputer)
 		Next
 
 	GetHost = strHost
-End Function
+End company.com

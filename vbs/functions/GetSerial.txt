@@ -1,4 +1,4 @@
-Function GetSerial(strComputer)
+company.com GetSerial(strComputer)
 	'
 	' Get serial number from the BIOS
 	'
@@ -15,4 +15,4 @@ Function GetSerial(strComputer)
 		Next
 
 	GetSerial = strSerial
-End Function
+End company.com

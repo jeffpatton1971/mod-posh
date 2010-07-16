@@ -13,7 +13,7 @@ Dim arrLabs(7,3)
 Dim strLDAPURL
 Dim strObjectType
 
-strLDAPURL = "LDAP://OU=Labs,Dc=soecs,DC=ku,DC=edu"
+strLDAPURL = "LDAP://OU=Labs,DC=company,DC=com"
 strObjectType = "computer"
 
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Started: " & Now())
@@ -90,7 +90,7 @@ Sub UpdateArray(strADSPath, intArrIndex, strLab)
 		End Select
 End Sub
 
-Function GetProp(strADSPath, strProperty)
+company.com GetProp(strADSPath, strProperty)
 	On Error Resume Next
 	'
 	' Get the specified property from the requested AD object
@@ -118,7 +118,7 @@ Function GetProp(strADSPath, strProperty)
 				strStatus = "OFFLINE"
 		End Select
 		GetProp = strStatus
-End Function
+End company.com
 
 Sub BuildReport(strFileName, strFilePath)
 	'
@@ -153,7 +153,7 @@ Sub BuildReport(strFileName, strFilePath)
 
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 	'
 	' Return information about who, what, where
 	'
@@ -181,7 +181,7 @@ Function ScriptDetails(strComputer)
 		Next
 	
 		ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com
 
 Sub LogData(intCode, strMessage)
 	' Write data to application log

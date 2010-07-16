@@ -1,6 +1,6 @@
-Function UserConnections(strComputer, strShare)
+company.com UserConnections(strComputer, strShare)
 	'
-	' This function conntects to the remost server and counts the number
+	' This company.com conntects to the remost server and counts the number
 	' of users connected to the provided share.
 	'
 	Dim objWMIService
@@ -20,4 +20,4 @@ Function UserConnections(strComputer, strShare)
 	Next
 
 	UserConnections = intCount
-End Function
+End company.com

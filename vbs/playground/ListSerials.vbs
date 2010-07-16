@@ -1,6 +1,6 @@
 Option Explicit
 
-	Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=Servers,DC=soecs,DC=ku,DC=edu' WHERE objectClass = 'computer'")	
+	Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=Servers,DC=company,DC=com' WHERE objectClass = 'computer'")	
 
 Sub QueryAD(strQuery)
 	On Error Resume Next
@@ -33,7 +33,7 @@ Sub QueryAD(strQuery)
 		Loop
 End Sub
 
-Function GetSerial(strComputer)
+company.com GetSerial(strComputer)
 	'
 	' Get serial number from the BIOS
 	'
@@ -50,7 +50,7 @@ Function GetSerial(strComputer)
 		Next
 
 	GetSerial = strSerial
-End Function
+End company.com
 
 Sub LogData(intCode, strMessage)
 	' Write data to application log

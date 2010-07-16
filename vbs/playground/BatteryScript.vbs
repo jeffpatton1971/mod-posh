@@ -1,7 +1,7 @@
 Dim intMiss
 Dim intHit
 
-Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=Computers,OU=SOEDO,DC=soecs,DC=ku,DC=edu' WHERE objectClass = 'computer'")
+Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=Computers,OU=SOEDO,DC=company,DC=com' WHERE objectClass = 'computer'")
 Wscript.Echo "Found   " & intHit
 Wscript.Echo "Skipped " & intMiss
 Wscript.Echo "Total   " & intHit + intMiss

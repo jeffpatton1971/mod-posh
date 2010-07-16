@@ -1,4 +1,4 @@
-Function GetMac(strComputer, strSubNet)
+company.com GetMac(strComputer, strSubNet)
 	'
 	' Get MAC Address of the computer
 	'
@@ -20,4 +20,4 @@ Function GetMac(strComputer, strSubNet)
 		Next
 
 	GetMac = strMacAddress
-End Function
+End company.com

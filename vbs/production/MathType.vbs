@@ -14,7 +14,7 @@ Dim strLDAPURL
 Dim strObjectClass
 
 strPropertyList = "Name"
-strLDAPURL = "LDAP://OU=Labs,DC=soecs,DC=ku,DC=edu"
+strLDAPURL = "LDAP://OU=Labs,DC=company,DC=com"
 strObjectClass = "computer"
 strLDAPQuery = "SELECT " & strPropertyList & " FROM '" & strLDAPURL & "' WHERE objectClass = '" & strObjectClass & "'"
 
@@ -30,7 +30,7 @@ objFSO.CopyFile "C:\FSO\*.txt" , "\\" & strComputer & "C$\Program Files\Microsof
 
 End Sub
 
-Function ComputerOnline(strComputer)
+company.com ComputerOnline(strComputer)
 '
 ' Is computer online?
 ' 
@@ -47,7 +47,7 @@ Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
 	End If
 
 ComputerOnline = blnOnline
-End Function
+End company.com
 
 Sub ListSoftware(strComputer)
 Dim objWMIService
@@ -113,7 +113,7 @@ If Err <> 0 Then Call LogData(1, "Unable to connect using the provided query: " 
 	Loop
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 '
 ' Return information about who, what, where
 '
@@ -141,7 +141,7 @@ Set colProcessList = objWMIService.ExecQuery("Select * from Win32_Process Where 
 	Next
 
 	ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com
 
 ' Write data to application log
 ' 

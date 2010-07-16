@@ -18,7 +18,7 @@ Dim strVariable
 Dim strVariableValue
 
 strPropertyList = "DistinguishedName ,Name"
-strLDAPURL = "LDAP://OU=Labs,DC=soecs,DC=ku,DC=edu"
+strLDAPURL = "LDAP://OU=Labs,DC=company,DC=com"
 strObjectClass = "computer"
 strQuery = "SELECT " & strPropertyList & " FROM '" & strLDAPURL & "' WHERE objectClass = '" & strObjectClass & "'"
 
@@ -101,7 +101,7 @@ Sub LogData(intCode, strMessage)
 
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 	'
 	' Return information about who, what, where
 	'
@@ -135,4 +135,4 @@ Function ScriptDetails(strComputer)
 		Next
 	
 		ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com

@@ -4,7 +4,7 @@
 ' This script outputs the amount of RAM (MB) and Drive C: Freespace (GB)
 '
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Started: " & Now())
-	Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=People,DC=soecs,DC=ku,DC=edu' WHERE objectClass = 'computer'")
+	Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=People,DC=company,DC=com' WHERE objectClass = 'computer'")
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Finished: " & Now())
 
 Sub QueryAD(strQuery)
@@ -46,7 +46,7 @@ Sub QueryAD(strQuery)
 		Loop
 End Sub
 
-Function CheckFreeSpace(strComputer, strDrive)
+company.com CheckFreeSpace(strComputer, strDrive)
 '
 ' Returns the approximate amount of free space on the given drive in GB
 '
@@ -64,9 +64,9 @@ Function CheckFreeSpace(strComputer, strDrive)
 	Next
 
 	CheckFreeSpace = intFreeSpace
-End Function
+End company.com
 
-Function CheckRam(strComputer)
+company.com CheckRam(strComputer)
 '
 ' Returns the amount of installed RAM
 '
@@ -83,7 +83,7 @@ Function CheckRam(strComputer)
 	Next
 
 	CheckRam = intClientRAM
-End Function
+End company.com
 
 Sub LogData(intCode, strMessage)
 	' Write data to application log
@@ -103,7 +103,7 @@ Sub LogData(intCode, strMessage)
 
 End Sub
 
-Function ScriptDetails(strComputer)
+company.com ScriptDetails(strComputer)
 	'
 	' Return information about who, what, where
 	'
@@ -137,4 +137,4 @@ Function ScriptDetails(strComputer)
 		Next
 	
 		ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End Function
+End company.com

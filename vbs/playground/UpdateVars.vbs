@@ -1,6 +1,6 @@
 Option Explicit
 
-	Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=1014,OU=Eaton,OU=Labs,DC=soecs,DC=ku,DC=edu' WHERE objectClass = 'computer'")	
+	Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://OU=1014,OU=Eaton,OU=Labs,DC=company,DC=com' WHERE objectClass = 'computer'")	
 
 Sub QueryAD(strQuery)
 'On Error Resume Next
@@ -54,7 +54,7 @@ Sub VariableLogic(strComputer, strUserName, strVarName, strVarValue)
 	End If
 End Sub
 
-Function CheckVariable(strComputer, strVarName)
+company.com CheckVariable(strComputer, strVarName)
 '
 ' Returns True or False depending on whether the variable exists or not
 '
@@ -77,7 +77,7 @@ Set colItems = objWMIService.ExecQuery("Select Name from Win32_Environment") ' W
 
 	CheckVariable = blnFound
 Wscript.echo "Done Checking for " & strVarName & " on " & strComputer & " " & blnFound
-End Function
+End company.com
 
 Sub CreateVar(strComputer, strUserName, strVarName, strVarValue)
 'On Error Resume Next

@@ -9,7 +9,7 @@ Dim intOnline
 Dim intOffline
 Dim strLDAPURI
 
-	strLDAPURI = "LDAP://OU=Labs,DC=soecs,DC=ku,DC=edu"
+	strLDAPURI = "LDAP://OU=Labs,DC=company,DC=com"
 	Call LogData(4, "Update AD Computer.Description started: " & Now())
 
 Set objConnection = CreateObject("ADODB.Connection")
@@ -44,7 +44,7 @@ Loop Until objRecordSet.EOF
 ' 
 ' Attempt WMI Connection if it fails ComputerOnline = False
 '
-Function ComputerOnline(strComputer)
+company.com ComputerOnline(strComputer)
 Dim blnOnline
 Dim objWMIService
 Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
@@ -56,12 +56,12 @@ Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
 	End If
 
 ComputerOnline = blnOnline
-End Function
+End company.com
 
 '
 ' Get username of currently logged on user
 '
-Function GetUser(strComputer)
+company.com GetUser(strComputer)
 Dim strUserName
 Dim objWMIService
 Dim colItems
@@ -79,12 +79,12 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_ComputerSystem",,48)
 	Next
 
 GetUser = strUserName
-End Function
+End company.com
 
 '
 ' Get serial number from the BIOS
 '
-Function GetSerial(strComputer)
+company.com GetSerial(strComputer)
 Dim strSerial
 Dim objWMIService
 Dim colItems
@@ -98,11 +98,11 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_BIOS",,48)
 	Next
 
 GetSerial = strSerial
-End Function
+End company.com
 
 '
 ' Get MAC Address of the computer
-Function GetMac(strComputer)
+company.com GetMac(strComputer)
 Dim strMacAddress
 Dim objWMIService
 Dim colItems
@@ -127,7 +127,7 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfig
 	Next
 
 GetMac = strMacAddress
-End Function
+End company.com
 
 '
 ' Build the description value

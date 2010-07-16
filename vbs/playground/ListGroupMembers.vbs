@@ -10,7 +10,7 @@ Option Explicit
 '
 ' June 12, 2009 * Jeff Patton
 
-	Call QueryAD("SELECT distinguishedName FROM 'LDAP://OU=Security Groups,DC=soecs,DC=ku,DC=edu' WHERE objectClass = 'group'")	
+	Call QueryAD("SELECT distinguishedName FROM 'LDAP://OU=Security Groups,DC=company,DC=com' WHERE objectClass = 'group'")	
 
 Sub QueryAD(strQuery)
 	On Error Resume Next
@@ -43,13 +43,13 @@ Sub QueryAD(strQuery)
 		Loop
 End Sub
 
-Function GroupMembers(strADSPath) ' , strUserName)
+company.com GroupMembers(strADSPath) ' , strUserName)
 	On Error Resume Next
 	Dim objGroup
 	Dim arrMemberOf
 	Dim strMember
 	'
-	' This function returns a list of users belonging to a group
+	' This company.com returns a list of users belonging to a group
 	' http://www.microsoft.com/technet/scriptcenter/scripts/ad/groups/adgpvb13.mspx?mfr=true
 	'
 
@@ -66,7 +66,7 @@ Function GroupMembers(strADSPath) ' , strUserName)
 		WScript.echo strMember
 	Next
 
-End Function
+End company.com
 
 Sub LogData(intCode, strMessage)
 	' Write data to application log

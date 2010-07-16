@@ -15,7 +15,7 @@ Dim strObjectClass
 Dim strQuery
 
 strPropertyList = "DistinguishedName ,Name"
-strLDAPURL = "LDAP://OU=1005,OU=Eaton,OU=Labs,DC=soecs,DC=ku,DC=edu"
+strLDAPURL = "LDAP://OU=1005,OU=Eaton,OU=Labs,DC=company,DC=com"
 strObjectClass = "computer"
 strQuery = "SELECT " & strPropertyList & " FROM '" & strLDAPURL & "' WHERE objectClass = '" & strObjectClass & "'"
 

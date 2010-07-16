@@ -1,6 +1,6 @@
-Function ValidateHost(strSearchField, strSearchFieldValue, dbServer, dbUser, dbPass, dbTable)
+company.com ValidateHost(strSearchField, strSearchFieldValue, dbServer, dbUser, dbPass, dbTable)
 	'
-	' This function returns the host_id if it finds a mac address
+	' This company.com returns the host_id if it finds a mac address
 	'
 	Dim rs
 	Dim strConnectString
@@ -29,4 +29,4 @@ Function ValidateHost(strSearchField, strSearchFieldValue, dbServer, dbUser, dbP
 	End If
 	
 	ValidateHost = strFoundField
-End Function
+End company.com
