@@ -90,7 +90,7 @@ Sub UpdateArray(strADSPath, intArrIndex, strLab)
 		End Select
 End Sub
 
-company.com GetProp(strADSPath, strProperty)
+Function GetProp(strADSPath, strProperty)
 	On Error Resume Next
 	'
 	' Get the specified property from the requested AD object
@@ -118,7 +118,7 @@ company.com GetProp(strADSPath, strProperty)
 				strStatus = "OFFLINE"
 		End Select
 		GetProp = strStatus
-End company.com
+End Function
 
 Sub BuildReport(strFileName, strFilePath)
 	'
@@ -153,7 +153,7 @@ Sub BuildReport(strFileName, strFilePath)
 
 End Sub
 
-company.com ScriptDetails(strComputer)
+Function ScriptDetails(strComputer)
 	'
 	' Return information about who, what, where
 	'
@@ -181,7 +181,7 @@ company.com ScriptDetails(strComputer)
 		Next
 	
 		ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End company.com
+End Function
 
 Sub LogData(intCode, strMessage)
 	' Write data to application log

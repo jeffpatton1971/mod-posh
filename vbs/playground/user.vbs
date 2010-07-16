@@ -6,7 +6,7 @@ Wscript.Echo RetrieveUser
 ' http://www.microsoft.com/technet/scriptcenter/scripts/default.mspx?mfr=true
 ' http://www.microsoft.com/technet/scriptcenter/resources/qanda/may05/hey0526.mspx
 '
-company.com RetrieveUser()
+Function RetrieveUser()
 Dim objWMIService
 Dim colItems
 Dim objItem
@@ -24,4 +24,4 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_ComputerSystem")
 
 RetrieveUser =  strUser
 
-End company.com
+End Function

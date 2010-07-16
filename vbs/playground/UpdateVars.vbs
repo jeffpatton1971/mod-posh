@@ -54,7 +54,7 @@ Sub VariableLogic(strComputer, strUserName, strVarName, strVarValue)
 	End If
 End Sub
 
-company.com CheckVariable(strComputer, strVarName)
+Function CheckVariable(strComputer, strVarName)
 '
 ' Returns True or False depending on whether the variable exists or not
 '
@@ -77,7 +77,7 @@ Set colItems = objWMIService.ExecQuery("Select Name from Win32_Environment") ' W
 
 	CheckVariable = blnFound
 Wscript.echo "Done Checking for " & strVarName & " on " & strComputer & " " & blnFound
-End company.com
+End Function
 
 Sub CreateVar(strComputer, strUserName, strVarName, strVarValue)
 'On Error Resume Next

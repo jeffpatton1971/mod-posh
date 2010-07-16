@@ -1,4 +1,4 @@
-company.com CheckVariable(strVarName)
+Function CheckVariable(strVarName)
 	'
 	' Returns True or False depending on whether the variable exists or not
 	'
@@ -17,4 +17,4 @@ company.com CheckVariable(strVarName)
 		Next
 	
 		CheckVariable = blnFound
-End company.com
+End Function

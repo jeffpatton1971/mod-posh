@@ -43,13 +43,13 @@ Sub QueryAD(strQuery)
 		Loop
 End Sub
 
-company.com GroupMembers(strADSPath) ' , strUserName)
+Function GroupMembers(strADSPath) ' , strUserName)
 	On Error Resume Next
 	Dim objGroup
 	Dim arrMemberOf
 	Dim strMember
 	'
-	' This company.com returns a list of users belonging to a group
+	' This function returns a list of users belonging to a group
 	' http://www.microsoft.com/technet/scriptcenter/scripts/ad/groups/adgpvb13.mspx?mfr=true
 	'
 
@@ -66,7 +66,7 @@ company.com GroupMembers(strADSPath) ' , strUserName)
 		WScript.echo strMember
 	Next
 
-End company.com
+End Function
 
 Sub LogData(intCode, strMessage)
 	' Write data to application log

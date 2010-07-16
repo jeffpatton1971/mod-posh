@@ -1,4 +1,4 @@
-company.com CheckFreeSpace(strComputer, strDrive)
+Function CheckFreeSpace(strComputer, strDrive)
 '
 ' Returns the amount of free space on the given drive in GB
 '
@@ -15,4 +15,4 @@ company.com CheckFreeSpace(strComputer, strDrive)
 	Next
 
 	CheckFreeSPace = intFreeSpace
-End company.com
+End Function

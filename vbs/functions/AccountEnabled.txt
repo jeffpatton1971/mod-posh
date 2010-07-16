@@ -1,6 +1,6 @@
-company.com AccountEnabled(strUserName, strComputer)
+Function AccountEnabled(strUserName, strComputer)
 	'
-	' This company.com returns True if the specified account is found and enabled.
+	' This function returns True if the specified account is found and enabled.
 	'
 	Dim locUsers
 	Dim objUser
@@ -20,4 +20,4 @@ company.com AccountEnabled(strUserName, strComputer)
 			Case Else
 		End Select
 	Next
-End company.com
+End Function

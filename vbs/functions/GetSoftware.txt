@@ -1,6 +1,6 @@
-company.com GetSoftware(blnSMS)
+Function GetSoftware(blnSMS)
 	'
-	' Based on blnSMS this company.com will make one of
+	' Based on blnSMS this function will make one of
 	' two WMI calls to return a list of software.
 	'
 	' WMI Variables
@@ -49,4 +49,4 @@ company.com GetSoftware(blnSMS)
 		Case Else
 	End Select
 	GetSoftware = strSoftware
-End company.com
+End Function

@@ -10,7 +10,7 @@
 ' The only exemption to this script will be computers in the Research OU, so there will
 ' be code that will check which OU the computer is in first.
 '
-' This script will perform five basic company.coms:
+' This script will perform five basic Functions:
 '	Create the TEMP and SCRATCH directories if they are not there
 '	Empty the TEMP and SCRATCH directories
 '	Set Environment Variables through the registry
@@ -103,7 +103,7 @@ Sub Main
 
 End Sub
 '
-' Below are procedures and company.coms required by this script.
+' Below are procedures and Functions required by this script.
 '
 Sub ChangePass(strComputer, strAccount, strPassword)
 	'
@@ -136,7 +136,7 @@ Sub AddGroup(strComputer, strLocalGroup, strDomainGroup)
 	If Err <> 0 Then Call LogData(1, Err.Number & vbCrLf & Err.Description & vbCrLf & "Unable to add " & strDomainGroup & " to " & strLocalGroup)
 End Sub
 
-company.com RetrieveOU()
+Function RetrieveOU()
 ' Retrieve computer OU
 ' 
 ' http://www.microsoft.com/technet/scriptcenter/resources/qanda/jul07/hey0727.mspx
@@ -153,7 +153,7 @@ strName = objSysInfo.ComputerName
 strOU = Right(strName, Len(strName) - InStr(strName, ","))
 RetrieveOU = strOU
 
-End company.com
+End Function
 
 Sub AddVar(strRegPath, strVariable, strVariableValue, strVariableType)
 	'
@@ -215,9 +215,9 @@ Sub FixDupRegEntry(strRegistry, strRegValue)
 		End If
 End Sub
 
-company.com CheckFolder(strPath)
+Function CheckFolder(strPath)
 	'
-	' This company.com returns vbTrue or vbFalse based on whether or not it finds the folder
+	' This Function returns vbTrue or vbFalse based on whether or not it finds the folder
 	'
 	Dim blnFound
 	Dim objFSO
@@ -231,7 +231,7 @@ company.com CheckFolder(strPath)
 	End If
 
 	CheckFolder = blnFound
-End company.com
+End Function
 
 Sub ClearFolder(strPath)
 	' Delete files in a folder
@@ -292,7 +292,7 @@ Sub LogData(intCode, strMessage)
 
 End Sub
 
-company.com ScriptDetails(strComputer)
+Function ScriptDetails(strComputer)
 	'
 	' Return information about who, what, where
 	'
@@ -326,4 +326,4 @@ company.com ScriptDetails(strComputer)
 		Next
 	
 		ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End company.com
+End Function

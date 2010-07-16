@@ -1,7 +1,7 @@
-company.com GetHostData(strSubNet)
+Function GetHostData(strSubNet)
 	'
-	' The purpose of this company.com is to build the data
-	' that is passed to other company.coms. It  will return
+	' The purpose of this function is to build the data
+	' that is passed to other Functions. It  will return
 	' information via WMI from the localhost. 
 	' Currently all that's needed is:
 	'    Bios serialnumber
@@ -16,7 +16,7 @@ company.com GetHostData(strSubNet)
 	' release, source:trunk/client/winmon-client.vbs
 	'
 	' In this release I have moved several things out 
-	' to separate company.coms.
+	' to separate functions.
 	'
 	' Declare variables that are pulled from WMI
 	'
@@ -30,7 +30,7 @@ company.com GetHostData(strSubNet)
 	Dim strDate
 	Dim strFieldValues
 	'
-	' Assign values to variables by calling company.coms
+	' Assign values to variables by calling Functions
 	'
 	strSerialNumber = GetSerial(".")
 	strMACAddress = GetMac(".", strSubNet)
@@ -47,4 +47,4 @@ company.com GetHostData(strSubNet)
 	' Assign the string to GetHostData
 	'
 	GetHostData = strFieldValues
-End company.com
+End Function

@@ -1,4 +1,4 @@
-company.com GetProp(strADSPath, strProperty)
+Function GetProp(strADSPath, strProperty)
 	On Error Resume Next
 	'
 	' Get the specified property from the requested AD object
@@ -18,4 +18,4 @@ company.com GetProp(strADSPath, strProperty)
 		End If
 	
 		GetProp = strStatus
-End company.com
+End Function

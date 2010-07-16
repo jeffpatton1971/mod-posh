@@ -54,7 +54,7 @@ End Sub
 Sub GetServerConnections(strComputer)
 	'
 	' This procedure gets a list of sharenames from the provided server
-	' to pass along to the userconnections company.com.
+	' to pass along to the userconnections function.
 	'
 	Dim objWMIService
 	Dim colItems
@@ -70,9 +70,9 @@ Sub GetServerConnections(strComputer)
 	Next
 End Sub
 
-company.com UserConnections(strComputer, strShare)
+Function UserConnections(strComputer, strShare)
 	'
-	' This company.com conntects to the remost server and counts the number
+	' This function conntects to the remost server and counts the number
 	' of users connected to the provided share.
 	'
 	Dim objWMIService
@@ -93,7 +93,7 @@ company.com UserConnections(strComputer, strShare)
 	If isEmpty(intCount) Then intCount = 0
 
 	UserConnections = intCount
-End company.com
+End Function
 
 Sub LogData(intCode, strMessage)
 ' Write data to application log
@@ -113,7 +113,7 @@ Set objShell = Wscript.CreateObject("Wscript.Shell")
 
 End Sub
 
-company.com ScriptDetails(strComputer)
+Function ScriptDetails(strComputer)
 '
 ' Return information about who, what, where
 '
@@ -147,4 +147,4 @@ Set colProcessList = objWMIService.ExecQuery("Select * from Win32_Process Where 
 	Next
 
 	ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End company.com
+End Function

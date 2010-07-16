@@ -1,6 +1,6 @@
-company.com CheckFolder(strPath)
+Function CheckFolder(strPath)
 	'
-	' This company.com returns vbTrue or vbFalse based on whether or not it finds the folder
+	' This function returns vbTrue or vbFalse based on whether or not it finds the folder
 	'
 	Dim blnFound
 	Dim objFSO
@@ -14,4 +14,4 @@ company.com CheckFolder(strPath)
 	End If
 
 	CheckFolder = blnFound
-End company.com
+End Function

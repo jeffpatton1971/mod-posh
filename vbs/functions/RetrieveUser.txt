@@ -1,4 +1,4 @@
-company.com RetrieveUser()
+Function RetrieveUser()
 	Dim objWMIService
 	Dim colItems
 	Dim objItem
@@ -16,4 +16,4 @@ company.com RetrieveUser()
 	
 	RetrieveUser =  strUser
 
-End company.com
+End Function

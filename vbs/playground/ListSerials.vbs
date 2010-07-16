@@ -33,7 +33,7 @@ Sub QueryAD(strQuery)
 		Loop
 End Sub
 
-company.com GetSerial(strComputer)
+Function GetSerial(strComputer)
 	'
 	' Get serial number from the BIOS
 	'
@@ -50,7 +50,7 @@ company.com GetSerial(strComputer)
 		Next
 
 	GetSerial = strSerial
-End company.com
+End Function
 
 Sub LogData(intCode, strMessage)
 	' Write data to application log

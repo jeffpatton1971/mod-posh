@@ -46,7 +46,7 @@ Sub QueryAD(strQuery)
 		Loop
 End Sub
 
-company.com CheckFreeSpace(strComputer, strDrive)
+Function CheckFreeSpace(strComputer, strDrive)
 '
 ' Returns the approximate amount of free space on the given drive in GB
 '
@@ -64,9 +64,9 @@ company.com CheckFreeSpace(strComputer, strDrive)
 	Next
 
 	CheckFreeSpace = intFreeSpace
-End company.com
+End Function
 
-company.com CheckRam(strComputer)
+Function CheckRam(strComputer)
 '
 ' Returns the amount of installed RAM
 '
@@ -83,7 +83,7 @@ company.com CheckRam(strComputer)
 	Next
 
 	CheckRam = intClientRAM
-End company.com
+End Function
 
 Sub LogData(intCode, strMessage)
 	' Write data to application log
@@ -103,7 +103,7 @@ Sub LogData(intCode, strMessage)
 
 End Sub
 
-company.com ScriptDetails(strComputer)
+Function ScriptDetails(strComputer)
 	'
 	' Return information about who, what, where
 	'
@@ -137,4 +137,4 @@ company.com ScriptDetails(strComputer)
 		Next
 	
 		ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End company.com
+End Function

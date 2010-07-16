@@ -16,7 +16,7 @@ Sub VariableLogic(strComputer, strUserName, strVarName, strVarValue)
 	End If
 End Sub
 
-company.com CheckVariable(strVarName)
+Function CheckVariable(strVarName)
 '
 ' Returns True or False depending on whether the variable exists or not
 '
@@ -35,7 +35,7 @@ Set colItems = objWMIService.ExecQuery("Select * from Win32_Environment")
 	Next
 
 	CheckVariable = blnFound
-End company.com
+End Function
 
 Sub VariableWork(strComputer, strUserName, strVarName, strVarValue, strAction)
 On Error Resume Next

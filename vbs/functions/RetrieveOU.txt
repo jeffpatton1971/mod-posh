@@ -1,4 +1,4 @@
-company.com RetrieveOU()
+Function RetrieveOU()
 	' Retrieve computer OU
 	' 
 	' http://www.microsoft.com/technet/scriptcenter/resources/qanda/jul07/hey0727.mspx
@@ -15,4 +15,4 @@ company.com RetrieveOU()
 	strOU = Right(strName, Len(strName) - InStr(strName, ","))
 	RetrieveOU = strOU
 
-End company.com
+End Function

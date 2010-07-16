@@ -51,9 +51,9 @@ Sub QueryAD(strQuery)
 		Loop
 End Sub
 
-company.com AccountEnabled(strUserName, strComputer)
+Function AccountEnabled(strUserName, strComputer)
 	'
-	' This company.com returns True if the specified account is found and enabled.
+	' This function returns True if the specified account is found and enabled.
 	'
 	Dim locUsers
 	Dim objUser
@@ -73,7 +73,7 @@ company.com AccountEnabled(strUserName, strComputer)
 			Case Else
 		End Select
 	Next
-End company.com
+End Function
 
 Sub LogData(intCode, strMessage)
 	' Write data to application log
@@ -93,7 +93,7 @@ Sub LogData(intCode, strMessage)
 
 End Sub
 
-company.com ScriptDetails(strComputer)
+Function ScriptDetails(strComputer)
 	'
 	' Return information about who, what, where
 	'
@@ -127,4 +127,4 @@ company.com ScriptDetails(strComputer)
 		Next
 	
 		ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End company.com
+End Function

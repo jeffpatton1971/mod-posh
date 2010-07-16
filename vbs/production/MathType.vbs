@@ -30,7 +30,7 @@ objFSO.CopyFile "C:\FSO\*.txt" , "\\" & strComputer & "C$\Program Files\Microsof
 
 End Sub
 
-company.com ComputerOnline(strComputer)
+Function ComputerOnline(strComputer)
 '
 ' Is computer online?
 ' 
@@ -47,7 +47,7 @@ Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
 	End If
 
 ComputerOnline = blnOnline
-End company.com
+End Function
 
 Sub ListSoftware(strComputer)
 Dim objWMIService
@@ -113,7 +113,7 @@ If Err <> 0 Then Call LogData(1, "Unable to connect using the provided query: " 
 	Loop
 End Sub
 
-company.com ScriptDetails(strComputer)
+Function ScriptDetails(strComputer)
 '
 ' Return information about who, what, where
 '
@@ -141,7 +141,7 @@ Set colProcessList = objWMIService.ExecQuery("Select * from Win32_Process Where 
 	Next
 
 	ScriptDetails = "Script Name: " & strScriptName & vbCrLf & "Script Path: " & strScriptPath & vbCrLf & "Script User: " & strUserName
-End company.com
+End Function
 
 ' Write data to application log
 ' 

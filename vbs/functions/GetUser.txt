@@ -1,4 +1,4 @@
-company.com GetUser(strComputer)
+Function GetUser(strComputer)
 	'
 	' Get username of currently logged on user
 	'
@@ -19,4 +19,4 @@ company.com GetUser(strComputer)
 		Next
 
 	GetUser = strUserName
-End company.com
+End Function

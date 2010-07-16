@@ -1,5 +1,5 @@
 '
-' This company.com returns false when run on a notebook or true on a desktop
+' This function returns false when run on a notebook or true on a desktop
 '
 ' In order to prevent a GPO from being applied the filter should return false
 '

@@ -6,7 +6,7 @@ Wscript.Echo "Found   " & intHit
 
 Sub BatteryPresent(strComputer)
 '
-' This company.com needs to return false in order to prevent GPO application
+' This function needs to return false in order to prevent GPO application
 '
 Dim objWMIService
 Dim colItems

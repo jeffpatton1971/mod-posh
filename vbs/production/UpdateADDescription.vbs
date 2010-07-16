@@ -44,7 +44,7 @@ Loop Until objRecordSet.EOF
 ' 
 ' Attempt WMI Connection if it fails ComputerOnline = False
 '
-company.com ComputerOnline(strComputer)
+Function ComputerOnline(strComputer)
 Dim blnOnline
 Dim objWMIService
 Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
@@ -56,12 +56,12 @@ Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
 	End If
 
 ComputerOnline = blnOnline
-End company.com
+End Function
 
 '
 ' Get username of currently logged on user
 '
-company.com GetUser(strComputer)
+Function GetUser(strComputer)
 Dim strUserName
 Dim objWMIService
 Dim colItems
@@ -79,12 +79,12 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_ComputerSystem",,48)
 	Next
 
 GetUser = strUserName
-End company.com
+End Function
 
 '
 ' Get serial number from the BIOS
 '
-company.com GetSerial(strComputer)
+Function GetSerial(strComputer)
 Dim strSerial
 Dim objWMIService
 Dim colItems
@@ -98,11 +98,11 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_BIOS",,48)
 	Next
 
 GetSerial = strSerial
-End company.com
+End Function
 
 '
 ' Get MAC Address of the computer
-company.com GetMac(strComputer)
+Function GetMac(strComputer)
 Dim strMacAddress
 Dim objWMIService
 Dim colItems
@@ -127,7 +127,7 @@ Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfig
 	Next
 
 GetMac = strMacAddress
-End company.com
+End Function
 
 '
 ' Build the description value

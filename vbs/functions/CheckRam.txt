@@ -1,4 +1,4 @@
-company.com CheckRam(strComputer)
+Function CheckRam(strComputer)
 '
 ' Returns the amount of installed RAM
 '
@@ -15,4 +15,4 @@ company.com CheckRam(strComputer)
 	Next
 
 	CheckRam = intClientRAM
-End company.com
+End Function
