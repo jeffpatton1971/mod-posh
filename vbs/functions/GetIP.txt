@@ -1,4 +1,5 @@
-Function GetIP(strComputer, strMACAddress)
+Function GetIP(strComputer, strSubNet, strMacAddress)
+	On Error Resume Next
 	'
 	' Get IP Address of the computer
 	'
@@ -7,21 +8,33 @@ Function GetIP(strComputer, strMACAddress)
 	Dim objItem
 	Dim strIP
 	Dim strIPAddress
+	Dim IP
 
 	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
+	If Err <> 0 Then 
+		Call HandleError(Err.Number, Err.Description)
+	End If
 	Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration Where IPEnabled = True",,48) 
+	If Err <> 0 Then 
+		Call HandleError(Err.Number, Err.Description)
+	End If
 
 		For Each objItem in colItems
 			If objItem.MACAddress = strMACAddress Then
 				strIPAddress = Join(objItem.IPAddress, ",")
-				Exit For
 			End If
 		Next
 
 		If InStr(strIPAddress, ",") Then
-				strIPAddress = Split(strIPAddress, ",")
-				strIP = strIPAddress(0)
-			Else
+			strIPAddress = Split(strIPAddress, ",")
+			For Each IP in strIPAddress
+				If inStr(IP, strSubNet) Then
+					strIP = IP
+					Exit For
+				End If
+			next
+		Else
+			strIP = strIPAddress
 		End If
 	GetIP = strIP
 End Function
