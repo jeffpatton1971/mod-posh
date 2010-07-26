@@ -30,6 +30,7 @@ Function GetWMIData(strComputer, WMIClass, WMIProperty)
 				strReturnVal = objItem.Caption
 			Case "csdversion"
 				strReturnVal = objItem.CSDVersion
+				If isNull(strReturnVal) Then strReturnVal = ""
 			Case "serialnumber"
 				strReturnVal = objItem.SerialNumber
 			Case "dnshostname"
