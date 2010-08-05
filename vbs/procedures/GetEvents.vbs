@@ -5,6 +5,12 @@ Sub GetEvents(strComputer, strLogFile, intDays)
 '
 ' http://msdn.microsoft.com/en-us/library/aa394226(VS.85).aspx
 '
+	Dim dtmStartDate
+	Dim dtmEndDate
+	Dim objWMIService
+	Dim colLoggedEvents
+	Dim objEvent
+
 	Set dtmStartDate = CreateObject("WbemScripting.SWbemDateTime")
 	Set dtmEndDate = CreateObject("WbemScripting.SWbemDateTime")
 
