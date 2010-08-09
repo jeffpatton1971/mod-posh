@@ -39,6 +39,12 @@ Function GetWMIData(strComputer, WMIClass, WMIProperty)
 				strReturnVal = objItem.CSName
 			Case "uuid"
 				strReturnVal = objItem.UUID
+			Case "identifyingnumber"
+				strReturnVal = objItem.IdentifyingNumber
+			Case "name"
+				strReturnVal = objItem.Name
+			Case "vendor"
+				strReturnVal = objItem.Vendor
 			Case Else
 				Call LogData(1, "Unable to find " & WMIProperty & " in " & WMIClass & vbCrLf & "Please submit a ticket at http://code.patton-tech.com/winmon/newticket")
 		End Select
