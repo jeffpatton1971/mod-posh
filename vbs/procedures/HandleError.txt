@@ -7,9 +7,9 @@ Sub HandleError(intErr, strErrDescription)
 			'
 			' ODB Connection Error
 			'
-			Call LogData(1, "Error Number: " & intErr & vbCrLf & "Error Desc  : " & strDescription & vbCrLf & "Defined     : The proper ODBC driver is not present on this system."
+			Call LogData(1, "Error Number: " & intErr & vbCrLf & "Error Desc  : " & strDescription & vbCrLf & "Defined     : The proper ODBC driver is not present on this system.")
 			Wscript.Quit
 		Case Else
-			Call LogData(1, "Error Number: " & intErr & vbCrLf & "Error Desc  : " & strDescription & vbCrLf & "Defined     : I have not yet seen this error number please submit a ticket at http://code.patton-tech.com/winmon."
+			Call LogData(1, "Error Number: " & intErr & vbCrLf & "Error Desc  : " & strDescription & vbCrLf & "Defined     : I have not yet seen this error number please submit a ticket at http://code.patton-tech.com/winmon.")
 	End Select
 End Sub
