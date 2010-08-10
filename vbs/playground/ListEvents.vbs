@@ -14,8 +14,18 @@ Sub GetEvents(strComputer, strLogFile, intDays)
 '
 ' http://msdn.microsoft.com/en-us/library/aa394226(VS.85).aspx
 '
+	Dim dtmStartDate
+	Dim dtmEndDate
+	Dim dtmTimeWritten
+	Dim dtmTempDate
+	Dim objWMIService
+	Dim colLoggedEvents
+	Dim objEvent
+	Dim arrValues(5)
+
 	Set dtmStartDate = CreateObject("WbemScripting.SWbemDateTime")
 	Set dtmEndDate = CreateObject("WbemScripting.SWbemDateTime")
+	Set dtmTimeWritten = CreateObject("WbemScripting.SWbemDateTime")
 
 	intDays  = (intDays - intDays) - intDays
 	dtmStartDate.SetVarDate now(), True
@@ -27,12 +37,25 @@ Sub GetEvents(strComputer, strLogFile, intDays)
 							      & "' And Logfile = '" & strLogFile & "'")
 
 	For Each objEvent in colLoggedEvents
-	    Wscript.Echo "Logname: " & objEvent.LogFile
-	    Wscript.Echo "EventId: " & objEvent.EventCode
-	    Wscript.Echo "Level: " & objEvent.Type
-	    Wscript.Echo "User: " & objEvent.User
-	    Wscript.Echo "Logged: " & objEvent.TimeWritten
-	    Wscript.Echo "Message: " & vbCrLf & objEvent.Message
+	    arrValues(0) = objEvent.LogFile
+	    arrValues(1) = objEvent.EventCode
+	    arrValues(2) = objEvent.Type
+	    If isNull(objEvent.User) Then
+	       arrValues(3) = ""
+	    Else
+	       arrValues(3) = objEvent.User
+	    End If
+	    dtmTimeWritten.Value = objEvent.TimeWritten
+	    dtmTempDate = dtmTimeWritten.Year & "-"
+	    If dtmTimeWritten.Month < 10 Then dtmTempDate = dtmTempDate & "0" & dtmTimeWritten.Month & "-"
+	    If dtmTimeWritten.Day < 10 Then dtmTempDate = dtmTempDate & "0" & dtmTimeWritten.Day & " "
+	    If dtmTimeWritten.Hoursm < 10 Then dtmTempDate = dtmTempDate & "0" & dtmTimeWritten.Hours & ":"
+	    
+	    arrValues(4) = dtmTimeWritten.Year & "-" & dtmTimeWritten.Month & "-" & dtmTimeWritten.Day & " " & dtmTimeWritten.Hours & ":" & dtmTimeWritten.Minutes & ":" & dtmTimeWritten.Seconds
+	    arrValues(5) = objEvent.Message
+	    For x = 0 to 5
+	    	wscript.echo arrvalues(x)
+	    Next
 	Next
 End Sub
 
