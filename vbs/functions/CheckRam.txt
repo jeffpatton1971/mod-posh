@@ -8,10 +8,10 @@ Function CheckRam(strComputer)
 	Dim intClientRAM
 
 	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
-	Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_LogicalMemoryConfiguration",,48) 
+	Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_OperatingSystem",,48) 
 
 	For Each objItem in colItems 
-		intClientRAM = (objItem.TotalPhysicalMemory \1024)
+		intClientRam = Cdbl(objItem.TotalPhysicalMemory /1024 /1024 /1024 )
 	Next
 
 	CheckRam = intClientRAM
