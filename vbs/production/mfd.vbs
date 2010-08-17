@@ -42,7 +42,7 @@ Dim bolDefault
 Dim strPrintServer
 
 bolDefault = vbTrue
-strPrintServer = "pcutprd.home.ku.edu"
+strPrintServer = "printserver.company.com"
 
 Call ConnectPrinters(LCase(strPrintServer), LCase(Wscript.Arguments.Item(0)), bolDefault)
 
