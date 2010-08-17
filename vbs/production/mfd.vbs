@@ -44,7 +44,7 @@ Dim strPrintServer
 bolDefault = vbTrue
 strPrintServer = "pcutprd.home.ku.edu"
 
-Call ConnectPrinters(strPrintServer, Wscript.Arguments.Item(0), bolDefault)
+Call ConnectPrinters(LCase(strPrintServer), LCase(Wscript.Arguments.Item(0)), bolDefault)
 
 Sub ConnectPrinters(strPrintServer, strPrinter, bolDefault)
 	Dim objNetwork
