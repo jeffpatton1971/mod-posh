@@ -1,0 +1,15 @@
+Function GetOwner(strComputerDN)
+'
+' This function returns the owner of a computer object
+'
+' Source, Richard Mueller
+' http://social.technet.microsoft.com/Forums/en-us/ITCG/thread/59159984-729c-46d1-8faa-58c71ac3a209
+'
+	Dim objADObject
+	Dim objSecurityDescriptor
+
+	set objADObject = GetObject("LDAP://" & strComputerDN)
+	set objSecurityDescriptor = objADObject.Get("ntSecurityDescriptor")
+
+	GetOwner = objSecurityDescriptor.Owner
+End Function
