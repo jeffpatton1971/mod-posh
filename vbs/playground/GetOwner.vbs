@@ -34,13 +34,14 @@ Sub QueryAD(strQuery)
 	If Err <> 0 Then Call LogData(1, "Unable to connect using the provided query: " & vbCrLf & strQuery)
 	
 		objRecordSet.MoveFirst
-	
+		Wscript.Echo "Computer Name,Owner"	
+
 		Do Until objRecordSet.EOF
 			'
 			' Code to do whatever is needed
 			'
-			Wscript.Echo "Computer Name" & vbTab & "Owner"
-			Wscript.Echo objRecordSet.Fields("Name") & vbTab & GetOwner(objRecordSet.Fields("DistinguishedNameName"))
+
+			Wscript.Echo objRecordSet.Fields("Name") & "," & GetOwner(objRecordSet.Fields("DistinguishedName"))
 			objRecordSet.MoveNext
 		Loop
 End Sub
