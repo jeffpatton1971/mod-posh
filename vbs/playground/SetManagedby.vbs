@@ -2,7 +2,9 @@
 ' SetManagedBy
 '
 ' This script works through AD and sets the managedby property
-' of the computer object, to the owner of the same
+' of the computer object, to the owner of the same. In order 
+' for this script to work, you will need to have rights to 
+' query the GC of the domain the user account resides in.
 '
 ' September 21, 2010: Jeff Patton
 '
@@ -40,7 +42,6 @@ Sub QueryAD(strQuery)
 	If Err <> 0 Then Call LogData(1, "Unable to connect using the provided query: " & vbCrLf & strQuery)
 	
 		objRecordSet.MoveFirst
-		Wscript.Echo "Computer Name,Owner"	
 
 		Do Until objRecordSet.EOF
 			'
@@ -48,7 +49,7 @@ Sub QueryAD(strQuery)
 			'
 			strComputerPath = objRecordSet.Fields("DistinguishedName")
 			strUserDN =  NT4toDN(GetOwner(objRecordSet.Fields("DistinguishedName")))
-			Call WriteData(strADSIProp, strUserDN, strCompupterPath)
+			Call WriteData(strADSIProp, strUserDN, strComputerPath)
 			objRecordSet.MoveNext
 		Loop
 End Sub
