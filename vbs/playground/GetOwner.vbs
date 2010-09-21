@@ -7,7 +7,7 @@
 ' September 21, 2010: Jeff Patton
 '
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Started: " & Now())
-	Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://DC=soecs,DC=ku,DC=edu' WHERE objectClass = 'computer'")
+	Call QueryAD("SELECT DistinguishedName ,Name FROM 'LDAP://CN=Computers,DC=company,DC=com' WHERE objectClass = 'computer'")
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Finished: " & Now())
 
 Sub QueryAD(strQuery)
