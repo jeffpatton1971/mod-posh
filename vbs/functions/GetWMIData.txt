@@ -51,6 +51,10 @@ Function GetWMIData(strComputer, WMIClass, WMIProperty)
 				strReturnVal = objItem.TotalVisibleMemorySize
 			Case "numberofcores"
 				strReturnVal = objItem.NumberOfCores
+			Case "lastbootuptime"
+				strReturnVal = objItem.LastBootUpTime
+			Case "currentclockspeed"
+				strReturnVal = objItem.CurrentClockSpeed
 			Case Else
 				Call LogData(1, "Unable to find " & WMIProperty & " in " & WMIClass & vbCrLf & "Please submit a ticket at http://code.patton-tech.com/winmon/newticket")
 		End Select
