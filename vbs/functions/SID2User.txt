@@ -1,0 +1,24 @@
+Function SID2User(strSID)
+	'
+	' This function returns the username of a SID
+	' from the Foreign Security Principals OU in 
+	' your domain. 
+	'
+	' You need to specify the name of your DC
+	'
+	' Source:
+	' http://blog.lazyindustries.com/?p=188
+	'
+	Dim strComputer
+	Dim objWMIService
+	Dim objAccount
+	
+	strComputer = "dc1.soecs.ku.edu"
+	set objWMIService=GetObject("winmgmts://" & strComputer & "/root/cimv2")
+	set objAccount = objWMIService.Get("Win32_SID.SID='" & strSID & "'")
+	
+	If objAccount.AccountName = "" Then
+	Else
+		SID2User = objAccount.ReferencedDomainName & "\" & objAccount.AccountName
+	End If
+End Function
