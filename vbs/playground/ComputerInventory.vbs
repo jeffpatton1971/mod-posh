@@ -1,38 +1,16 @@
 '
-' AD Template Script
+' Computer Inventory
 '
-' September 28, 2010: Jeff Patton
+' This script walks AD and returns the OS and name of each computer object it finds.
 '
-' This script contains the basic functions and subroutines
-' to walk through AD and return information that you 
-' require.
+' September 28, 2010: Jeff Patton 
 '
-' In order for this script to work within your environment
-' you will need to modify the variables below to suit
-' your needs.
+' USAGE:
 '
-' strQueryObjectClass: would be the object in AD you wish
-' 		       to search for (eg: computer, user)
+' cscript //nologo ComputerInventory.vbs > report.csv
 '
-' strQueryLDAP: would be the LDAP connection string that 
-' 		maps to your AD installation. NOTE LDAP
-'		must be in ALL CAPS.
-'
-' strQueryVars: would be the attributes for the objectClass
-' 		that you are returning from AD.
-'
-Dim strQuery
-Dim strQyeryObjectClass
-Dim strQueryLDAP
-Dim strQueryVars
-
-	strQueryObjectClass = ""
-	strQueryLDAP = ""
-	strQueryVars = ""
-        strQuery = "SELECT " & strQueryVars & " FROM '" & strQueryLDAP & "' WHERE objectClass = '" & strQueryObjectClass & "'"
-
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Started: " & Now())
-	Call QueryAD(strQuery)
+	Call QueryAD("SELECT OperatingSystem ,Name FROM 'LDAP://OU=BERC,DC=soecs,DC=ku,DC=edu' WHERE objectClass = 'computer'")
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Finished: " & Now())
 
 	Sub QueryAD(strQuery)
@@ -58,16 +36,15 @@ Dim strQueryVars
 	Set objRecordSet = objCommand.Execute
 	If Err <> 0 Then Call LogData(1, "Unable to connect using the provided query: " & vbCrLf & strQuery)
 	
-	'
-	' If you are reporting information, column headers should be output above the loop.
-	'
+	Wscript.Echo "Computer Name,Operating System"
 	
 		objRecordSet.MoveFirst
 	
 		Do Until objRecordSet.EOF
 			'
-			' If you are reporting information, row data goes inside the loop.
+			' Code to do whatever is needed
 			'
+			Wscript.Echo objRecordSet.Fields("Name") & "," & objRecordSet.Fields("OperatingSystem")
 			objRecordSet.MoveNext
 		Loop
 End Sub
