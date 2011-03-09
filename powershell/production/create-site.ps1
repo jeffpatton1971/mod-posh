@@ -10,17 +10,18 @@
 
 $sitetemplate = "STS#0"
 
-do
-	{
-		$url = Read-Host "Please enter desired URL"
-		$databasename = Read-Host "Please enter DB Name" 
-		$ownerlogin = Read-Host "Please enter the HOME\username of the site owner"
-		$owneremail = Read-Host "Please enter the email address of the site owner"
-		$title = Read-Host "Please enter the title of the site"
-	}
-until ($title -ne "")
+$url = Read-Host "Please enter desired URL"
+$databasename = Read-Host "Please enter DB Name" 
+$ownerlogin = Read-Host "Please enter the username of the site owner"
+$owneremail = $ownerlogin + "@ku.edu"
+$title = Read-Host "Please enter the title of the site"
+
+stsadm -o createsiteinnewdb `
+	-url "$url" `
+	-owneremail "$owneremail" `
+	-ownerlogin "$ownerlogin" `
+	-sitetemplate "$sitetemplate" `
+	-title "$title" `
+	-databasename "$databasename"
 	
-function CreateSite($url, $databasename, $ownerlogin, $owneremail, $sitetemplate, $title)
-	{
-		stsadm -o createsiteinnewdb -url $url -owneremail $owneremail -ownerlogin $ownerlogin -sitetemplate $sitetemplate -title $title -databasename $databasename + "_Content"
-	}
+iisreset
