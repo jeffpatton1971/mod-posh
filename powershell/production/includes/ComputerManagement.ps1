@@ -1,14 +1,17 @@
 #
 #	Computer Management Functions
 #
-#	Function AddUser
+#	Function Add-User
 #		Create's a local user account and adds
 #		that account to the specified group.
 #
-#	Function ChangePass
+#	Function Set-Pass
 #		Changes the password of a local user account
 #
-Function AddUser($Computer, $User, $Password, $Description, $Group)
+#	Function Set-Group
+#		Changes group membership of local user account
+#
+Function Add-User($Computer, $User, $Password, $Description)
 	{
 		$objComputer = [ADSI]"WinNT://$Computer"
 		$objUser = $objComputer.Create("User", $User)
@@ -16,12 +19,16 @@ Function AddUser($Computer, $User, $Password, $Description, $Group)
 		$objUser.SetInfo()
 		$objUser.description = $Description
 		$objUser.SetInfo()
-		$objComputer = [ADSI]"WinNT://$Computer/$Group,group"
-		$objComputer.add("WinNT://$Computer/$User")
 	}
 
-Function ChangePass($Computer, $User, $Password)
+Function Set-Pass($Computer, $User, $Password)
 	{
 		$objUser=[adsi]("WinNT://$strComputer/$User, user")
 		$objUser.psbase.invoke("SetPassword", $Password)
+	}
+	
+Function Set-Group($Computer, $User, $Group)
+	{
+		$objComputer = [ADSI]"WinNT://$Computer/$Group,group"
+		$objComputer.add("WinNT://$Computer/$User")
 	}
