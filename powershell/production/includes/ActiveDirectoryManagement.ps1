@@ -1,17 +1,24 @@
 #
 #	Active Directory Functions
 #
-#	Function QueryAD:
-#		Returns a list of objects from ActiveDirectory
+#	Function Get-ADObjects:
+#		Returns a list of objects from ActiveDirectory.
+#		$ADProperty is a list of properties you want returned
+#			and is accessible via .properties.propertyName
 #
-Function QueryAD($objectCategory, $ADProperty)
+Function Get-ADObjects($objOU, $objectCategory, $ADProperty)
 	{
-		$objDomain = New-Object System.DirectoryServices.DirectoryEntry
-		$objSearcher = New-Object System.DirectoryServices.DirectorySearcher
-		$objSearcher.SearchRoot = $objDomain
-		$objSearcher.Filter = ("(objectCategory=$objectCategory)")
-		
-		foreach ($i in $ADProperty){$objSearcher.PropertiesToLoad.Add($i)}
-		
-		$ADObjects = $objSearcher.FindAll()
-	}
+		if($objOU -eq $Null) 
+			{
+				$objOU = ""
+			}		
+		$objSearcher = New-Object System.DirectoryServices.DirectorySearcher([ADSI]$objOU)
+		$objSearcher.SearchScope = "subtree"
+		$objSearcher.PageSize = 1000
+		$objSearcher.Filter = ("(objectCategory=$objectCategory)")	
+		foreach ($i in $ADProperty)
+			{
+				$objSearcher.PropertiesToLoad.Add($i)
+			}
+		$objSearcher.FindAll()
+	}	
