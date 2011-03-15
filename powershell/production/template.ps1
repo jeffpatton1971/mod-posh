@@ -17,7 +17,7 @@ $LogName = "Application"
 $ScriptPath = $MyInvocation.MyCommand.Path
 $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 
-	New-EventLog -Source $ScriptName -LogName $LogName
+	New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
 	$Message = "Script: " + $ScriptPath + "`nScript User: " + $Username
 	
 	LogEvent($ScriptName, $LogName, "100", "Information", $Message + "Started: " + (Get-Date).toString())
