@@ -12,7 +12,7 @@
 #		System
 #		Security
 #
-$ScriptName = ""
+$ScriptName = $MyInvocation.MyCommand.ToString()
 $LogName = "Application"
 $ScriptPath = $MyInvocation.MyCommand.Path
 $Username = $env:USERDOMAIN + "\" + $env:USERNAME
