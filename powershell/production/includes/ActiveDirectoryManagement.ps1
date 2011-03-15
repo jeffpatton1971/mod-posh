@@ -1,11 +1,3 @@
-#
-#	Active Directory Functions
-#
-#	Function Get-ADObjects:
-#		Returns a list of objects from ActiveDirectory.
-#		$ADProperty is a list of properties you want returned
-#			and is accessible via .properties.propertyName
-#
 Function Get-ADObjects
 	{
 	<#
