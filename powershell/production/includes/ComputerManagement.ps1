@@ -57,6 +57,8 @@ Function Set-Group($Computer, $User, $Group)
 		.DESCRIPTION
 		This function will add an existing user to an existing group. You will need
 		to run this with either UAC disabled or from an elevated prompt.
+		.EXAMPLE
+		set-group MyComputer MyUserAccount Administrators
 		.LINK
 		http://scripts.patton-tech.com/		
 	#>
