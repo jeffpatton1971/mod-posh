@@ -17,9 +17,18 @@ Function Get-ADObjects
 		If you want specific properties returned like name, or distinguishedName 
 		provide a comma seperated list.
 		.EXAMPLE
-		get-adobjects "LDAP://OU=Workstations,DC=company,DC=com" computer name
+		This exmaple returns a list of computers found in this OU
+		get-adobjects "LDAP://OU=Workstations,DC=company,DC=com"
 		.EXAMPLE
+		This example returns a list of user in this container
 		get-adobjects "LDAP://CN=Users,DC=company,DC=com" user distinguishedName
+		.EXAMPLE
+		This example returns the objectSid of the named computer
+		get-adobjects "LDAP://CN=MyComputer,OU=Workstations,DC=company,DC=com" computer objectSid
+		.NOTES
+		The script runs under the users context, so the user account must have permissions
+		to view the objects within the domain that the function is currently running
+		against.
 		.LINK
 		http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement
 	#>	
@@ -28,13 +37,13 @@ Function Get-ADObjects
 				[Parameter(Mandatory=$true)]
 				[string]$objOU,
 				[string]$objectCategory="computer",
-				[string]$ADProperty="name"
+				[array]$ADProperty="name"
 			)
 		
 		$objSearcher = New-Object System.DirectoryServices.DirectorySearcher([ADSI]$objOU)
 		$objSearcher.SearchScope = "subtree"
 		$objSearcher.PageSize = 1000
-		$objSearcher.Filter = ("(objectCategory=$objectCategory)")	
+		$objSearcher.Filter = ("(objectCategory=$objectCategory)")
 		foreach ($i in $ADProperty)
 			{
 				$objSearcher.PropertiesToLoad.Add($i)
