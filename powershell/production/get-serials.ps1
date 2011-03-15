@@ -18,14 +18,14 @@ $ScriptPath = $MyInvocation.MyCommand.Path
 $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 
 	New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
-	$Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
 	
+	$Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
 	Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
 
 	#	Dotsource in the AD functions I need
 	. .\includes\ActiveDirectoryManagement.ps1
-	$ADSPath =  Read-Host "Please provide an LDAP URL"
-	$computers = Get-ADObjects $ADSPath "computer" "name"
+
+	$computers = Get-ADObjects $args[0] $args[1] $args[2]
 	foreach ($computer in $computers)
 		{
 			if ($computer -eq $null){}
