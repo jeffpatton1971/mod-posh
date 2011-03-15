@@ -39,10 +39,6 @@ Function Get-ADObjects
 				[string]$ADProperty="name"
 			)
 		
-		if($objOU -eq $Null) 
-			{
-				$objOU = ""
-			}		
 		$objSearcher = New-Object System.DirectoryServices.DirectorySearcher([ADSI]$objOU)
 		$objSearcher.SearchScope = "subtree"
 		$objSearcher.PageSize = 1000
