@@ -18,8 +18,8 @@ $ScriptPath = $MyInvocation.MyCommand.Path
 $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 
 	New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
-	$Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
 	
+	$Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
 	Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
 	
 	#	Script code goes here
