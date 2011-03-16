@@ -50,3 +50,45 @@ Function Get-ADObjects
 			}
 		$objSearcher.FindAll()
 	}	
+Function Add-UserToLocalGroup
+	{
+		<#
+			.SYNOPSIS
+				Add a domain user to a local group.
+			.DESCRIPTION
+				Add a domain user to a local group on a computer.
+			.PARAMETER Computer
+				The NetBIOS name of the computer where the local group resides.
+			.PARAMETER UserName
+				The name of the user to add to the group.
+			.PARAMETER LocalGroup
+				The name of the group to add the user to.
+			.PARAMETER UserDomain
+				The NetBIOS name of the domain where the user object is.
+			.EXAMPLE
+				add-usertolocalgroup server myuser administrators
+			.EXAMPLE
+				add-usertolocalgroup server myuser administrators company
+			.NOTES
+				The script runs under the users context, so the user account must have permissions
+				to view the objects within the domain that the function is currently running
+				against.
+			.LINK
+				http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement
+		#>
+		Param
+			(
+				[Parameter(Mandatory=$true)]
+				[string]$Computer,
+				[Parameter(Mandatory=$true)]
+				[string]$UserName,
+				[Parameter(Mandatory=$true)]
+				[string]$LocalGroup,
+				[string]$UserDomain				
+			)
+		if $UserDomain -eq $null
+			{
+				[string]$UserDomain = ([ADSI] "").name
+			}
+		([ADSI]"WinNT://$Computer/$LocalGroup,group").Add("WinNT://$UserDomain/$UserName")
+	}
