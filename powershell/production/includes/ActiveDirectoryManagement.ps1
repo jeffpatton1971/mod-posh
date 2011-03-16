@@ -46,7 +46,7 @@ Function Get-ADObjects
 		$objSearcher.Filter = ("(objectCategory=$objectCategory)")
 		foreach ($i in $ADProperty)
 			{
-				$objSearcher.PropertiesToLoad.Add($i)
+				[void]$objSearcher.PropertiesToLoad.Add($i)
 			}
 		$objSearcher.FindAll()
 	}	
