@@ -86,7 +86,7 @@ Function Add-UserToLocalGroup
 				[string]$LocalGroup,
 				[string]$UserDomain				
 			)
-		if $UserDomain -eq $null
+		if ($UserDomain -eq $null)
 			{
 				[string]$UserDomain = ([ADSI] "").name
 			}
