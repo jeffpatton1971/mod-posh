@@ -1,12 +1,12 @@
-Function Add-User
+Function New-User
 	{
 	<#
 		.SYNOPSIS
-			Add a user account to the local computer.
+			Create a new user account on the local computer.
 		.DESCRIPTION
-			This function will add a user account to the local computer.
+			This function will create a user account on the local computer.
 		.PARAMETER Computer
-			The NetBIOS name of the computer that you will add the account to.
+			The NetBIOS name of the computer that you will create the account on.
 		.PARAMETER User
 			The user name of the account that will be created.
 		.PARAMETER Password
@@ -14,7 +14,7 @@ Function Add-User
 			on the destination computer.
 		.PARAMETER Description
 			A description of what this account will be used for.
-		.NOTE
+		.NOTES
 			You will need to run this with either UAC disabled or from an elevated prompt.
 		.EXAMPLE
 			add-user MyComputer MyUserAccount MyP@ssw0rd "This is my account."
@@ -54,7 +54,7 @@ Function Set-Pass
 		.PARAMETER Password
 			The password for the account, this must follow password policies enforced
 			on the destination computer.
-		.NOTE
+		.NOTES
 			You will need to run this with either UAC disabled or from an elevated prompt.
 		.EXAMPLE
 			set-pass MyComputer MyUserAccount N3wP@ssw0rd
@@ -88,7 +88,7 @@ Function Set-Group
 			The user name of the account that will be created.
 		.PARAMETER Group
 			The name of an existing group to add this user to.
-		.NOTE
+		.NOTES
 			You will need to run this with either UAC disabled or from an elevated prompt.
 		.EXAMPLE
 			set-group MyComputer MyUserAccount Administrators
