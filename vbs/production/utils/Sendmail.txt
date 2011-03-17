@@ -1,0 +1,28 @@
+Sub Sendmail(strFrom, strTo, strSub, strBody, strSmtpServer, blnAuthSmtp, strAuthUser, strAuthPass)
+'
+' A procedure that sends email
+' http://technet.microsoft.com/en-us/library/ee176585.aspx
+'
+Dim cdoAuthType
+
+	cdoAuthType = 1			'Basic Auth
+	'cdoAuthType = 2		'NTLM Auth
+
+	Set objEmail = CreateObject("CDO.Message")
+	objEmail.From = strFrom
+	objEmail.To = strTo
+	objEmail.Subject = strSub
+	objEmail.Textbody = strBody
+	
+	If blnAuth = vbTrue Then
+		objEmail.Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 1
+		objEmail.Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/sendusername") = strAuthUser
+		objEmail.Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/sendpassword") = strAuthPass
+	End If
+	
+	objEmail.Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/sendusing") = 2
+	objEmail.Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpserver") = strSmtpServer
+	objEmail.Configuration.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = 25
+	objEmail.Configuration.Fields.Update
+	objEmail.Send
+End Sub

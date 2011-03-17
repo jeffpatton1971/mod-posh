@@ -1,0 +1,34 @@
+Function PingHost(strHost)
+	Dim objShell
+	Dim objExec
+	Dim strPingResult
+	
+	Set objShell = CreateObject("Wscript.Shell")
+	Set objExec = objShell.Exec("ping -n 2 -w 1000 " & strHost)
+	strPingResult = LCase(objExec.StdOut.ReadAll)
+	
+	If InStr(strPingResult, "reply from") Then
+			PingHost = "Online"
+		Else
+			PingHost = "Offline"
+	End If
+End Function
+
+Function WMIPing(strComputer)
+	'
+	' Is computer online?
+	' 
+	' Attempt WMI Connection if it fails ComputerOnline = False
+	'
+	Dim blnOnline
+	Dim objWMIService
+	
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
+		If Err <> 0 Then
+			blnOnline = vbFalse
+		Else
+			blnOnline = vbTrue
+		End If
+	
+	ComputerOnline = blnOnline
+End Function

@@ -1,0 +1,30 @@
+'
+' WindowStyle Variable
+' http://msdn.microsoft.com/en-us/library/d5fk67ky(v=vs.85).aspx
+' 
+' Defines the appearance of the program's window.
+' 0 - Hides the window and activates another window.
+' 1 - Activates and displays a window.
+' 2 - Activates the window and displays it as a minimized window. 
+' 3 - Activates the window and displays it as a maximized window. 
+' 4 - Displays a window in its most recent size and position. The active window remains active.
+' 5 - Activates the window and displays it in its current size and position.
+' 6 - Minimizes the specified window and activates the next top-level window in the Z order.
+' 7 - Displays the window as a minimized window.
+' 8 - Displays the window in its current state.
+' 9 - Activates and displays the window.
+' 10 - Sets the show-state based on the state of the program that started the application.
+'
+Function RunCommand(strCommand, intWindowStyle, blnReturnCode)
+	'
+	' This function uses the Run method of the Shell Object
+	' to launch a process on the computer.
+	'
+	' strCommand: Full path + command line of program to run
+	' intWindowStyle: An integer representing how to display the command window
+	' blnReturnCode: True/False if you want to return the exit code
+	Dim objShell
+	
+	Set objShell = CreateObject("Wscript.Shell")
+	RunCommand = objShell.Run(strCommand,intWindowStyle,blnReturnCode)
+End Function

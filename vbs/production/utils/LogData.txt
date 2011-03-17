@@ -1,0 +1,17 @@
+Sub LogData(intCode, strMessage)
+	' Write data to application log
+	' 
+	' http://www.microsoft.com/technet/scriptcenter/guide/default.mspx?mfr=true
+	'
+	' Event Codes
+	' 	0 = Success
+	'	1 = Error
+	'	2 = Warning
+	'	4 = Information
+	Dim objShell
+
+	Set objShell = Wscript.CreateObject("Wscript.Shell")
+
+		objShell.LogEvent intCode, strMessage
+
+End Sub
