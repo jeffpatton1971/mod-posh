@@ -1,0 +1,11 @@
+'
+' File Management subroutines
+'
+' Below is a collection of useful file utilies.
+'
+Sub DeleteFile(strCompleteFilePath)
+Dim objFSO
+
+	Set objFSO = CreateObject("Scripting.FileSystemObject")
+	objFSO.DeleteFile(strCompleteFilePath)
+End Sub
