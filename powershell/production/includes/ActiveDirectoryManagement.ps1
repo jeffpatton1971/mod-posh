@@ -92,3 +92,33 @@ Function Add-UserToLocalGroup
 			}
 		([ADSI]"WinNT://$Computer/$LocalGroup,group").Add("WinNT://$UserDomain/$UserName")
 	}
+Function Get-LocalGroupMembers
+	{
+		<#
+			.SYNOPSIS
+				Return a list of user accounts that are in a specified group.
+			.DESCRIPTION
+				Return a list of user accounts that are in a specified group.
+			.PARAMETER ComputerName
+				The name of the computer to connect to.
+			.PARAMETER GroupName
+				The name of the group to search in.
+			.NOTES
+			.EXAMPLE
+				Get-LocalGroupMembers MyComputer Administrators
+			.LINK
+				http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement
+		#>
+		
+		Param
+			(
+				[Parameter(Mandatory=$true)]
+				[string]$ComputerName,
+				[Parameter(Mandatory=$true)]
+				[string]$GroupName
+			)
+		$Computer = [ADSI]("WinNT://$ComputerName, computer")
+		$Group = $Computer.PSBase.Children.Find($GroupName)
+		
+		$Group.psbase.invoke("Members") | %{$_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null)}
+	}
