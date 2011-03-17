@@ -19,7 +19,7 @@ Function New-User
 			.EXAMPLE
 				add-user MyComputer MyUserAccount MyP@ssw0rd "This is my account."
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#New-User
 		#>
 		Param
 			(
@@ -59,7 +59,7 @@ Function Set-Pass
 			.EXAMPLE
 				set-pass MyComputer MyUserAccount N3wP@ssw0rd
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Set-Pass
 		#>
 		Param
 			(
@@ -93,7 +93,7 @@ Function Set-Group
 			.EXAMPLE
 				set-group MyComputer MyUserAccount Administrators
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Set-Group
 		#>
 		Param
 			(
@@ -156,7 +156,7 @@ Function New-ScheduledTask
 		.EXAMPLE
 			new-scheduledtask "Reboot Computer" "shutdown /r" ONCE "18:00:00" "03/16/2011" SYSTEM MyDesktopPC
 		.LINK
-			http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement
+			http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#New-ScheduledTask
 		#>
 		
 		Param
