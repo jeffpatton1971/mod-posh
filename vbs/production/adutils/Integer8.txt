@@ -1,0 +1,67 @@
+' Integer8Date.vbs
+' VBScript program demonstrating how to convert an Integer8 attribute,
+' such as pwdLastSet, to a date value. The Integer8Date function
+' corrects for the inaccuracy in the HighPart and LowPart methods of
+' the IADsLargeInteger interface. It is desirable to have the
+' Integer8Date function always return a date, so the main program
+' can compare values to find the latest date. For this reason, if the
+' Integer8 attribute has no value, the function returns the date
+' 1/1/1601, which is the "zero" date. This really means "never".
+'
+' ----------------------------------------------------------------------
+' Copyright (c) 2003 Richard L. Mueller
+' Hilltop Lab web site - http://www.rlmueller.net
+' Version 1.0 - May 21, 2003
+' Version 1.1 - June 5, 2003 - Retrieve time zone bias from registry.
+' Version 1.2 - October 29, 2003 - Account for very large values.
+' Version 1.3 - January 25, 2004 - Modify error trapping.
+' Version 1.4 - December 29, 2009 - Handle Integer8 attribute no value.
+'
+' You have a royalty-free right to use, modify, reproduce, and
+' distribute this script file in any way you find useful, provided that
+' you agree that the copyright owner above has no warranty, obligations,
+' or liability for such use.
+
+Function TZBias()
+Dim objShell, lngBiasKey, k
+' Obtain local Time Zone bias from machine registry.
+' This bias changes with Daylight Savings Time.
+Set objShell = CreateObject("Wscript.Shell")
+lngBiasKey = objShell.RegRead("HKLM\System\CurrentControlSet\Control\" _
+    & "TimeZoneInformation\ActiveTimeBias")
+If (UCase(TypeName(lngBiasKey)) = "LONG") Then
+    lngTZBias = lngBiasKey
+ElseIf (UCase(TypeName(lngBiasKey)) = "VARIANT()") Then
+    lngTZBias = 0
+    For k = 0 To UBound(lngBiasKey)
+        lngTZBias = lngTZBias + (lngBiasKey(k) * 256^k)
+    Next
+End If
+TZBias = lngTZBias
+End Function
+
+Function Integer8Date(ByVal objDate, ByVal lngBias)
+    ' Function to convert Integer8 (64-bit) value to a date, adjusted for
+    ' local time zone bias.
+    Dim lngAdjust, lngDate, lngHigh, lngLow
+    lngAdjust = lngBias
+    lngHigh = objDate.HighPart
+    lngLow = objdate.LowPart
+    ' Account for error in IADsLargeInteger property methods.
+    If (lngLow < 0) Then
+        lngHigh = lngHigh + 1
+    End If
+    If (lngHigh = 0) And (lngLow = 0) Then
+        lngAdjust = 0
+    End If
+    lngDate = #1/1/1601# + (((lngHigh * (2 ^ 32)) _
+        + lngLow) / 600000000 - lngAdjust) / 1440
+    ' Trap error if lngDate is ridiculously huge.
+    On Error Resume Next
+    Integer8Date = CDate(lngDate)
+    If (Err.Number <> 0) Then
+        On Error GoTo 0
+        Integer8Date = #1/1/1601#
+    End If
+    On Error GoTo 0
+End Function

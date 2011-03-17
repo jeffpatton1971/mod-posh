@@ -1,0 +1,12 @@
+Sub WriteData(strProperty, strValue, strADSPath)
+	'
+	' Update a single-value property of an object in AD
+	'
+	Dim objADObject
+	
+	Set objADObject = GetObject("LDAP://" & strADSPath)
+	
+		objADObject.Put strProperty , strValue
+		objADObject.SetInfo
+
+End Sub

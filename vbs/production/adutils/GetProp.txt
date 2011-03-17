@@ -1,0 +1,21 @@
+Function GetProp(strADSPath, strProperty)
+	On Error Resume Next
+	'
+	' Get the specified property from the requested AD object
+	'
+	Dim objComputer
+	Dim objProperty
+	Dim strStatus
+	
+	Set objComputer = GetObject("LDAP://" & strADSPath)
+	objProperty = objComputer.Get(strProperty)
+	
+		If IsNull(objProperty) Then
+			Call LogData(2, "No '" & strProperty & "' found for: " & vbCrLf & strADSPath)
+		Else
+			strStatus = objProperty
+			objProperty = Null
+		End If
+	
+		GetProp = strStatus
+End Function
