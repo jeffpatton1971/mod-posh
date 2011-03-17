@@ -30,7 +30,7 @@ Function Get-ADObjects
 			to view the objects within the domain that the function is currently running
 			against.
 		.LINK
-			http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement
+			http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-ADObjects
 	#>	
 		Param
 			(
@@ -74,7 +74,7 @@ Function Add-UserToLocalGroup
 				to view the objects within the domain that the function is currently running
 				against.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement
+				http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Add-UserToLocalGroup
 		#>
 		Param
 			(
@@ -109,7 +109,7 @@ Function Get-LocalGroupMembers
 			.EXAMPLE
 				Get-LocalGroupMembers MyComputer Administrators
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement
+				http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-LocalGroupMembers
 		#>
 		
 		Param
