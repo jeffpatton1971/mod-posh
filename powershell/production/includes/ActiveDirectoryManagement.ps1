@@ -117,8 +117,23 @@ Function Get-LocalGroupMembers
 				[Parameter(Mandatory=$true)]
 				[string]$GroupName
 			)
-		$Computer = [ADSI]("WinNT://$ComputerName, computer")
-		$Group = $Computer.PSBase.Children.Find($GroupName)
+		$Group = [ADSI]("WinNT://$ComputerName/$GroupName,group")
 		
-		$Group.psbase.invoke("Members") | %{$_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null)}
+		$Members = @()  
+		$Group.Members() |  
+			% {  
+				$AdsPath = $_.GetType().InvokeMember("Adspath", 'GetProperty', $null, $_, $null)
+				$AccountArray = $AdsPath.split('/',[StringSplitOptions]::RemoveEmptyEntries)
+				$AccountName = $AccountArray[-1]
+				$AccountDomain = $AccountArray[-2]
+				$AccountClass = $_.GetType().InvokeMember("Class", 'GetProperty', $null, $_, $null)
+				
+				$Member = New-Object PSObject  
+				$Member | Add-Member -MemberType NoteProperty -Name "Name" -Value $AccountName  
+				$Member | Add-Member -MemberType NoteProperty -Name "Domain" -Value $AccountDomain  
+				$Member | Add-Member -MemberType NoteProperty -Name "Class" -Value $AccountClass  
+
+				$Members += $Member  
+			}
+		Return $Members
 	}
