@@ -98,7 +98,9 @@ Function Get-LocalGroupMembers
 			.SYNOPSIS
 				Return a list of user accounts that are in a specified group.
 			.DESCRIPTION
-				Return a list of user accounts that are in a specified group.
+				This function returns a list of accounts from the provided group. The
+				object returned holds the Name, Domain and type of account that is a member,
+				either a user or group.
 			.PARAMETER ComputerName
 				The name of the computer to connect to.
 			.PARAMETER GroupName
