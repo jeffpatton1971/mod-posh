@@ -88,7 +88,7 @@ Function Add-UserToLocalGroup
 			)
 		if ($UserDomain -eq $null)
 			{
-				[string]$UserDomain = ([ADSI] "").name
+				$UserDomain = [string]([ADSI] "").name
 			}
 		([ADSI]"WinNT://$Computer/$LocalGroup,group").Add("WinNT://$UserDomain/$UserName")
 	}
