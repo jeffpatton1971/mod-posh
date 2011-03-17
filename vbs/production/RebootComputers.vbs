@@ -34,29 +34,57 @@
 ' My copy is located at:
 ' http://patton-tech.com/files/WindowsErrorAndExitCodes.csv
 '
+' WindowStyle Variable
+' http://msdn.microsoft.com/en-us/library/d5fk67ky(v=vs.85).aspx
+' 
+' Defines the appearance of the program's window.
+' 0 - Hides the window and activates another window.
+' 1 - Activates and displays a window.
+' 2 - Activates the window and displays it as a minimized window. 
+' 3 - Activates the window and displays it as a maximized window. 
+' 4 - Displays a window in its most recent size and position. The active window remains active.
+' 5 - Activates the window and displays it in its current size and position.
+' 6 - Minimizes the specified window and activates the next top-level window in the Z order.
+' 7 - Displays the window as a minimized window.
+' 8 - Displays the window in its current state.
+' 9 - Activates and displays the window.
+' 10 - Sets the show-state based on the state of the program that started the application.
+'
+
 Dim strQuery
-Dim strQyeryObjectClass
 Dim strQueryLDAP
-Dim strQueryVars
 Dim strShutdownCMD
 Dim strShutdownMessage
 Dim objShell
-
-	If Wscript.Arguments.Count = 3 Then
+Dim strEmailList
+Dim strEmailMessage
+Dim strSubject
+Dim intGoodCount
+Dim intBadCount
+Dim strGoodMessage
+Dim strBadMessage
+Dim intWindowStyle
+Const ForReading = 1
+	
+	strEmailList = "user@company.com"
+	intWindowStyle = 0
+	
+	If Wscript.Arguments.Count = 1 Then
 		Set colNamedArguments = Wscript.Arguments.Named
 		
-		strQueryObjectClass = colNamedArguments.Item("objectClass")
 		strQueryLDAP = colNamedArguments.Item("ldapURI")
-		strQueryVars = colNamedArguments.Item("queryVars")
-		strQuery = "SELECT " & strQueryVars & " FROM '" & strQueryLDAP & "' WHERE objectClass = '" & strQueryObjectClass & "'"
+		strQuery = "SELECT 'Name' FROM '" & strQueryLDAP & "' WHERE objectClass = 'computer'"
 	Else
-		Wscript.Echo "Usage: CScript.exe RebootComputers.vbs /ldapURI:LDAP://OU=Workstations,DC=company,DC=com /objectClass:computer /queryVars:Name"
+		Wscript.Echo "Usage: CScript.exe RebootComputers.vbs /ldapURI:LDAP://OU=Workstations,DC=company,DC=com"
 		Wscript.Quit
 	End If
 
 	strShutdownMessage = "This computer will reboot within the next 2 minutes for weekly maintenance, please save all work."
 
-	Call LogData(4, ScriptDetails(".") & vbCrLf & "Started: " & Now())
+	Call LogData(4,	ScriptDetails(".") & vbCrLf & "Started: " & Now())
+	Set objFSO = CreateObject("Scripting.FileSystemObject")
+	Set objFile = objFSO.OpenTextFile("utils\Sendmail.txt", ForReading)
+	Execute objFile.ReadAll()
 	Call QueryAD(strQuery)
 	Call LogData(4, ScriptDetails(".") & vbCrLf & "Finished: " & Now())
 
@@ -86,6 +114,7 @@ Sub QueryAD(strQuery)
 	'
 	' If you are reporting information, column headers should be output above the loop.
 	'
+	strEmailMessage = "Searching for computers in: " & vbCrLf & vbTab & strQueryLDAP & vbCrLf & "Found " & objRecordSet.RecordCount & " computers." & vbCrLf
 	
 		objRecordSet.MoveFirst
 	
@@ -98,17 +127,27 @@ Sub QueryAD(strQuery)
 			'
 			strShutdownCMD = "shutdown -r -f -t 120 -m \\" & objRecordSet.Fields("Name") & " -c " & chr(34) & strShutdownMessage & chr(34)
 			Set objShell = CreateObject("Wscript.Shell")
-			intReturnCode = objShell.Run(strShutdownCMD,1,vbTrue)
+			intReturnCode = objShell.Run(strShutdownCMD,intWindowStyle,vbTrue)
 			Select Case intReturnCode
 				Case 0
-					Call LogData(0, "The following command sucessfully executed." & vbCrLf & strShutdownCMD)
-				Case 1707
-					Call LogData(1, "Unable to connect to \\" & objRecordSet.Fields("Name") & vbCrLf & "The network address is invalid.")
+					strGoodMessage = strGoodMessage & "The following command sucessfully executed." & vbCrLf & strShutdownCMD & vbCrLf
+					intGoodCount = intGoodCount + 1
+				Case 53,1707
+					strBadMessage = strBadMessage & "Unable to connect to \\" & objRecordSet.Fields("Name") & ". The network address is invalid." & vbCrLf
+					intBadCount = intBadCount + 1
 				Case Else
-					Call LogData(1, "Exit code, " & intReturnCode & " was returned from the command. List of exit codes available at http://patton-tech.com/files/WindowsErrorAndExitCodes.csv")
+					strBadMessage = strBadMessage & "Exit code " & intReturnCode & " was returned while attempting to reboot " & objRecordSet.Fields("Name") & vbCrLf
+					intBadCount = intBadCount + 1
 			End Select
 			objRecordSet.MoveNext
 		Loop
+		strSubject = "Reboot Script Output"
+		strEmailMessage = strEmailMessage & "Attempting to reboot " & intGoodCount + intBadCount & " computers. " & intGoodCount & " computers sucessfully rebooted. "
+		strEmailMessage = strEmailMessage & intBadCount & " were unreachable due to power or network issues." & vbCrLf & vbCrLf
+		strEmailMessage = strEmailMessage = "Successful reboots:" & vbCrLf & strGoodMessage & vbCrLf
+		strEmailMessage = strEmailMessage = "Failed attempts:" & vbCrLf & strBadMessage
+		Call Sendmail("user@company.com", strEmailList, strSubject, strEmailMessage, "smtp.company.com", vbFalse, "user", "password")
+		Call LogData(4, strEmailMessage)
 End Sub
 
 Sub LogData(intCode, strMessage)
