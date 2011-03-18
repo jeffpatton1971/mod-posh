@@ -25,8 +25,8 @@ $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 			if ($computer -eq $null){}
 			else
 				{
-					write-host "Accounts with Administrative access on: " $computer.Properties.name
 					$groups = Get-LocalGroupMembers $computer.Properties.name Administrators
+					write-host "Accounts with Administrative access on: " $computer.Properties.name
 					$groups | Format-Table -autosize
 				}
 		}
