@@ -27,7 +27,7 @@ $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 				{
 					write-host $computer.Properties.name
 					$groups = Get-LocalGroupMembers $computer.Properties.name Administrators
-					$groups | Format-Table
+					$groups | Format-Table -autosize
 				}
 		}
 	
