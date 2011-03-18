@@ -18,7 +18,7 @@ $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 	#	Dotsource in the functions you need.
 	. .\includes\ActiveDirectoryManagement.ps1
 	
-	$computers = Get-ADObjects "LDAP://OU=People,DC=soecs,DC=edu"
+	$computers = Get-ADObjects "LDAP://OU=People,DC=soecs,DC=ku,DC=edu"
 	
 	foreach ($computer in $computers)
 		{
