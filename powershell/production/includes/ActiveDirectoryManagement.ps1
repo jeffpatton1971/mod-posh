@@ -121,23 +121,37 @@ Function Get-LocalGroupMembers
 				[Parameter(Mandatory=$true)]
 				[string]$GroupName
 			)
-		$Group = [ADSI]("WinNT://$ComputerName/$GroupName,group")
-		
-		$Members = @()  
-		$Group.Members() |  
-			% {  
-				$AdsPath = $_.GetType().InvokeMember("Adspath", 'GetProperty', $null, $_, $null)
-				$AccountArray = $AdsPath.split('/',[StringSplitOptions]::RemoveEmptyEntries)
-				$AccountName = $AccountArray[-1]
-				$AccountDomain = $AccountArray[-2]
-				$AccountClass = $_.GetType().InvokeMember("Class", 'GetProperty', $null, $_, $null)
-				
-				$Member = New-Object PSObject  
-				$Member | Add-Member -MemberType NoteProperty -Name "Name" -Value $AccountName  
-				$Member | Add-Member -MemberType NoteProperty -Name "Domain" -Value $AccountDomain  
-				$Member | Add-Member -MemberType NoteProperty -Name "Class" -Value $AccountClass  
+			
+			Test-Connection $ComputerName -Count 1 -ErrorAction SilentlyContinue -ErrorVariable err
+			
+			If ($err -eq $null)
+				{
+					#	$ComputerName online
+					$Group = [ADSI]("WinNT://$ComputerName/$GroupName,group")
+					
+					$Members = @()  
+					$Group.Members() |  
+						% {  
+							$AdsPath = $_.GetType().InvokeMember("Adspath", 'GetProperty', $null, $_, $null)
+							$AccountArray = $AdsPath.split('/',[StringSplitOptions]::RemoveEmptyEntries)
+							$AccountName = $AccountArray[-1]
+							$AccountDomain = $AccountArray[-2]
+							$AccountClass = $_.GetType().InvokeMember("Class", 'GetProperty', $null, $_, $null)
+							
+							$Member = New-Object PSObject  
+							$Member | Add-Member -MemberType NoteProperty -Name "Name" -Value $AccountName  
+							$Member | Add-Member -MemberType NoteProperty -Name "Domain" -Value $AccountDomain  
+							$Member | Add-Member -MemberType NoteProperty -Name "Class" -Value $AccountClass  
 
-				$Members += $Member  
-			}
+							$Members += $Member  
+						}
+				}
+			Else
+				{
+					#	$ComputerName offline
+					Write-Host $ComputerName " offline."
+					
+					Break
+				}
 		Return $Members
 	}
