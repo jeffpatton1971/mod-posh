@@ -150,8 +150,6 @@ Function Get-LocalGroupMembers
 				{
 					#	$ComputerName offline
 					Write-Host $ComputerName " offline."
-					
-					Break
 				}
 		Return $Members
 	}
