@@ -179,3 +179,37 @@ Function New-ScheduledTask
 
 		schtasks /create /tn $TaskName /tr $TaskRun /sc $TaskSchedule /st $StartTime /sd $StartDate /ru $TaskUser /s $Server
 	}
+Function Remove-UserFromLocalGroup
+	{
+		<#
+			.SYNOPSIS
+				Removes a user/group from a local computer group.
+			.DESCRIPTION
+				Removes a user/group from a local computer group.
+			.PARAMETER Computer
+				Name of the computer to connect to.
+			.PARAMETER User
+				Name of the user or group to remove.
+			.PARAMETER GroupName
+				Name of the group where that the user/group is a member of.
+			.NOTES
+				You will need to run this with either UAC disabled or from an elevated prompt.
+			.EXAMPLE
+				remove-userfromlocalgroup MyComputer RandomUser 
+			.LINK
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Remove-UserFromLocalGroup
+		#>
+		
+		Param
+			(
+				[Parameter(Mandatory=$true)]
+				[string]$Computer,
+				[Parameter(Mandatory=$true)]
+				[string]$User,
+				[Parameter(Mandatory=$true)]
+				[string]$GroupName="Administrators"
+			)
+		
+		$Group = $Computer.psbase.children.find($GroupName)
+		$Group.Remove("WinNT://$Computer/$User)
+	}
