@@ -18,7 +18,7 @@ $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 	#	Dotsource in the functions you need.
 	. .\includes\ActiveDirectoryManagement.ps1
 	
-	$computers = Get-ADObjects "LDAP://OU=People,DC=soecs,DC=ku,DC=edu"
+	$computers = Get-ADObjects "LDAP://OU=Labs,DC=soecs,DC=ku,DC=edu"
 	
 	foreach ($computer in $computers)
 		{
@@ -26,8 +26,11 @@ $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 			else
 				{
 					$groups = Get-LocalGroupMembers $computer.Properties.name Administrators
-					write-host "Accounts with Administrative access on: " $computer.Properties.name
-					$groups | Format-Table -autosize
+					If ($groups -ne $null)
+						{
+							write-host "Accounts with Administrative access on: " $computer.Properties.name
+							$groups | Format-Table -autosize
+						}
 				}
 		}
 	
