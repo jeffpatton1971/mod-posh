@@ -122,9 +122,13 @@ Function Get-LocalGroupMembers
 				[string]$GroupName
 			)
 			
-			Test-Connection $ComputerName -Count 1 -ErrorAction SilentlyContinue -ErrorVariable err
+			$empty = Test-Connection $ComputerName -Count 1 -ErrorAction SilentlyContinue -ErrorVariable err
 			
-			If ($err -eq $null)
+			If ($err -ne $null)
+				{
+					#	$ComputerName offline
+				}
+			Else
 				{
 					#	$ComputerName online
 					$Group = [ADSI]("WinNT://$ComputerName/$GroupName,group")
@@ -145,11 +149,6 @@ Function Get-LocalGroupMembers
 
 							$Members += $Member  
 						}
-				}
-			Else
-				{
-					#	$ComputerName offline
-					Write-Host $ComputerName " offline."
 				}
 		Return $Members
 	}
