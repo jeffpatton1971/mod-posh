@@ -4,8 +4,9 @@ Function Update-Content
 			.SYNOPSIS
 				Updates the contents of a file.
 			.DESCRIPTION
-				This function adds content to the top or bottom of an existing file.
-			.PARAMETER File
+				This function adds content to the top or bottom of an existing file. By default the function will update
+				the beginning of a file.
+			.PARAMETER ThisFile
 				The full path and filename to the file to update
 			.PARAMETER Content
 				Content to add to the file
@@ -26,35 +27,36 @@ Function Update-Content
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$File,
+				[string]$ThisFile,
 				[Parameter(Mandatory=$true)]
-				[string]$Content,
-				[Parameter(Mandatory=$true)]
+				[string]$Content,			
 				[bool]$Beginning=$true
 			)	
-
-		if (Test-Path $File -eq $True)
+write-host $thisfile
+test-path $thisfile
+break
+		if (Test-Path $ThisFile -eq $True)
 			{
-				$Data = Get-Content $File
+				$Data = Get-Content $ThisFile
 				if ($Beginning -eq $True)
 					{
 						if ($Data[0].Contains($Content) -eq $True)
 							{
-								Write-Host "Skipping $File, content exists"
+								Write-Host "Skipping $ThisFile, content exists"
 							}
 						else
 							{
-								Write-Host "Writing content to $File"
-								Set-Content $File -Value $Content,$Data
+								Write-Host "Writing content to $ThisFile"
+								Set-Content $ThisFile -Value $Content,$Data
 							}
 					}
 				else
 					{
-						Add-Content -Path $File -Value $Content
+						Add-Content -Path $ThisFile -Value $Content
 					}
 			}
 		else
 			{
-				Write-Host "File $File does not exist"
+				Write-Host "File $ThisFile does not exist"
 			}
 	}
