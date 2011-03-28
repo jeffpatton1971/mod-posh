@@ -32,10 +32,8 @@ Function Update-Content
 				[string]$Content,			
 				[bool]$Beginning=$true
 			)	
-write-host $thisfile
-test-path $thisfile
-break
-		if (Test-Path $ThisFile -eq $True)
+
+		if ((Test-Path $ThisFile) -eq $True)
 			{
 				$Data = Get-Content $ThisFile
 				if ($Beginning -eq $True)
