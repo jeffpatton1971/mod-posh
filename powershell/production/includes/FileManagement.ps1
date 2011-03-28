@@ -20,7 +20,7 @@ Function Update-Content
 				This example sets a variable named header to be used in the command-line. We then pass the path and
 				header variable into the function for processing.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ApacheHttpdManagement#Update-ContentTop
+				http://scripts.patton-tech.com/wiki/PowerShell/FileManagement#Update-Content
 		#>
 
 		Param
