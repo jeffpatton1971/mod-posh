@@ -211,5 +211,5 @@ Function Remove-UserFromLocalGroup
 			)
 		
 		$Group = $Computer.psbase.children.find($GroupName)
-		$Group.Remove("WinNT://$Computer/$User)
+		$Group.Remove("WinNT://$Computer/$User")
 	}
