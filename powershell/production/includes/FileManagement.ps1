@@ -13,10 +13,7 @@ Function Update-Content
 			.PARAMETER Beginning
 				True or False to add content to top (true) or bottom (false) of file
 			.EXAMPLE
-				$Header = "Host Identity User DateTime Offset Request Status Size Referrer UserAgent"
-				$LogFile = "C:\logfiles\access.log"
-				
-				Update-Content $LogFile $Header
+				Update-Content "C:\logfiles\access.log" "Host Identity User DateTime Offset Request Status Size Referrer UserAgent"
 				
 				This example sets a variable named header to be used in the command-line. We then pass the path and
 				header variable into the function for processing.
