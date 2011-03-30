@@ -14,7 +14,7 @@ Function Update-Content
 				True or False to add content to top (true) or bottom (false) of file
 			.EXAMPLE
 				$Header = "Host Identity User DateTime Offset Request Status Size Referrer UserAgent"
-				$LogFile = C:\logfiles\access.log
+				$LogFile = "C:\logfiles\access.log"
 				
 				Update-Content $LogFile $Header
 				
