@@ -8,6 +8,10 @@
 	</Description>
 	<Dependencies>
 		Log Parser 2.2 COM component
+		http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+		
+		Microsoft Office Chart Web Component
+		http://www.microsoft.com/downloads/en/details.aspx?FamilyID=982b0359-0a86-4fb2-a7ee-5f3a499515dd
 	</Dependencies>
 	<Usage>
 		Dot source from calling script
@@ -24,7 +28,7 @@ function Get-LPInputFormat{
 			Returns Log Parser Input Format object based on passed string
 		.EXAMPLE
 			Get-LPInputFormat -InputType <string>
-		.NOTE
+		.NOTES
 			You will need to download and install Microsoft's LogParser, you can find it at this URL:
 			http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
 			
@@ -71,7 +75,7 @@ function Get-LPOutputFormat{
 			Returns Log Parser Output Format object based on passed string
 		.EXAMPLE
 			Get-LPOutputFormat -OutputType <string>
-		.NOTE
+		.NOTES
 			You will need to download and install Microsoft's LogParser, you can find it at this URL:
 			http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
 			
@@ -107,7 +111,7 @@ function Invoke-LPExecute{
 			Executes a Log Parser Query and returns a recordset
 		.EXAMPLE
 			Invoke-LPExecute -query <string>
-		.NOTE
+		.NOTES
 			You will need to download and install Microsoft's LogParser, you can find it at this URL:
 			http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
 			
@@ -140,7 +144,7 @@ function Invoke-LPExecuteBatch{
 			Executes Log Parser batch query with passed input and output types	
 		.EXAMPLE
 			Invoke-LPExecuteBatch -query <string> -inputtype <LogParserInputFormat> -outputtype <LogParserOutputFormat>
-		.NOTE
+		.NOTES
 			You will need to download and install Microsoft's LogParser, you can find it at this URL:
 			http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
 			
@@ -166,7 +170,7 @@ function Get-LPRecord{
 			Returns PowerShell custom object from Log Parser recordset for current record
 		.EXAMPLE
 			Get-LPRecord -rs <RecordSet>
-		.NOTE
+		.NOTES
 			You will need to download and install Microsoft's LogParser, you can find it at this URL:
 			http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
 			
@@ -199,7 +203,7 @@ function Get-LPRecordSet{
 			Executes a Log Parser Query and returns a LogRecordSet as a custom powershell object
 		.EXAMPLE
 			Get-LPRecordSet -query <string>
-		.NOTE
+		.NOTES
 			You will need to download and install Microsoft's LogParser, you can find it at this URL:
 			http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
 			
