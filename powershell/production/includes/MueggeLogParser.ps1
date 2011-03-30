@@ -1,31 +1,38 @@
-# ---------------------------------------------------------------------------
-### <Library name='Muegge_LogParser_Lib.ps1'>
-### <Author>David Muegge</Author>
-### <CreateDate>20081108</CreateDate>
-### <ModifiedDate>20081121</ModifiedDate>
-### <Description>
-### 	Log Parser function library
-### </Description>
-### <Dependencies>
-###		Log Parser 2.2 COM component
-### </Dependencies>
-### <Usage>
-### 	Dot source from calling script
-### </Usage>
-### </Library>
-# ---------------------------------------------------------------------------
- 
-# ---------------------------------------------------------------------------
-### <Function name='Get-LPInputFormat'>
-### <Description>
-### 	Returns Log Parser Input Format object based on passed string
-### </Description>
-### <Usage>
-###		Get-LPInputFormat -InputType <string>
-### </Usage>
-### </Function>
-# ---------------------------------------------------------------------------
+<#
+	<Library name='Muegge_LogParser_Lib.ps1'>
+	<Author>David Muegge</Author>
+	<CreateDate>20081108</CreateDate>
+	<ModifiedDate>20081121</ModifiedDate>
+	<Description>
+		Log Parser function library
+	</Description>
+	<Dependencies>
+		Log Parser 2.2 COM component
+	</Dependencies>
+	<Usage>
+		Dot source from calling script
+	</Usage>
+	</Library>
+#>
+
 function Get-LPInputFormat{
+
+	<#
+		.SYNOPSIS
+			Returns Log Parser Input Format object based on passed string
+		.DESCRIPTION
+			Returns Log Parser Input Format object based on passed string
+		.EXAMPLE
+			Get-LPInputFormat -InputType <string>
+		.NOTE
+			You will need to download and install Microsoft's LogParser, you can find it at this URL:
+			http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+			
+			The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
+			into the PowerShell v2 internal help system.
+		.LINK
+			http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#get-LPInputFormat
+	#>
  
 	param([String]$InputType)
  
@@ -54,20 +61,25 @@ function Get-LPInputFormat{
 	return $inputobj
  
 }
- 
- 
-# ---------------------------------------------------------------------------
-### <Function name='Get-LPOutputFormat'>
-### <Description>
-### 	Returns Log Parser Output Format object based on passed string
-### </Description>
-### <Usage>
-###		Get-LPOutputFormat -OutputType <string>
-### </Usage>
-### </Function>
-# ---------------------------------------------------------------------------
+
 function Get-LPOutputFormat{
- 
+
+	<#
+		.SYNOPSIS
+			Returns Log Parser Output Format object based on passed string
+		.DESCRIPTION
+			Returns Log Parser Output Format object based on passed string
+		.EXAMPLE
+			Get-LPOutputFormat -OutputType <string>
+		.NOTE
+			You will need to download and install Microsoft's LogParser, you can find it at this URL:
+			http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+			
+			The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
+			into the PowerShell v2 internal help system.		
+		.LINK
+			http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Get-LPOutputFormat
+	#>
 	param([String]$OutputType)
  
 	switch($OutputType.ToLower()){
@@ -85,19 +97,25 @@ function Get-LPOutputFormat{
 	return $outputobj
  
 }
- 
- 
-# ---------------------------------------------------------------------------
-### <Function name='Invoke-LPExecute'>
-### <Description>
-### 	Executes a Log Parser Query and returns a recordset
-### </Description>
-### <Usage>
-###		Invoke-LPExecute -query <string>
-### </Usage>
-### </Function>
-# ---------------------------------------------------------------------------
+
 function Invoke-LPExecute{
+
+	<#
+		.SYNOPSIS
+			Executes a Log Parser Query and returns a recordset
+		.DESCRIPTION
+			Executes a Log Parser Query and returns a recordset
+		.EXAMPLE
+			Invoke-LPExecute -query <string>
+		.NOTE
+			You will need to download and install Microsoft's LogParser, you can find it at this URL:
+			http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+			
+			The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
+			into the PowerShell v2 internal help system.		
+		.LINK
+			http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Invoke-LPExecute
+	#>
  
 	param([string] $query, $inputtype)
  
@@ -112,19 +130,25 @@ function Invoke-LPExecute{
     return $LPRecordSet
  
 }
- 
- 
-# ---------------------------------------------------------------------------
-### <Function name='Invoke-LPExecuteBatch'>
-### <Description>
-### 	Executes Log Parser batch query with passed input and output types
-### </Description>
-### <Usage>
-###		Invoke-LPExecuteBatch -query <string> -inputtype <LogParserInputFormat> -outputtype <LogParserOutputFormat>
-### </Usage>
-### </Function>
-# ---------------------------------------------------------------------------
+
 function Invoke-LPExecuteBatch{
+
+	<#
+		.SYNOPSIS
+			Executes Log Parser batch query with passed input and output types
+		.DESCRIPTION
+			Executes Log Parser batch query with passed input and output types	
+		.EXAMPLE
+			Invoke-LPExecuteBatch -query <string> -inputtype <LogParserInputFormat> -outputtype <LogParserOutputFormat>
+		.NOTE
+			You will need to download and install Microsoft's LogParser, you can find it at this URL:
+			http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+			
+			The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
+			into the PowerShell v2 internal help system.		
+		.LINK
+			http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Invoke-LPExecuteBatch
+	#>
  
 	param([string]$query, $inputtype, $outputtype)
  
@@ -132,20 +156,26 @@ function Invoke-LPExecuteBatch{
     $result = $LPQuery.ExecuteBatch($query, $inputtype, $outputtype)
     return $result
 }
- 
- 
-# ---------------------------------------------------------------------------
-### <Function name='Get-LPRecord'>
-### <Description>
-###		Returns PowerShell custom object from Log Parser recordset for current record
-### </Description>
-### <Usage>
-###		Get-LPRecord -rs <RecordSet>
-### </Usage>
-### </Function>
-# ---------------------------------------------------------------------------
+
 function Get-LPRecord{
  
+	<#
+		.SYNOPSIS
+			Returns PowerShell custom object from Log Parser recordset for current record
+		.DESCRIPTION
+			Returns PowerShell custom object from Log Parser recordset for current record
+		.EXAMPLE
+			Get-LPRecord -rs <RecordSet>
+		.NOTE
+			You will need to download and install Microsoft's LogParser, you can find it at this URL:
+			http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+			
+			The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
+			into the PowerShell v2 internal help system.		
+		.LINK
+			http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Get-LPRecord
+	#>
+	
 	param($LPRecordSet)
  
 	$LPRecord = new-Object System.Management.Automation.PSObject
@@ -159,21 +189,26 @@ function Get-LPRecord{
 	}
 	return $LPRecord
 }
- 
- 
- 
-# ---------------------------------------------------------------------------
-### <Function name='Get-LPRecordSet'>
-### <Description>
-### 	Executes a Log Parser Query and returns a LogRecordSet as a custom powershell object
-### </Description>
-### <Usage>
-###		Get-LPRecordSet -query <string>
-### </Usage>
-### </Function>
-# ---------------------------------------------------------------------------
+
 function Get-LPRecordSet{
- 
+
+	<#
+		.SYNOPSIS
+			Executes a Log Parser Query and returns a LogRecordSet as a custom powershell object
+		.DESCRIPTION
+			Executes a Log Parser Query and returns a LogRecordSet as a custom powershell object
+		.EXAMPLE
+			Get-LPRecordSet -query <string>
+		.NOTE
+			You will need to download and install Microsoft's LogParser, you can find it at this URL:
+			http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+			
+			The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
+			into the PowerShell v2 internal help system.		
+		.LINK
+			http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Get-LPRecordSet
+	#>
+	
 	param([string]$query)
  
 	# Execute Query
