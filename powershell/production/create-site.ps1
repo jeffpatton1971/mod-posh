@@ -17,7 +17,7 @@ $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 	$Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
 	Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
 
-	#	Dotsource in the AD functions I need
+	#	Dotsource in the SharePoint functions I need
 	. .\includes\SharePointManagement.ps1
 	
 	#	Ask for new site URL
