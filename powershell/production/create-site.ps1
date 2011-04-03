@@ -1,12 +1,33 @@
-#
-#	Sharepoint Site Creation Script
-#	
-#	March 8, 2011: Jeff Patton
-#	
-#	This script works against WSS 3.0 and creates a new site
-#	in a new content database. It checks if the site to be
-#	created exists before creating the new site.
-#
+<#
+.SYNOPSIS
+	Create a new SharePoint site within a new SQL DB
+.DESCRIPTION
+	Created March 8, 2011: Jeff Patton
+	This script creates a new SharePoint site within a new SQL DB. It relies on several functions inside the 
+	SharePointManagement.ps1 library to work properly. You will need to provide the base URL of your SharePoint 
+	installation as well as the path to the new site to be created.
+.PARAMETER RootURL
+	This is the base URL of your WSS 3.0 installation
+.PARAMETER SitePath
+	This is the path to your new WSS 3.0 site
+.EXAMPLE
+	create-site http://intranet.company.com team
+.NOTES
+	Run script from Sharepoint server
+	Run script as Administrator or disable UAC
+	Script needs to be run under a SharePoint Farm Administrator account
+.LINK
+	http://scripts.patton-tech.com/browser/powershell/production/create-site.ps1
+#>
+
+Param
+	(
+		[Parameter(Mandatory=$true)]
+		[string]$RootURL,
+		[Parameter(Mandatory=$true)]
+		[string]$SitePath
+	)
+
 $ScriptName = $MyInvocation.MyCommand.ToString()
 $LogName = "Application"
 $ScriptPath = $MyInvocation.MyCommand.Path
@@ -19,10 +40,6 @@ $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 
 	#	Dotsource in the SharePoint functions I need
 	. .\includes\SharePointManagement.ps1
-	
-	#	Ask for new site URL
-	$RootUrl = Read-Host "Please enter the FQDN of the Sharepoint server:"
-	$SitePath = Read-Host "Please enter the path to the site you wish to create:"
 	
 	#	Check if that site already exists
 	$SP3Sites = [xml](Get-Sharepoint3Sites $RootURL)
