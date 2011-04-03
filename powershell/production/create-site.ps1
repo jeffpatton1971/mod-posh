@@ -1,23 +1,23 @@
 <#
-.SYNOPSIS
-	Create a new SharePoint site within a new SQL DB
-.DESCRIPTION
-	Created March 8, 2011: Jeff Patton
-	This script creates a new SharePoint site within a new SQL DB. It relies on several functions inside the 
-	SharePointManagement.ps1 library to work properly. You will need to provide the base URL of your SharePoint 
-	installation as well as the path to the new site to be created.
-.PARAMETER RootURL
-	This is the base URL of your WSS 3.0 installation
-.PARAMETER SitePath
-	This is the path to your new WSS 3.0 site
-.EXAMPLE
-	create-site http://intranet.company.com team
-.NOTES
-	Run script from Sharepoint server
-	Run script as Administrator or disable UAC
-	Script needs to be run under a SharePoint Farm Administrator account
-.LINK
-	http://scripts.patton-tech.com/browser/powershell/production/create-site.ps1
+	.SYNOPSIS
+		Create a new SharePoint site within a new SQL DB
+	.DESCRIPTION
+		Created March 8, 2011: Jeff Patton
+		This script creates a new SharePoint site within a new SQL DB. It relies on several functions inside the 
+		SharePointManagement.ps1 library to work properly. You will need to provide the base URL of your SharePoint 
+		installation as well as the path to the new site to be created.
+	.PARAMETER RootURL
+		This is the base URL of your WSS 3.0 installation
+	.PARAMETER SitePath
+		This is the path to your new WSS 3.0 site
+	.EXAMPLE
+		create-site http://intranet.company.com team
+	.NOTES
+		Run script from Sharepoint server
+		Run script as Administrator or disable UAC
+		Script needs to be run under a SharePoint Farm Administrator account
+	.LINK
+		http://scripts.patton-tech.com/browser/powershell/production/create-site.ps1
 #>
 
 Param
