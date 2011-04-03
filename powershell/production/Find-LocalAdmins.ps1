@@ -12,10 +12,19 @@
 	.EXAMPLE
 		find-localadmins "LDAP://OU=Workstations,DC=company,DC=com"
 	.NOTES
+		You will need to run this script as an administrator or disable UAC to update the event-log
 		You will need to have at least Read permissions in the AD container in order to get a list of computers.
 	.LINK
 		http://scripts.patton-tech.com/browser/powershell/production
 #>
+
+Param
+	(
+		[Parameter(Mandatory=$true)]
+		[string]$ADSPath,
+		[Parameter(Mandatory=$true)]
+		[string]$GroupName
+	)	
 
 $ScriptName = $MyInvocation.MyCommand.ToString()
 $LogName = "Application"
