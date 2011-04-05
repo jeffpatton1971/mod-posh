@@ -45,7 +45,7 @@ function Get-PrivateBuildInfo()
 				whether or not Notepad is a private build. You must report the actual computer name and not something 
 				generic like “localhost” because this will facilitate logging later. 
 			.LINK
-				http://blogs.technet.com/b/heyscriptingguy/archive/2011/04/04/the-2011-scripting-games-beginner-event-1-use-powershell-to-identify-private-builds-of-software.aspx
+				https://2011sg.poshcode.org/206
 		#>
 		
 		Param
