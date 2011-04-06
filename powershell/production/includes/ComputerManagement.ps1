@@ -307,7 +307,7 @@ Function Get-Services
 		Param
 			(
 				[string]$Computer = (& hostname),
-				[string]$Credential,
+				$Credential,
 				[string]$State = "Running",
 				[string]$StartMode = "Auto"
 			)
