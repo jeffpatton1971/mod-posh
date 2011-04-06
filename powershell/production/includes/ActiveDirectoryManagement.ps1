@@ -50,6 +50,8 @@ Function Get-ADObjects
 				[void]$objSearcher.PropertiesToLoad.Add($i)
 			}
 		$objSearcher.FindAll()
+		
+		Return $objSearcher
 	}	
 Function Add-UserToLocalGroup
 	{
