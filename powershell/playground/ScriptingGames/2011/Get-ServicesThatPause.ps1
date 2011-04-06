@@ -52,7 +52,7 @@ function Get-ServicesThatPause()
 				PowerShell. Your script must only report on running services that accept a pause command. The output 
 				should display the status of the service, name, and display name of the services that meet the criteria.
 			.LINK
-				http://blogs.technet.com/b/heyscriptingguy/archive/2011/04/05/the-2011-scripting-games-beginner-event-2-use-powershell-to-identify-services-that-will-pause.aspx
+				https://2011sg.poshcode.org/298
 		#>
 		
 		Param
