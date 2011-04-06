@@ -213,3 +213,118 @@ Function Remove-UserFromLocalGroup
 		$Group = $Computer.psbase.children.find($GroupName)
 		$Group.Remove("WinNT://$Computer/$User")
 	}
+Function Get-Services
+	{
+		<#
+			.SYNOPSIS
+				Get a list of services
+			.DESCRIPTION
+				This function returns a list of services on a given computer. This list can be filtered based on the
+				given StartMode  (ie. Running, Stopped) as well as filtered on StartMode (ie. Auto, Manual).
+			.PARAMETER State
+				Most often this will be either Running or Stopped, but possible values include
+					Running
+					Stopped
+					Paused
+			.PARAMETER StartMode
+				Most often this will be either Auto or Manual, but possible values include
+					Auto
+					Manual
+					Disabled
+			.PARAMETER Computer
+				The NetBIOS name of the computer to retrieve services from
+			.NOTES
+				Depending on how you are setup you may need to provide credentials in order to access remote machines
+				You may need to have UAC disabled or run PowerShell as an administrator to see services locally
+			.EXAMPLE
+				Get-Services |Format-Table -AutoSize
+
+				ExitCode Name                 ProcessId StartMode State   Status
+				-------- ----                 --------- --------- -----   ------
+					   0 atashost                  1380 Auto      Running OK
+					   0 AudioEndpointBuilder       920 Auto      Running OK
+					   0 AudioSrv                   880 Auto      Running OK
+					   0 BFE                       1236 Auto      Running OK
+					   0 BITS                       964 Auto      Running OK
+					   0 CcmExec                   2308 Auto      Running OK
+					   0 CryptSvc                  1088 Auto      Running OK
+				
+				Description
+				-----------
+				This example shows the default options in place
+			.EXAMPLE
+				Get-Services -State "stopped" |Format-Table -AutoSize
+
+				ExitCode Name                           ProcessId StartMode State   Status
+				-------- ----                           --------- --------- -----   ------
+					   0 AppHostSvc                             0 Auto      Stopped OK
+					   0 clr_optimization_v4.0.30319_32         0 Auto      Stopped OK
+					   0 clr_optimization_v4.0.30319_64         0 Auto      Stopped OK
+					   0 MMCSS                                  0 Auto      Stopped OK
+					   0 Net Driver HPZ12                       0 Auto      Stopped OK
+					   0 Pml Driver HPZ12                       0 Auto      Stopped OK
+					   0 sppsvc                                 0 Auto      Stopped OK
+				
+				Description
+				-----------
+				This example shows the output when specifying the state parameter
+			.EXAMPLE
+				Get-Services -State "stopped" -StartMode "disabled" |Format-Table -AutoSize
+
+				ExitCode Name                           ProcessId StartMode State   Status
+				-------- ----                           --------- --------- -----   ------
+					1077 clr_optimization_v2.0.50727_32         0 Disabled  Stopped OK
+					1077 clr_optimization_v2.0.50727_64         0 Disabled  Stopped OK
+					1077 CscService                             0 Disabled  Stopped OK
+					1077 Mcx2Svc                                0 Disabled  Stopped OK
+					1077 MSSQLServerADHelper100                 0 Disabled  Stopped OK
+					1077 NetMsmqActivator                       0 Disabled  Stopped OK
+					1077 NetPipeActivator                       0 Disabled  Stopped OK
+				
+				Description
+				-----------
+				This example shows how to specify a different state and startmode.
+			.EXAMPLE
+				Get-Services -Computer dpm -Credential "Domain\Administrator" |Format-Table -AutoSize
+
+				ExitCode Name                   ProcessId StartMode State   Status
+				-------- ----                   --------- --------- -----   ------
+					   0 AppHostSvc                  1152 Auto      Running OK
+					   0 BFE                          564 Auto      Running OK
+					   0 CryptSvc                    1016 Auto      Running OK
+					   0 DcomLaunch                   600 Auto      Running OK
+					   0 Dhcp                         776 Auto      Running OK
+					   0 Dnscache                    1016 Auto      Running OK
+					   0 DPMAMService                1184 Auto      Running OK
+				
+				Description
+				-----------
+				This example shows how to specify a remote computer and credentials to authenticate with.
+			.LINK
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-Services
+		#>
+		
+		Param
+			(
+				[string]$Computer = (& hostname),
+				[string]$Credential,
+				[string]$State = "Running",
+				[string]$StartMode = "Auto"
+			)
+		
+		If ($Computer -eq (& hostname))
+			{		
+				$Services = Get-WmiObject win32_service -filter "State = '$State' and StartMode = '$StartMode'"
+			}
+		Else
+			{
+				If ($Credential -eq $null)
+					{
+						$Credential = Get-Credential
+					}
+				$Services = Get-WmiObject win32_service -filter "State = '$State' and StartMode = '$StartMode'" `
+							-ComputerName $Computer -Credential $Credential
+			}
+		
+		Return $Services
+	}
