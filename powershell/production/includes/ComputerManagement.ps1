@@ -24,7 +24,7 @@ Function New-User
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$Computer,
+				[string]$Computer = (& hostname),
 				[Parameter(Mandatory=$true)]
 				[string]$User,
 				[Parameter(Mandatory=$true)]
@@ -64,7 +64,7 @@ Function Set-Pass
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$Computer,
+				[string]$Computer = (& hostname),
 				[Parameter(Mandatory=$true)]
 				[string]$User,
 				[Parameter(Mandatory=$true)]
@@ -98,7 +98,7 @@ Function Set-Group
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$Computer,
+				[string]$Computer = (& hostname),
 				[Parameter(Mandatory=$true)]
 				[string]$User,
 				[Parameter(Mandatory=$true)]
@@ -203,7 +203,7 @@ Function Remove-UserFromLocalGroup
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$Computer,
+				[string]$Computer = (& hostname),
 				[Parameter(Mandatory=$true)]
 				[string]$User,
 				[Parameter(Mandatory=$true)]
