@@ -402,14 +402,23 @@ Function Get-NonStandardServiceAccounts()
 		
 		If ($Computer -eq (& hostname))
 			{
-				$Services = Get-WmiObject win32_service |Select-Object StartName, Name, DisplayName
+				$Services = Get-WmiObject win32_service |Select-Object __Server, StartName, Name, DisplayName
 			}
 		Else
 			{
-				$Services = Get-WmiObject win32_service -ComputerName $Computer -Credential $Credentials `
-							|Select-Object StartName, Name, DisplayName
+				$Result = Test-Connection -Count 1 -Computer $Computer -ErrorAction SilentlyContinue
+				
+				If ($result -ne $null)
+					{
+						$Services = Get-WmiObject win32_service -ComputerName $Computer -Credential $Credentials `
+									|Select-Object __Server, StartName, Name, DisplayName
+					}
+				Else
+					{
+						$Unreachable += "$Computer not available"
+					}
 			}
 
-		
-		Return $Services |Where-Object {$_.StartName -notmatch $Filter}
+			$Suspect = $Services |Where-Object {$_.StartName -notmatch $Filter}
+		Return $Suspect
 	}
