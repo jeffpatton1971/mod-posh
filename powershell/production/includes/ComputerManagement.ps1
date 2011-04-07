@@ -387,14 +387,6 @@ Function Get-NonStandardServiceAccounts()
 			.NOTES
 				Powershell may need to be run elevated to run this script.
 				UAC may need to be disabled to run this script.
-				You are the network administrator for a medium-sized, single-site company. You are responsible for 50 
-				servers that are running a combination of Windows Server 2003, Windows Server 2008, and Windows Server 
-				2008 R2. All of the servers have Windows PowerShell 2.0 installed on them, and Windows PowerShell 
-				remoting is enabled. A recent security audit discovered a few services that are not configured to use 
-				standard service accounts. Instead, some of the services are using custom service accounts with custom 
-				permissions. Because your corporate security plan requires that all services use standard service 
-				accounts, your boss has tasked you with writing a Windows PowerShell script that reports all services 
-				that are using non-standard accounts. 
 			.LINK
 				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-NonStandardServiceAccounts
 		#>
