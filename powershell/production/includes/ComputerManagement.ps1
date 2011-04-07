@@ -415,10 +415,10 @@ Function Get-NonStandardServiceAccounts()
 					}
 				Else
 					{
-						$Unreachable += "$Computer not available"
+						#	Should do something with unreachable computers here.
 					}
 			}
 
-			$Suspect = $Services |Where-Object {$_.StartName -notmatch $Filter}
+		$Suspect = $Services |Where-Object {$_.StartName -notmatch $Filter}
 		Return $Suspect
 	}
