@@ -66,7 +66,7 @@ Function Get-NonStandardServiceAccounts()
 				accounts, your boss has tasked you with writing a Windows PowerShell script that reports all services 
 				that are using non-standard accounts. 
 			.LINK
-				http://blogs.technet.com/b/heyscriptingguy/archive/2011/04/07/the-2011-scripting-games-beginner-event-4-use-powershell-to-find-accounts-used-by-services.aspx
+				https://2011sg.poshcode.org/419
 		#>
 		
 		Param
