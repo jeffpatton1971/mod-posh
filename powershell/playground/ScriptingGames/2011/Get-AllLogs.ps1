@@ -66,7 +66,7 @@ Function Get-AllLogs()
 				last time the log was written to, and the most recent dates should be on top of the list. In addition, 
 				the report should state the size of the log, and whether or not it is a classic log.
 			.LINK
-				http://blogs.technet.com/b/heyscriptingguy/archive/2011/04/06/the-2011-scripting-games-beginner-event-3-use-powershell-to-report-event-log-and-etl-log-details.aspx
+				https://2011sg.poshcode.org/344
 		#>
 		
 		Param
