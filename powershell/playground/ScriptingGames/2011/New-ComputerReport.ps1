@@ -5,65 +5,65 @@ Function New-ComputerReport()
                 Create a file listing basic user and computer information
             .DESCRIPTION
                 This function creates a text file containing basic information about the local or remote computers. The
-				information collected is as follows:
-					UserName - Name of currently logged on user
-					Computer - Name of the computer to report on
-					Domain - Domain name the computer is joined to
-					OperatingSystem - Name of the OS on the computer
+                information collected is as follows:
+                    UserName - Name of currently logged on user
+                    Computer - Name of the computer to report on
+                    Domain - Domain name the computer is joined to
+                    OperatingSystem - Name of the OS on the computer
             .PARAMETER ComputerName
-				The NetBIOS name of a remote computer
+                The NetBIOS name of a remote computer
             .PARAMETER Credentials
-				The DOMAIN\USERNAME with rights to remote computer
+                The DOMAIN\USERNAME with rights to remote computer
             .PARAMETER FileName
-				The filename of the report to create, the file is created in the directory the script is run in. If you
-				provide path information, the path to the destination must exist first.
+                The filename of the report to create, the file is created in the directory the script is run in. If you
+                provide path information, the path to the destination must exist first.
             .EXAMPLE
-				New-ComputerReport -ComputerName dc2 -Credentials $Credentials -FileName .\dcs.txt
+                New-ComputerReport -ComputerName dc2 -Credentials $Credentials -FileName .\dcs.txt
 
-				User:     DOMAIN\Administrator
-				Computer: DC1
-				Domain:   domain.company.com
-				OS:       Microsoft? Windows Server? 2008 Standard 
-				User information collected on: 4/8/2011
+                User:     DOMAIN\Administrator
+                Computer: DC1
+                Domain:   domain.company.com
+                OS:       Microsoft? Windows Server? 2008 Standard 
+                User information collected on: 4/8/2011
 
-				User:     DOMAIN\Administrator
-				Computer: DC2
-				Domain:   domain.company.com
-				OS:       Microsoft? Windows Server? 2008 Standard 
-				User information collected on: 4/8/2011
-				
-				Description
-				-----------
-				This example shows using the -ComputerName parameter to pass in a named computer, the subsequent output
-				is the contents of the file specified for FileName.
+                User:     DOMAIN\Administrator
+                Computer: DC2
+                Domain:   domain.company.com
+                OS:       Microsoft? Windows Server? 2008 Standard 
+                User information collected on: 4/8/2011
+                
+                Description
+                -----------
+                This example shows using the -ComputerName parameter to pass in a named computer, the subsequent output
+                is the contents of the file specified for FileName.
 
             .EXAMPLE
-				Get-Content .\servers.txt | New-ComputerReport -Credentials $Credentials -FileName report.txt
+                Get-Content .\servers.txt | New-ComputerReport -Credentials $Credentials -FileName report.txt
 
-				User:     
-				Computer: INTRANET
-				Domain:   domain.company.com
-				OS:       Microsoft(R) Windows(R) Server 2003, Standard Edition
-				User information collected on: 4/8/2011
+                User:     
+                Computer: INTRANET
+                Domain:   domain.company.com
+                OS:       Microsoft(R) Windows(R) Server 2003, Standard Edition
+                User information collected on: 4/8/2011
 
-				User:     
-				Computer: VC
-				Domain:   domain.company.com
-				OS:       Microsoft Windows Server 2008 R2 Enterprise 
-				User information collected on: 4/8/2011
+                User:     
+                Computer: VC
+                Domain:   domain.company.com
+                OS:       Microsoft Windows Server 2008 R2 Enterprise 
+                User information collected on: 4/8/2011
 
-				...
-				
-				Description
-				-----------
-				This example shows piping input from a file into the function to generate the named report. The input
-				file was a single column list of server names.
+                ...
+                
+                Description
+                -----------
+                This example shows piping input from a file into the function to generate the named report. The input
+                file was a single column list of server names.
             .NOTES
-				PowerShell may need to be run elevated
-				UAC may need to be disabled on the local computer
-				
+                PowerShell may need to be run elevated
+                UAC may need to be disabled on the local computer
+                
             .LINK
-				https://2011sg.poshcode.org/516
+                https://2011sg.poshcode.org/516
         #>
         
         Param
@@ -73,7 +73,7 @@ Function New-ComputerReport()
                 [System.String[]]
                 ${ComputerName} = @(hostname),
                 $Credentials,
-				[Parameter(Mandatory=$true)]
+                [Parameter(Mandatory=$true)]
                 [string]$FileName
             )
             
@@ -84,16 +84,16 @@ Function New-ComputerReport()
                         If ($ComputerName -eq (& hostname))
                             {
                                 $OperatingSystem = Get-WmiObject Win32_OperatingSystem `
-													-ErrorAction SilentlyContinue -ErrorVariable err
+                                                    -ErrorAction SilentlyContinue -ErrorVariable err
                                 $UserInfo = Get-WmiObject Win32_ComputerSystem `
-													-ErrorAction SilentlyContinue -ErrorVariable err
+                                                    -ErrorAction SilentlyContinue -ErrorVariable err
                             }
                         Else
                             {
                                 $OperatingSystem = Get-WmiObject Win32_OperatingSystem -ComputerName $ComputerName `
-											-Credential $Credentials  -ErrorAction SilentlyContinue -ErrorVariable err
+                                            -Credential $Credentials  -ErrorAction SilentlyContinue -ErrorVariable err
                                 $UserInfo = Get-WmiObject Win32_ComputerSystem -ComputerName $ComputerName `
-											-Credential $Credentials -ErrorAction SilentlyContinue -ErrorVariable err
+                                            -Credential $Credentials -ErrorAction SilentlyContinue -ErrorVariable err
                             }
 
                                 If ($err -ne $null){break}
