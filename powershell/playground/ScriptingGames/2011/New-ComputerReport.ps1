@@ -63,7 +63,7 @@ Function New-ComputerReport()
 				UAC may need to be disabled on the local computer
 				
             .LINK
-				http://blogs.technet.com/b/heyscriptingguy/archive/2011/04/08/the-2011-scripting-games-beginner-event-5-use-powershell-to-collect-basic-computer-information.aspx
+				https://2011sg.poshcode.org/516
         #>
         
         Param
