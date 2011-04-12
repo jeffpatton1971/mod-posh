@@ -17,20 +17,48 @@ Function Get-ADObjects
 				If you want specific properties returned like name, or distinguishedName 
 				provide a comma seperated list.
 			.EXAMPLE
-				This exmaple returns a list of computers found in this OU
-				get-adobjects "LDAP://OU=Workstations,DC=company,DC=com"
-			.EXAMPLE
-                Get-ADObjects -ADSPath "LDAP://OU=labs,DC=soecs,DC=ku,DC=edu" -ADProperties "name","distinguishedName"
+                Get-ADObjects -ADSPath "LDAP://OU=Workstations,DC=company,DC=com"
 
-                Path                                                                                  Properties                                                                           
-                ----                                                                                  ----------                                                                           
-                LDAP://CN=e1010-pc01,OU=1010,OU=Eaton,OU=Labs,DC=soecs,DC=ku,DC=edu                   {name, adspath, distinguishedname}                                                   
-                LDAP://CN=e1010-pc02,OU=1010,OU=Eaton,OU=Labs,DC=soecs,DC=ku,DC=edu                   {name, adspath, distinguishedname}                                                   
-                LDAP://CN=e1010-pc03,OU=1010,OU=Eaton,OU=Labs,DC=soecs,DC=ku,DC=edu                   {name, adspath, distinguishedname}                                                   
-                LDAP://CN=e1010-pc04,OU=1010,OU=Eaton,OU=Labs,DC=soecs,DC=ku,DC=edu                   {name, adspath, distinguishedname}
+                Path                                                                  Properties                                                                           
+                ----                                                                  ----------                                                                           
+                LDAP://CN=Computer-pc01,OU=Workstations,DC=company,DC=com             {name, adspath}                                                                      
+                LDAP://CN=Computer-pc02,OU=Workstations,DC=company,DC=com             {name, adspath}                                                                      
+                LDAP://CN=Computer-pc03,OU=Workstations,DC=company,DC=com             {name, adspath}                                                                      
+                LDAP://CN=Computer-pc04,OU=Workstations,DC=company,DC=com             {name, adspath}
+                
+                Description
+                -----------
+                When specifying just the ADSPath computer objects and their associated name properties are returned
+                by default.
 			.EXAMPLE
-				This example returns the objectSid of the named computer
-				get-adobjects "LDAP://CN=MyComputer,OU=Workstations,DC=company,DC=com" computer objectSid
+                Get-ADObjects -ADSPath "LDAP://OU=Workstations,DC=company,DC=com" -ADProperties "name","distinguishedName"
+
+                Path                                                                  Properties                                                                           
+                ----                                                                  ----------                                                                           
+                LDAP://CN=Computer-pc01,OU=Workstations,DC=company,DC=com             {name, adspath, distinguishedname}                                                   
+                LDAP://CN=Computer-pc02,OU=Workstations,DC=company,DC=com             {name, adspath, distinguishedname}                                                   
+                LDAP://CN=Computer-pc03,OU=Workstations,DC=company,DC=com             {name, adspath, distinguishedname}                                                   
+                LDAP://CN=Computer-pc04,OU=Workstations,DC=company,DC=com             {name, adspath, distinguishedname}
+
+                Description
+                -----------
+                This example shows the format for ADProperties, each property is composed of a string enclosed in quotes
+                seperated by commas.
+			.EXAMPLE
+                Get-ADObjects -ADSPath "LDAP://OU=Groups,DC=company,DC=com" `
+                -ADProperties "name","distinguishedName" -objectCategory group
+
+                Path                                                                  Properties                                                                           
+                ----                                                                  ----------                                                                           
+                LDAP://CN=Group-01,OU=Groups,DC=Company,DC=com                        {name, adspath, distinguishedname}                                                   
+                LDAP://CN=Group-02,OU=Groups,DC=Company,DC=com                        {name, adspath, distinguishedname}                                                   
+                LDAP://CN=Group-03,OU=Groups,DC=Company,DC=com                        {name, adspath, distinguishedname}                                                   
+                LDAP://CN=Group-04,OU=Groups,DC=Company,DC=com                        {name, adspath, distinguishedname}
+                
+                Description
+                -----------
+                This example shows multiple properties as well as setting the objectCategory to be groups that are 
+                returned.
 			.NOTES
 				The script runs under the users context, so the user account must have permissions
 				to view the objects within the domain that the function is currently running
