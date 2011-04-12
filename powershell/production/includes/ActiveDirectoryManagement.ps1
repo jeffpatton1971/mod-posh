@@ -20,8 +20,14 @@ Function Get-ADObjects
 				This exmaple returns a list of computers found in this OU
 				get-adobjects "LDAP://OU=Workstations,DC=company,DC=com"
 			.EXAMPLE
-				This example returns a list of user in this container
-				get-adobjects "LDAP://CN=Users,DC=company,DC=com" user distinguishedName
+                Get-ADObjects -ADSPath "LDAP://OU=labs,DC=soecs,DC=ku,DC=edu" -ADProperties "name","distinguishedName"
+
+                Path                                                                                  Properties                                                                           
+                ----                                                                                  ----------                                                                           
+                LDAP://CN=e1010-pc01,OU=1010,OU=Eaton,OU=Labs,DC=soecs,DC=ku,DC=edu                   {name, adspath, distinguishedname}                                                   
+                LDAP://CN=e1010-pc02,OU=1010,OU=Eaton,OU=Labs,DC=soecs,DC=ku,DC=edu                   {name, adspath, distinguishedname}                                                   
+                LDAP://CN=e1010-pc03,OU=1010,OU=Eaton,OU=Labs,DC=soecs,DC=ku,DC=edu                   {name, adspath, distinguishedname}                                                   
+                LDAP://CN=e1010-pc04,OU=1010,OU=Eaton,OU=Labs,DC=soecs,DC=ku,DC=edu                   {name, adspath, distinguishedname}
 			.EXAMPLE
 				This example returns the objectSid of the named computer
 				get-adobjects "LDAP://CN=MyComputer,OU=Workstations,DC=company,DC=com" computer objectSid
@@ -53,7 +59,7 @@ Function Get-ADObjects
                     }
                 group
                     {
-                        "(&(objectCategory=group))"
+                        $objectCategory = "(&(objectCategory=group))"
                     }
                 default
                     {
