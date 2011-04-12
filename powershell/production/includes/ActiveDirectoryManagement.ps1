@@ -7,13 +7,13 @@ Function Get-ADObjects
 				This function will return a list of objects from ActiveDirectory. It will
 				start at the provided ADSPath and search for objectCategory. For each
 				objectCategory it finds it stores the ADProperty that was requested.
-			.PARAMETER objOU
+			.PARAMETER ADSPath
 				This is the LDAP URI of the location within ActiveDirectory you would like to
 				search. This can be an OU, CN or even the root of your domain.
 			.PARAMETER objectCategory
 				This is the kind of object that you would like the search to return. Typical
 				values are; computer (default), user and group.
-			.PARAMETER ADProperty
+			.PARAMETER ADProperties
 				If you want specific properties returned like name, or distinguishedName 
 				provide a comma seperated list.
 			.EXAMPLE
@@ -36,22 +36,46 @@ Function Get-ADObjects
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$objOU,
-				[string]$objectCategory="computer",
-				[array]$ADProperty="name"
+				[string]$ADSPath,
+				[string]$objectCategory,
+				[array]$ADProperties="name"
 			)
+            
+        Switch ($objectCategory)
+            {
+                computer
+                    {
+                        $objectCategory = "(&(objectCategory=computer))"
+                    }
+                user
+                    {
+                        $objectCategory = "(&(objectCategory=user))"
+                    }
+                group
+                    {
+                        "(&(objectCategory=group))"
+                    }
+                default
+                    {
+                        $objectCategory = "(&(objectCategory=computer))"
+                    }                
+            }
 		
-		$objSearcher = New-Object System.DirectoryServices.DirectorySearcher([ADSI]$objOU)
-		$objSearcher.SearchScope = "subtree"
-		$objSearcher.PageSize = 1000
-		$objSearcher.Filter = ("(objectCategory=$objectCategory)")
-		foreach ($i in $ADProperty)
-			{
-				[void]$objSearcher.PropertiesToLoad.Add($i)
-			}
-		$objSearcher.FindAll()
-		
-		Return $objSearcher
+        $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
+        $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+        $DirectorySearcher.SearchRoot = $DirectoryEntry
+        $DirectorySearcher.PageSize = 1000
+        $DirectorySearcher.Filter = $objectCategory
+        $DirectorySearcher.SearchScope = "Subtree"
+
+        foreach ($Property in $ADProperties)
+            {
+                [void]$DirectorySearcher.PropertiesToLoad.Add($Property)
+                }
+
+        $ADObjects = $DirectorySearcher.FindAll()
+
+		Return $ADObjects
 	}	
 Function Add-UserToLocalGroup
 	{
