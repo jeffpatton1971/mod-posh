@@ -4,15 +4,17 @@ Function Get-ADObjects
 			.SYNOPSIS
 				Returns a list of objects from ActiveDirectory
 			.DESCRIPTION
-				This function will return a list of objects from ActiveDirectory. It will
-				start at the provided ADSPath and search for objectCategory. For each
-				objectCategory it finds it stores the ADProperty that was requested.
+				This function will return a list of objects from ActiveDirectory. It will start at the provided ADSPath 
+                and find each object that matches the provided SearchFilter. For each object returned only the 
+                specified properties will be provided.
 			.PARAMETER ADSPath
-				This is the LDAP URI of the location within ActiveDirectory you would like to
-				search. This can be an OU, CN or even the root of your domain.
-			.PARAMETER objectCategory
-				This is the kind of object that you would like the search to return. Typical
-				values are; computer (default), user and group.
+				This is the LDAP URI of the location within ActiveDirectory you would like to search. This can be an 
+                OU, CN or even the root of your domain.
+			.PARAMETER SearchFilter
+				This parameter is specified in the same format as an LDAP Search Filter. For more information on the 
+                format please visit Microsoft (http://msdn.microsoft.com/en-us/library/aa746475.aspx). If nothing is 
+                specified on the command-line the default filter is used:
+                    (objectCategory=computer)
 			.PARAMETER ADProperties
 				If you want specific properties returned like name, or distinguishedName 
 				provide a comma seperated list.
@@ -47,7 +49,7 @@ Function Get-ADObjects
                 seperated by commas.
 			.EXAMPLE
                 Get-ADObjects -ADSPath "LDAP://OU=Groups,DC=company,DC=com" `
-                -ADProperties "name","distinguishedName" -objectCategory group
+                -ADProperties "name","distinguishedName" -SearchFilter group
 
                 Path                                                                  Properties                                                                           
                 ----                                                                  ----------                                                                           
@@ -58,7 +60,7 @@ Function Get-ADObjects
                 
                 Description
                 -----------
-                This example shows multiple properties as well as setting the objectCategory to be groups that are 
+                This example shows multiple properties as well as setting the SearchFilter to be groups that are 
                 returned.
 			.NOTES
 				The script runs under the users context, so the user account must have permissions
@@ -72,35 +74,15 @@ Function Get-ADObjects
 			(
 				[Parameter(Mandatory=$true)]
 				[string]$ADSPath,
-				[string]$objectCategory,
+				[string]$SearchFilter = "(objectCategory=computer)",
 				[array]$ADProperties="name"
 			)
-            
-        Switch ($objectCategory)
-            {
-                computer
-                    {
-                        $objectCategory = "(&(objectCategory=computer))"
-                    }
-                user
-                    {
-                        $objectCategory = "(&(objectCategory=user))"
-                    }
-                group
-                    {
-                        $objectCategory = "(&(objectCategory=group))"
-                    }
-                default
-                    {
-                        $objectCategory = "(&(objectCategory=computer))"
-                    }                
-            }
 		
         $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
         $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
         $DirectorySearcher.SearchRoot = $DirectoryEntry
         $DirectorySearcher.PageSize = 1000
-        $DirectorySearcher.Filter = $objectCategory
+        $DirectorySearcher.Filter = $SearchFilter
         $DirectorySearcher.SearchScope = "Subtree"
 
         foreach ($Property in $ADProperties)
