@@ -31,7 +31,8 @@ Function Get-ADObjects
                 When specifying just the ADSPath computer objects and their associated name properties are returned
                 by default.
 			.EXAMPLE
-                Get-ADObjects -ADSPath "LDAP://OU=Workstations,DC=company,DC=com" -ADProperties "name","distinguishedName"
+                Get-ADObjects -ADSPath "LDAP://OU=Workstations,DC=company,DC=com" `
+                -ADProperties "name","distinguishedName"
 
                 Path                                                                  Properties                                                                           
                 ----                                                                  ----------                                                                           
