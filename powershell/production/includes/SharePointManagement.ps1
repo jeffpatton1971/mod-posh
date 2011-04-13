@@ -125,4 +125,60 @@ Function New-Sharepoint3Path
 			)
 			
 		stsadm -o addpath -url $RootURL + "/" + $SitePath -type wildcardinclusion
-	}
+    }
+Function New-Sharepoint3Subweb
+    {
+        <#
+            .SYNOPSIS
+                Creates a subsite at the specified Uniform Resource Locator (URL).
+            .DESCRIPTION
+                Creates a subsite at the specified Uniform Resource Locator (URL).
+            .PARAMETER SiteURL
+                The URL where the subsite should be created. This should be a path below an existing site collection or 
+                subsite.
+            .PARAMETER SiteTemplate
+                Specifies the type of template to be used by the newly created site.
+                If you do not specify a template to use, the owner can choose a template when he or she first browses to
+                the site.
+                
+                The value must be in the form name#configuration. If you do not specify the configuration, (for example,
+                STS) configuration 0 is the default (for example, STS#0).
+                
+                The list of available templates can be customized to include templates you create. To display a list of 
+                custom templates, use the Enumtemplates operation.
+            .PARAMETER Title
+                The title of the new subsite.
+                The maximum length is 255 characters.
+            .PARAMETER Description
+                Description of the new subsite.
+            .EXAMPLE
+                New-Sharepoint3Subweb -SiteURL http://schmoopy/subweb2 -SiteTemplate sts#2 -Title "This is my subweb" 1
+                -Description "This is an awesome description for my site."
+
+                Description
+                -----------
+                This example shows the basic usage of the function with all parameters specified.
+            .NOTES
+                The STSADM command needs to be on your path, or run the script from inside the folder
+                http://technet.microsoft.com/en-us/library/cc287718(office.12).aspx
+            .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#New-Sharepoint3Subweb
+        #>
+        
+        Param
+            (
+                [Parameter(Mandatory=$true)]
+                [string]$SiteURL,
+                [string]$SiteTemplate = "sts#2",
+                [string]$Title = "New Web",
+                [string]$Description = "Sample description for website."
+            )
+        #
+        #   TODO
+        #
+        #   Need to add site to QuickLaunch
+        #   Need to add site to TopLinkBar
+        #   Need to inherit TopLinkBar from Parent in subsite
+        
+        stsadm -o createweb -url $SiteURL -sitetemplate $SiteTemplate -title $Title -description $Description
+    }
