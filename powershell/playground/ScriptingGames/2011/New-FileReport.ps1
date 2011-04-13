@@ -77,7 +77,7 @@ Function New-FileReport
                 the files in the folder, and write the information from the directory listing to a comma-separated value
                 (CSV) file so that you can open the CSV file in a Microsoft Excel spreadsheet for further analysis.
             .LINK
-                http://blogs.technet.com/b/heyscriptingguy/archive/2011/04/13/the-2011-scripting-games-beginner-event-8-use-powershell-to-report-disk-space-utilization.aspx
+                https://2011sg.poshcode.org/1160
         #>
         
         Param
