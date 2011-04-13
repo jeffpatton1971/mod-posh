@@ -159,7 +159,7 @@ Function New-Sharepoint3Subweb
                 -----------
                 This example shows the basic usage of the function with all parameters specified.
             .NOTES
-                The STSADM command needs to be on your path, or run the script from inside the folder
+                The STSADM command needs to be on your path, or run the script from inside the folder.
                 http://technet.microsoft.com/en-us/library/cc287718(office.12).aspx
             .LINK
                 http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#New-Sharepoint3Subweb
@@ -180,5 +180,27 @@ Function New-Sharepoint3Subweb
         #   Need to add site to TopLinkBar
         #   Need to inherit TopLinkBar from Parent in subsite
         
-        stsadm -o createweb -url $SiteURL -sitetemplate $SiteTemplate -title $Title -description $Description
+        $Result = stsadm -o createweb -url $SiteURL -sitetemplate $SiteTemplate -title $Title -description $Description
+        
+        Switch ($LASTEXITCODE)
+            {
+                -2147024713
+                    {
+                        Return "The Web site address $SiteURL is already in use"
+                    }
+                -2147024894
+                    {
+                        Return "The Web application at $SiteURL could not be found. Verify that you have typed " +
+                        "the URL correctly. If the URL should be serving existing content, the system administrator " +
+                        "may needto add a new request URL mapping to the intended application."
+                    }
+                0
+                    {
+                        Return "Operation completed successfully."
+                    }
+                Default
+                    {
+                        Return $Result
+                    }
+            }
     }
