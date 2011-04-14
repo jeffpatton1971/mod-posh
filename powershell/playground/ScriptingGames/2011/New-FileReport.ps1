@@ -54,7 +54,7 @@ Function Get-JustFiles
 
         Return Get-ChildItem -Path $Target |Where-Object {!$_.PSIsContainer} `
             |Select-Object -Property Name, Length, LastWriteTime `
-            |Export-Csv -Path $Filename -NoTypeInformation
+            |Export-Csv -Path $Filename -NoTypeInformation -UseCulture
     }
 
 Function New-FileReport
@@ -89,5 +89,5 @@ Function New-FileReport
             )
 
         Get-JustFiles -Target $Target -FileName $FileName
-        Open-FileInExcel -FileName $FileName
+        Open-FileInExcel -FileName (Get-ChildItem $FileName).FullName
     }
