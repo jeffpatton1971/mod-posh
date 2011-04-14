@@ -39,7 +39,7 @@ Function New-LogFile
                 which day. For the purposes of this event, it is only necessary to create a text file with the name 
                 made up of the year, month, and day.
             .LINK
-                http://blogs.technet.com/b/heyscriptingguy/archive/2011/04/14/the-2011-scripting-games-beginner-event-9-use-powershell-to-create-a-file-name-based-on-a-date.aspx
+                https://2011sg.poshcode.org/1292
         #>
         
         Param
