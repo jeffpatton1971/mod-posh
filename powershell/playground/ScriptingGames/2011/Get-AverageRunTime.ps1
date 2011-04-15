@@ -54,7 +54,7 @@ Function Get-AverageRunTime
                 Comment out the following lines:
                     66, 67, 71
             .LINK
-                http://blogs.technet.com/b/heyscriptingguy/archive/2011/04/15/the-2011-scripting-games-beginner-event-10-use-powershell-to-measure-time-to-complete-a-command.aspx
+                https://2011sg.poshcode.org/1425
         #>
         
         Param
