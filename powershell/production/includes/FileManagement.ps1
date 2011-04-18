@@ -115,3 +115,62 @@ Function New-LogFile
             }
         $LogData |Out-File -FilePath (($LogPath + "\" + $FileName) + ".log") -Encoding ASCII -NoClobber
     }
+Function Convert-Delimiter
+    {
+        <#
+            .SYNOPSIS
+                A function to convert between different delimiters.
+            .DESCRIPTION
+                Written primarily as a way of enabling the use of Import-CSV when
+                the source file was a columnar text file with data like services.txt:
+                
+                ip              service         port
+                --              -------         ----
+                13.13.13.1      http            8000
+                13.13.13.2      https           8001
+                13.13.13.1      irc             6665-6669
+            .PARAMETER From
+                The delimiter that needs to be replaced
+            .PARAMETER To
+                The delimiter to replace with
+            .EXAMPLE
+                Get-Content services.txt | Convert-Delimiter " +" "," | Set-Content services.csv
+                
+                Description
+                -----------
+                Would convert the file above into something that could passed to:
+                Import-Csv services.csv
+            .NOTES
+                This function was taken from http://poshcode.org/146 
+                I tweaked it to fit my style of functions,  but otherwise the actual code that does all the 
+                work was left in tact.
+            .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/FileManagement#Convert-Delimiter
+        #>
+        
+        Param
+            (
+                [regex]$From,
+                [string]$To
+            )
+
+        Process
+            {
+                ## replace the original delimiter with the new one, wrapping EVERY block in Þ
+                ## if there's quotes around some text with a delimiter, assume it doesn't count
+                ## if there are two quotes "" stuck together inside quotes, assume they're an 'escaped' quote
+                $_ = $_ -replace "(?:`"((?:(?:[^`"]|`"`"))+)(?:`"$from|`"`$))|(?:((?:.(?!$from))*.)(?:$from|`$))","Þ`$1`$2Þ$to" 
+
+                ## clean up the end where there might be duplicates
+                $_ = $_ -replace "Þ(?:$to|Þ)?`$","Þ"
+
+                ## normalize quotes so that they're all double "" quotes
+                $_ = $_ -replace "`"`"","`"" -replace "`"","`"`"" 
+
+                ## remove the Þ wrappers if there are no quotes inside them
+                $_ = $_ -replace "Þ((?:[^Þ`"](?!$to))+)Þ($to|`$)","`$1`$2"
+
+                ## replace the Þ with quotes, and explicitly emit the result
+                Return $_             
+            }        
+    }
