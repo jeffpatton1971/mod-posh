@@ -422,3 +422,37 @@ Function Get-NonStandardServiceAccounts()
 		$Suspect = $Services |Where-Object {$_.StartName -notmatch $Filter}
 		Return $Suspect
 	}
+Function Remove-User
+    {
+        <#
+            .SYNOPSIS
+                Delete a user account from the local computer.
+            .DESCRIPTION
+                This function will delete a user account from the local computer
+            .PARAMETER ComputerName
+                The NetBIOS name of the computer the account is found on
+            .PARAMETER UserName
+                The username to delete
+            .EXAMPLE
+                Remove-User -ComputerName Desktop -UserName TestAcct
+                
+                Description
+                -----------
+                Basic syntax of the command.
+            .NOTES
+                The user context the script is run under must be able to delete accounts on the remote computer
+            .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Remove-User
+        #>
+        
+        Param
+            (
+                [Parameter(Mandatory=$true)]
+                $ComputerName = (& hostname),
+                [Parameter(Mandatory=$true)]
+                $UserName
+            )
+
+        $ADSI = [adsi]"WinNT://$ComputerName"
+        $ADSI.Delete("user", $UserName)
+    }
