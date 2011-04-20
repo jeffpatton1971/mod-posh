@@ -1,21 +1,20 @@
-#
-#	Template Script
-#
-#	This script sets up the basic framework that I use
-#	for all my scripts.
-#
-#	$ScriptName is used to register events for this script
-#	in the $LogName log.
-#
-#	$LogName is which classic log you want to log to
-#		Application
-#		System
-#		Security
-#
-$ScriptName = $MyInvocation.MyCommand.ToString()
-$LogName = "Application"
-$ScriptPath = $MyInvocation.MyCommand.Path
-$Username = $env:USERDOMAIN + "\" + $env:USERNAME
+<#
+    .SYNOPSIS
+        Template script
+    .DESCRIPTION
+        This script sets up the basic framework that I use for all my scripts.
+    .PARAMETER
+    .EXAMPLE
+    .NOTES
+        ScriptName is used to register events for this script
+        LogName is used to determine which classic log to write to
+    .LINK
+#>
+
+    $ScriptName = $MyInvocation.MyCommand.ToString()
+    $LogName = "Application"
+    $ScriptPath = $MyInvocation.MyCommand.Path
+    $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 
 	New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
 	
