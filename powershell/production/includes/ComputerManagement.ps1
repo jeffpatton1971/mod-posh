@@ -1,4 +1,4 @@
-Function New-User
+Function New-LocalUser
 	{
 		<#
 			.SYNOPSIS
@@ -17,7 +17,7 @@ Function New-User
 			.NOTES
 				You will need to run this with either UAC disabled or from an elevated prompt.
 			.EXAMPLE
-				add-user MyComputer MyUserAccount MyP@ssw0rd "This is my account."
+				New-LocalUser MyComputer MyUserAccount MyP@ssw0rd "This is my account."
 			.LINK
 				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#New-User
 		#>
@@ -75,7 +75,7 @@ Function Set-Pass
 		$objUser.psbase.invoke("SetPassword", $Password)
 	}
 	
-Function Set-Group
+Function Add-LocalUserToGroup
 	{
 		<#
 			.SYNOPSIS
@@ -91,7 +91,7 @@ Function Set-Group
 			.NOTES
 				You will need to run this with either UAC disabled or from an elevated prompt.
 			.EXAMPLE
-				set-group MyComputer MyUserAccount Administrators
+				Add-LocalUserToGroup MyComputer MyUserAccount Administrators
 			.LINK
 				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Set-Group
 		#>
@@ -422,7 +422,7 @@ Function Get-NonStandardServiceAccounts()
 		$Suspect = $Services |Where-Object {$_.StartName -notmatch $Filter}
 		Return $Suspect
 	}
-Function Remove-User
+Function Remove-LocalUser
     {
         <#
             .SYNOPSIS
@@ -434,7 +434,7 @@ Function Remove-User
             .PARAMETER UserName
                 The username to delete
             .EXAMPLE
-                Remove-User -ComputerName Desktop -UserName TestAcct
+                Remove-LocalUser -ComputerName Desktop -UserName TestAcct
                 
                 Description
                 -----------
