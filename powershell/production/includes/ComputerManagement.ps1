@@ -520,11 +520,22 @@ Function Get-LocalUserAccounts
         
         if ($isAlive -ne $null)
             {
-                $ScriptBlock += " -ComputerName $ComputerName"
-                if ($Credentials)
+                if ($isAlive.__SERVER.ToString() -eq $ComputerName)
                     {
-                        $ScriptBlock += " -Credential `$Credentials"
-                        write-host $scriptblock
+                        $ScriptBlock += " -ComputerName $ComputerName"
+                        if ($Credentials)
+                            {
+                                if ($isAlive.__SERVER.ToString() -eq $ComputerName)
+                                    {}
+                                else
+                                    {
+                                        $ScriptBlock += " -Credential `$Credentials"
+                                    }
+                            }
+                    }
+                else
+                    {
+                        Return "Bad DNS $ComputerName resolved to " + $isAlive.__Server.ToString()
                     }
             }
         else
