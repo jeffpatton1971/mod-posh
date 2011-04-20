@@ -470,3 +470,67 @@ Function Remove-LocalUser
 
         Return $Return
     }
+Function Get-LocalUserAccounts
+    {
+        <#
+            .SYNOPSIS
+                Return a list of local user accounts.
+            .DESCRIPTION
+                This function returns the Name and SID of any local user accounts that are found
+                on the remote computer.
+            .PARAMETER ComputerName
+                The NetBIOS name of the remote computer
+            .EXAMPLE
+                Get-LocalUserAccounts -ComputerName Desktop-PC01
+
+                Name                                                      SID                                                                                  
+                ----                                                      ---                                                                                  
+                Administrator                                             S-1-5-21-1168524473-3979117187-4153115970-500
+                Guest                                                     S-1-5-21-1168524473-3979117187-4153115970-501
+                
+                Description
+                -----------
+                This example shows the basic usage
+            .EXAMPLE
+                Get-LocalUserAccounts -ComputerName citadel -Credentials $Credentials
+
+                Name                                                      SID
+                ----                                                      ---
+                Administrator                                             S-1-5-21-1168524473-3979117187-4153115970-500
+                Guest                                                     S-1-5-21-1168524473-3979117187-4153115970-501
+                
+                Description
+                -----------
+                This example shows using the optional Credentials variable to pass administrator credentials
+            .NOTES
+                You will need to provide credentials when running this against computers in a diffrent domain.
+            .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-LocalUserAccounts
+        #>
+        
+        Param
+            (
+                [string]$ComputerName = (& hostname),
+                [System.Management.Automation.PSCredential]$Credentials
+            )
+
+        $Filter = "LocalAccount=True"
+        $ScriptBlock = "Get-WmiObject Win32_UserAccount -Filter $Filter"
+        $isAlive = Test-Connection -ComputerName $ComputerName -Count 1 -ErrorAction SilentlyContinue
+        
+        if ($isAlive -ne $null)
+            {
+                $ScriptBlock += " -ComputerName $ComputerName"
+                if ($Credentials)
+                    {
+                        $ScriptBlock += " -Credential `$Credentials"
+                        write-host $scriptblock
+                    }
+            }
+        else
+            {
+                Return "Unable to connect to $ComputerName"
+            }
+
+        Return Invoke-Expression $ScriptBlock |Select-Object Name, SID
+    }
