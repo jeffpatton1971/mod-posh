@@ -454,17 +454,19 @@ Function Remove-User
             )
 
         $ADSI = [adsi]"WinNT://$ComputerName"
-        $Users = $ADSI.psbase.children |Where-Object {$_.psBase.schemaClassName -eq "User"} |Select-Object -expand Name
-        foreach ($user in $users)
+        $Users = $ADSI.psbase.children |Where-Object {$_.psBase.schemaClassName -eq "User"} |Select-Object -ExpandProperty Name
+        foreach ($User in $Users)
             { 
-                if ($user -eq $UserName)
+                if ($User -eq $UserName)
                     {
                         $ADSI.Delete("user", $UserName)
-                        Return $True
+                        $Return = $True
                     }
                 else
                     {
-                        Return $False
+                        $Return = $False
                     }
             }
+
+        Return $Return
     }
