@@ -85,7 +85,7 @@ Function Set-Pass
                 $Return = $ThisError.Substring(1,$ThisError.IndexOf("."))
                 }
 
-        Return $Return
+        Return [string]$Return
 	}
 	
 Function Add-LocalUserToGroup
