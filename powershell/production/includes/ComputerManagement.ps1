@@ -70,9 +70,20 @@ Function Set-Pass
 				[Parameter(Mandatory=$true)]
 				[string]$Password
 			)
-			
-		$objUser=[adsi]("WinNT://$ComputerName/$UserName, user")
-		$objUser.psbase.invoke("SetPassword", $Password)
+
+        Try
+            {
+        		$User = [adsi]("WinNT://$ComputerName/$UserName, user")
+        		$User.psbase.invoke("SetPassword", $Password)
+                
+                $Return = "Password updated"
+                }
+        Catch [System.Management.Automation.MethodInvocationException]
+            {
+                $Return = $Error[0].Exception
+                }
+
+        Return $Return
 	}
 	
 Function Add-LocalUserToGroup
