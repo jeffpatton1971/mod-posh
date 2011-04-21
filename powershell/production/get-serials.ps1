@@ -29,6 +29,7 @@
         This example shows piping the output to a csv file.
     .NOTES
     .LINK
+        http://scripts.patton-tech.com/wiki/PowerShell/Production/GetSerials
 #>
 
 Param
