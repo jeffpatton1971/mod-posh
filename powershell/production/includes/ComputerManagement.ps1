@@ -47,9 +47,9 @@ Function Set-Pass
 				Change the password of an existing user account.
 			.DESCRIPTION
 				This function will change the password for an existing user account. 
-			.PARAMETER Computer
+			.PARAMETER ComputerName
 				The NetBIOS name of the computer that you will add the account to.
-			.PARAMETER User
+			.PARAMETER UserName
 				The user name of the account that will be created.
 			.PARAMETER Password
 				The password for the account, this must follow password policies enforced
@@ -64,14 +64,14 @@ Function Set-Pass
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$Computer = (& hostname),
+				[string]$ComputerName = (& hostname),
 				[Parameter(Mandatory=$true)]
-				[string]$User,
+				[string]$UserName,
 				[Parameter(Mandatory=$true)]
 				[string]$Password
 			)
 			
-		$objUser=[adsi]("WinNT://$strComputer/$User, user")
+		$objUser=[adsi]("WinNT://$ComputerName/$UserName, user")
 		$objUser.psbase.invoke("SetPassword", $Password)
 	}
 	
