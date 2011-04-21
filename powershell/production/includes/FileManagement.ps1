@@ -174,3 +174,54 @@ Function Convert-Delimiter
                 Return $_             
             }        
     }
+Function Get-WebLogs
+    {
+        <#
+            .SYNOPSIS
+                Get log data from requested log file.
+            .DESCRIPTION
+                This function returns the data from either an Apache or IIS log file. Very simple routine, it simply
+                returns the data to be handled by some other function.
+            .PARAMETER LogFile
+                The path and filename to the log file to parse.
+            .PARAMETER LogType
+                The kind of logfile to work with, Apache or IIS.
+            .EXAMPLE
+            .NOTES
+            .LINK
+        #>
+        
+        Param
+            (
+                [Parameter(Mandatory=$true)]
+                $LogFile,
+                [Parameter(Mandatory=$true)]
+                $LogType
+            )
+        
+        switch ($LogType)
+            {
+                apache
+                    {
+                        #   Apache Log
+                        #	Import the log file for processing
+                        $WebTemp = foreach ($item in Get-Content $LogFile){$item.Remove(($item.IndexOf("]")-6),1)} 
+                        $WebTemp |Convert-Delimiter " " "," |Set-Content .\templog.csv
+                        $WebLog = Import-Csv .\templog.csv -Header "RemoteHost", "RemoteLogName", "RemoteUser", "Time", "Request", "Status", "Size", "Referer", "UserAgent"
+                        Remove-Item .\templog.csv
+                        Remove-Variable WebTemp
+                    }
+                iis
+                    {
+                        #   iis log
+                        #   Remove header information wherever it appears
+                        $WebTemp = Get-Content $LogFile |Where-Object {$_ -match "/#*"}
+                        $WebTemp |Convert-Delimiter -From " " -To "`t" |Set-Content .\templog.csv
+                        $WebLog = Import-Csv .\templog.csv  -Delimiter `t -header "Date", "Time", "ServerSitename", "ServerIP", "Method", "URIStem", "URIQuery", "ServerPort", "ClientUsername", "ClientIP", "HTTPStatus", "ProtocolStatus", "Win32Status", "BytesSent", "BytesReceived" ,"TimeTaken"
+                        Remove-Item .\templog.csv
+                        Remove-Variable WebTemp
+                    }
+            }
+
+        Return $WebLog
+    }
