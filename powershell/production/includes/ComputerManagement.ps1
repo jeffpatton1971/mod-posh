@@ -453,19 +453,28 @@ Function Remove-LocalUser
                 $UserName
             )
 
-        $ADSI = [adsi]"WinNT://$ComputerName"
-        $Users = $ADSI.psbase.children |Where-Object {$_.psBase.schemaClassName -eq "User"} |Select-Object -ExpandProperty Name
-        foreach ($User in $Users)
-            { 
-                if ($User -eq $UserName)
-                    {
-                        $ADSI.Delete("user", $UserName)
-                        $Return = $True
+        $isAlive = Test-Connection -ComputerName $ComputerName -Count 1 -ErrorAction SilentlyContinue
+        
+        if ($isAlive -ne $null)
+            {
+                $ADSI = [adsi]"WinNT://$ComputerName"
+                $Users = $ADSI.psbase.children |Where-Object {$_.psBase.schemaClassName -eq "User"} |Select-Object -ExpandProperty Name
+                foreach ($User in $Users)
+                    { 
+                        if ($User -eq $UserName)
+                            {
+                                $ADSI.Delete("user", $UserName)
+                                $Return = "Deleted"
+                            }
+                        else
+                            {
+                                $Return = "User not found"
+                            }
                     }
-                else
-                    {
-                        $Return = $False
-                    }
+            }
+        else
+            {
+                $Return = "$ComputerName not available"
             }
 
         Return $Return
@@ -520,22 +529,15 @@ Function Get-LocalUserAccounts
         
         if ($isAlive -ne $null)
             {
-                if ($isAlive.__SERVER.ToString() -eq $ComputerName)
+                $ScriptBlock += " -ComputerName $ComputerName"
+                if ($Credentials)
                     {
-                        $ScriptBlock += " -ComputerName $ComputerName"
-                        if ($Credentials)
+                        if ($isAlive.__SERVER.ToString() -eq $ComputerName)
+                            {}
+                        else
                             {
-                                if ($isAlive.__SERVER.ToString() -eq $ComputerName)
-                                    {}
-                                else
-                                    {
-                                        $ScriptBlock += " -Credential `$Credentials"
-                                    }
+                                $ScriptBlock += " -Credential `$Credentials"
                             }
-                    }
-                else
-                    {
-                        Return "Bad DNS $ComputerName resolved to " + $isAlive.__Server.ToString()
                     }
             }
         else
