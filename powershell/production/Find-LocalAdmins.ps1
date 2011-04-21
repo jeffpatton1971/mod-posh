@@ -15,7 +15,7 @@
 		You will need to run this script as an administrator or disable UAC to update the event-log
 		You will need to have at least Read permissions in the AD container in order to get a list of computers.
 	.LINK
-		http://scripts.patton-tech.com/browser/powershell/production
+		http://scripts.patton-tech.com/wiki/PowerShell/Production/FindLocalAdmins
 #>
 
 Param
@@ -25,35 +25,41 @@ Param
 		[Parameter(Mandatory=$true)]
 		[string]$GroupName
 	)	
+Begin
+    {
+        $ScriptName = $MyInvocation.MyCommand.ToString()
+        $LogName = "Application"
+        $ScriptPath = $MyInvocation.MyCommand.Path
+        $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 
-$ScriptName = $MyInvocation.MyCommand.ToString()
-$LogName = "Application"
-$ScriptPath = $MyInvocation.MyCommand.Path
-$Username = $env:USERDOMAIN + "\" + $env:USERNAME
-
-	New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
-	
-	$Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
-	Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
-	
-	#	Dotsource in the AD functions
-	. .\includes\ActiveDirectoryManagement.ps1
-	
-	$computers = Get-ADObjects $ADSPath
-	
-	foreach ($computer in $computers)
-		{
-			if ($computer -eq $null){}
-			else
-				{
-					$groups = Get-LocalGroupMembers $computer.Properties.name $GroupName
-					If ($groups -ne $null)
-						{
-							write-host "Accounts with membership in $GroupName on: " $computer.Properties.name
-							$groups | Format-Table -autosize
-						}
-				}
-		}
-	
-	$Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
-	Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message	
+        New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
+        	
+        $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
+        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
+        	
+        #	Dotsource in the AD functions
+        . .\includes\ActiveDirectoryManagement.ps1
+    }
+Process
+    {    	
+    	$computers = Get-ADObjects $ADSPath
+    	
+    	foreach ($computer in $computers)
+    		{
+    			if ($computer -eq $null){}
+    			else
+    				{
+    					$groups = Get-LocalGroupMembers $computer.Properties.name $GroupName
+    					If ($groups -ne $null)
+    						{
+    							write-host "Accounts with membership in $GroupName on: " $computer.Properties.name
+    							$groups | Format-Table -autosize
+    						}
+    				}
+    		}
+	}
+End
+    {    
+    	$Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
+    	Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message	
+    }
