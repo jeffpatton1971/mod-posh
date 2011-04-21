@@ -80,7 +80,7 @@ Function Set-Pass
                 }
         Catch [System.Management.Automation.MethodInvocationException]
             {
-                $Return = $Error[0].Exception
+                $Return = $Error[0].Exception.ToString()
                 }
 
         Return $Return
