@@ -16,6 +16,12 @@ $principal = new-object System.Security.principal.windowsprincipal($CurrentUser)
 
 Import-Module Pscx
 
+#$MyIncludes = Get-ChildItem "$env:HOMEDRIVE$env:HOMEPATH\My Repositories\scripts\powershell\production\includes"
+#foreach ($file in $MyIncludes)
+#    {
+#        $ThisFile = $file.fullname |Where-Object {$_ -notmatch "bak"}
+#        . "$thisfile"
+#        }
 . "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\ActiveDirectoryManagement.ps1"
 . "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\ComputerManagement.ps1"
 . "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\FileManagement.ps1"
