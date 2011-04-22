@@ -172,8 +172,9 @@ Function Convert-Delimiter
 
                 ## replace the Þ with quotes, and explicitly emit the result
                 Return $_             
-            }        
+            }
     }
+
 Function Get-WebLogs
     {
         <#

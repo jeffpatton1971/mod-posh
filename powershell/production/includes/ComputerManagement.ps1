@@ -39,7 +39,6 @@ Function New-LocalUser
 		$objUser.description = $Description
 		$objUser.SetInfo()
 	}
-
 Function Set-Pass
 	{
 		<#
@@ -86,8 +85,7 @@ Function Set-Pass
                 }
 
         Return [string]$Return
-	}
-	
+	}	
 Function Add-LocalUserToGroup
 	{
 		<#
