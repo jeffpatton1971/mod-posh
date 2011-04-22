@@ -171,10 +171,9 @@ Function Convert-Delimiter
                 $_ = $_ -replace "Þ((?:[^Þ`"](?!$to))+)Þ($to|`$)","`$1`$2"
 
                 ## replace the Þ with quotes, and explicitly emit the result
-                Return $_             
+                Return $_ -replace "Þ","`""
             }
     }
-
 Function Get-WebLogs
     {
         <#
