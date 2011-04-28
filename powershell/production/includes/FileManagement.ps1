@@ -207,7 +207,7 @@ Function Get-FileLogs
                         #	Import the log file for processing
                         $WebTemp = foreach ($item in Get-Content $LogFile){$item.Remove(($item.IndexOf("]")-6),1)} 
                         $WebTemp |Convert-Delimiter " " "," |Set-Content .\templog.csv
-                        $WebLog = Import-Csv .\templog.csv -Header "RemoteHost", "RemoteLogName", "RemoteUser", "Time", "Request", "Status", "Size", "Referer", "UserAgent"
+                        $Return = Import-Csv .\templog.csv -Header "RemoteHost", "RemoteLogName", "RemoteUser", "Time", "Request", "Status", "Size", "Referer", "UserAgent"
                         Remove-Item .\templog.csv
                         Remove-Variable WebTemp
                     }
@@ -217,7 +217,7 @@ Function Get-FileLogs
                         #   Remove header information wherever it appears
                         $WebTemp = Get-Content $LogFile |Where-Object {$_ -match "/#*"}
                         $WebTemp |Convert-Delimiter -From " " -To "`t" |Set-Content .\templog.csv
-                        $WebLog = Import-Csv .\templog.csv  -Delimiter `t -header "Date", "Time", "ServerSitename", "ServerIP", "Method", "URIStem", "URIQuery", "ServerPort", "ClientUsername", "ClientIP", "HTTPStatus", "ProtocolStatus", "Win32Status", "BytesSent", "BytesReceived" ,"TimeTaken"
+                        $Return = Import-Csv .\templog.csv  -Delimiter `t -header "Date", "Time", "ServerSitename", "ServerIP", "Method", "URIStem", "URIQuery", "ServerPort", "ClientUsername", "ClientIP", "HTTPStatus", "ProtocolStatus", "Win32Status", "BytesSent", "BytesReceived" ,"TimeTaken"
                         Remove-Item .\templog.csv
                         Remove-Variable WebTemp
                     }
@@ -225,13 +225,13 @@ Function Get-FileLogs
                     {
                         #   wfw log
                         #   Remove header information wherever it appears
-                        $WfwTemp = foreach ($item in Get-Content $LogFile){$item.Remove(($item.IndexOf("]")-6),1)} 
-                        $WfwTemp |Convert-Delimiter " " "," |Set-Content .\templog.csv
-                        $WfwLog = Import-Csv .\templog.csv -Header "Date", "Time", "Action", "Protocol", "src-ip", "dst-ip", "src-port", "dst-port", "size", "tcpflags", "tcpsyn", "tcpack", "tcpwin", "icmptype", "icmpmode", "Info", "Path"
+                        $WfwTemp = foreach ($item in Get-Content $LogFile){if ($item.Length -gt 0){$item |Where-Object {$_ -notmatch '#'}}}
+                        $WfwTemp |Convert-Delimiter -From " " -To "," |Set-Content .\templog.csv
+                        $Return = Import-Csv .\templog.csv -Header "Date", "Time", "Action", "Protocol", "src-ip", "dst-ip", "src-port", "dst-port", "size", "tcpflags", "tcpsyn", "tcpack", "tcpwin", "icmptype", "icmpmode", "Info", "Path"
                         Remove-Item .\templog.csv
                         Remove-Variable WfwTemp
                     }
             }
 
-        Return $WebLog
+        Return $Return
     }
