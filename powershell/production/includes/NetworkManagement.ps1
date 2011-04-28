@@ -16,7 +16,7 @@ Function Get-HostName
 			(
 				[Parameter(Mandatory=$true)]
 				[string]$Computer
-				
+            )
 		[System.Net.Dns]::GetHostEntry($Computer)
 	}
 Function Get-HostIp
@@ -34,7 +34,7 @@ Function Get-HostIp
 			(
 				[Parameter(Mandatory=$true)]
 				[string]$Computer
-				
+            )
 		[System.Net.Dns]::GetHostAddresses($Computer)
 	}
 Function Get-NetstatReport
