@@ -28,6 +28,8 @@ Import-Module Pscx
 . "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\MueggeLogParser.ps1"
 . "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\SharePointManagement.ps1"
 . "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\PerformanceTesting.ps1"
+. "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\NetworkManagement.ps1"
+. "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\WindowsFirewallManagement.ps1"
 
 $Password = Get-Content C:\Users\jspatton\cred.txt |ConvertTo-SecureString
 $Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "SOECS\jeffpatton.admin", $Password
