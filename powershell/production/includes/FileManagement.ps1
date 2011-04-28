@@ -174,14 +174,14 @@ Function Convert-Delimiter
                 Return $_ -replace "Þ","`""
             }
     }
-Function Get-WebLogs
+Function Get-FileLogs
     {
         <#
             .SYNOPSIS
                 Get log data from requested log file.
             .DESCRIPTION
-                This function returns the data from either an Apache or IIS log file. Very simple routine, it simply
-                returns the data to be handled by some other function.
+                This function returns the data from either an Apache, Windows Firewall or IIS log file. Very simple 
+                routine, it simply returns the data to be handled by some other function.
             .PARAMETER LogFile
                 The path and filename to the log file to parse.
             .PARAMETER LogType
@@ -220,6 +220,16 @@ Function Get-WebLogs
                         $WebLog = Import-Csv .\templog.csv  -Delimiter `t -header "Date", "Time", "ServerSitename", "ServerIP", "Method", "URIStem", "URIQuery", "ServerPort", "ClientUsername", "ClientIP", "HTTPStatus", "ProtocolStatus", "Win32Status", "BytesSent", "BytesReceived" ,"TimeTaken"
                         Remove-Item .\templog.csv
                         Remove-Variable WebTemp
+                    }
+                wfw
+                    {
+                        #   wfw log
+                        #   Remove header information wherever it appears
+                        $WfwTemp = foreach ($item in Get-Content $LogFile){$item.Remove(($item.IndexOf("]")-6),1)} 
+                        $WfwTemp |Convert-Delimiter " " "," |Set-Content .\templog.csv
+                        $WfwLog = Import-Csv .\templog.csv -Header "Date", "Time", "Action", "Protocol", "src-ip", "dst-ip", "src-port", "dst-port", "size", "tcpflags", "tcpsyn", "tcpack", "tcpwin", "icmptype", "icmpmode", "Info", "Path"
+                        Remove-Item .\templog.csv
+                        Remove-Variable WfwTemp
                     }
             }
 
