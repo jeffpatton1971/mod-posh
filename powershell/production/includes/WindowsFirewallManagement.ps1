@@ -1,4 +1,4 @@
-Get-FWServices
+Function Get-FWServices
     {
         <#
             .SYNOPSIS
@@ -55,7 +55,7 @@ Get-FWServices
             Return $FwServices
         }
     }
-Get-FWApplications
+Function Get-FWApplications
     {
         <#
             .SYNOPSIS
@@ -93,7 +93,7 @@ Get-FWApplications
                 Return $Applications
             }
     }
-Get-FWGloballyOpenPorts
+Function Get-FWGloballyOpenPorts
     {
         <#
             .SYNOPSIS
@@ -132,7 +132,7 @@ Get-FWGloballyOpenPorts
                 Return $OpenPorts
             }
     }
-New-FWPortOpening
+Function New-FWPortOpening
     {
         <#
             .SYNOPSIS
