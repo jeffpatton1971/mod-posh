@@ -110,9 +110,17 @@ Function Add-UserToLocalGroup
 			.PARAMETER UserDomain
 				The NetBIOS name of the domain where the user object is.
 			.EXAMPLE
-				add-usertolocalgroup server myuser administrators
+                Add-UserToLocalGroup -Computer server -UserName myuser -LocalGroup administrators
+
+                Description
+                -----------
+                Adds a user from the local domain to the specified computer.
 			.EXAMPLE
-				add-usertolocalgroup server myuser administrators company
+                Add-UserToLocalGroup -Computer server -UserName myuser -LocalGroup administrators -UserDomain company
+
+                Description
+                -----------
+                Adds a user from the company domain to the specified computer's local Administrators group.
 			.NOTES
 				The script runs under the users context, so the user account must have permissions
 				to view the objects within the domain that the function is currently running
