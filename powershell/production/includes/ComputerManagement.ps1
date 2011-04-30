@@ -468,7 +468,7 @@ Function Remove-LocalUser
             .NOTES
                 The user context the script is run under must be able to delete accounts on the remote computer
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Remove-User
+                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Remove-LocalUser
         #>
         
         Param
