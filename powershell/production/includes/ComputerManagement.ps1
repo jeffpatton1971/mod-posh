@@ -170,7 +170,7 @@ Function New-ScheduledTask
 				http://technet.microsoft.com/en-us/library/bb490996.aspx
 		.EXAMPLE
 			New-ScheduledTask -TaskName "Reboot Computer" -TaskRun "shutdown /r" -TaskSchedule ONCE `
-            -StartTime "18:00:00" -StartDate "03/16/2011" -TaskUser SYSTEM -ServerMyDesktopPC
+            -StartTime "18:00:00" -StartDate "03/16/2011" -TaskUser SYSTEM -Server MyDesktopPC
 		.LINK
 			http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#New-ScheduledTask
 		#>
