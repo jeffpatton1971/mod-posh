@@ -60,7 +60,7 @@ Function Set-Pass
 			.NOTES
 				You will need to run this with either UAC disabled or from an elevated prompt.
 			.EXAMPLE
-				set-pass MyComputer MyUserAccount N3wP@ssw0rd
+				Set-Pass -ComputerName MyComputer -UserName MyUserAccount -Password N3wP@ssw0rd
 			.LINK
 				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Set-Pass
 		#>
