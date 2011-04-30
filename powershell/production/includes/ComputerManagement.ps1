@@ -591,6 +591,8 @@ Function Get-PendingUpdates
                 Author: Boe Prox
                 Date Created: 05Mar2011
                 RPC Dynamic Ports need to be enabled on inbound remote servers.
+            .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-PendingUpdates
         #> 
 
         Param
