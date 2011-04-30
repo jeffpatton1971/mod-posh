@@ -23,7 +23,7 @@ Function New-LocalUser
                 -----------
                 Creates a user named MyUserAccount on MyComputer.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#New-User
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#New-LocalUser
 		#>
 		Param
 			(
