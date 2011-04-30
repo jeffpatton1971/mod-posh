@@ -17,14 +17,18 @@ Function New-LocalUser
 			.NOTES
 				You will need to run this with either UAC disabled or from an elevated prompt.
 			.EXAMPLE
-				New-LocalUser MyComputer MyUserAccount MyP@ssw0rd "This is my account."
+                New-LocalUser -ComputerName MyComputer -User MyUserAccount -Password MyP@ssw0rd -Description "Account."
+                
+                Description
+                -----------
+                Creates a user named MyUserAccount on MyComputer.
 			.LINK
 				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#New-User
 		#>
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$Computer = (& hostname),
+				[string]$ComputerName = (& hostname),
 				[Parameter(Mandatory=$true)]
 				[string]$User,
 				[Parameter(Mandatory=$true)]
@@ -32,7 +36,7 @@ Function New-LocalUser
 				[string]$Description
 			)
 			
-		$objComputer = [ADSI]"WinNT://$Computer"
+		$objComputer = [ADSI]"WinNT://$ComputerName"
 		$objUser = $objComputer.Create("User", $User)
 		$objUser.setpassword($password)
 		$objUser.SetInfo()
