@@ -211,7 +211,17 @@ Function Remove-UserFromLocalGroup
 			.NOTES
 				You will need to run this with either UAC disabled or from an elevated prompt.
 			.EXAMPLE
-				remove-userfromlocalgroup MyComputer RandomUser 
+				Remove-UserFromLocalGroup -ComputerName MyComputer -UserName RandomUser
+                
+                Description
+                -----------
+                This example removes a user from the local administrators group.
+            .Example
+                Remove-UserFromLocalGroup -ComputerName MyComputer -UserName RandomUser -GroupName Users
+                
+                Description
+                -----------
+                This example removes a user from the local users group.
 			.LINK
 				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Remove-UserFromLocalGroup
 		#>
@@ -219,9 +229,9 @@ Function Remove-UserFromLocalGroup
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$Computer = (& hostname),
+				[string]$ComputerName = (& hostname),
 				[Parameter(Mandatory=$true)]
-				[string]$User,
+				[string]$UserName,
 				[Parameter(Mandatory=$true)]
 				[string]$GroupName="Administrators"
 			)
