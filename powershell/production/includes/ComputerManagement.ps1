@@ -106,14 +106,14 @@ Function Add-LocalUserToGroup
 			.NOTES
 				You will need to run this with either UAC disabled or from an elevated prompt.
 			.EXAMPLE
-				Add-LocalUserToGroup MyComputer MyUserAccount Administrators
+				Add-LocalUserToGroup -ComputerName MyComputer -User MyUserAccount -Group Administrators
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Set-Group
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Add-LocalUserToGroup
 		#>
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$Computer = (& hostname),
+				[string]$ComputerName = (& hostname),
 				[Parameter(Mandatory=$true)]
 				[string]$User,
 				[Parameter(Mandatory=$true)]
