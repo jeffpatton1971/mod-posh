@@ -160,7 +160,7 @@ Function Get-LocalGroupMembers
 				The name of the group to search in.
 			.NOTES
 			.EXAMPLE
-				Get-LocalGroupMembers MyComputer Administrators
+				Get-LocalGroupMembers -ComputerName MyComputer -GroupName Administrators
 			.LINK
 				http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-LocalGroupMembers
 		#>
