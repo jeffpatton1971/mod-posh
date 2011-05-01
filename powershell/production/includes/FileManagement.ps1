@@ -6,16 +6,18 @@ Function Update-Content
 			.DESCRIPTION
 				This function adds content to the top or bottom of an existing file. By default the function will update
 				the beginning of a file.
-			.PARAMETER ThisFile
+			.PARAMETER FileName
 				The full path and filename to the file to update
 			.PARAMETER Content
 				Content to add to the file
 			.PARAMETER Beginning
 				True or False to add content to top (true) or bottom (false) of file
 			.EXAMPLE
-				Update-Content "C:\logfiles\access.log" "Host Identity User DateTime Offset Request Status Size Referrer UserAgent"
+				Update-Content -FileName "C:\logfiles\access.log" -Content "Host Identity User DateTime Offset Request Status Size Referrer UserAgent"
 				
-				This example sets a variable named header to be used in the command-line. We then pass the path and
+				Description
+                -----------
+                This example sets a variable named header to be used in the command-line. We then pass the path and
 				header variable into the function for processing.
 			.LINK
 				http://scripts.patton-tech.com/wiki/PowerShell/FileManagement#Update-Content
@@ -24,35 +26,35 @@ Function Update-Content
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$ThisFile,
+				[string]$FileName,
 				[Parameter(Mandatory=$true)]
 				[string]$Content,			
 				[bool]$Beginning=$true
 			)	
 
-		if ((Test-Path $ThisFile) -eq $True)
+		if ((Test-Path $FileName) -eq $True)
 			{
-				$Data = Get-Content $ThisFile
+				$Data = Get-Content $FileName
 				if ($Beginning -eq $True)
 					{
 						if ($Data[0].Contains($Content) -eq $True)
 							{
-								Write-Host "Skipping $ThisFile, content exists"
+								Write-Host "Skipping $FileName, content exists"
 							}
 						else
 							{
-								Write-Host "Writing content to $ThisFile"
-								Set-Content $ThisFile -Value $Content,$Data
+								Write-Host "Writing content to $FileName"
+								Set-Content $FileName -Value $Content,$Data
 							}
 					}
 				else
 					{
-						Add-Content -Path $ThisFile -Value $Content
+						Add-Content -Path $FileName -Value $Content
 					}
 			}
 		else
 			{
-				Write-Host "File $ThisFile does not exist"
+				Write-Host "File $FileName does not exist"
 			}
 	}
 Function New-LogFile
