@@ -185,10 +185,31 @@ Function New-FWPortOpening
     {
         <#
             .SYNOPSIS
+                Create a port opening in Windows Firewall.
             .DESCRIPTION
+                This function creates a port opening in the Windows Firewall.
             .EXAMPLE
+                New-FWPortOpening -RuleName Rule1 -RuleProtocol 6 -RulePort 123 -RuleRemoteAddresses *
+                
+                Get-FWGloballyOpenPorts
+
+                RemoteAddresses : *
+                Name            : Rule1
+                IpVersion       : 2
+                Port            : 123
+                Scope           : 0
+                Protocol        : 6
+                Enabled         : False
+                BuiltIn         : False
+                
+                Description
+                -----------
+                This example shows setting a portopening, and then viewing the newly created rule.
             .NOTES
+                In order for this function to work properly you will need to run this function in an elevated PowerShell
+                prompt, as well as have the permissions to modify the firewall.
             .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/WindowsFirewallManagement#New-FWPortOpening
         #>
 
         Param
