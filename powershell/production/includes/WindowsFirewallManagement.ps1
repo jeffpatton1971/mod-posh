@@ -132,10 +132,24 @@ Function Get-FWGloballyOpenPorts
     {
         <#
             .SYNOPSIS
+                Return ports that are open across all profiles.
             .DESCRIPTION
+                This function returns a list of Globally Open Ports that are available on the Windows Firewall
             .EXAMPLE
+                Get-FWGloballyOpenPorts |Format-Table
+
+                RemoteAddres Name            IpVersion         Port       Scope    Protocol     Enabled     BuiltIn
+                ses
+                ------------ ----            ---------         ----       -----    --------     -------     -------
+                *            Allowed P...            2          456           0          17        True       False
+                *            Allowed P...            2          123           0           6        True       False
+
+                Description
+                -----------
+                Sample output piped through Format-Table
             .NOTES
             .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/WindowsFirewallManagement#Get-FWGloballyOpenPorts
         #>
 
         Begin
