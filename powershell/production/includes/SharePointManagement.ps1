@@ -112,7 +112,7 @@ Function New-Sharepoint3Path
 			.PARAMETER SitePath
 				This is the path to the new site from the RootURL
 			.EXAMPLE
-				new-sharepoint3path http://intranet.company.com /documents/team-docs
+				new-sharepoint3path -RootURL http://intranet.company.com -SitePath /documents/team-docs
 			.NOTES
 				The STSADM command needs to be on your path, or run the script from inside the folder
 			.LINK
