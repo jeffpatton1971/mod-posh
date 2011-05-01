@@ -80,9 +80,9 @@ Function Get-Sharepoint3Sites
 		.PARAMETER RootURL
 			This is the base URL of your Sharepoint installation
 		.EXAMPLE
-			Get-Sharepoint3Site http://intranet.company.com
+			Get-Sharepoint3Site -RootURL http://intranet.company.com
 		.Example
-			$sites = [xml](Get-Sharepoint3Sites)
+			$sites = [xml](Get-Sharepoint3Sites -RootURL http://intranet.company.com)
 			$sites.Sites.Site[3].Url
 		.NOTES
 			The STSADM command needs to be on your path, or run the script from inside the folder
