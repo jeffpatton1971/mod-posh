@@ -5,19 +5,29 @@ Function Get-HostName
 				Returns the hostname from the provided IP
 			.DESCRIPTION
 				Reutrns an object that contains the hostname from a DNS server query
-			.PARAMETER Computer
+			.PARAMETER ComputerName
 				The IP Address of a computer
 			.EXAMPLE
+                Get-HostName -ComputerName 127.0.0.1
+
+                HostName                          Aliases                          AddressList
+                --------                          -------                          -----------
+                MyPC                              {}                               {fe80::d5af:b64e:c661:9202%18...
+
+                Description
+                -----------
+                The output of the function.
 			.NOTES
 			.LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/NetworkManagement#
 		#>
 		
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$Computer
+				[string]$ComputerName
             )
-		[System.Net.Dns]::GetHostEntry($Computer)
+		[System.Net.Dns]::GetHostEntry($ComputerName)
 	}
 Function Get-HostIp
 	{
@@ -28,6 +38,7 @@ Function Get-HostIp
 			.EXAMPLE
 			.NOTES
 			.LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/NetworkManagement#
 		#>
 		
 		Param
@@ -45,6 +56,7 @@ Function Get-NetstatReport
             .EXAMPLE
             .NOTES
             .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/NetworkManagement#
         #>
         $netstat = netstat -a -n -o | where-object { $_ -match "(UDP|TCP)" }
         [regex]$regexTCP = '(?<Protocol>\S+)\s+((?<LAddress>(2[0-4]\d|25[0-5]|[01]?\d\d?)\.(2[0-4]\d|25[0-5]|[01]?\d\d?)\.(2[0-4]\d|25[0-5]|[01]?\d\d?)\.(2[0-4]\d|25[0-5]|[01]?\d\d?))|(?<LAddress>\[?[0-9a-fA-f]{0,4}(\:([0-9a-fA-f]{0,4})){1,7}\%?\d?\]))\:(?<Lport>\d+)\s+((?<Raddress>(2[0-4]\d|25[0-5]|[01]?\d\d?)\.(2[0-4]\d|25[0-5]|[01]?\d\d?)\.(2[0-4]\d|25[0-5]|[01]?\d\d?)\.(2[0-4]\d|25[0-5]|[01]?\d\d?))|(?<RAddress>\[?[0-9a-fA-f]{0,4}(\:([0-9a-fA-f]{0,4})){1,7}\%?\d?\]))\:(?<RPort>\d+)\s+(?<State>\w+)\s+(?<PID>\d+$)'
