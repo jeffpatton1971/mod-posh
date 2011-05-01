@@ -27,9 +27,12 @@ Function New-Sharepoint3Site
 				This will be the title of the site that will be displayed in
 				the browser title bar.
 			.EXAMPLE
-				new-sharepoint3site https://intranet.company.com/team administrator administrator@company.com "Company Team Site" WSS_CompanyIntranet
+				New-Sharepoint3Site -url https://intranet.company.com/team -ownerlogin administrator `
+                -owneremail administrator@company.com -title "Company Team Site" -databasename WSS_CompanyIntranet
 			.EXAMPLE
-				new-sharepoint3site STS#2 https://intranet.company.com/documents administrator administrator@company.com "Company Dodcument Site" WSS_CompanyDocument
+				New-Sharepoint3Site -sitetemplate STS#2 -url https://intranet.company.com/documents `
+                -ownerlogin administrator -owneremail administrator@company.com -title "Company Dodcument Site" `
+                -databasename WSS_CompanyDocument
 			.NOTES
 				You will need to be running this under the Sharepoint Farm administrators context.
 				This script will need to run on the server that is hosting the SharePoint admin site.
