@@ -77,10 +77,27 @@ Function Get-FWApplications
     {
         <#
             .SYNOPSIS
+                Return a list of applicaitons allowed
             .DESCRIPTION
+                This function returns a list of applications that have been authorized through the Windows Firewall.
             .EXAMPLE
+                Get-FWApplications |Format-Table
+
+                ProcessImageFi Name               IpVersion Property      RemoteAddress       Enabled         Scope
+                leName                                                    es
+                -------------- ----               --------- --------      -------------       -------         -----
+                C:\Program ... VMware Authd               2 Application   *                      True             0
+                C:\Program ... Bonjour Ser...             2 Application   *                      True             0
+                C:\users\je... dropbox.exe                2 Application   *                      True             0
+                C:\program ... Opera Inter...             2 Application   *                      True             0
+                C:\program ... Microsoft O...             2 Application   *                      True             0
+
+                Description
+                -----------
+                Sample output piped through Format-Table
             .NOTES
             .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/WindowsFirewallManagement#Get-FWApplications
         #>
 
         Begin
