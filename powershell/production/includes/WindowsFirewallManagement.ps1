@@ -2,10 +2,28 @@ Function Get-FWServices
     {
         <#
             .SYNOPSIS
+                Return a list of services allowed through the firewall
             .DESCRIPTION
+                This function returns a list of services and related ports that are allowed through the Windows Firewall
             .EXAMPLE
+                Get-FWServices |Format-Table
+
+                Property  Name           Type Customize IpVersion     Scope RemoteAdd   Enabled Protocol  Port
+                                                      d                     resses
+                --------  ----           ---- --------- ---------     ----- ---------   ------- --------  ----
+                Service   File a...         0     False         2         1 LocalS...      True -         -
+                Port      File a...         -         -         2         1 LocalS...      True 17        138
+                Service   Networ...         1     False         2         1 LocalS...     False -         -
+                Port      Networ...         -         -         2         1 LocalS...     False 6         2869
+                Service   Remote...         2     False         2         0 *             False -         -
+                Port      Remote...         -         -         2         0 *             False 6         3389
+
+                Description
+                -----------
+                This example shows the output of the function piped through Format-Table
             .NOTES
             .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/WindowsFirewallManagement#Get-FWServices
         #>
         
         Begin
