@@ -187,10 +187,29 @@ Function Get-FileLogs
             .PARAMETER LogFile
                 The path and filename to the log file to parse.
             .PARAMETER LogType
-                The kind of logfile to work with, Apache or IIS.
+                The kind of logfile to work with, Apache, WFW or IIS.
             .EXAMPLE
+                Get-FileLogs -LogFile 'C:\LogFiles\scripts_access.log' -LogType apache |Format-Table
+
+                RemoteHost  RemoteLogN RemoteUser Time       Request    Status     Size       Referer    UserAgent
+                            ame
+                ----------  ---------- ---------- ----       -------    ------     ----       -------    ---------
+                192.168.... -          -          [02/Mar... GET / H... 200        6730       -          Mozilla...
+                192.168.... -          -          [02/Mar... GET /ch... 200        2457       http://... Mozilla...
+                192.168.... -          -          [02/Mar... GET /ch... 200        3836       http://... Mozilla...
+                192.168.... -          -          [02/Mar... GET /ch... 200        18449      http://... Mozilla...
+                192.168.... -          -          [02/Mar... GET /ch... 200        4907       http://... Mozilla...
+                
+                Description
+                -----------
+                This example shows the output of the function being piped through Format-Table
             .NOTES
+                Each switch creates a temporary file that is removed before processing continues.
+                This function depends on Convert-Delimiter being available.
             .LINK
+                Convert-Delimiter
+            .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/FileManagement#Get-FileLogs
         #>
         
         Param
