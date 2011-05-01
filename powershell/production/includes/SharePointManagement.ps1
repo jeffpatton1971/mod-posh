@@ -155,7 +155,7 @@ Function New-Sharepoint3Subweb
             .PARAMETER Description
                 Description of the new subsite.
             .EXAMPLE
-                New-Sharepoint3Subweb -SiteURL http://schmoopy/subweb2 -SiteTemplate sts#2 -Title "This is my subweb" 1
+                New-Sharepoint3Subweb -SiteURL http://schmoopy/subweb2 -SiteTemplate sts#2 -Title "This is my subweb" `
                 -Description "This is an awesome description for my site."
 
                 Description
