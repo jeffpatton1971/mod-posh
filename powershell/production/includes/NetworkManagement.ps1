@@ -33,20 +33,40 @@ Function Get-HostIp
 	{
 		<#
 			.SYNOPSIS
+                Returns a list of IP's for the specified host.
 			.DESCRIPTION
-			.PARAMETER
+                Returns a list of IP's for the specified host.
+			.PARAMETER ComputerName
+                NetBIOS name of a computer
 			.EXAMPLE
+                Get-HostIp -Computer MyPC |Format-Table
+
+                Address      AddressFamil      ScopeId IsIPv6Multic IsIPv6LinkL IsIPv6SiteL IPAddressTo SortableAdd
+                                        y                       ast        ocal        ocal String             ress
+                -------      ------------      ------- ------------ ----------- ----------- ----------- -----------
+                             ...NetworkV6           18        False        True       False fe80::d5... ...7261E+38
+                             ...NetworkV6           19        False        True       False fe80::95... ...7261E+38
+                             ...NetworkV6           11        False        True       False fe80::48... ...7261E+38
+                             ...NetworkV6           12        False        True       False fe80::20... ...7261E+38
+                16820416     InterNetwork                     False       False       False 192.168.0.1  3232235521
+                31631552     InterNetwork                     False       False       False 192.168....  3232293377
+                553717932    InterNetwork                     False       False       False 172.16.1.33  2886730017
+                             ...NetworkV6            0        False       False       False 2001:0:4... ...1596E+37
+
+                Description
+                -----------
+                This example shows the output of the function.
 			.NOTES
 			.LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/NetworkManagement#
+                http://scripts.patton-tech.com/wiki/PowerShell/NetworkManagement#Get-HostIp
 		#>
 		
 		Param
 			(
 				[Parameter(Mandatory=$true)]
-				[string]$Computer
+				[string]$ComputerName
             )
-		[System.Net.Dns]::GetHostAddresses($Computer)
+		[System.Net.Dns]::GetHostAddresses($ComputerName)
 	}
 Function Get-NetstatReport
     {
