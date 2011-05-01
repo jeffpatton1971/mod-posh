@@ -19,7 +19,7 @@ Function Get-HostName
                 The output of the function.
 			.NOTES
 			.LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/NetworkManagement#
+                http://scripts.patton-tech.com/wiki/PowerShell/NetworkManagement#Get-HostName
 		#>
 		
 		Param
