@@ -24,11 +24,11 @@ Set-Location $env:HOMEDRIVE$env:HOMEPATH"\My Repositories\scripts\powershell\pro
 #   Dot source in my functions
 foreach ($file in Get-ChildItem .\includes\*.ps1){. $file.fullname}
 
-$Password = Get-Content C:\Users\Jeff Patton\cred.txt |ConvertTo-SecureString
+$Password = Get-Content C:\Users\jspatton\cred.txt |ConvertTo-SecureString
 $Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "SOECS\jeffpatton.admin", $Password
 
 #	Import the PoshCode functions 
-. "C:\Users\Jeff Patton\PoshCode.ps1"
+. "C:\Users\jspatton\PoshCode.ps1"
 
 if ($principal.IsInRole("Administrators")) 
 	{
