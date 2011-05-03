@@ -16,28 +16,16 @@ $principal = new-object System.Security.principal.windowsprincipal($CurrentUser)
 
 Import-Module Pscx
 
-#$MyIncludes = Get-ChildItem "$env:HOMEDRIVE$env:HOMEPATH\My Repositories\scripts\powershell\production\includes"
-#foreach ($file in $MyIncludes)
-#    {
-#        $ThisFile = $file.fullname |Where-Object {$_ -notmatch "bak"}
-#        . "$thisfile"
-#        }
-. "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\ActiveDirectoryManagement.ps1"
-. "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\ComputerManagement.ps1"
-. "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\FileManagement.ps1"
-. "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\MueggeLogParser.ps1"
-. "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\SharePointManagement.ps1"
-. "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\PerformanceTesting.ps1"
-. "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\NetworkManagement.ps1"
-. "C:\Users\jspatton\My Repositories\scripts\powershell\production\includes\WindowsFirewallManagement.ps1"
+Set-Location $env:HOMEDRIVE$env:HOMEPATH"\My Repositories\scripts\powershell\production"
 
-$Password = Get-Content C:\Users\jspatton\cred.txt |ConvertTo-SecureString
+#   Dot source in my functions
+foreach ($file in Get-ChildItem .\includes\*.ps1){. $file.fullname}
+
+$Password = Get-Content C:\Users\Jeff Patton\cred.txt |ConvertTo-SecureString
 $Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "SOECS\jeffpatton.admin", $Password
 
 #	Import the PoshCode functions 
-. "C:\Users\jspatton\PoshCode.3.8.ps1"
-
-Set-Location $env:HOMEDRIVE$env:HOMEPATH"\My Repositories\scripts\powershell\production"
+. "C:\Users\Jeff Patton\PoshCode.ps1"
 
 if ($principal.IsInRole("Administrators")) 
 	{
