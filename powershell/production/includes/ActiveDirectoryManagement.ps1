@@ -208,3 +208,96 @@ Function Get-LocalGroupMembers
 				}
 		Return $Members
 	}
+Function Get-ADGroupMembers
+{
+    <#
+        .SYNOPSIS
+            Return a collection of users in an ActiveDirectory group.
+        .DESCRIPTION
+            This function returns an object that contains all the properties of a user object. This function
+            works for small groups as well as groups in excess of 1000.
+        .PARAM UserGroup
+            The name of the group to get membership from.
+        .PARAM UserDomain
+            The LDAP URL of the domain that the group resides in.
+        .EXAMPLE
+            Get-ADGroupMembers -UserGroup Managers |Format-Table -Property name, distinguishedName, cn
+
+            name                             distinguishedName                cn                              
+            ----                             -----------------                --                              
+            {Steve Roberts}                  {CN=Steve Roberts,CN=Users,DC... {Steve Roberts}                 
+            {S-1-5-21-57989841-1078081533... {CN=S-1-5-21-57989841-1078081... {S-1-5-21-57989841-1078081533...
+            {S-1-5-21-57989841-1078081533... {CN=S-1-5-21-57989841-1078081... {S-1-5-21-57989841-1078081533...
+            {Matt Temple}                    {CN=Matt Temple,CN=Users,DC=c... {Matt Temple}                   
+            ...
+            Description
+            -----------
+            This example shows passing in a group name, but leaving the default domain name in place.
+        .NOTES
+            The context under which this script is run must have rights to pull infromation from ActiveDirectory.
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-ADGroupMembers
+    #>
+    Param
+        (
+    $UserGroup = "Domain Users",
+    $UserDomain = ([ADSI]"LDAP://DC=company,DC=com")
+        )
+
+    Begin
+        {
+            $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($UserDomain.Path)
+            $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+
+            $LDAPFilter = "(&(objectCategory=Group)(name=$($UserGroup)))"
+
+            $DirectorySearcher.SearchRoot = $DirectoryEntry
+            $DirectorySearcher.PageSize = 1000
+            $DirectorySearcher.Filter = $LDAPFilter
+            $DirectorySearcher.SearchScope = "Subtree"
+
+            $SearchResult = $DirectorySearcher.FindAll()
+            
+            $UserAccounts = @()
+        }
+
+    Process
+        {
+            foreach ($Item in $SearchResult)
+            {
+                $Group = $Item.GetDirectoryEntry()
+                $Members = $Group.member
+                
+                If ($Members -ne $Null)
+                {
+                    foreach ($User in $Members)
+                    {
+                        $UserObject = New-Object System.DirectoryServices.DirectoryEntry("LDAP://$($User)")
+                        If ($UserObject.objectCategory.Value.Contains("Group"))
+                        {
+                        }
+                        Else
+                        {
+                            $ThisUser = New-Object -TypeName PSObject -Property @{
+                                cn = $UserObject.cn
+                                distinguishedName = $UserObject.distinguishedName
+                                name = $UserObject.name
+                                nTSecurityDescriptor = $UserObject.nTSecurityDescriptor
+                                objectCategory = $UserObject.objectCategory
+                                objectClass = $UserObject.objectClass
+                                objectGUID = $UserObject.objectGUID
+                                objectSID = $UserObject.objectSID
+                                showInAdvancedViewOnly = $UserObject.showInAdvancedViewOnly
+                            }
+                        }
+                    $UserAccounts += $ThisUser
+                    }
+                }
+            }
+        }
+
+    End
+        {
+            Return $UserAccounts
+        }
+}
