@@ -216,9 +216,9 @@ Function Get-ADGroupMembers
         .DESCRIPTION
             This function returns an object that contains all the properties of a user object. This function
             works for small groups as well as groups in excess of 1000.
-        .PARAM UserGroup
+        .PARAMETER UserGroup
             The name of the group to get membership from.
-        .PARAM UserDomain
+        .PARAMETER UserDomain
             The LDAP URL of the domain that the group resides in.
         .EXAMPLE
             Get-ADGroupMembers -UserGroup Managers |Format-Table -Property name, distinguishedName, cn
