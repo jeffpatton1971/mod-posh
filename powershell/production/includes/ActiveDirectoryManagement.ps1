@@ -241,7 +241,7 @@ Function Get-ADGroupMembers
     Param
         (
     $UserGroup = "Domain Users",
-    $UserDomain = ([ADSI]"LDAP://DC=company,DC=com")
+    [ADSI]$UserDomain = ("LDAP://DC=company,DC=com")
         )
 
     Begin
