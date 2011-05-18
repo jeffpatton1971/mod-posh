@@ -15,7 +15,8 @@
 #>
 Param
     (
-    
+    [parameter(Mandatory=$true, HelpMessage="Enter an LDAP url.")]
+     $ADSPath
     )
 Begin
     {
@@ -31,20 +32,24 @@ Begin
 
         . .\includes\ActiveDirectoryManagement.ps1
         . .\includes\DellWebsiteFunctions.ps1
+        
+        $Computers = Get-ADObjects -ADSPath $ADSPath
     }
 Process
-    {
-        $Computers = Get-ADObjects -ADSPath "LDAP://OU=Labs,DC=soecs,DC=ku,DC=edu"
+    {   
+        $Jobs = @()
         Foreach ($Computer in $computers)
         {
             If ($computer.properties.name -ne $null)
                 {
-                    Get-DellBIOSReport -ComputerName $Computer.Properties.name
+                    $Jobs += Get-DellBIOSReport -ComputerName $Computer.Properties.name
                 }
         }
     }
 End
     {
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message	
+        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message
+        
+        Return $Jobs
     }

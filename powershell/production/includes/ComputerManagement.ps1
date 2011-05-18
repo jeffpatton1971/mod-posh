@@ -629,3 +629,48 @@ Function Get-PendingUpdates
                 Return $SearchResult.Updates
             }
     }
+
+Function Get-ServiceTag
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .EXAMPLE
+        .NOTES
+        .LINK
+    #>
+    
+    Param
+    (
+        $ComputerName
+    )
+    
+    Begin
+    {
+        $ErrorActionPreference = "SilentlyContinue"
+    }
+    
+    Process
+    {
+        Try
+        {
+            $null = Test-Connection -ComputerName $ComputerName -Count 1 -quiet
+            $Return = New-Object PSObject -Property @{
+                ComputerName = $ComputerName
+                SerialNumber = (Get-WmiObject -Class Win32_BIOS -ComputerName $ComputerName -Credential $Credentials).SerialNumber 
+            }
+        }
+        Catch
+        {
+            $Return = New-Object PSObject -Property @{
+                ComputerName = $ComputerName
+                SerialNumber = "Offline"
+            }
+        }
+    }
+    
+    End
+    {
+        Return $Return
+    }
+}
