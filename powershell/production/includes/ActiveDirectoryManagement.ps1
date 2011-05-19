@@ -301,3 +301,91 @@ Function Get-ADGroupMembers
             Return $UserAccounts
         }
 }
+
+Function Get-StaleComputerAccounts
+{
+    <#
+        .SYNOPSIS
+            Return a collection of computer accounts older than a set number of days.
+        .DESCRIPTION
+            This function can be used to get a list of computer accounts within your Active Directory
+            that are older than a certain number of days. Typically a computer account will renew it's
+            own password every 90 days, so any account where the 'whenChanged' attribute is older than 
+            90 would be considered old.
+        .PARAMETER ADSPath
+            This is an LDAP url that will become the base of your search.
+        .PARAMETER DayOffset
+            Am integer that represents the number of days in which an account is considered stale.
+        .EXAMPLE
+            Get-StaleComputerAccounts -ADSPath "LDAP://DC=company,DC=com" -DayOffset 90
+
+            name                             adspath                          whenchanged
+            ----                             -------                          -----------
+            {desktop1}                       {LDAP://CN=desktop1,OU=Sales ... {11/17/2010 9:19:01 AM}
+            {workstation}                    {LDAP://CN=workstation,OU=Ser... {2/10/2011 7:05:28 PM}
+            {computer09}                     {LDAP://CN=computer09,OU=Admi... {10/25/2010 3:40:32 PM}
+            {workstation01}                  {LDAP://CN=workstation01,OU=S... {6/2/2010 4:29:08 PM}
+
+            Description
+            -----------
+            This is the typical usage from the command-line as well as sample output.
+        .NOTES
+            90 is a default value, when run in production you should use the number of days that you
+            consider an account to be stale.
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-StaleComputerAccounts
+    #>
+    
+    Param
+    (
+        [Parameter(Mandatory=$true)]
+        [string]$ADSPath,
+        [Parameter(Mandatory=$true)]
+        [int]$DayOffset
+    )
+    
+    Begin
+    {
+        $DateOffset = (Get-Date).AddDays(-$DayOffset)
+        [string]$SearchFilter = "(objectCategory=computer)"
+        [array]$ADProperties= "name", "whenChanged"
+
+        $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
+        $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+        $DirectorySearcher.SearchRoot = $DirectoryEntry
+        $DirectorySearcher.PageSize = 1000
+        $DirectorySearcher.Filter = $SearchFilter
+        $DirectorySearcher.SearchScope = "Subtree"
+
+        foreach ($Property in $ADProperties)
+            {
+                [void]$DirectorySearcher.PropertiesToLoad.Add($Property)
+                }
+
+        $ADObjects = $DirectorySearcher.FindAll()
+    }
+    
+    Process
+    {
+        $StaleComputerAccounts = @()
+
+        foreach ($ADObject in $ADObjects)
+        {
+            $WhenChanged = $ADObject.Properties.whenchanged
+            if ($WhenChanged -lt $DateOffset -and $ADObject.Properties.adspath -notlike "*OU=Servers*")
+                {
+                    $ThisComputer = New-Object PSObject -Property @{
+                        name = $ADObject.Properties.name
+                        adspath = $ADObject.Properties.adspath
+                        whenchanged = $WhenChanged
+                        }
+                    $StaleComputerAccounts += $ThisComputer
+                    }
+            }
+    }
+    
+    End
+    {
+        Return $StaleComputerAccounts
+    }
+}
