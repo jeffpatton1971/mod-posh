@@ -37,32 +37,34 @@ Function Get-FWServices
 
                 ForEach($item in $FirewallPolicy.Services)
                 {
-                    $ThisService = New-Object -TypeName PSObject
-                    Add-Member -InputObject $ThisService -MemberType NoteProperty -Name "Property" -Value "Service"
-                    Add-Member -InputObject $ThisService -MemberType NoteProperty -Name "Name" -Value $item.Name
-                    Add-Member -InputObject $ThisService -MemberType NoteProperty -Name "Type" -Value $item.Type
-                    Add-Member -InputObject $ThisService -MemberType NoteProperty -Name "Customized" -Value $Item.Customized
-                    Add-Member -InputObject $ThisService -MemberType NoteProperty -Name "IpVersion" -Value $item.IpVersion
-                    Add-Member -InputObject $ThisService -MemberType NoteProperty -Name "Scope" -Value $item.Scope
-                    Add-Member -InputObject $ThisService -MemberType NoteProperty -Name "RemoteAddresses" -Value $item.RemoteAddresses
-                    Add-Member -InputObject $ThisService -MemberType NoteProperty -Name "Enabled" -Value $item.Enabled
-                    Add-Member -InputObject $ThisService -MemberType NoteProperty -Name "Protocol" -Value "-"
-                    Add-Member -InputObject $ThisService -MemberType NoteProperty -Name "Port" -Value "-"
-                    Add-Member -InputObject $ThisService -MemberType NoteProperty -Name "Builtin" -Value "-"
+                    $ThisService = New-Object -TypeName PSObject -Property @{
+                        Property = "Service"
+                        Name = $item.Name
+                        Type = $item.Type
+                        Customized = $Item.Customized
+                        IpVersion = $item.IpVersion
+                        Scope = $item.Scope
+                        RemoteAddresses = $item.RemoteAddresses
+                        Enabled = $item.Enabled
+                        Protocol = "-"
+                        Port = "-"
+                        Builtin = "-"
+                        }
                     ForEach ($entry in $Item.GloballyOpenPorts)
                     {
-                        $ThisEntry = New-Object -TypeName PSObject
-                        Add-Member -InputObject $ThisEntry -MemberType NoteProperty -Name "Property" -Value "Port"
-                        Add-Member -InputObject $ThisEntry -MemberType NoteProperty -Name "Name" -Value $entry.Name
-                        Add-Member -InputObject $ThisEntry -MemberType NoteProperty -Name "Type" -Value "-"
-                        Add-Member -InputObject $ThisEntry -MemberType NoteProperty -Name "Customized" -Value "-"
-                        Add-Member -InputObject $ThisEntry -MemberType NoteProperty -Name "IpVersion" -Value $entry.IpVersion
-                        Add-Member -InputObject $ThisEntry -MemberType NoteProperty -Name "Scope" -Value $entry.Scope
-                        Add-Member -InputObject $ThisEntry -MemberType NoteProperty -Name "RemoteAddresses" -Value $entry.RemoteAddresses
-                        Add-Member -InputObject $ThisEntry -MemberType NoteProperty -Name "Enabled" -Value $entry.Enabled
-                        Add-Member -InputObject $ThisEntry -MemberType NoteProperty -Name "Protocol" -Value $entry.Protocol
-                        Add-Member -InputObject $ThisEntry -MemberType NoteProperty -Name "Port" -Value $entry.Port
-                        Add-Member -InputObject $ThisEntry -MemberType NoteProperty -Name "BuiltIn" -Value $entry.Builtin
+                        $ThisEntry = New-Object -TypeName PSObject -Property @{
+                            Property = "Port"
+                            Name = $entry.Name
+                            Type = "-"
+                            Customized = "-"
+                            IpVersion = $entry.IpVersion
+                            Scope = $entry.Scope
+                            RemoteAddresses = $entry.RemoteAddresses
+                            Enabled = $entry.Enabled
+                            Protocol = $entry.Protocol
+                            Port = $entry.Port
+                            BuiltIn = $entry.Builtin
+                            }
                     }
                     $FWServices += $ThisService
                     $FwServices += $ThisEntry
