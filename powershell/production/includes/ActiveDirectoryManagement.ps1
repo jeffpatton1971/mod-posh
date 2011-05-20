@@ -348,7 +348,7 @@ Function Get-StaleComputerAccounts
     {
         $DateOffset = (Get-Date).AddDays(-$DayOffset)
         [string]$SearchFilter = "(objectCategory=computer)"
-        [array]$ADProperties= "name", "whenChanged"
+        [array]$ADProperties= "name", "whenChanged", "whenCreated"
 
         $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
         $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
@@ -371,13 +371,15 @@ Function Get-StaleComputerAccounts
 
         foreach ($ADObject in $ADObjects)
         {
-            [datetime]$WhenChanged = [string]$ADObject.Properties.whenchanged
+            $WhenChanged = $ADObject.Properties.whenchanged
+            $WhenCreated = $ADObject.Properties.whencreated
             if ($WhenChanged -lt $DateOffset -and $ADObject.Properties.adspath -notlike "*OU=Servers*")
                 {
                     $ThisComputer = New-Object PSObject -Property @{
                         name = [string]$ADObject.Properties.name
                         adspath = [string]$ADObject.Properties.adspath
-                        whenchanged = $WhenChanged
+                        whenchanged = [string]$WhenChanged
+                        whencreated = [string]$WhenCreated
                         }
                     $StaleComputerAccounts += $ThisComputer
                     }
