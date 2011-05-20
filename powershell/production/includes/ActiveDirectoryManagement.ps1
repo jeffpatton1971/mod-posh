@@ -395,3 +395,52 @@ Function Get-StaleComputerAccounts
         Return $StaleComputerAccounts
     }
 }
+
+Function Set-AccountDisabled
+{
+    <#
+        .SYNOPSIS
+            Disable an account object in Active Directory
+        .DESCRIPTION
+            This function will disable an object in Active Directory, regardless of whether the object
+            is a user or computer.
+        .PARAMETER ADSPath
+            The full LDAP URI of the object to disable.
+        .EXAMPLE
+            Set-AccountDisabled -ADSPath "LDAP://CN=Desktop-01,OU=Workstations,DC=Company,DC=com"
+        .NOTES
+            The context under which this function is run needs to have rights to modify the object in 
+            Active Directory. The error I catch is specifically an Access is Denied message.
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Set-AccountDisabled
+    #>
+    
+    Param
+    (
+        [Parameter(Mandatory=$true)]
+        [string]$ADSPath
+    )
+    
+    Begin
+    {
+        $DisableComputer = [ADSI]$ADSPath
+    }
+    
+    Process
+    {
+        Try
+        {
+            $DisableComputer.psbase.invokeset("AccountDisabled","True")
+            $DisableComputer.psbase.CommitChanges()
+            }
+        Catch [System.Management.Automation.MethodInvocationException]
+        {
+            Return $Error[0].Exception
+            }
+    }
+    
+    End
+    {
+        Return $True
+    }
+}
