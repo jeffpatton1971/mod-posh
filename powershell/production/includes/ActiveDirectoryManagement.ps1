@@ -332,6 +332,10 @@ Function Get-StaleComputerAccounts
         .NOTES
             90 is a default value, when run in production you should use the number of days that you
             consider an account to be stale.
+            The If statement that checks if adsPath contains OU=Servers is specifically for our production
+            environment. All "servers", regardless of OS, are placed in the Servers OU in their respective 
+            hierarchy. I treat server accounts slightly differently than I do workstations accounts, so I 
+            wanted a way to differentiate the two.
         .LINK
             http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-StaleComputerAccounts
     #>
