@@ -371,12 +371,12 @@ Function Get-StaleComputerAccounts
 
         foreach ($ADObject in $ADObjects)
         {
-            $WhenChanged = $ADObject.Properties.whenchanged
+            [datetime]$WhenChanged = [string]$ADObject.Properties.whenchanged
             if ($WhenChanged -lt $DateOffset -and $ADObject.Properties.adspath -notlike "*OU=Servers*")
                 {
                     $ThisComputer = New-Object PSObject -Property @{
-                        name = $ADObject.Properties.name
-                        adspath = $ADObject.Properties.adspath
+                        name = [string]$ADObject.Properties.name
+                        adspath = [string]$ADObject.Properties.adspath
                         whenchanged = $WhenChanged
                         }
                     $StaleComputerAccounts += $ThisComputer
