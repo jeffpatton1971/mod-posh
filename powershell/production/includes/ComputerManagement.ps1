@@ -36,9 +36,9 @@ Function New-LocalUser
 				[string]$Description
 			)
 			
-		$objComputer = [ADSI]"WinNT://$ComputerName"
+		$objComputer = [ADSI]("WinNT://$($ComputerName)")
 		$objUser = $objComputer.Create("User", $User)
-		$objUser.setpassword($password)
+		$objUser.SetPassword($password)
 		$objUser.SetInfo()
 		$objUser.description = $Description
 		$objUser.SetInfo()
