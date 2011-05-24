@@ -501,6 +501,11 @@ Function Add-DomainGroupToLocalGroup
         .PARAMETER UserDomain
             The NetBIOS domain name.
 		.EXAMPLE
+            Add-DomainGroupToLocalGroup -ComputerName "Desktop-PC01" -DomainGroup "StudentAdmins" -UserDomain "COMPANY"
+            
+            Description
+            ===========
+            Showing the default syntax to add a student admin group to a local computer account.
 		.NOTES
 		.LINK
             http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Add-DomainGroupToLocalGroup
