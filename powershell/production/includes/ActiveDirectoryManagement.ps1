@@ -444,3 +444,90 @@ Function Set-AccountDisabled
         Return $True
     }
 }
+Function Reset-ComputerAccount
+{
+    <#
+        .SYNOPSIS
+            Reset computer account password
+        .DESCRIPTION
+            This function will reset the computer account password for a single computer
+            or for an OU of computers.
+        .PARAMETER ADSPath
+            The ADSPath of the computer account, or containing OU.
+        .EXAMPLE
+            Reset-ComputerAccount -ADSPath "LDAP://CN=Desktop-PC01,OU=Workstations,DC=company,DC=com"
+            
+            Description
+            -----------
+            Example usage showing single computer account reset.
+        .NOTES
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Reset-ComputerAccount
+    #>
+    
+    Param
+    (
+        [Parameter(Mandatory=$true)]
+        [String]$ADSPath
+    )
+    
+    Begin
+    {
+        $Computer = [ADSI]$ADSPath
+    }
+    
+    Process
+    {
+        $Computer.SetPassword($($Computer.name)+"$")
+    }
+    
+    End
+    {
+    }
+}
+Function Add-DomainGroupToLocalGroup
+{
+	<#
+		.SYNOPSIS
+            Add a Domain security group to a local computer group
+		.DESCRIPTION
+            This function will add a Domain security group to a local computer group.
+		.PARAMETER ComputerName
+            The NetBIOS name of the computer to update
+        .PARAMETER DomainGroup
+            The name of the Domain security group
+        .PARAMETER LocalGroup
+            The name of the local group to update, if not provided Administrators is assumed.
+        .PARAMETER UserDomain
+            The NetBIOS domain name.
+		.EXAMPLE
+		.NOTES
+		.LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Add-DomainGroupToLocalGroup
+	#>
+	
+	Param
+	(
+        [Parameter(Mandatory=$true)]
+        [string]$ComputerName,
+        [Parameter(Mandatory=$true)]
+        [string]$DomainGroup,
+        [string]$LocalGroup="Administrators",
+        [string]$UserDomain	
+	)
+	
+	Begin
+	{
+        $ComputerObject = [ADSI]("WinNT://$($ComputerName),computer")
+        $GroupObject = $ComputerObject.PSBase.Children.Find("$($LocalGroup)")
+	}
+	
+	Process
+	{
+		$GroupObject.Add("WinNT://$UserDomain/$DomainGroup")
+	}
+	
+	End
+	{
+	}
+}
