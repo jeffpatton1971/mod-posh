@@ -533,6 +533,7 @@ Function Add-DomainGroupToLocalGroup
         {
             $GroupObject = $ComputerObject.PSBase.Children.Find("$($LocalGroup)")
             $GroupObject.Add("WinNT://$UserDomain/$DomainGroup")
+			Return $?
             }
         Catch
         {
@@ -542,6 +543,5 @@ Function Add-DomainGroupToLocalGroup
 	
 	End
 	{
-		Return $?
 	}
 }
