@@ -16,6 +16,12 @@
         Description
         -----------
         The basic syntax of the script.
+    .EXAMPLE
+	    Update-LabComputers -ADSPath "LDAP://OU=Workstations,DC=company,DC=com" -GroupName "StudentAdmins" -DomainName "COMPANY" | Export-Csv ./Report.csv -NoTypeInformation
+		
+		Description
+		-----------
+		Shows piping the output of the script to a csv file.
     .NOTES
         ScriptName: Update-LabComputers
         Created By: Jeff Patton
@@ -71,4 +77,4 @@ End
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message
 		
 		Return $Jobs
-    }
+    
