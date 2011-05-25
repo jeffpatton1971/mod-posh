@@ -139,8 +139,27 @@ Function Add-LocalUserToGroup
 				[string]$Group
 			)
 
-		$objComputer = [ADSI]("WinNT://$($ComputerName)/$($Group),group")
-		$objComputer.add("WinNT://$($ComputerName)/$($User),group")
+        Begin
+        {
+        }
+        
+        Process
+        {
+            Try
+            {
+                $objComputer = [ADSI]("WinNT://$($ComputerName)/$($Group),group")
+                $objComputer.add("WinNT://$($ComputerName)/$($User),group")
+                Return $?
+                }
+            Catch
+            {
+                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
+        }
+        
+        End
+        {
+        }
 	}
 Function New-ScheduledTask
 	{
