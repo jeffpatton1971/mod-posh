@@ -50,17 +50,26 @@ Begin
         . .\includes\ActiveDirectoryManagement.ps1
         
         $LabComputers = Get-ADObjects -ADSPath $ADSPath
+		$Jobs = @()
     }
 Process
     {
         foreach ($LabComputer in $LabComputers)
         {
             Write-Output "Updating $($LabComputer.Properties.name)"
-            Add-DomainGroupToLocalGroup -ComputerName $LabComputer.Properties.name -DomainGroup $GroupName -UserDomain $DomainName
+            $Status = Add-DomainGroupToLocalGroup -ComputerName $LabComputer.Properties.name -DomainGroup $GroupName -UserDomain $DomainName
+			
+			$ThisJob = New-Object PSObject -Property @{
+				ComputerName = $($LabComputer.Properties.name)
+				Status = $Status
+				}
+            $Jobs += $ThisJob
         }
     }
 End
     {
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message	
+        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message
+		
+		Return $Jobs
     }
