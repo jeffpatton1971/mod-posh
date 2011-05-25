@@ -35,13 +35,32 @@ Function New-LocalUser
 				[string]$Password,
 				[string]$Description
 			)
-			
-		$objComputer = [ADSI]("WinNT://$($ComputerName)")
-		$objUser = $objComputer.Create("User", $User)
-		$objUser.SetPassword($password)
-		$objUser.SetInfo()
-		$objUser.description = $Description
-		$objUser.SetInfo()
+
+        Begin
+        {
+        }
+        
+        Process
+        {
+            Try
+            {
+                $objComputer = [ADSI]("WinNT://$($ComputerName)")
+                $objUser = $objComputer.Create("User", $User)
+                $objUser.SetPassword($password)
+                $objUser.SetInfo()
+                $objUser.description = $Description
+                $objUser.SetInfo()
+                Return $?
+                }
+            Catch
+            {
+                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
+        }
+        
+        End
+        {
+        }
 	}
 Function Set-Pass
 	{
