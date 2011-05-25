@@ -56,7 +56,6 @@ Process
     {
         foreach ($LabComputer in $LabComputers)
         {
-            Write-Output "Updating $($LabComputer.Properties.name)"
             $Status = Add-DomainGroupToLocalGroup -ComputerName $LabComputer.Properties.name -DomainGroup $GroupName -UserDomain $DomainName
 			
 			$ThisJob = New-Object PSObject -Property @{
