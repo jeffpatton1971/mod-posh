@@ -60,7 +60,7 @@ Process
 			
 			$ThisJob = New-Object PSObject -Property @{
 				ComputerName = $($LabComputer.Properties.name)
-				Status = $Status
+				Status = [string]$Status
 				}
             $Jobs += $ThisJob
         }
