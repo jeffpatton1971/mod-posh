@@ -100,11 +100,9 @@ Function Set-Pass
                 
                 $Return = "Password updated"
                 }
-        Catch [System.Management.Automation.MethodInvocationException]
+        Catch
             {
-                [string]$ThisError = $Error[0].Exception
-                $ThisError = $ThisError.Substring($ThisError.indexof(":",($ThisError.IndexOf(":")+2))+2)
-                $Return = $ThisError.Substring(1,$ThisError.IndexOf("."))
+                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
                 }
 
         Return [string]$Return
