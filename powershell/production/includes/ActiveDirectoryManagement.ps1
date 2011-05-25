@@ -534,22 +534,14 @@ Function Add-DomainGroupToLocalGroup
             $GroupObject = $ComputerObject.PSBase.Children.Find("$($LocalGroup)")
             $GroupObject.Add("WinNT://$UserDomain/$DomainGroup")
             }
-        Catch [System.Runtime.InteropServices.COMException]
-        {
-            Write-Warning -Message "Error connecting to $($ComputerName)"
-            }
-        Catch [System.UnauthorizedAccessException]
-        {
-            Write-Warning -Message "Access is denied."
-            }
         Catch
         {
-            $Error[0] |Format-List * -Force
-            Break
+            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
             }
 	}
 	
 	End
 	{
+		Return $?
 	}
 }
