@@ -524,12 +524,20 @@ Function Add-DomainGroupToLocalGroup
 	Begin
 	{
         $ComputerObject = [ADSI]("WinNT://$($ComputerName),computer")
-        $GroupObject = $ComputerObject.PSBase.Children.Find("$($LocalGroup)")
+        
 	}
 	
 	Process
 	{
-		$GroupObject.Add("WinNT://$UserDomain/$DomainGroup")
+        Try
+        {
+            $GroupObject = $ComputerObject.PSBase.Children.Find("$($LocalGroup)")
+            $GroupObject.Add("WinNT://$UserDomain/$DomainGroup")
+            }
+        Catch
+        {
+            Write-Warning -Message "Error connecting to $($ComputerName)"
+            }
 	}
 	
 	End
