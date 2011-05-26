@@ -84,28 +84,37 @@ Function Set-Pass
 				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Set-Pass
 		#>
 		Param
-			(
-				[Parameter(Mandatory=$true)]
-				[string]$ComputerName = (& hostname),
-				[Parameter(Mandatory=$true)]
-				[string]$UserName,
-				[Parameter(Mandatory=$true)]
-				[string]$Password
-			)
+        (
+            [Parameter(Mandatory=$true)]
+            [string]$ComputerName = (& hostname),
+            [Parameter(Mandatory=$true)]
+            [string]$UserName,
+            [Parameter(Mandatory=$true)]
+            [string]$Password
+        )
 
-        Try
-            {
-        		$User = [adsi]("WinNT://$ComputerName/$UserName, user")
-        		$User.psbase.invoke("SetPassword", $Password)
-                
-                $Return = "Password updated"
-                }
-        Catch
-            {
-                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
-                }
-
-        Return [string]$Return
+        Begin
+        {
+        }
+        
+        Process
+        {
+            Try
+                {
+            		$User = [adsi]("WinNT://$ComputerName/$UserName, user")
+            		$User.psbase.invoke("SetPassword", $Password)
+                    
+                    Return "Password updated"
+                    }
+            Catch
+                {
+                    Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                    }
+        }
+        
+        End
+        {
+        }
 	}	
 Function Add-LocalUserToGroup
 	{
