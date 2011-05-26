@@ -77,22 +77,40 @@ Function Get-ADObjects
 				[string]$SearchFilter = "(objectCategory=computer)",
 				[array]$ADProperties="name"
 			)
-		
-        $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
-        $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
-        $DirectorySearcher.SearchRoot = $DirectoryEntry
-        $DirectorySearcher.PageSize = 1000
-        $DirectorySearcher.Filter = $SearchFilter
-        $DirectorySearcher.SearchScope = "Subtree"
 
-        foreach ($Property in $ADProperties)
+        Begin
+        {
+        }
+        
+        Process
+        {
+            Try
             {
-                [void]$DirectorySearcher.PropertiesToLoad.Add($Property)
+                $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
+                $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+                $DirectorySearcher.SearchRoot = $DirectoryEntry
+                $DirectorySearcher.PageSize = 1000
+                $DirectorySearcher.Filter = $SearchFilter
+                $DirectorySearcher.SearchScope = "Subtree"
+
+                foreach ($Property in $ADProperties)
+                    {
+                        [void]$DirectorySearcher.PropertiesToLoad.Add($Property)
+                        }
+
+                $ADObjects = $DirectorySearcher.FindAll()
+
+        		Return $ADObjects
                 }
-
-        $ADObjects = $DirectorySearcher.FindAll()
-
-		Return $ADObjects
+            Catch
+            {
+                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
+        }
+        
+        End
+        {
+        }
 	}	
 Function Add-UserToLocalGroup
 	{
@@ -137,13 +155,33 @@ Function Add-UserToLocalGroup
 				[string]$UserName,
 				[Parameter(Mandatory=$true)]
 				[string]$LocalGroup,
-				[string]$UserDomain				
+				[string]$UserDomain
 			)
+
+        Begin
+        {
 		if ($UserDomain -eq $null)
 			{
 				$UserDomain = [string]([ADSI] "").name
 			}
-		([ADSI]"WinNT://$Computer/$LocalGroup,group").Add("WinNT://$UserDomain/$UserName")
+        }
+        
+        Process
+        {
+            Try
+            {
+                ([ADSI]"WinNT://$Computer/$LocalGroup,group").Add("WinNT://$UserDomain/$UserName")
+                Return $?
+                }
+            Catch
+            {
+                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
+        }
+        
+        End
+        {
+        }
 	}
 Function Get-LocalGroupMembers
 	{
@@ -177,36 +215,44 @@ Function Get-LocalGroupMembers
 				[Parameter(Mandatory=$true)]
 				[string]$GroupName
 			)
-			
-			$empty = Test-Connection $ComputerName -Count 1 -ErrorAction SilentlyContinue -ErrorVariable err
-			
-			If ($err -ne $null)
-				{
-					#	$ComputerName offline
-				}
-			Else
-				{
-					#	$ComputerName online
-					$Group = [ADSI]("WinNT://$ComputerName/$GroupName,group")
-					
-					$Members = @()  
-					$Group.Members() |  
-						% {  
-							$AdsPath = $_.GetType().InvokeMember("Adspath", 'GetProperty', $null, $_, $null)
-							$AccountArray = $AdsPath.split('/',[StringSplitOptions]::RemoveEmptyEntries)
-							$AccountName = $AccountArray[-1]
-							$AccountDomain = $AccountArray[-2]
-							$AccountClass = $_.GetType().InvokeMember("Class", 'GetProperty', $null, $_, $null)
-							
-							$Member = New-Object PSObject  
-							$Member | Add-Member -MemberType NoteProperty -Name "Name" -Value $AccountName  
-							$Member | Add-Member -MemberType NoteProperty -Name "Domain" -Value $AccountDomain  
-							$Member | Add-Member -MemberType NoteProperty -Name "Class" -Value $AccountClass  
+		
+        Begin
+        {
+        }	
+		
+        Process
+        {
+            Try
+            {
+                $Group = [ADSI]("WinNT://$ComputerName/$GroupName,group")
+                $Members = @()  
+                $Group.Members() |foreach 
+                    {
+                        $AdsPath = $_.GetType().InvokeMember("Adspath", 'GetProperty', $null, $_, $null)
+                        $AccountArray = $AdsPath.split('/',[StringSplitOptions]::RemoveEmptyEntries)
+                        $AccountName = $AccountArray[-1]
+                        $AccountDomain = $AccountArray[-2]
+                        $AccountClass = $_.GetType().InvokeMember("Class", 'GetProperty', $null, $_, $null)
+                        
+                        $Member = New-Object PSObject -Property @{
+                            Name = $AccountName
+                            Domain = $AccountDomain
+                            Class = $AccountClass
+                            }
 
-							$Members += $Member  
-						}
-				}
-		Return $Members
+                        $Members += $Member  
+                        }
+                Return $Members
+                }
+            Catch
+            {
+                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
+        }
+        
+        End
+        {
+        }
 	}
 Function Get-ADGroupMembers
 {
@@ -239,10 +285,10 @@ Function Get-ADGroupMembers
             http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-ADGroupMembers
     #>
     Param
-        (
-    $UserGroup = "Managers",
-    [ADSI]$UserDomain = "LDAP://DC=company,DC=com"
-        )
+    (
+        $UserGroup = "Managers",
+        [ADSI]$UserDomain = "LDAP://DC=company,DC=com"
+    )
 
     Begin
         {
@@ -432,16 +478,16 @@ Function Set-AccountDisabled
         {
             $DisableComputer.psbase.invokeset("AccountDisabled","True")
             $DisableComputer.psbase.CommitChanges()
+            Return $?
             }
-        Catch [System.Management.Automation.MethodInvocationException]
+        Catch
         {
-            Return $Error[0].Exception
+            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
             }
     }
     
     End
     {
-        Return $True
     }
 }
 Function Reset-ComputerAccount
@@ -478,7 +524,15 @@ Function Reset-ComputerAccount
     
     Process
     {
-        $Computer.SetPassword($($Computer.name)+"$")
+        Try
+        {
+            $Computer.SetPassword($($Computer.name)+"$")
+            Return $?
+            }
+        Catch
+        {
+            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+            }
     }
     
     End
@@ -524,7 +578,6 @@ Function Add-DomainGroupToLocalGroup
 	Begin
 	{
         $ComputerObject = [ADSI]("WinNT://$($ComputerName),computer")
-        
 	}
 	
 	Process
