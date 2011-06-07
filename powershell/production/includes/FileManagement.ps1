@@ -221,6 +221,7 @@ Function Get-FileLogs
             )
         Begin
         {
+            $ErrorActionPreference = "Stop"
             if ((Test-Path -Path "c:\temp") -ne $true)
             {
                 Try
@@ -245,33 +246,54 @@ Function Get-FileLogs
                 {
                     apache
                         {
-                            #   Apache Log
-                            #	Import the log file for processing
-                            $WebTemp = foreach ($item in Get-Content $LogFile){$item.Remove(($item.IndexOf("]")-6),1)} 
-                            $WebTemp |Convert-Delimiter " " "," |Set-Content "$($TempPath)\templog.csv"
-                            $Return = Import-Csv .\templog.csv -Header "RemoteHost", "RemoteLogName", "RemoteUser", "Time", "Request", "Status", "Size", "Referer", "UserAgent"
-                            Remove-Item "$($TempPath)\templog.csv"
-                            Remove-Variable WebTemp
+                            Try
+                            {
+                                #   Apache Log
+                                #	Import the log file for processing
+                                $WebTemp = foreach ($item in Get-Content $LogFile){$item.Remove(($item.IndexOf("]")-6),1)} 
+                                $WebTemp |Convert-Delimiter " " "," |Set-Content "$($TempPath)\templog.csv"
+                                $Return = Import-Csv "$($TempPath)\templog.csv" -Header "RemoteHost", "RemoteLogName", "RemoteUser", "Time", "Request", "Status", "Size", "Referer", "UserAgent"
+                                Remove-Item "$($TempPath)\templog.csv"
+                                Remove-Variable WebTemp
+                                }
+                            Catch
+                            {
+                                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                                }
                         }
                     iis
                         {
-                            #   iis log
-                            #   Remove header information wherever it appears
-                            $WebTemp = Get-Content $LogFile |Where-Object {$_ -match "/#*"}
-                            $WebTemp |Convert-Delimiter -From " " -To "`t" |Set-Content "$($TempPath)\templog.csv"
-                            $Return = Import-Csv .\templog.csv  -Delimiter `t -header "Date", "Time", "ServerSitename", "ServerIP", "Method", "URIStem", "URIQuery", "ServerPort", "ClientUsername", "ClientIP", "HTTPStatus", "ProtocolStatus", "Win32Status", "BytesSent", "BytesReceived" ,"TimeTaken"
-                            Remove-Item "$($TempPath)\templog.csv"
-                            Remove-Variable WebTemp
+                            Try
+                            {
+                                #   iis log
+                                #   Remove header information wherever it appears
+                                $WebTemp = Get-Content $LogFile |Where-Object {$_ -match "/#*"}
+                                $WebTemp |Convert-Delimiter -From " " -To "`t" |Set-Content "$($TempPath)\templog.csv"
+                                $Return = Import-Csv "$($TempPath)\templog.csv"  -Delimiter `t -header "Date", "Time", "ServerSitename", "ServerIP", "Method", "URIStem", "URIQuery", "ServerPort", "ClientUsername", "ClientIP", "HTTPStatus", "ProtocolStatus", "Win32Status", "BytesSent", "BytesReceived" ,"TimeTaken"
+                                Remove-Item "$($TempPath)\templog.csv"
+                                Remove-Variable WebTemp
+                                }
+                            Catch
+                            {
+                                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                                }
                         }
                     wfw
                         {
-                            #   wfw log
-                            #   Remove header information wherever it appears
-                            $WfwTemp = foreach ($item in Get-Content $LogFile){if ($item.Length -gt 0){$item |Where-Object {$_ -notmatch '#'}}}
-                            $WfwTemp |Convert-Delimiter -From " " -To "," |Set-Content "$($TempPath)\templog.csv"
-                            $Return = Import-Csv .\templog.csv -Header "Date", "Time", "Action", "Protocol", "src-ip", "dst-ip", "src-port", "dst-port", "size", "tcpflags", "tcpsyn", "tcpack", "tcpwin", "icmptype", "icmpmode", "Info", "Path"
-                            Remove-Item "$($TempPath)\templog.csv"
-                            Remove-Variable WfwTemp
+                            Try
+                            {
+                                #   wfw log
+                                #   Remove header information wherever it appears
+                                $WfwTemp = foreach ($item in Get-Content $LogFile){if ($item.Length -gt 0){$item |Where-Object {$_ -notmatch '#'}}}
+                                $WfwTemp |Convert-Delimiter -From " " -To "," |Set-Content "$($TempPath)\templog.csv"
+                                $Return = Import-Csv "$($TempPath)\templog.csv" -Header "Date", "Time", "Action", "Protocol", "src-ip", "dst-ip", "src-port", "dst-port", "size", "tcpflags", "tcpsyn", "tcpack", "tcpwin", "icmptype", "icmpmode", "Info", "Path"
+                                Remove-Item "$($TempPath)\templog.csv"
+                                Remove-Variable WfwTemp
+                                }
+                            Catch
+                            {
+                                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                                }
                         }
                 }
         }
