@@ -257,7 +257,7 @@ Function Get-FileLogs
                             Catch
                             {
                                 $ThisError = $Error[0]
-                                Return $ThisError.Exception.Message
+                                Return $ThisError.Exception.Message.ToString().Trim()
                                 }
                         }
                     iis
@@ -275,7 +275,7 @@ Function Get-FileLogs
                             Catch
                             {
                                 $ThisError = $Error[0]
-                                Return $ThisError.Exception.Message
+                                Return $ThisError.Exception.Message.ToString().Trim()
                                 }
                         }
                     wfw
@@ -293,7 +293,7 @@ Function Get-FileLogs
                             Catch
                             {
                                 $ThisError = $Error[0]
-                                Return $ThisError.Exception.Message
+                                Return $ThisError.Exception.Message.ToString().Trim()
                                 }
                         }
                 }
