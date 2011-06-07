@@ -97,7 +97,7 @@ Process
         {
             Try
             {
-                Set-GPPermissions -Guid $DeptGPO.Id -TargetName $TargetName -PermissionLevel $PermissionLevel -TargetType $TargetType -WhatIf
+                Set-GPPermissions -Guid $DeptGPO.Id -TargetName $TargetName -PermissionLevel $PermissionLevel -TargetType $TargetType
                 $Message = "Adding $($TargetName) to $($DeptGPO.DisplayName) with permission level $($PermissionLevel)"
                 Write-EventLog -LogName $LogName -Source $ScriptName -EventId "101" -EntryType "Information" -Message $Message
                 }
