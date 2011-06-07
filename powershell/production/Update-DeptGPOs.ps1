@@ -21,6 +21,8 @@
             None
     .PARAMETER BackupLocation
         A valid location either local or UNC to store the GPO backups.
+    .PARAMETER Test
+        Set to $False in order to update security and perform backup.
     .EXAMPLE
         .\Update-DeptGPOs.ps1 -DeptCode "Admin" -TargetName "MyUser" -BackupLocation "c:\temp"
         
@@ -60,7 +62,8 @@ Param
     $TargetType = "User",
     [ValidateSet("GpoRead", "GpoApply", "GpoEdit", "GpoEditDeleteModifySecurity","None")]
     $PermissionLevel = "None",
-    $BackupLocation
+    $BackupLocation,
+    $Test = $True
 )
 Begin
     {
@@ -80,7 +83,20 @@ Begin
         {
             Import-Module GroupPolicy
             $DeptGPOs = Get-GPO -All |Where-Object {$_.DisplayName -like "*$($DeptCode)*"}
-            Backup-GPO -All -Path $BackupLocation -Comment "Updating Security on $($DeptCode) GPOs"
+            
+            Foreach ($DeptGPO in $DeptGPOs)
+            {
+                If ($Test -eq $False)
+                {
+                    Backup-GPO -Guid $DeptGPO.Id -Path $BackupLocation -Comment "Updating Security on $($DeptCode) GPOs"
+                    $Message = "Backed up $($DeptGPO.DisplayName) to $($BackupLocation)"
+                    Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message
+                    }
+                Else
+                {
+                    Write-Host "Backed up $($DeptGPO.Displayname) to $($BackupLocation)"
+                    }
+                }
             }
         Catch
         {
@@ -97,9 +113,16 @@ Process
         {
             Try
             {
-                Set-GPPermissions -Guid $DeptGPO.Id -TargetName $TargetName -PermissionLevel $PermissionLevel -TargetType $TargetType
-                $Message = "Adding $($TargetName) to $($DeptGPO.DisplayName) with permission level $($PermissionLevel)"
-                Write-EventLog -LogName $LogName -Source $ScriptName -EventId "101" -EntryType "Information" -Message $Message
+                If ($Test -eq $False)
+                {                    
+                    Set-GPPermissions -Guid $DeptGPO.Id -TargetName $TargetName -PermissionLevel $PermissionLevel -TargetType $TargetType
+                    $Message = "Adding $($TargetName) to $($DeptGPO.DisplayName) with permission level $($PermissionLevel)"
+                    Write-EventLog -LogName $LogName -Source $ScriptName -EventId "101" -EntryType "Information" -Message $Message
+                    }
+                Else
+                {
+                    Set-GPPermissions -Guid $DeptGPO.Id -TargetName $TargetName -PermissionLevel $PermissionLevel -TargetType $TargetType -WhatIf
+                    }
                 }
             Catch
             {
