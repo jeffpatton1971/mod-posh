@@ -258,7 +258,8 @@ Function Get-FileLogs
                                 }
                             Catch
                             {
-                                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                                $ThisError = $Error[0]
+                                Return $ThisError.Exception.Message
                                 }
                         }
                     iis
@@ -275,7 +276,8 @@ Function Get-FileLogs
                                 }
                             Catch
                             {
-                                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                                $ThisError = $Error[0]
+                                Return $ThisError.Exception.Message
                                 }
                         }
                     wfw
@@ -292,7 +294,8 @@ Function Get-FileLogs
                                 }
                             Catch
                             {
-                                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                                $ThisError = $Error[0]
+                                Return $ThisError.Exception.Message
                                 }
                         }
                 }
