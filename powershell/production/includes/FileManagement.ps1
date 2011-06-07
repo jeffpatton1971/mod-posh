@@ -229,7 +229,7 @@ Function Get-FileLogs
             {
                 Try
                 {
-                    New-Item $TempPath -ItemType directory
+                    $Null = New-Item $TempPath -ItemType directory
                     }
                 Catch
                 {
