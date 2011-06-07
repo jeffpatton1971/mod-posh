@@ -188,6 +188,8 @@ Function Get-FileLogs
                 The path and filename to the log file to parse.
             .PARAMETER LogType
                 The kind of logfile to work with, Apache, WFW or IIS.
+            .PARAMETER TempPath
+                A temporary path to write the output to.
             .EXAMPLE
                 Get-FileLogs -LogFile 'C:\LogFiles\scripts_access.log' -LogType apache |Format-Table
 
@@ -217,26 +219,22 @@ Function Get-FileLogs
                 [Parameter(Mandatory=$true)]
                 $LogFile,
                 [Parameter(Mandatory=$true)]
-                $LogType
+                $LogType,
+                $TempPath = "C:\Temp"
             )
         Begin
         {
             $ErrorActionPreference = "Stop"
-            if ((Test-Path -Path "c:\temp") -ne $true)
+            if ((Test-Path -Path $TempPath) -ne $true)
             {
                 Try
                 {
-                    New-Item -Path c:\ -Name temp -ItemType directory
-                    $TempPath = "c:\temp"
+                    New-Item $TempPath -ItemType directory
                     }
                 Catch
                 {
                     Return $Error[0].Exception.InnerException.Message.ToString().Trim()
                     }
-                }
-            else
-            {
-                $TempPath = "c:\temp"
                 }
         }
         
