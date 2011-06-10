@@ -771,7 +771,8 @@ Function Backup-EventLogs
         {
             If ($EventLog.RecordCount -gt 0)
             {
-                $BackupFilename = "$($ComputerName)-$($EventLog.LogName)-"+(Get-Date -format "yyy-MM-dd HH-MM-ss").ToString()+".csv"
+                $LogName = ($EventLog.LogName).Replace("/","-")
+                $BackupFilename = "$($ComputerName)-$($LogName)-"+(Get-Date -format "yyy-MM-dd HH-MM-ss").ToString()+".csv"
                 Get-WinEvent -LogName $EventLog.LogName -ComputerName $ComputerName |Export-Csv -Path ".\$($BackupFilename)"
                 }
             }
