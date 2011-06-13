@@ -742,17 +742,73 @@ Function Backup-EventLogs
         .SYNOPSIS
             Backup Eventlogs from remote computer
         .DESCRIPTION
-            This function backs up all logs on a Windows computer that have events written in them. This
-            log is stored as a .csv file in the current directory, where the filename is the ComputerName+
-            Logname+Date+Time the backup was created.
+            This function copies event log files from a remote computer to a backup location.
         .PARAMETER ComputerName
             The NetBIOS name of the computer to connect to.
+        .PARAMETER LogPath
+            The path to the logs you wish to backup. The default logpath "C:\Windows\system32\winevt\Logs"
+            is used if left blank.
+        .PARAMETER BackupPath
+            The location to copy the logs to.
         .EXAMPLE
             Backup-EventLogs -ComputerName dc1
         .NOTES
             May need to be a user with rights to access various logs, such as security on remote computer.
         .LINK
             http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Backup-EventLogs
+    #>
+    
+    Param
+    (
+        [string]$ComputerName,
+        [string]$LogPath = "C:\Windows\system32\winevt\Logs",
+        [string]$BackupPath = "C:\Logs"
+    )
+    
+    Begin
+    {
+        $EventLogs = "\\$($Computername)\$($LogPath.Replace(":","$"))"
+        If ((Test-Path $BackupPath) -ne $True)
+        {
+            New-Item $BackupPath -Type Directory |Out-Null
+            }
+        }
+
+    Process
+    {
+        Try
+        {
+            Copy-Item $EventLogs -Destination $BackupPath -Recurse
+            }
+        Catch
+        {
+            Return $Error
+            }
+        }
+
+    End
+    {
+        Return $?
+        }
+}
+
+Function Export-EventLogs
+{
+    <#
+        .SYNOPSIS
+            Export Eventlogs from remote computer
+        .DESCRIPTION
+            This function backs up all logs on a Windows computer that have events written in them. This
+            log is stored as a .csv file in the current directory, where the filename is the ComputerName+
+            Logname+Date+Time the backup was created.
+        .PARAMETER ComputerName
+            The NetBIOS name of the computer to connect to.
+        .EXAMPLE
+            Export-EventLogs -ComputerName dc1
+        .NOTES
+            May need to be a user with rights to access various logs, such as security on remote computer.
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Export-EventLogs
     #>
     
     Param
