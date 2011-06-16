@@ -6,34 +6,53 @@
 '   \\people.soecs.ku.edu\profiles\%USERNAME%\Profile\Favorites
 '
 ' 
+Dim UserName
 Groups = GetGroupMembership(".")
 
-For Each GroupDN In Groups
-    ThisGroup = Split(GroupDN, ",")
-    GroupName = Right(ThisGroup(0),Len(ThisGroup(0))-3)
+For Each GroupName In Groups
     NetPath = "\\people.soecs.ku.edu\"
     FolderPath = "\" & UserName & "\Profile\Favorites"
     Select Case GroupName
         Case "LegacyProfile"
-            Wscript.Echo NetPath & "Profiles" & FolderPath
+            BackupRegKeyValue "","",""
+            SetRegKeyValue "", NetPath & "Profiles" & FolderPath
+            Wscript.Quit
         Case "AGroup"
-            Wscript.Echo NetPath & Left(GroupName, 1) & FolderPath
+            BackupRegKeyValue "","",""
+            SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
+            Wscript.Quit
         Case "CGroup"
-            Wscript.Echo NetPath & Left(GroupName, 1) & FolderPath
+            BackupRegKeyValue "","",""
+            SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
+            Wscript.Quit
         Case "EGroup"
-            Wscript.Echo NetPath & Left(GroupName, 1) & FolderPath
+            BackupRegKeyValue "","",""
+            SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
+            Wscript.Quit
         Case "IGroup"
-            Wscript.Echo NetPath & Left(GroupName, 1) & FolderPath
+            BackupRegKeyValue "","",""
+            SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
+            Wscript.Quit
         Case "KGroup"
-            Wscript.Echo NetPath & Left(GroupName, 1) & FolderPath
+            BackupRegKeyValue "","",""
+            SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
+            Wscript.Quit
         Case "MGroup"
-            Wscript.Echo NetPath & Left(GroupName, 1) & FolderPath
+            BackupRegKeyValue "","",""
+            SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
+            Wscript.Quit
         Case "NGroup"
-            Wscript.Echo NetPath & Left(GroupName, 1) & FolderPath
+            BackupRegKeyValue "","",""
+            SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
+            Wscript.Quit
         Case "SGRoup"
-            Wscript.Echo NetPath & Left(GroupName, 1) & FolderPath
+            BackupRegKeyValue "","",""
+            SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
+            Wscript.Quit
         Case "TGroup"
-            Wscript.Echo NetPath & Left(GroupName, 1) & FolderPath
+            BackupRegKeyValue "","",""
+            SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
+            Wscript.Quit
     End Select
 Next
 
@@ -54,7 +73,6 @@ Function GetGroupMembership(ComputerName)
         For Each Group in User.groups
             GroupNames = GroupNames & Group.Name & ","
         Next
-        GetGroupMembership = Split(GroupNames, ",")
     Else
         Set objWMIService = GetObject("winmgmts:\\" & ComputerName & "\root\CIMV2") 
         Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_UserAccount WHERE Name = '" & UserName & "'",,48) 
@@ -64,8 +82,14 @@ Function GetGroupMembership(ComputerName)
 
         Set objPrincipal = GetObject("GC://cn=" & UserSid & ",cn=ForeignSecurityPrincipals,dc=soecs,dc=ku,dc=edu" )
         
-        GetGroupMembership = objPrincipal.memberOf
+        For Each Group In objPrincipal.memberOf
+            ThisGroup = Split(Group, ",")
+            GroupName = Right(ThisGroup(0),Len(ThisGroup(0))-3)
+            GroupNames = GroupNames & GroupName & ","
+        Next
     End If
+    
+    GetGroupMembership = Split(GroupNames, ",")
 End Function
 
 Function SetRegKeyValue(KeyPath, Value)
@@ -77,19 +101,18 @@ End Function
 Function BackupRegKeyValue(KeyPath, BackupPath, FileName)
     If KeyPath = "" Then KeyPath = "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders\Favorites"
     If FileName = "" Then FileName = "Backup-RegistryKey.txt"
-    If BackupPath = "" Then BackupPath = "U:\"
+    If BackupPath = "" Then BackupPath = "U:"
     
     Set WshShell = WScript.CreateObject("WScript.Shell")
     CurKey = WshShell.RegRead(KeyPath)
 
     Dim objFSO
-    Dim strFile
 	
     Set objFSO = CreateObject("Scripting.FileSystemObject")
     
-    Set File = objFSO.OpenTextFile(BackupPath & "\" & FileName , True, 8)
-    File.WriteLine("Backup-RegKeyValue ran on " & Date())
-    File.WriteLine("Backing up registry key:" * KeyPath)
+    Set File = objFSO.OpenTextFile(BackupPath & "\" & FileName ,8, True)
+    File.WriteLine("Backup-RegKeyValue ran on " & Now())
+    File.WriteLine("Backing up registry key:" & KeyPath)
     File.WriteLine("Original value: " & CurKey)
     File.WriteLine
     File.Close
