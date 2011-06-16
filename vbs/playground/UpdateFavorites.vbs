@@ -14,43 +14,43 @@ For Each GroupName In Groups
     FolderPath = "\" & UserName & "\Profile\Favorites"
     Select Case GroupName
         Case "LegacyProfile"
-            BackupRegKeyValue "","",""
+            BackupRegKeyValue ""
             SetRegKeyValue "", NetPath & "Profiles" & FolderPath
             Wscript.Quit
         Case "AGroup"
-            BackupRegKeyValue "","",""
+            BackupRegKeyValue ""
             SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
             Wscript.Quit
         Case "CGroup"
-            BackupRegKeyValue "","",""
+            BackupRegKeyValue ""
             SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
             Wscript.Quit
         Case "EGroup"
-            BackupRegKeyValue "","",""
+            BackupRegKeyValue ""
             SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
             Wscript.Quit
         Case "IGroup"
-            BackupRegKeyValue "","",""
+            BackupRegKeyValue ""
             SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
             Wscript.Quit
         Case "KGroup"
-            BackupRegKeyValue "","",""
+            BackupRegKeyValue ""
             SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
             Wscript.Quit
         Case "MGroup"
-            BackupRegKeyValue "","",""
+            BackupRegKeyValue ""
             SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
             Wscript.Quit
         Case "NGroup"
-            BackupRegKeyValue "","",""
+            BackupRegKeyValue ""
             SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
             Wscript.Quit
         Case "SGRoup"
-            BackupRegKeyValue "","",""
+            BackupRegKeyValue ""
             SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
             Wscript.Quit
         Case "TGroup"
-            BackupRegKeyValue "","",""
+            BackupRegKeyValue ""
             SetRegKeyValue "", NetPath & Left(GroupName, 1) & FolderPath
             Wscript.Quit
     End Select
@@ -98,22 +98,29 @@ Function SetRegKeyValue(KeyPath, Value)
     WshShell.RegWrite KeyPath, Value, "REG_SZ"
 End Function
 
-Function BackupRegKeyValue(KeyPath, BackupPath, FileName)
+Function BackupRegKeyValue(KeyPath)
     If KeyPath = "" Then KeyPath = "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders\Favorites"
-    If FileName = "" Then FileName = "Backup-RegistryKey.txt"
-    If BackupPath = "" Then BackupPath = "U:"
     
     Set WshShell = WScript.CreateObject("WScript.Shell")
     CurKey = WshShell.RegRead(KeyPath)
 
-    Dim objFSO
-	
-    Set objFSO = CreateObject("Scripting.FileSystemObject")
-    
-    Set File = objFSO.OpenTextFile(BackupPath & "\" & FileName ,8, True)
-    File.WriteLine("Backup-RegKeyValue ran on " & Now())
-    File.WriteLine("Backing up registry key:" & KeyPath)
-    File.WriteLine("Original value: " & CurKey)
-    File.WriteLine
-    File.Close
+    Call LogData(0, "Original Favorites KeyValue = " & CurKey)
 End Function
+
+Sub LogData(intCode, strMessage)
+	' Write data to application log
+	' 
+	' http://www.microsoft.com/technet/scriptcenter/guide/default.mspx?mfr=true
+	'
+	' Event Codes
+	' 	0 = Success
+	'	1 = Error
+	'	2 = Warning
+	'	4 = Information
+	Dim objShell
+
+	Set objShell = Wscript.CreateObject("Wscript.Shell")
+
+		objShell.LogEvent intCode, strMessage
+
+End Sub
