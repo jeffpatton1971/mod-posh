@@ -59,8 +59,10 @@ Next
 Function GetGroupMembership(ComputerName)
     If ComputerName = "" Then ComputerName = "."
 
-    Set objWMIService = GetObject("winmgmts:\\" & ComputerName & "\root\cimv2")
-    Set colItems = objWMIService.ExecQuery("Select * From Win32_ComputerSystem")
+    Set WshNetwork = CreateObject("Wscript.Network")
+
+    DomainName = WshNetwork.UserDomain
+    UserName =  WshNetwork.UserName
 
     For Each objItem in colItems
         arrName = Split(objItem.UserName, "\")
