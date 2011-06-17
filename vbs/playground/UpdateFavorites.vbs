@@ -57,6 +57,8 @@ For Each GroupName In Groups
 Next
 
 Function GetGroupMembership(ComputerName)
+    Const HKEY_CURRENT_USER = &H80000001
+
     If ComputerName = "" Then ComputerName = "."
 
     Set WshNetwork = CreateObject("Wscript.Network")
@@ -64,23 +66,19 @@ Function GetGroupMembership(ComputerName)
     DomainName = WshNetwork.UserDomain
     UserName =  WshNetwork.UserName
 
-    For Each objItem in colItems
-        arrName = Split(objItem.UserName, "\")
-        DomainName = arrName(0)
-        UserName =  arrName(1)
-    Next
+    Set oReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\.\root\default:StdRegProv")
+    oReg.EnumKey HKEY_CURRENT_USER, "Software\Microsoft\Protected Storage System Provider", arrSubKeys
 
+    For Each subkey In arrSubKeys
+        UserSid = subkey
+    Next
+    
     If LCase(DomainName) = "soecs" Then
         Set User = GetObject("WinNT://" & DomainName & "/" & UserName)
         For Each Group in User.groups
             GroupNames = GroupNames & Group.Name & ","
         Next
     Else
-        Set objWMIService = GetObject("winmgmts:\\" & ComputerName & "\root\CIMV2") 
-        Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_UserAccount WHERE Name = '" & UserName & "'",,48) 
-        For Each objItem in colItems 
-            UserSid = objItem.SID
-        Next
 
         Set objPrincipal = GetObject("GC://cn=" & UserSid & ",cn=ForeignSecurityPrincipals,dc=soecs,dc=ku,dc=edu" )
         
