@@ -1,11 +1,10 @@
-'
 ' UpdateFavortes.vbs
 '
 ' This script needs to do several things, it will check the current value of HKCU\Software\Microsoft\Windows\
 ' Current Version\Explorer\User Shell Folders\Favorites. It will look like this:
 '   \\people.soecs.ku.edu\profiles\%USERNAME%\Profile\Favorites
 '
-' 
+' Updated 6/29/2011 - Added call to log the update event
 Dim UserName
 Groups = GetGroupMembership(".")
 
@@ -81,12 +80,17 @@ Function GetGroupMembership(ComputerName)
     Else
 
         Set objPrincipal = GetObject("GC://cn=" & UserSid & ",cn=ForeignSecurityPrincipals,dc=soecs,dc=ku,dc=edu" )
-        
-        For Each Group In objPrincipal.memberOf
-            ThisGroup = Split(Group, ",")
-            GroupName = Right(ThisGroup(0),Len(ThisGroup(0))-3)
-            GroupNames = GroupNames & GroupName & ","
-        Next
+        If isArray(objPrincipal.memberOf) Then
+            For Each Group In objPrincipal.memberOf
+                ThisGroup = Split(Group, ",")
+                GroupName = Right(ThisGroup(0),Len(ThisGroup(0))-3)
+                GroupNames = GroupNames & GroupName & ","
+            Next
+        Else
+                ThisGroup = Split(objPrincipal.memberOf, ",")
+                GroupName = Right(ThisGroup(0),Len(ThisGroup(0))-3)
+                GroupNames = GroupNames & GroupName & ","
+        End If
     End If
     
     GetGroupMembership = Split(GroupNames, ",")
@@ -96,6 +100,8 @@ Function SetRegKeyValue(KeyPath, Value)
     If KeyPath = "" Then KeyPath = "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders\Favorites"
     Set WshShell = WScript.CreateObject("WScript.Shell")
     WshShell.RegWrite KeyPath, Value, "REG_SZ"
+    
+    Call LogData(0, "Setting Favorites KeyValue = " & Value)
 End Function
 
 Function BackupRegKeyValue(KeyPath)
