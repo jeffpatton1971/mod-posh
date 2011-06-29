@@ -651,3 +651,62 @@ Function Get-FSMORoleOwner
         Write-Warning "$($Error)"
         }
 }
+Function Convert-FspToUsername
+{
+    <#
+        .SYNOPSIS
+            Convert a FSP to a sAMAccountName
+        .DESCRIPTION
+            This function converts FSP's to sAMAccountName's.
+        .PARAMETER SourceDomain
+            The distinguishedName of the domain where the FSP's are located.
+        .PARAMETER RemoteDomain
+            The NetBIOS name of the domain where the user accounts live.
+        .EXAMPLES
+        .NOTES
+            This function needs to run in the context of a user in the RemoteDomain
+            
+            This function assumes at least a one-way non-transitive trust from the
+            SourceDomain to the RemoteDomain
+            
+            RemoteDomain user account should already have read permission to the 
+            ForeignSecurityPrincipals CN of the SourceDomain. If not, at the least
+            the RemoteDomain user account should have read permission.
+            
+            This function if run seperately requires the ActiveDirectoryManagement.ps1 available from my
+            script site: http://scripts.patton-tech.com
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Convert-FspToUsername
+    #>
+    
+    Param
+    (
+        $SourceDomain = "DC=soecs,DC=ku,DC=edu",
+        $RemoteDomain = "HOME"
+    )
+    
+    Begin
+    {
+        $FSPPath = "LDAP://CN=ForeignSecurityPrincipals,$($SourceDomain)"    
+        $Users = Get-ADObjects -ADSPath $FSPPath -SearchFilter "(objectClass=foreignSecurityPrincipal)"
+        $UserNames = @()
+        }
+
+    Process
+    {
+        foreach ($User in $Users)
+        {
+            $ThisUser = New-Object -TypeName PSObject -Property @{
+                sAMAccountName = ((Convert-SIDToUser -ObjectSID (Convert-ObjectSID -ObjectSID $User.Properties.name)).Value).Replace($RemoteDomain +"\", $null)
+                objectSID = $User.Properties.name
+                adsPath = $User.Properties.adspath
+                }
+            $UserNames += $ThisUser
+            }
+        }
+
+    End
+    {
+        Return $UserNames
+        }
+}
