@@ -681,8 +681,8 @@ Function Convert-FspToUsername
     
     Param
     (
-        $SourceDomain = "DC=soecs,DC=ku,DC=edu",
-        $RemoteDomain = "HOME"
+        $SourceDomain = "DC=company,DC=com",
+        $RemoteDomain = "CORP"
     )
     
     Begin
