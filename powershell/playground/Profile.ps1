@@ -14,9 +14,6 @@ $Global:Admin="$"
 $CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $principal = new-object System.Security.principal.windowsprincipal($CurrentUser)
 
-# Load up the extra love
-Import-Module Pscx
-
 Add-PSSnapin -Name VMware.VimAutomation.Core
 
 Set-Location $env:HOMEDRIVE$env:HOMEPATH"\My Repositories\scripts\powershell\production"
