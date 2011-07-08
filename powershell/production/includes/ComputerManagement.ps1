@@ -896,13 +896,13 @@ Function Get-SiSReport
         {
             $ThisDisk = Get-PSDrive $SisDisk
             $SisReport = New-Object -TypeName PSObject -Property @{
-                Disk = $SisDisk
-                Used = $ThisDisk.Used
-                Free = $ThisDisk.Free
-                CommonStoreFiles = ($SisResult[($SisResult.Count)-4]).TrimStart("Common store files:")
-                LinkFiles = ($SisResult[($SisResult.Count)-3]).TrimStart("Link files:")
-                InaccessibleLinkFiles = ($SisResult[($SisResult.Count)-2]).TrimStart("Inaccessible link files:")
-                SpaceSaved = ($SisResult[($SisResult.Count)-1]).TrimStart("Space saved:")
+                "Disk" = $SisDisk
+                "Used (GB)" = [math]::round(($ThisDisk.Used /1024 /1024 /1024),2)
+                "Free (GB)" = [math]::round(($ThisDisk.Used /1024 /1024 /1024),2)
+                "Common Store Files" = ($SisResult[($SisResult.Count)-4]).TrimStart("Common store files:")
+                "Link Files" = ($SisResult[($SisResult.Count)-3]).TrimStart("Link files:")
+                "Inaccessible Link Files" = ($SisResult[($SisResult.Count)-2]).TrimStart("Inaccessible link files:")
+                "Space Saved (GB)" = [math]::round(((($SisResult[($SisResult.Count)-1]).TrimStart("Space saved:")).TrimEnd(" KB")/1024 /1024),2)
                 }
             }
         }
