@@ -898,7 +898,7 @@ Function Get-SiSReport
             $SisReport = New-Object -TypeName PSObject -Property @{
                 "Disk" = $SisDisk
                 "Used (GB)" = [math]::round(($ThisDisk.Used /1024 /1024 /1024),2)
-                "Free (GB)" = [math]::round(($ThisDisk.Used /1024 /1024 /1024),2)
+                "Free (GB)" = [math]::round(($ThisDisk.Free /1024 /1024 /1024),2)
                 "Common Store Files" = ($SisResult[($SisResult.Count)-4]).TrimStart("Common store files:")
                 "Link Files" = ($SisResult[($SisResult.Count)-3]).TrimStart("Link files:")
                 "Inaccessible Link Files" = ($SisResult[($SisResult.Count)-2]).TrimStart("Inaccessible link files:")
