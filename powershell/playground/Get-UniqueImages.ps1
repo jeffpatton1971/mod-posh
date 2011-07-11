@@ -55,6 +55,8 @@
     .LINK
         http://nicholasarmstrong.com/2010/02/exif-quick-reference/
     .LINK
+        http://scripts.patton-tech.com/browser/powershell/playground/EXIFFunctions.ps1
+    .LINK
         http://scripts.patton-tech.com/browser/powershell/playground/Get-UniqueImages.ps1
 #>
 Param
