@@ -912,3 +912,84 @@ Function Get-SiSReport
         Return $SisReport
         }
 }
+Function Get-PaperCutLogs
+{
+    <#
+        .SYNOPSIS
+            Get PaperCut logs from all print servers
+        .DESCRIPTION
+            Return the PaperCut logs from all print servers.
+        .PARAMETER PrintServers
+            The FQDN of the print servers
+        .EXAMPLE
+            Get-PaperCutLogs |Export-Csv -Path .\PrintLog.csv
+            
+            Description
+            -----------
+            This example shows the basic usage of the command. The output is piped into
+            a spreadsheet on the local computer for further analysis.
+        .NOTES
+            You must have downlaoded and installed the latest version of PaperCut Print Logger
+            for this to work.
+            
+            http://www.papercut.com/products/free_software/print_logger/#
+            
+            The resulting data will encompass all months that the servers have been logging data  
+            for, currently this goes back about 3 years. The CSV output can be opened in Excel  
+            and you can generate graphs based on which printer is used the most, how much paper  
+            is consumed by each printer and so on.  
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-PaperCutLogs
+    #>
+    
+    Param
+    (
+    $PrintServers = @("ps1.company.com","ps2.company.com")
+    )
+    
+    Begin
+    {
+        # Location of the monthly PaperCut logs
+        $PcutLogLocation = "c$\Program Files (x86)\PaperCut Print Logger\logs\csv\monthly"
+        # Column headings in the CSV
+        $PcutHeader = "Time","User","Pages","Copies","Printer","Document Name","Client","Paper Size","Language","Height","Width","Duplex","Grayscale","Size"
+        # Need it set to stop in order for the try/catch to work
+        $ErrorActionPreference = "Stop"
+        # Define an empty array to hold all the log entries
+        $PcutReport = @()
+        }
+    
+    Process
+    {
+        foreach ($PrintServer in $PrintServers)
+        {
+            # Get each log file from the server
+            Try
+            {
+                $PcutLogs = Get-ChildItem "\\$($PrintServer)\$($PcutLogLocation)"
+                }
+            Catch
+            {
+                # This runs only if we're trying to pull logs from an x86 print server
+                $PcutLogs = Get-ChildItem "\\$($PrintServer)\c$\Program Files\PaperCut Print Logger\logs\csv\monthly"
+                }
+                
+            Foreach ($PcutLog in $PcutLogs)
+            {
+                # Import the csv into a variable, skip 1 skips the first line of the PaperCut CSV
+                # which has information not related to the log itself
+                $ThisReport = Import-Csv $PcutLog.FullName -Header $PcutHeader |Select-Object -Skip 1
+                
+                # Add this log to the array
+                $PcutReport += $ThisReport |Where-Object {$_.Time -ne "Time"}
+                }
+            }
+        }
+    
+    End
+    {
+        # Display the result, this can be piped into Export-CSV to generate a large 
+        # spreadsheet suitable for analysis
+        Return $PcutReport
+        }
+}
