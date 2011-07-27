@@ -874,12 +874,16 @@ Function Get-SiSReport
     
     Param
     (
-    $SisDisk = "c"
+    $SisDisk = "c:"
     )
 
     Begin
     {
-        $SisAdmin = "& sisadmin /v $($SisDisk):"
+        If ($SisDisk.Contains(":") -eq $False)
+        {
+            $SisDisk += ":"
+            }
+        $SisAdmin = "& sisadmin /v $($SisDisk)"
         Try
         {
             $SisResult = Invoke-Expression $SisAdmin
