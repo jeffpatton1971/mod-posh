@@ -29,7 +29,7 @@
 #>
 Param
     (
-    $DPMServerName = "dpm.soecs.ku.edu"
+    $DPMServerName = "dpm.company.com"
     )
 Begin
     {
