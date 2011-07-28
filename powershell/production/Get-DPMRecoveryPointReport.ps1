@@ -47,7 +47,6 @@ Begin
 
         #	Dotsource in the functions you need.
 
-        $ProtectionGroups = Get-ProtectionGroup -DPMServerName $DPMServerName
         $Report = @()
 
         if (Get-PSSnapin -Name 'Microsoft.DataProtectionManager.PowerShell')
@@ -63,6 +62,7 @@ Begin
                 Return $Error[0].Exception.InnerException.Message.ToString().Trim()
                 }
             }
+        $ProtectionGroups = Get-ProtectionGroup -DPMServerName $DPMServerName
     }
 Process
     {
