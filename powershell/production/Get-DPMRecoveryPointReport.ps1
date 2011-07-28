@@ -2,7 +2,7 @@
     .SYNOPSIS
         Get-DPMRecoveryPointReport
     .DESCRIPTION
-        This script sets up the basic framework that I use for all my scripts.
+        This script generates a report of all the recovery points from your DPM server.
     .PARAMETER DPMServerName
         The FQDN of your DPM server
     .EXAMPLE
