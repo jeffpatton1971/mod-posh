@@ -1037,7 +1037,9 @@ Function Set-ShutdownMethod
             -----------
             An example showing how to pipe information into the function.
         .NOTES
+            You will need proper credentials on the remote machine for this to work.
         .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Set-ShutdownMethod
     #>
     
     PARAM
