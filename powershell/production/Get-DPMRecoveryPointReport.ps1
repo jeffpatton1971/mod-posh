@@ -49,6 +49,20 @@ Begin
 
         $ProtectionGroups = Get-ProtectionGroup -DPMServerName $DPMServerName
         $Report = @()
+
+        if (Get-PSSnapin -Name 'Microsoft.DataProtectionManager.PowerShell')
+        { } 
+        else
+        { 
+            try 
+            {
+                Add-PSSnapin -Name 'Microsoft.DataProtectionManager.PowerShell'
+                }
+            Catch
+            { 
+                Return Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
+            }
     }
 Process
     {
