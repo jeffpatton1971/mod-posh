@@ -60,7 +60,7 @@ Begin
                 }
             Catch
             { 
-                Return Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
                 }
             }
     }
