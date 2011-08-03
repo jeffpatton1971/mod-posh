@@ -49,7 +49,16 @@ Begin
     }
 Process
     {
-        $LowDisk = (((Get-WinEvent -LogName System |Where-Object {$_.id -eq 2013})[0].Message).TrimStart("The ")).TrimEnd(" disk is at or near capacity.  You may need to delete some files.")
+        $Event2013 = Get-WinEvent -LogName System |Where-Object {$_.id -eq 2013}
+        if ($Event2013.Count -eq $null)
+        {
+            $LowDisk = ($Event2013.Message.TrimStart("The ")).TrimEnd(" disk is at or near capacity.  You may need to delete some files.")
+            }
+        else
+        {
+            $LowDisk = ($Event2013[0].Message.TrimStart("The ")).TrimEnd(" disk is at or near capacity.  You may need to delete some files.")
+            }
+
         $DiskSpace = [math]::round(((Get-WmiObject -Class win32_LogicalDisk |Where-Object{$_.DeviceId -eq $LowDisk}).FreeSpace /1024 /1024 /1024),3)
 
         $Report = New-Object -TypeName PSObject -Property @{
