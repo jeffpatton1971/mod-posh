@@ -2,7 +2,7 @@
     .SYNOPSIS
         Log a print job to a file.
     .DESCRIPTION
-        This script works in conjunction with an Event Trigger on the System
+        This script works in conjunction with an Event Trigger on the PrintService
         event on our print servers. This script queries the Microsoft-Windows-PrintService/Operational
         log for EventID 307, and returns the drive letter from the most recent event. 
         
