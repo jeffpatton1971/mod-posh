@@ -119,7 +119,7 @@ Process
             $metadata = $decoder.Frames[0].Metadata
 
             $Tags = @()
-            foreach ($tag in $ifd)
+            foreach ($tag in $metadata.GetQuery("/app1"))
             {
                 if ($tag -ne "/{ushort=34665}")
                 {
@@ -167,61 +167,6 @@ Process
                     {
                         # Orientation, the image orientation in terms of rows and columns
                         $TagOrientation = $Tag.TagValue
-                        }
-                    33434
-                    {
-                        # ExposureTime
-                        $TagExposureTime = $Tag.TagValue
-                        }
-                    33437
-                    {
-                        # FNumber
-                        $TagFNumber = $Tag.TagValue
-                        }
-                    34855
-                    {
-                        # ISOSpeedRatings
-                        $TagISOSpeedRatings = $Tag.TagValue
-                        }
-                    36867
-                    {
-                        # DateTimeOriginal, Date and teim original image was generated
-                        $TagDateTimeOriginal = $Tag.TagValue
-                        }
-                    37385
-                    {
-                        # Flash
-                        $TagFlash = $Tag.TagValue
-                        }
-                    37386
-                    {
-                        # FocalLength, Lens focal length
-                        $TagFocalLength = $Tag.TagValue
-                        }
-                    40962
-                    {
-                        # PixelXDimension, valid image width
-                        $TagPixelXDimension = $Tag.TagValue
-                        }
-                    40963
-                    {
-                        # PixelYDimension, valid image height
-                        $TagPixelYDimension = $Tag.TagValue
-                        }
-                    4097
-                    {
-                        # RelatedImageWidth, image width
-                        $TagRelatedImageWidth = $Tag.TagValue
-                        }
-                    4098
-                    {
-                        # RelatedImageHeight, image height
-                        $TagRelatedImageHeight = $Tag.TagValue
-                        }
-                    41728
-                    {
-                        # FileSource, indicates the image source
-                        $TagFileSource = $Tag.TagValue
                         }
                     }
                 }
