@@ -662,7 +662,7 @@ Function Convert-FspToUsername
             The distinguishedName of the domain where the FSP's are located.
         .PARAMETER RemoteDomain
             The NetBIOS name of the domain where the user accounts live.
-        .EXAMPLES
+        .EXAMPLE
         .NOTES
             This function needs to run in the context of a user in the RemoteDomain
             
