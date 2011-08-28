@@ -207,3 +207,57 @@ Function New-Sharepoint3Subweb
                     }
             }
     }
+Function Get-SPListIds
+{
+    <#
+    .Synopsis
+        Get the ID's and titles from a given list
+    .Description
+        This function returns the ID and Title from a given list.
+    .PARAMETER Site
+        The URL of the sharepoint web
+    .PARAMETER SitePath
+        The path to the sharepoint site
+    .Example
+        Get-SPListIds -Site "http://intranet.company.com" -SitePath "Blog/Lists/Categories/" 
+    #>
+    Param
+    (
+        $Site,
+        $SitePath
+    )
+    Begin
+    {
+        $SPSnapIn = Get-PSSnapin -Name "microsoft.sharepoint.powershell" -ErrorAction SilentlyContinue
+        if ($SPSnapIn -eq $null)
+        {
+            $ErrorActionPreference = "Stop"
+            Try
+            {
+                Add-PSSnapin microsoft.sharepoint.powershell
+                $SPWeb = Get-SPWeb -Identity $Site
+                }
+            Catch
+            {
+                Return $Error[0].Exception
+                }
+            }
+        }
+    Process
+    {
+        $ListIds = @()
+        $List = $SPWeb.GetList($SitePath)
+        $List.Items| foreach {
+                                $ListId = New-Object -TypeName PSObject -Property @{
+                                    ID = $_.id.tostring()
+                                    Title = $_.title
+                                    }
+                                $ListIds += $ListId
+                                }
+        }
+    End
+    {
+        $SPWeb.Close()
+        Return $ListIds
+        }
+}
