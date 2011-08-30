@@ -307,7 +307,9 @@ Function New-SPListItem
         $SPListItem = $SPList.Items.Add()
         $SPListItem["Title"] = $ItemValue
         $SPListItem.Update()
-        $ListId = $SPListItem.ID
+        $ListId = New-Object -TypeName PSObject -Property @{
+            ID = $SPListItem.ID
+            }
         }
     End
     {
