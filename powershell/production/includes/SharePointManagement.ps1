@@ -261,3 +261,57 @@ Function Get-SPListIds
         Return $ListIds
         }
 }
+
+Function New-SPListItem
+{
+    <#
+    .Synopsis
+        Add an item to an existing list
+    .Description
+        This function adds and item to an existing list and returns that item's ID.
+    .PARAMETER Site
+        The URL of the sharepoint web
+    .PARAMETER SitePath
+        The path to the sharepoint site
+    .PARAMETER ItemValue
+        The item to be added to the list
+    .Example
+        New-SPListItem -Site "http://intranet.company.com" -SitePath "Blog/Lists/Categories/" -ItemValue "SharePoint"
+    #>
+    Param
+    (
+        $Site,
+        $SitePath,
+        $ItemValue
+    )
+    Begin
+    {
+        $SPSnapIn = Get-PSSnapin -Name "microsoft.sharepoint.powershell" -ErrorAction SilentlyContinue
+        if ($SPSnapIn -eq $null)
+        {
+            $ErrorActionPreference = "Stop"
+            Try
+            {
+                Add-PSSnapin microsoft.sharepoint.powershell
+                $SPWeb = Get-SPWeb -Identity $Site
+                }
+            Catch
+            {
+                Return $Error[0].Exception
+                }
+            }
+        }
+    Process
+    {
+        $SPList = $SPWeb.GetList($SitePath)
+        $SPListItem = $SPList.Items.Add()
+        $SPListItem["Title"] = $ItemValue
+        $SPListItem.Update()
+        $ListId = $SPListItem.ID
+        }
+    End
+    {
+        $SPWeb.Close()
+        Return $ListId
+        }
+}
