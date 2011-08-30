@@ -317,3 +317,51 @@ Function New-SPListItem
         Return $ListId
         }
 }
+Function Get-SPListItem
+{
+    <#
+    .Synopsis
+        Get the ID's and titles from a given list
+    .Description
+        This function returns the ID and Title from a given list.
+    .PARAMETER Site
+        The URL of the sharepoint web
+    .PARAMETER SitePath
+        The path to the sharepoint site
+    .Example
+        Get-SPListItem -Site "http://intranet.company.com" -SitePath "Blog/Lists/Categories/" -LookupValue "cat1"
+    #>
+    Param
+    (
+        $Site,
+        $SitePath,
+        $LookupValue
+    )
+    Begin
+    {
+        $SPSnapIn = Get-PSSnapin -Name "microsoft.sharepoint.powershell" -ErrorAction SilentlyContinue
+        if ($SPSnapIn -eq $null)
+        {
+            $ErrorActionPreference = "Stop"
+            Try
+            {
+                Add-PSSnapin microsoft.sharepoint.powershell
+                $SPWeb = Get-SPWeb -Identity $Site
+                }
+            Catch
+            {
+                Return $Error[0].Exception
+                }
+            }
+        }
+    Process
+    {
+        $List = $SPWeb.GetList($SitePath)
+        $ListIds = $List.Items | Where-Object {$_.Title -eq $LookupValue} |Select-Object -Property Title, Id
+        }
+    End
+    {
+        $SPWeb.Close()
+        Return $ListIds
+        }
+}
