@@ -427,3 +427,53 @@ Function New-SPDocLibFolder
         Return $FolderID
         }
 }
+Function Add-SPFileToDocLib
+{
+    <#
+    .Synopsis
+        Add a file to a SharePoint Document Library
+    .Description
+        This function will add a file to a Dcoument Library and return the resulting object
+    .PARAMETER Site
+        The URL of the SharePoint site
+    .PARAMETER SitePath
+        The path to the application on the site
+    .PARAMETER FilePath
+        The fileobject to upload to the server
+    .Example
+        Add-SPFileToDocLib -Site "http://intranet.company.com/" -SitePath "Shared Documents" -FilePath (Get-ChildItem .\image.png)
+    #>
+    Param
+    (
+        $Site,
+        $SitePath,
+        $FilePath   
+    )
+    Begin
+    {
+        $SPSnapIn = Get-PSSnapin -Name "microsoft.sharepoint.powershell" -ErrorAction SilentlyContinue
+        if ($SPSnapIn -eq $null)
+        {
+            $ErrorActionPreference = "Stop"
+            Try
+            {
+                Add-PSSnapin microsoft.sharepoint.powershell
+                $SPWeb = Get-SPWeb -Identity $Site
+                }
+            Catch
+            {
+                Return $Error[0].Exception
+                }
+            }
+        }
+    Process
+    {
+        $SPFolder = $SPWeb.GetFolder($SitePath)
+        $SPFileCollection = $SPFolder.Files
+        $Return = $SPFileCollection.Add($FilePath.Name,$FilePath.OpenRead(),$false)
+        }
+    End
+    {
+        Return $Return
+        }
+}
