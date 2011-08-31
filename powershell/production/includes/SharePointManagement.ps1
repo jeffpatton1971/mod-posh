@@ -365,3 +365,65 @@ Function Get-SPListItem
         Return $ListIds
         }
 }
+Function New-SPDocLibFolder
+{
+    <#
+    .Synopsis
+        Create a new folder in a SharePoint Document Library
+    .Description
+        This function will create a folder inside the Document Library, the return is the ID of 
+        the folder.
+    .PARAMETER Site
+        The URL of the SharePoint site
+    .PARAMETER SitePath
+        The path to the application on the site
+    .PARAMETER Folder
+        The name of the folder to create
+    .Example
+        New-SPDocLibFolder -Site "http://intranet.company.com/" -SitePath "Shared Documents" -Folder "New Folder"
+    #>
+    Param
+    (
+        $Site,
+        $SitePath,
+        $Folder    
+    )
+    Begin
+    {
+        $SPSnapIn = Get-PSSnapin -Name "microsoft.sharepoint.powershell" -ErrorAction SilentlyContinue
+        if ($SPSnapIn -eq $null)
+        {
+            $ErrorActionPreference = "Stop"
+            Try
+            {
+                Add-PSSnapin microsoft.sharepoint.powershell
+                $SPWeb = Get-SPWeb -Identity $Site
+                }
+            Catch
+            {
+                Return $Error[0].Exception
+                }
+            }
+        }
+    Process
+    {
+        $SPDocLib = $SPWeb.GetList($SitePath)
+        Try
+        {
+            $SPFolder = $SPDocLib.AddItem("",[microsoft.sharepoint.spfilesystemobjecttype]::folder, $Folder)
+            $SPFolder.Update()
+            $FolderID = New-Object -TypeName PSObject -Property @{
+                ID = $SPFolder.ID
+                }
+            }
+        Catch
+        {
+            Return $Error[0].Exception
+            }
+        }
+    End
+    {
+        $SPWeb.Close()
+        Return $FolderID
+        }
+}
