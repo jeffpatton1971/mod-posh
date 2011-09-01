@@ -18,6 +18,12 @@
         ScriptName is used to register events for this script
         LogName is used to determine which classic log to write to
         
+        ErrorCodes
+            100 = Success
+            101 = Error
+            102 = Warning
+            104 = Information
+        
         This script should be added to a GPO for the OU that we need to make exceptions for. See the first
         Technet article for more details on how to configure it.
             Script Name = PowerShell.exe
