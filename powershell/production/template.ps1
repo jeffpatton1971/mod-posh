@@ -11,6 +11,12 @@
         Date Coded:
         ScriptName is used to register events for this script
         LogName is used to determine which classic log to write to
+        
+        ErrorCodes
+            100 = Success
+            101 = Error
+            102 = Warning
+            104 = Information        
     .LINK
 #>
 Param
@@ -27,15 +33,15 @@ Begin
         New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
 
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
+        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message 
 
         #	Dotsource in the functions you need.
-    }
+        }
 Process
     {
-    }
+        }
 End
     {
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message	
-    }
+        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message	
+        }
