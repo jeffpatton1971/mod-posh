@@ -61,7 +61,7 @@ Process
                 $DefaultPrinter = Get-WMIObject -query "Select * From Win32_Printer Where Name = $($User.Printer)"
                 If ($DefaultPrinter -eq $null)
                 {
-                    Write-Verbose "Log this error"
+                    Write-Verbose "The specified printer, $($User.Printer) was not found on the client"
                     $Message = "$($User.Printer) is not a valid printer name"
                     Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message	
                     }
