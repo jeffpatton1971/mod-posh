@@ -1,225 +1,242 @@
 Function Get-ADObjects
-	{
-		<#
-			.SYNOPSIS
-				Returns a list of objects from ActiveDirectory
-			.DESCRIPTION
-				This function will return a list of objects from ActiveDirectory. It will start at the provided ADSPath 
-                and find each object that matches the provided SearchFilter. For each object returned only the 
-                specified properties will be provided.
-			.PARAMETER ADSPath
-				This is the LDAP URI of the location within ActiveDirectory you would like to search. This can be an 
-                OU, CN or even the root of your domain.
-			.PARAMETER SearchFilter
-				This parameter is specified in the same format as an LDAP Search Filter. For more information on the 
-                format please visit Microsoft (http://msdn.microsoft.com/en-us/library/aa746475.aspx). If nothing is 
-                specified on the command-line the default filter is used:
-                    (objectCategory=computer)
-			.PARAMETER ADProperties
-				If you want specific properties returned like name, or distinguishedName 
-				provide a comma seperated list.
-			.EXAMPLE
-                Get-ADObjects -ADSPath "LDAP://OU=Workstations,DC=company,DC=com"
+{
+    <#
+        .SYNOPSIS
+            Returns a list of objects from ActiveDirectory
+        .DESCRIPTION
+            This function will return a list of objects from ActiveDirectory. It will start at the provided ADSPath 
+            and find each object that matches the provided SearchFilter. For each object returned only the 
+            specified properties will be provided.
+        .PARAMETER ADSPath
+            This is the LDAP URI of the location within ActiveDirectory you would like to search. This can be an 
+            OU, CN or even the root of your domain.
+        .PARAMETER SearchFilter
+            This parameter is specified in the same format as an LDAP Search Filter. For more information on the 
+            format please visit Microsoft (http://msdn.microsoft.com/en-us/library/aa746475.aspx). If nothing is 
+            specified on the command-line the default filter is used:
+                (objectCategory=computer)
+        .PARAMETER ADProperties
+            If you want specific properties returned like name, or distinguishedName 
+            provide a comma seperated list.
+        .EXAMPLE
+            Get-ADObjects -ADSPath "LDAP://OU=Workstations,DC=company,DC=com"
 
-                Path                                                                  Properties                                                                           
-                ----                                                                  ----------                                                                           
-                LDAP://CN=Computer-pc01,OU=Workstations,DC=company,DC=com             {name, adspath}                                                                      
-                LDAP://CN=Computer-pc02,OU=Workstations,DC=company,DC=com             {name, adspath}                                                                      
-                LDAP://CN=Computer-pc03,OU=Workstations,DC=company,DC=com             {name, adspath}                                                                      
-                LDAP://CN=Computer-pc04,OU=Workstations,DC=company,DC=com             {name, adspath}
-                
-                Description
-                -----------
-                When specifying just the ADSPath computer objects and their associated name properties are returned
-                by default.
-			.EXAMPLE
-                Get-ADObjects -ADSPath "LDAP://OU=Workstations,DC=company,DC=com" `
-                -ADProperties "name","distinguishedName"
+            Path                                                                  Properties                                                                           
+            ----                                                                  ----------                                                                           
+            LDAP://CN=Computer-pc01,OU=Workstations,DC=company,DC=com             {name, adspath}                                                                      
+            LDAP://CN=Computer-pc02,OU=Workstations,DC=company,DC=com             {name, adspath}                                                                      
+            LDAP://CN=Computer-pc03,OU=Workstations,DC=company,DC=com             {name, adspath}                                                                      
+            LDAP://CN=Computer-pc04,OU=Workstations,DC=company,DC=com             {name, adspath}
+            
+            Description
+            -----------
+            When specifying just the ADSPath computer objects and their associated name properties are returned
+            by default.
+        .EXAMPLE
+            Get-ADObjects -ADSPath "LDAP://OU=Workstations,DC=company,DC=com" `
+            -ADProperties "name","distinguishedName"
 
-                Path                                                                  Properties                                                                           
-                ----                                                                  ----------                                                                           
-                LDAP://CN=Computer-pc01,OU=Workstations,DC=company,DC=com             {name, adspath, distinguishedname}                                                   
-                LDAP://CN=Computer-pc02,OU=Workstations,DC=company,DC=com             {name, adspath, distinguishedname}                                                   
-                LDAP://CN=Computer-pc03,OU=Workstations,DC=company,DC=com             {name, adspath, distinguishedname}                                                   
-                LDAP://CN=Computer-pc04,OU=Workstations,DC=company,DC=com             {name, adspath, distinguishedname}
+            Path                                                                  Properties                                                                           
+            ----                                                                  ----------                                                                           
+            LDAP://CN=Computer-pc01,OU=Workstations,DC=company,DC=com             {name, adspath, distinguishedname}                                                   
+            LDAP://CN=Computer-pc02,OU=Workstations,DC=company,DC=com             {name, adspath, distinguishedname}                                                   
+            LDAP://CN=Computer-pc03,OU=Workstations,DC=company,DC=com             {name, adspath, distinguishedname}                                                   
+            LDAP://CN=Computer-pc04,OU=Workstations,DC=company,DC=com             {name, adspath, distinguishedname}
 
-                Description
-                -----------
-                This example shows the format for ADProperties, each property is composed of a string enclosed in quotes
-                seperated by commas.
-			.EXAMPLE
-                Get-ADObjects -ADSPath "LDAP://OU=Groups,DC=company,DC=com" `
-                -ADProperties "name","distinguishedName" -SearchFilter group
+            Description
+            -----------
+            This example shows the format for ADProperties, each property is composed of a string enclosed in quotes
+            seperated by commas.
+        .EXAMPLE
+            Get-ADObjects -ADSPath "LDAP://OU=Groups,DC=company,DC=com" `
+            -ADProperties "name","distinguishedName" -SearchFilter group
 
-                Path                                                                  Properties                                                                           
-                ----                                                                  ----------                                                                           
-                LDAP://CN=Group-01,OU=Groups,DC=Company,DC=com                        {name, adspath, distinguishedname}                                                   
-                LDAP://CN=Group-02,OU=Groups,DC=Company,DC=com                        {name, adspath, distinguishedname}                                                   
-                LDAP://CN=Group-03,OU=Groups,DC=Company,DC=com                        {name, adspath, distinguishedname}                                                   
-                LDAP://CN=Group-04,OU=Groups,DC=Company,DC=com                        {name, adspath, distinguishedname}
-                
-                Description
-                -----------
-                This example shows multiple properties as well as setting the SearchFilter to be groups that are 
-                returned.
-			.NOTES
-				The script runs under the users context, so the user account must have permissions
-				to view the objects within the domain that the function is currently running
-				against.
-			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-ADObjects
-		#>
-		
-		Param
-			(
-				[Parameter(Mandatory=$true)]
-				[string]$ADSPath,
-				[string]$SearchFilter = "(objectCategory=computer)",
-				[array]$ADProperties="name"
-			)
+            Path                                                                  Properties                                                                           
+            ----                                                                  ----------                                                                           
+            LDAP://CN=Group-01,OU=Groups,DC=Company,DC=com                        {name, adspath, distinguishedname}                                                   
+            LDAP://CN=Group-02,OU=Groups,DC=Company,DC=com                        {name, adspath, distinguishedname}                                                   
+            LDAP://CN=Group-03,OU=Groups,DC=Company,DC=com                        {name, adspath, distinguishedname}                                                   
+            LDAP://CN=Group-04,OU=Groups,DC=Company,DC=com                        {name, adspath, distinguishedname}
+            
+            Description
+            -----------
+            This example shows multiple properties as well as setting the SearchFilter to be groups that are 
+            returned.
+        .NOTES
+            The script runs under the users context, so the user account must have permissions
+            to view the objects within the domain that the function is currently running
+            against.
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-ADObjects
+    #>
+    
+    Param
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$ADSPath,
+        [string]$SearchFilter = "(objectCategory=computer)",
+        [array]$ADProperties="name"
+        )
 
-        Begin
+    Begin
+    {
+        if ($ADSPath -notcontains "LDAP://")
         {
+            $ADSPath = "LDAP://$($ADSPath)"
+            }
         }
-        
-        Process
+    Process
+    {
+        Try
         {
-            Try
-            {
-                $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
-                $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
-                $DirectorySearcher.SearchRoot = $DirectoryEntry
-                $DirectorySearcher.PageSize = 1000
-                $DirectorySearcher.Filter = $SearchFilter
-                $DirectorySearcher.SearchScope = "Subtree"
+            $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
+            $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+            $DirectorySearcher.SearchRoot = $DirectoryEntry
+            $DirectorySearcher.PageSize = 1000
+            $DirectorySearcher.Filter = $SearchFilter
+            $DirectorySearcher.SearchScope = "Subtree"
 
-                foreach ($Property in $ADProperties)
-                    {
-                        [void]$DirectorySearcher.PropertiesToLoad.Add($Property)
-                        }
+            foreach ($Property in $ADProperties)
+                {
+                    [void]$DirectorySearcher.PropertiesToLoad.Add($Property)
+                    }
 
-                $ADObjects = $DirectorySearcher.FindAll()
-
-        		Return $ADObjects
-                }
-            Catch
-            {
-                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
-                }
-        }
-        
-        End
+            $ADObjects = $DirectorySearcher.FindAll()
+            }
+        Catch
         {
+            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+            }
         }
-	}	
+    End
+    {
+        Return $ADObjects
+        }
+    }    
 Function Add-UserToLocalGroup
-	{
-		<#
-			.SYNOPSIS
-				Add a domain user to a local group.
-			.DESCRIPTION
-				Add a domain user to a local group on a computer.
-			.PARAMETER Computer
-				The NetBIOS name of the computer where the local group resides.
-			.PARAMETER UserName
-				The name of the user to add to the group.
-			.PARAMETER LocalGroup
-				The name of the group to add the user to.
-			.PARAMETER UserDomain
-				The NetBIOS name of the domain where the user object is.
-			.EXAMPLE
+{
+        <#
+            .SYNOPSIS
+                Add a domain user to a local group.
+            .DESCRIPTION
+                Add a domain user to a local group on a computer.
+            .PARAMETER Computer
+                The NetBIOS name of the computer where the local group resides.
+            .PARAMETER UserName
+                The name of the user to add to the group.
+            .PARAMETER LocalGroup
+                The name of the group to add the user to.
+            .PARAMETER UserDomain
+                The NetBIOS name of the domain where the user object is.
+            .EXAMPLE
                 Add-UserToLocalGroup -Computer server -UserName myuser -LocalGroup administrators
 
                 Description
                 -----------
                 Adds a user from the local domain to the specified computer.
-			.EXAMPLE
+            .EXAMPLE
                 Add-UserToLocalGroup -Computer server -UserName myuser -LocalGroup administrators -UserDomain company
 
                 Description
                 -----------
                 Adds a user from the company domain to the specified computer's local Administrators group.
-			.NOTES
-				The script runs under the users context, so the user account must have permissions
-				to view the objects within the domain that the function is currently running
-				against.
-			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Add-UserToLocalGroup
-		#>
-		
-		Param
-			(
-				[Parameter(Mandatory=$true)]
-				[string]$Computer,
-				[Parameter(Mandatory=$true)]
-				[string]$UserName,
-				[Parameter(Mandatory=$true)]
-				[string]$LocalGroup,
-				[string]$UserDomain
-			)
+            .NOTES
+                The script runs under the users context, so the user account must have permissions
+                to view the objects within the domain that the function is currently running
+                against.
+            .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Add-UserToLocalGroup
+        #>
+        
+        Param
+            (
+                [Parameter(Mandatory=$true)]
+                [string]$Computer,
+                [Parameter(Mandatory=$true)]
+                [string]$UserName,
+                [Parameter(Mandatory=$true)]
+                [string]$LocalGroup,
+                [string]$UserDomain
+            )
 
         Begin
         {
-		if ($UserDomain -eq $null)
-			{
-				$UserDomain = [string]([ADSI] "").name
-			}
-        }
+            if ($UserDomain -eq $null)
+            {
+                $UserDomain = [string]([ADSI] "").name
+                }
+            }
         
         Process
         {
             Try
             {
                 ([ADSI]"WinNT://$Computer/$LocalGroup,group").Add("WinNT://$UserDomain/$UserName")
-                Return $?
+                if ($? -eq $true)
+                {
+                    $Result = New-Object -TypeName PSObject -Property @{
+                        Computer = $Computer
+                        Group = $LocalGroup
+                        Domain = $UserDomain
+                        User = $UserName
+                        Success = $?
+                        }
+                    }
                 }
             Catch
             {
-                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                $Result = New-Object -TypeName PSObject -Property @{
+                    Computer = $Computer
+                    Group = $LocalGroup
+                    Domain = $UserDomain
+                    User = $UserName
+                    Success = $Error[0].Exception.InnerException.Message.ToString().Trim()
+                    }
                 }
         }
         
         End
         {
-        }
-	}
+            Return $Result
+            }
+    }
 Function Get-LocalGroupMembers
-	{
-		<#
-			.SYNOPSIS
-				Return a list of user accounts that are in a specified group.
-			.DESCRIPTION
-				This function returns a list of accounts from the provided group. The
-				object returned holds the Name, Domain and type of account that is a member,
-				either a user or group.
-			.PARAMETER ComputerName
-				The name of the computer to connect to.
-			.PARAMETER GroupName
-				The name of the group to search in.
-			.NOTES
-			.EXAMPLE
+{
+        <#
+            .SYNOPSIS
+                Return a list of user accounts that are in a specified group.
+            .DESCRIPTION
+                This function returns a list of accounts from the provided group. The
+                object returned holds the Name, Domain and type of account that is a member,
+                either a user or group.
+            .PARAMETER ComputerName
+                The name of the computer to connect to.
+            .PARAMETER GroupName
+                The name of the group to search in.
+            .NOTES
+            .EXAMPLE
                 Get-LocalGroupMembers -ComputerName mypc -GroupName Administrators
 
                 Name                              Domain                          Class
                 ----                              ------                          -----
                 Administrator                     mypc                            User
                 My Account                        mypc                            User
-			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-LocalGroupMembers
-		#>
-		
-		Param
-			(
-				[Parameter(Mandatory=$true)]
-				[string]$ComputerName,
-				[Parameter(Mandatory=$true)]
-				[string]$GroupName
-			)
-		
+            .LINK
+                http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-LocalGroupMembers
+        #>
+        
+        Param
+            (
+                [Parameter(Mandatory=$true)]
+                [string]$ComputerName,
+                [Parameter(Mandatory=$true)]
+                [string]$GroupName
+            )
+        
         Begin
         {
-        }	
-		
+            } 
+        
         Process
         {
             Try
@@ -228,32 +245,32 @@ Function Get-LocalGroupMembers
                 $Members = @()  
                 $Group.Members() |foreach 
                     {
-                        $AdsPath = $_.GetType().InvokeMember("Adspath", 'GetProperty', $null, $_, $null)
-                        $AccountArray = $AdsPath.split('/',[StringSplitOptions]::RemoveEmptyEntries)
-                        $AccountName = $AccountArray[-1]
-                        $AccountDomain = $AccountArray[-2]
-                        $AccountClass = $_.GetType().InvokeMember("Class", 'GetProperty', $null, $_, $null)
+                    $AdsPath = $_.GetType().InvokeMember("Adspath", 'GetProperty', $null, $_, $null)
+                    $AccountArray = $AdsPath.split('/',[StringSplitOptions]::RemoveEmptyEntries)
+                    $AccountName = $AccountArray[-1]
+                    $AccountDomain = $AccountArray[-2]
+                    $AccountClass = $_.GetType().InvokeMember("Class", 'GetProperty', $null, $_, $null)
                         
-                        $Member = New-Object PSObject -Property @{
-                            Name = $AccountName
-                            Domain = $AccountDomain
-                            Class = $AccountClass
-                            }
-
-                        $Members += $Member  
+                    $Member = New-Object PSObject -Property @{
+                        Name = $AccountName
+                        Domain = $AccountDomain
+                        Class = $AccountClass
                         }
-                Return $Members
+
+                    $Members += $Member  
+                    }
                 }
             Catch
             {
                 Return $Error[0].Exception.InnerException.Message.ToString().Trim()
                 }
-        }
+            }
         
         End
         {
-        }
-	}
+            Return $Members
+            }
+    }
 Function Get-ADGroupMembers
 {
     <#
@@ -305,7 +322,7 @@ Function Get-ADGroupMembers
             $SearchResult = $DirectorySearcher.FindAll()
             
             $UserAccounts = @()
-        }
+            }
 
     Process
         {
@@ -334,19 +351,19 @@ Function Get-ADGroupMembers
                                 objectGUID = $UserObject.objectGUID
                                 objectSID = $UserObject.objectSID
                                 showInAdvancedViewOnly = $UserObject.showInAdvancedViewOnly
+                                }
                             }
+                        $UserAccounts += $ThisUser
                         }
-                    $UserAccounts += $ThisUser
                     }
                 }
             }
-        }
 
     End
         {
             Return $UserAccounts
-        }
-}
+            }
+    }
 
 Function Get-StaleComputerAccounts
 {
@@ -434,13 +451,13 @@ Function Get-StaleComputerAccounts
                     $StaleComputerAccounts += $ThisComputer
                     }
             }
-    }
+        }
     
     End
     {
         Return $StaleComputerAccounts
+        }
     }
-}
 
 Function Set-AccountDisabled
 {
@@ -470,7 +487,7 @@ Function Set-AccountDisabled
     Begin
     {
         $DisableComputer = [ADSI]$ADSPath
-    }
+        }
     
     Process
     {
@@ -478,18 +495,28 @@ Function Set-AccountDisabled
         {
             $DisableComputer.psbase.invokeset("AccountDisabled","True")
             $DisableComputer.psbase.CommitChanges()
-            Return $?
+            if ($? -eq $true)
+            {
+                $Result = New-Object -TypeName PSObject -Property @{
+                    DisabledComputer = $DisabledComputer
+                    Success = $?
+                    }
+                }
             }
         Catch
         {
-            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+            $Result = New-Object -TypeName PSObject -Property @{
+                DisabledComputer = $DisabledComputer
+                Success = $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
             }
-    }
+        }
     
     End
     {
+        Return $Result
+        }
     }
-}
 Function Reset-ComputerAccount
 {
     <#
@@ -520,33 +547,43 @@ Function Reset-ComputerAccount
     Begin
     {
         $Computer = [ADSI]$ADSPath
-    }
+        }
     
     Process
     {
         Try
         {
             $Computer.SetPassword($($Computer.name)+"$")
-            Return $?
+            if ($? -eq $true)
+            {
+                $Result = New-Object -TypeName PSObject -Property @{
+                    Computer = $Computer
+                    Success = $?
+                    }
+                }
             }
         Catch
         {
-            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+            $Result = New-Object -TypeName PSObject -Property @{
+                Computer = $Computer
+                Success = $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
             }
-    }
+        }
     
     End
     {
+        Return $Result
+        }
     }
-}
 Function Add-DomainGroupToLocalGroup
 {
-	<#
-		.SYNOPSIS
+    <#
+        .SYNOPSIS
             Add a Domain security group to a local computer group
-		.DESCRIPTION
+        .DESCRIPTION
             This function will add a Domain security group to a local computer group.
-		.PARAMETER ComputerName
+        .PARAMETER ComputerName
             The NetBIOS name of the computer to update
         .PARAMETER DomainGroup
             The name of the Domain security group
@@ -554,50 +591,66 @@ Function Add-DomainGroupToLocalGroup
             The name of the local group to update, if not provided Administrators is assumed.
         .PARAMETER UserDomain
             The NetBIOS domain name.
-		.EXAMPLE
+        .EXAMPLE
             Add-DomainGroupToLocalGroup -ComputerName "Desktop-PC01" -DomainGroup "StudentAdmins" -UserDomain "COMPANY"
             
             Description
             ===========
             Showing the default syntax to add a student admin group to a local computer account.
-		.NOTES
-		.LINK
+        .NOTES
+        .LINK
             http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Add-DomainGroupToLocalGroup
-	#>
-	
-	Param
-	(
+    #>
+    
+    Param
+    (
         [Parameter(Mandatory=$true)]
         [string]$ComputerName,
         [Parameter(Mandatory=$true)]
         [string]$DomainGroup,
         [string]$LocalGroup="Administrators",
-        [string]$UserDomain	
-	)
-	
-	Begin
-	{
+        [string]$UserDomain    
+    )
+    
+    Begin
+    {
         $ComputerObject = [ADSI]("WinNT://$($ComputerName),computer")
-	}
-	
-	Process
-	{
+        }
+    
+    Process
+    {
         Try
         {
             $GroupObject = $ComputerObject.PSBase.Children.Find("$($LocalGroup)")
             $GroupObject.Add("WinNT://$UserDomain/$DomainGroup")
-			Return $?
+            if ($? -eq $true)
+            {
+                $Result = New-Object -TypeName PSobject -Property @{
+                    Computer = $ComputerName
+                    DomainGroup = $DomainGroup
+                    LocalGroup = $LocalGroup
+                    Domain = $UserDomain
+                    Result = $?
+                    }
+                }
             }
         Catch
         {
-            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+            $Result = New-Object -TypeName PSobject -Property @{
+                Computer = $ComputerName
+                DomainGroup = $DomainGroup
+                LocalGroup = $LocalGroup
+                Domain = $UserDomain
+                Result = $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
             }
-	}
-	
-	End
-	{
-	}
-}
+        }
+    
+    End
+    {
+        Return $Result
+        }
+    }
 Function Get-FSMORoleOwner 
 {
     <#  
@@ -625,32 +678,40 @@ Function Get-FSMORoleOwner
             Retrieves the FSMO role owners each domain in a forest. Also lists the domain and forest.        
     #>
 
-    Try 
+    Begin
     {
         $forest = [system.directoryservices.activedirectory.Forest]::GetCurrentForest() 
-        
-        ForEach ($domain in $forest.domains) 
+        }
+    Process
+    {
+        Try 
         {
-            $forestproperties = @{
-                Forest = $Forest.name
-                Domain = $domain.name
-                SchemaMaster = $forest.SchemaRoleOwner
-                DomainNamingMaster = $forest.NamingRoleOwner
-                RIDOwner = $Domain.RidRoleOwner
-                PDCOwner = $Domain.PdcRoleOwner
-                InfrastructureOwner = $Domain.InfrastructureRoleOwner
+            ForEach ($domain in $forest.domains) 
+            {
+                $forestproperties = @{
+                    Forest = $Forest.name
+                    Domain = $domain.name
+                    SchemaMaster = $forest.SchemaRoleOwner
+                    DomainNamingMaster = $forest.NamingRoleOwner
+                    RIDOwner = $Domain.RidRoleOwner
+                    PDCOwner = $Domain.PdcRoleOwner
+                    InfrastructureOwner = $Domain.InfrastructureRoleOwner
+                    }
+                $ForestObject = New-Object PSObject -Property $forestproperties
+                $ForestObject.PSTypeNames.Insert(0,"ForestRoles")
                 }
-            $newobject = New-Object PSObject -Property $forestproperties
-            $newobject.PSTypeNames.Insert(0,"ForestRoles")
-            $newobject
+            }
+
+        Catch 
+        {
+            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
             }
         }
-
-    Catch 
+    End
     {
-        Write-Warning "$($Error)"
+        Return $ForestObject
         }
-}
+    }
 Function Convert-FspToUsername
 {
     <#
@@ -658,55 +719,397 @@ Function Convert-FspToUsername
             Convert a FSP to a sAMAccountName
         .DESCRIPTION
             This function converts FSP's to sAMAccountName's.
-        .PARAMETER SourceDomain
-            The distinguishedName of the domain where the FSP's are located.
-        .PARAMETER RemoteDomain
-            The NetBIOS name of the domain where the user accounts live.
+        .PARAMETER UserSID
+            This is the SID of the FSP in the form of S-1-5-20. These can be found
+            in the ForeignSecurityPrincipals container of your domain.
         .EXAMPLE
+            Convert-FspToUsername -UserSID "S-1-5-11","S-1-5-17","S-1-5-20"
+
+            sAMAccountName                      Sid
+            --------------                      ---
+            NT AUTHORITY\Authenticated Users    S-1-5-11
+            NT AUTHORITY\IUSR                   S-1-5-17
+            NT AUTHORITY\NETWORK SERVICE        S-1-5-20
+
+            Description
+            ===========
+            This example shows passing in multipe sids to the function
+        .EXAMPLE
+            Get-ADObjects -ADSPath "LDAP://CN=ForeignSecurityPrincipals,DC=company,DC=com" -SearchFilter "(objectClass=foreignSecurityPrincipal)" |
+            foreach {$_.Properties.name} |Convert-FspToUsername
+
+            sAMAccountName                      Sid
+            --------------                      ---
+            NT AUTHORITY\Authenticated Users    S-1-5-11
+            NT AUTHORITY\IUSR                   S-1-5-17
+            NT AUTHORITY\NETWORK SERVICE        S-1-5-20
+
+            Description
+            ===========
+            This example takes the output of the Get-ADObjects function, and pipes it through foreach to get to the name
+            property, and the resulting output is piped through Convert-FspToUsername.
         .NOTES
-            This function needs to run in the context of a user in the RemoteDomain
-            
-            This function assumes at least a one-way non-transitive trust from the
-            SourceDomain to the RemoteDomain
-            
-            RemoteDomain user account should already have read permission to the 
-            ForeignSecurityPrincipals CN of the SourceDomain. If not, at the least
-            the RemoteDomain user account should have read permission.
-            
-            This function if run seperately requires the ActiveDirectoryManagement.ps1 available from my
-            script site: http://scripts.patton-tech.com
+            This function currently expects a SID in the same format as you see being displayed
+            as the name property of each object in the ForeignSecurityPrincipals container in your
+            domain. 
         .LINK
             http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Convert-FspToUsername
     #>
     
     Param
     (
-        $SourceDomain = "DC=company,DC=com",
-        $RemoteDomain = "CORP"
+        [Parameter(
+            Position=0,
+            Mandatory=$true,
+            ValueFromPipeline=$true)]
+        $UserSID
     )
     
     Begin
     {
-        $FSPPath = "LDAP://CN=ForeignSecurityPrincipals,$($SourceDomain)"    
-        $Users = Get-ADObjects -ADSPath $FSPPath -SearchFilter "(objectClass=foreignSecurityPrincipal)"
-        $UserNames = @()
         }
 
     Process
     {
-        foreach ($User in $Users)
+        foreach ($Sid in $UserSID)
         {
-            $ThisUser = New-Object -TypeName PSObject -Property @{
-                sAMAccountName = ((Convert-SIDToUser -ObjectSID (Convert-ObjectSID -ObjectSID $User.Properties.name)).Value).Replace($RemoteDomain +"\", $null)
-                objectSID = $User.Properties.name
-                adsPath = $User.Properties.adspath
+            try
+            {
+                $SAM = (New-Object System.Security.Principal.SecurityIdentifier($Sid)).Translate([System.Security.Principal.NTAccount])
+                $Result = New-Object -TypeName PSObject -Property @{
+                    Sid = $Sid
+                    sAMAccountName = $SAM.Value
+                    }
+                Return $Result
                 }
-            $UserNames += $ThisUser
+            catch
+            {
+                $Result = New-Object -TypeName PSObject -Property @{
+                    Sid = $Sid
+                    sAMAccountName = $Error[0].Exception.InnerException.Message.ToString().Trim()
+                    }
+                Return $Result
+                }
             }
         }
 
     End
     {
-        Return $UserNames
         }
-}
+    }
+Function Set-ComputerName
+{
+    <#
+        .SYNOPSIS
+            Change the name of the computer
+        .DESCRIPTION
+            This function will rename the local or optionally remote computer to the
+            computername of your choice. In addition you can force the computer to
+            reboot to finish the change.
+        .PARAMETER NewName
+            The new 15 character NetBIOS for the computer
+        .PARAMETER ComputerName
+            The NetBIOS name of the computer
+        .PARAMETER Credentials
+            Provide administrator credentials 
+        .PARAMETER Reboot
+            True to reboot
+        .EXAMPLE
+            Set-ComputerName -NewName 'Desktop-PC02' -ComputerName 'Desktop-PC01' -Reboot $True
+
+            OldName : Desktop-PC01
+            NewName : Desktop-PC02
+            Reboot  : 0
+            Success : 0
+
+            Description
+            -----------
+            This example shows the basic usage on a local computer. The 0 indicates success, so
+            the computer rebooted, and the name changed.
+        .NOTES
+            FunctionName : Set-ComputerName
+            Created by   : Jeff Patton
+            Date Coded   : 09/21/2011 10:59:03
+        .LINK
+    #>
+    Param
+        (
+        [string]$NewName,
+        [string]$ComputerName = (hostname),
+        $Credentials = (Get-Credential),
+        [boolean]$Reboot
+        )
+    Begin
+    {
+        if ($ComputerName -eq (hostname))
+        {
+            Write-Verbose "Using ComputerName as a switch to determine if we run wmi local or remote"
+            try
+            {
+                Write-Verbose "Grab the Win32_ComputerSystem class, this holds the rename method"
+                $ThisComputer = Get-WmiObject -Class Win32_ComputerSystem
+                Write-Verbose "Grab the Win32_OperatingSystem class, this holds the reboot method"
+                $RebootComputer = Get-WmiObject -Class Win32_OperatingSystem
+                }
+            catch
+            {
+                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
+            }
+        else
+        {
+            try
+            {
+                Write-Verbose "Grab the Win32_ComputerSystem class, this holds the rename method"
+                $ThisComputer = Get-WmiObject -Class Win32_ComputerSystem -ComputerName $ComputerName -Credential $Credentials -Authentication 6
+                Write-Verbose "Grab the Win32_OperatingSystem class, this holds the reboot method"
+                $RebootComputer = Get-WmiObject -Class Win32_OperatingSystem -ComputerName $ComputerName -Credential $Credentials -Authentication 6
+                }
+            catch
+            {
+                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
+            }
+        }
+    Process
+    {
+        try
+        {
+            if ($ComputerName -eq (hostname))
+            {
+                Write-Verbose "Renaming $($ComputerName) to $($NewName)"
+                $RetVal = $ThisComputer.Rename($NewName)
+                }
+            else
+            {
+                Write-Verbose "Renaming remote $($ComputerName) to $($NewName) requires credentials."
+                $RetVal = $ThisComputer.Rename($NewName,$Credentials.GetNetworkCredential().Password,$Credentials.UserName)
+                }
+            }
+        catch
+        {
+            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+            }
+        if ($Reboot -eq $true)
+        {
+            try
+            {
+                Write-Verbose "Rebooting $($ComputerName)"
+                $Reboot = $RebotComputer.InvokeMethod("Win32Shutdown",0)
+                }
+            catch
+            {
+                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
+            }
+        }
+    End
+    {
+        $ReturnObject = New-Object -TypeName PSObject -Property @{
+            OldName = $ComputerName
+            NewName = $NewName
+            Reboot = $Reboot
+            Success = $RetVal.ReturnValue
+            }
+        Return $ReturnObject
+        }
+    }
+Function Get-DomainName
+{
+    <#
+        .SYNOPSIS
+            Get the FQDN of the domain from an LDAP Url
+        .DESCRIPTION
+            This function returns the FQDN of a domain based on the LDAP Url.
+        .PARAMETER LdapUrl
+            The LDAP URL for whatever object you need the FQDN for.
+        .EXAMPLE
+            Get-DomainName -LdapUrl 'LDAP://CN=UserAccount,OU=Employees,DC=company,DC=com'
+
+            LdapUrl    : LDAP://CN=UserAccount,OU=Employees,DC=company,DC=com
+            DomainName : company.com
+
+            Description
+            -----------
+            This example shows the basic syntax of the commnand.
+        .NOTES
+            FunctionName : Get-DomainName
+            Created by   : Jeff Patton
+            Date Coded   : 09/22/2011 09:42:38
+        .LINK
+    #>
+    Param
+        (
+        $LdapUrl
+        )
+    Begin
+    {
+        if ($LdapUrl.GetType().Name -eq "String")
+        {
+            Write-Verbose "LDAP Url is a string"
+            $tempUrl = $LdapURL.ToUpper()
+            }
+        elseif ($LdapUrl.GetType().Name -eq "DirectoryEntry")
+        {
+            Write-Verbose "LDAP Url is an directory object"
+            $tempUrl = $LdapUrl.Path.ToString().ToUpper()
+            }
+        }
+    Process
+    {
+        Write-Verbose "Finding the first DC= and replacing it with a dot."
+        $DomainName = ($tempUrl.SubString($tempUrl.IndexOf(",DC=")+4)).Replace(",DC=",".")
+        $RetVal = New-Object -TypeName PSObject -Property @{
+            LdapUrl = $LdapUrl
+            DomainName = $DomainName.ToLower()
+            }
+        }
+    End
+    {
+        Return $RetVal
+        }
+    }
+Function Get-UserGroupMembership
+{
+    <#
+        .SYNOPSIS
+            Get a list of groups as displayed on the user objects Member of tab
+        .DESCRIPTION
+            This function returns a listing of groups that the user is a direct
+            member of. This is the same list that should appear in the Member Of
+            tab in Active Directory Users and Computers.
+        .PARAMETER UserDN
+            The DistinguishedName of the user object
+        .EXAMPLE
+            Get-UserGroupMembership -UserDN "CN=useraccount,OU=employees,DC=company,DC=com"
+
+            GroupDN
+            -------
+            CN=AdminStaff,OU=Groups,DC=company,DC=com
+            CN=ServerAdmin,OU=Groups,DC=Company,DC=com
+
+            Description
+            -----------
+            This shows the basic syntax of a user in the local domain.
+        .EXAMPLE
+            Get-UserGroupMembership -UserDN "CN=S-1-5-17,CN=ForeignSecurityPrincipals,DC=company,DC=com"
+
+            GroupDN
+            -------
+            CN=IIS_IUSRS,CN=Builtin,DC=company,DC=com
+
+            Description
+            -----------
+            This function also works against FSP's in your domain.
+        .NOTES
+            FunctionName : Get-UserGroupMembership
+            Created by   : Jeff Patton
+            Date Coded   : 09/22/2011 12:53:23
+
+            This script runs in the context of the user and as such the user
+            will need to have the requisite permissions to view the group membership
+            of a given user object.
+        .LINK
+    #>
+    Param
+        (
+            [Parameter(Mandatory=$true)]$UserDN
+        )
+    Begin
+    {
+        try
+        {
+            Write-Verbose "Attempting to connect to $($UserDN) to return a list of groups."
+            $Groups = ([adsi]"LDAP://$($UserDN)").MemberOf
+            }
+        Catch
+        {
+            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+            }
+        }
+    Process
+    {
+        if ($Groups)
+        {
+            Write-Verbose "Object has group membership."
+            $GroupMembership = @()
+            foreach ($Group in $Groups)
+            {
+                Write-Verbose "Adding $($Group) to the collection to return."
+                $GroupEntry = New-Object -TypeName PSObject -Property @{
+                    GroupDN = $Group
+                    }
+                $GroupMembership += $GroupEntry
+                }
+            }
+        }
+    End
+    {
+        Return $GroupMembership
+        }
+    }
+Function Add-UserToGroup
+{
+    <#
+        .SYNOPSIS
+            Add a domain user to a domain group
+        .DESCRIPTION
+            This function adds a domain user account to a domain group.
+        .PARAMETER GroupDN
+            The distinguishedName of the group to add to
+        .PARAMETER
+            The distinguishedName of the user account to add
+        .EXAMPLE
+            Add-UserToGroup -GroupDN 'CN=AdminStaff,OU=Groups,DC=company,DC=com' -UserDN 'CN=UserAccount,OU=Employees,DC=company,DC=com'
+
+            GroupDN : LDAP://CN=AdminStaff,OU=Groups,DC=company,DC=com
+            UserDN  : LDAP://CN=UserAccount,OU=Employees,DC=company,DC=com
+            Added   : True
+
+            Description
+            -----------
+            This example shows the syntax of the command.
+        .NOTES
+            FunctionName : Add-UserToGroup
+            Created by   : Jeff Patton
+            Date Coded   : 09/22/2011 14:18:33
+        .LINK
+    #>
+    Param
+        (
+        $GroupDN,
+        $UserDN
+        )
+    Begin
+    {
+        if ($GroupDN -notcontains "LDAP://")
+        {
+            $GroupDN = "LDAP://$($GroupDN)"
+            }
+        if ($UserDN -notcontains "LDAP://")
+        {
+            $UserDN = "LDAP://$($UserDN)"
+            }
+        }
+    Process
+    {
+        try
+        {
+            ([adsi]$GroupDN).Add($UserDN)
+            $RetVal = $?
+            }
+        catch
+        {
+            $RetVal = $Error[0].Exception.InnerException.Message.ToString().Trim()
+            }
+        }
+    End
+    {
+        $GroupUpdated = New-Object -Property PSObject -Property @{
+            GroupDN = $GroupDN
+            UserDN = $UserDN
+            Added = $RetVal
+            }
+        Return $GroupUpdated
+        }
+    }
