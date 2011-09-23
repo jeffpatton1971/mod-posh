@@ -80,7 +80,7 @@ Function Get-ADObjects
 
     Begin
     {
-        if ($ADSPath -notcontains "LDAP://")
+        if ($ADSPath -notmatch "LDAP://*")
         {
             $ADSPath = "LDAP://$($ADSPath)"
             }
@@ -1017,10 +1017,14 @@ Function Get-UserGroupMembership
         )
     Begin
     {
+        if ($UserDN -notmatch "LDAP://*")
+        {
+            $UserDN = "LDAP://$($UserDN)"
+            }
         try
         {
             Write-Verbose "Attempting to connect to $($UserDN) to return a list of groups."
-            $Groups = ([adsi]"LDAP://$($UserDN)").MemberOf
+            $Groups = ([adsi]$UserDN).MemberOf
             }
         Catch
         {
@@ -1082,11 +1086,11 @@ Function Add-UserToGroup
         )
     Begin
     {
-        if ($GroupDN -notcontains "LDAP://")
+        if ($GroupDN -notmatch "LDAP://*")
         {
             $GroupDN = "LDAP://$($GroupDN)"
             }
-        if ($UserDN -notcontains "LDAP://")
+        if ($UserDN -notmatch "LDAP://*")
         {
             $UserDN = "LDAP://$($UserDN)"
             }
@@ -1105,7 +1109,7 @@ Function Add-UserToGroup
         }
     End
     {
-        $GroupUpdated = New-Object -Property PSObject -Property @{
+        $GroupUpdated = New-Object -TypeName PSObject -Property @{
             GroupDN = $GroupDN
             UserDN = $UserDN
             Added = $RetVal
