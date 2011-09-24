@@ -1061,7 +1061,7 @@ Function Add-UserToGroup
             This function adds a domain user account to a domain group.
         .PARAMETER GroupDN
             The distinguishedName of the group to add to
-        .PARAMETER
+        .PARAMETER UserDN
             The distinguishedName of the user account to add
         .EXAMPLE
             Add-UserToGroup -GroupDN 'CN=AdminStaff,OU=Groups,DC=company,DC=com' -UserDN 'CN=UserAccount,OU=Employees,DC=company,DC=com'
@@ -1115,5 +1115,92 @@ Function Add-UserToGroup
             Added = $RetVal
             }
         Return $GroupUpdated
+        }
+    }
+
+Function Set-ADObjectProperties
+{
+    <#
+        .SYNOPSIS
+            Set the properties of a given object in AD
+        .DESCRIPTION
+            This function will set the properties of a given object in AD. The
+            function takes a comma seperated Propertyname, PropertyValue and sets
+            the value of that property on the object.
+        .PARAMETER ADObject
+            The object within AD to be modified
+        .PARAMETER PropertyPairs
+            The PropertyName and PropertyValue to be set. This can be an array
+            of values as such:
+                "Description,UserAccount","Office,Building 1"
+            The PropertyName should always be listed first, followed by the
+            values of the property.
+        .EXAMPLE
+            Set-ADObjectProperties -ADObject 'LDAP://CN=UserAccount,CN=Users,DC=company,DC=com' -PropertyPairs "Description,New User Account"
+
+            Description
+            -----------
+            This is the basic syntax of this function.
+        .NOTES
+            FunctionName : Set-ADObjectProperties
+            Created by   : Jeff Patton
+            Date Coded   : 09/23/2011 14:27:19
+        .LINK
+    #>
+    Param
+        (
+            $ADObject,
+            $PropertyPairs
+        )
+    Begin
+    {
+        if ($ADObject -notmatch "LDAP://*")
+        {
+            $ADObject = "LDAP://$($UserDN)"
+            }
+        Write-Verbose "Storing the object as a Directory Entry so we can modify it."
+        $ADObject = New-Object DirectoryServices.DirectoryEntry $ADObject
+        }
+    Process
+    {
+        Write-Verbose "Work through an array of 0 or more PropertyPairs."
+        foreach ($PropertyPair in $PropertyPairs)
+        {
+            Write-Verbose "Split this PropertyPair on comma."
+            $PropertyPair = $PropertyPair.Split(",")
+            if ($PropertyPair.Count -eq 2)
+            {
+                Write-Verbose "Assign PropertyName to PropertyPair[0]"
+                $PropertyName = $PropertyPair[0]
+                Write-Verbose "Assign PropertyValue to PropertyPair[1]"
+                $PropertyValue = $PropertyPair[1]
+
+                Write-Verbose "Assign the property of the object, the value"
+                $ADObject.Put($PropertyName,$PropertyValue)
+                }
+            elseif ($PropertyPair.Count -gt 2)
+            {
+                Write-Verbose "Multi-valued property detected"
+                Write-Verbose "Assign PropertyName to PropertyPair[0]"
+                $PropertyName = $PropertyPair[0]
+                Write-Verbose "Assign remaining values to PropertyValues"
+                $PropertyValues = $PropertyPair[1..(($PropertyPair.Count)-1)]
+
+                Write-Verbose "Assign the property of the object, the values"
+                $ADObject.PutEx(2,$PropertyName,$PropertyValues)
+                }
+            Write-Verbose "Save property changes to object"
+            try
+            {
+                $ADObject.SetInfo()
+                }
+            catch
+            {
+                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
+            }
+        }
+    End
+    {
         }
     }
