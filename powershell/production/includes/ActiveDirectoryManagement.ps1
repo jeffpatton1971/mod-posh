@@ -831,6 +831,7 @@ Function Set-ComputerName
             Created by   : Jeff Patton
             Date Coded   : 09/21/2011 10:59:03
         .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Set-ComputerName
     #>
     Param
         (
@@ -937,6 +938,7 @@ Function Get-DomainName
             Created by   : Jeff Patton
             Date Coded   : 09/22/2011 09:42:38
         .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-DomainName
     #>
     Param
         (
@@ -1010,6 +1012,7 @@ Function Get-UserGroupMembership
             will need to have the requisite permissions to view the group membership
             of a given user object.
         .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-UserGroupMembership
     #>
     Param
         (
@@ -1078,6 +1081,7 @@ Function Add-UserToGroup
             Created by   : Jeff Patton
             Date Coded   : 09/22/2011 14:18:33
         .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Add-UserToGroup
     #>
     Param
         (
@@ -1146,6 +1150,7 @@ Function Set-ADObjectProperties
             Created by   : Jeff Patton
             Date Coded   : 09/23/2011 14:27:19
         .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Set-ADObjectProperties
     #>
     Param
         (
