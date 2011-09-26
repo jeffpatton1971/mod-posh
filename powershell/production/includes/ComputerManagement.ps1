@@ -399,7 +399,7 @@ Function Get-Services
 		
 		Return $Services
 	}
-Function Get-NonStandardServiceAccounts()
+Function Get-NonStandardServiceAccounts
 	{
 		<#
 			.SYNOPSIS
