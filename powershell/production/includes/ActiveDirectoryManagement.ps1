@@ -675,7 +675,9 @@ Function Get-FSMORoleOwner
 
             Description
             -----------
-            Retrieves the FSMO role owners each domain in a forest. Also lists the domain and forest.        
+            Retrieves the FSMO role owners each domain in a forest. Also lists the domain and forest.
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-FSMORoleOwner
     #>
 
     Begin
