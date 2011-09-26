@@ -23,7 +23,7 @@ Function New-LocalUser
                 -----------
                 Creates a user named MyUserAccount on MyComputer.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#New-LocalUser
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#New-LocalUser
 		#>
 		Param
 			(
@@ -81,7 +81,7 @@ Function Set-Pass
 			.EXAMPLE
 				Set-Pass -ComputerName MyComputer -UserName MyUserAccount -Password N3wP@ssw0rd
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Set-Pass
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Set-Pass
 		#>
 		Param
         (
@@ -134,7 +134,7 @@ Function Add-LocalUserToGroup
 			.EXAMPLE
 				Add-LocalUserToGroup -ComputerName MyComputer -User MyUserAccount -Group Administrators
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Add-LocalUserToGroup
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Add-LocalUserToGroup
 		#>
 		Param
 			(
@@ -217,7 +217,7 @@ Function New-ScheduledTask
 			New-ScheduledTask -TaskName "Reboot Computer" -TaskRun "shutdown /r" -TaskSchedule ONCE `
             -StartTime "18:00:00" -StartDate "03/16/2011" -TaskUser SYSTEM -Server MyDesktopPC
 		.LINK
-			http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#New-ScheduledTask
+			http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#New-ScheduledTask
 		#>
 		
 		Param
@@ -268,7 +268,7 @@ Function Remove-UserFromLocalGroup
                 -----------
                 This example removes a user from the local users group.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Remove-UserFromLocalGroup
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Remove-UserFromLocalGroup
 		#>
 		
 		Param
@@ -372,7 +372,7 @@ Function Get-Services
 				-----------
 				This example shows how to specify a remote computer and credentials to authenticate with.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-Services
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-Services
 		#>
 		
 		Param
@@ -459,7 +459,7 @@ Function Get-NonStandardServiceAccounts()
 				Powershell may need to be run elevated to run this script.
 				UAC may need to be disabled to run this script.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-NonStandardServiceAccounts
+				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-NonStandardServiceAccounts
 		#>
 		
 		Param
@@ -513,7 +513,7 @@ Function Remove-LocalUser
             .NOTES
                 The user context the script is run under must be able to delete accounts on the remote computer
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Remove-LocalUser
+                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Remove-LocalUser
         #>
         
         Param
@@ -585,7 +585,7 @@ Function Get-LocalUserAccounts
             .NOTES
                 You will need to provide credentials when running this against computers in a diffrent domain.
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-LocalUserAccounts
+                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-LocalUserAccounts
         #>
         
         Param
@@ -637,7 +637,7 @@ Function Get-PendingUpdates
                 Date Created: 05Mar2011
                 RPC Dynamic Ports need to be enabled on inbound remote servers.
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-PendingUpdates
+                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-PendingUpdates
         #> 
 
         Param
@@ -698,7 +698,7 @@ Function Get-ServiceTag
         .NOTES
             This space intentionally left blank.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-ServiceTag
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-ServiceTag
     #>
     
     Param
@@ -755,7 +755,7 @@ Function Backup-EventLogs
         .NOTES
             May need to be a user with rights to access various logs, such as security on remote computer.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Backup-EventLogs
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Backup-EventLogs
     #>
     
     Param
@@ -808,7 +808,7 @@ Function Export-EventLogs
         .NOTES
             May need to be a user with rights to access various logs, such as security on remote computer.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Export-EventLogs
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Export-EventLogs
     #>
     
     Param
@@ -869,7 +869,7 @@ Function Get-SiSReport
             This function will return nothing if the drive being analyzed does not have SiS enabled
             This function will return a message if the sisadmin command returns any error
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-SiSReport
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-SiSReport
     #>
     
     Param
@@ -943,7 +943,7 @@ Function Get-PaperCutLogs
             and you can generate graphs based on which printer is used the most, how much paper  
             is consumed by each printer and so on.  
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-PaperCutLogs
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-PaperCutLogs
     #>
     
     Param
@@ -1039,7 +1039,7 @@ Function Set-ShutdownMethod
         .NOTES
             You will need proper credentials on the remote machine for this to work.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Set-ShutdownMethod
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Set-ShutdownMethod
     #>
     
     PARAM
@@ -1116,7 +1116,7 @@ Function Get-PrinterLogs
             The following log will need to be enabled before logs can be generated by the server:
             "Microsoft-Windows-PrintService/Operational"
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet#Get-PrinterLogs
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-PrinterLogs
     #>
     
     Param
@@ -1174,3 +1174,129 @@ Function Get-PrinterLogs
         Return $PrintLogs
         }
 }
+
+Function Get-OpenSessions
+{
+    <#
+        .SYNOPSIS
+            Return a list of open sessions
+        .DESCRIPTION
+            This function returns a list of open session on a given server. The output is 
+            similar to that of the Manage Open Sessions dialog in the Share and Storage
+            Management console.
+        .PARAMETER ComputerName
+            This is the FQDN or NetBIOS name of the computer
+        .EXAMPLE
+            Get-OpenSessions -ComputerName fs
+
+            User          Computer         ConnectTime     IdleTime
+            ----          --------         -----------     --------
+            user1         10.10.1.62              1615            1
+            user2         10.10.1.156             7529           17
+
+            Description
+            -----------
+            This example shows the basic usage of the command.
+        .NOTES
+            FunctionName : Get-OpenSessions
+            Created by   : Jeff Patton
+            Date Coded   : 09/26/2011 11:35:40
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-OpenSessions
+    #>
+    Param
+        (
+            $ComputerName = (hostname)
+        )
+    Begin
+    {
+        $ServerSessions = @()
+        $Server = [adsi]"WinNT://$($ComputerName)/LanmanServer"
+        $Sessions = $Server.PSBase.Invoke("Sessions")
+        }
+    Process
+    {
+        foreach ($Session in $Sessions)
+        {
+            Try
+            {
+                $UserSession = New-Object -TypeName PSobject -Property @{
+                    User = $Session.GetType().InvokeMember("User","GetProperty",$null,$Session,$null)
+                    Computer = $Session.GetType().InvokeMember("Computer","GetProperty",$null,$Session,$null)
+                    ConnectTime = $Session.GetType().InvokeMember("ConnectTime","GetProperty",$null,$Session,$null)
+                    IdelTime = $Session.GetType().InvokeMember("IdleTime","GetProperty",$null,$Session,$null)
+                    }
+                }
+            Catch
+            {
+                }
+            $ServerSessions += $UserSession
+            }
+        }
+    End
+    {
+        Return $ServerSessions
+        }
+    }
+Function Get-OpenFiles
+{
+    <#
+        .SYNOPSIS
+            Get a list of files open on the server
+        .DESCRIPTION
+            This function returns a list of files open on a given server. The output is
+            similar to that of the Manage Open Files from the Share and Storage Management
+            console.
+        .PARAMETER ComputerName
+            The NetBIOS or FQDN of the computer
+        .EXAMPLE
+            Get-OpenFiles -ComputerName fs
+
+            User          Path                              LockCount
+            ----          ----                              ---------
+            User1         F:\Users\User1\Documents\Data\...         0
+            User2         P:\Public                                 0
+
+            Description
+            -----------
+            This example shows the basic usage of this command.
+        .NOTES
+            FunctionName : Get-OpenFiles
+            Created by   : Jeff Patton
+            Date Coded   : 09/26/2011 13:01:38
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-OpenFiles
+    #>
+    Param
+        (
+            $ComputerName = (hostname)
+        )
+    Begin
+    {
+        $OpenFiles = @()
+        $Server = [adsi]"WinNT://$($ComputerName)/LanmanServer"
+        $Resources = $Server.PSBase.Invoke("Resources")
+        }
+    Process
+    {
+        foreach ($Resource in $Resources)
+        {
+            Try
+            {
+                $UserResource = New-Object -TypeName PSobject -Property @{
+                    User = $Resource.GetType().InvokeMember("User","GetProperty",$null,$Resource,$null)
+                    Path = $Resource.GetType().InvokeMember("Path","GetProperty",$null,$Resource,$null)
+                    LockCount = $Resource.GetType().InvokeMember("LockCount","GetProperty",$null,$Resource,$null)
+                    }
+                }
+            Catch
+            {
+                }
+            }
+        $OpenFiles += $UserResource
+        }
+    End
+    {
+        Return $OpenFiles
+        }
+    }
