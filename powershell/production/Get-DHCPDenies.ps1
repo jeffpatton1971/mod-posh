@@ -38,6 +38,8 @@
 #>
 Param
     (
+        [Parameter(Mandatory=$true)]
+        $EventID
     )
 Begin
     {
@@ -55,28 +57,28 @@ Begin
     }
 Process
     {
-        $Event20097 = Get-WinEvent -LogName Microsoft-Windows-Dhcp-Server/FilterNotifications |Where-Object {$_.id -eq 20097}
-        if ($Event20097.Count -eq $null)
+        $Events = Get-WinEvent -LogName Microsoft-Windows-Dhcp-Server/FilterNotifications |Where-Object {$_.id -eq $EventID}
+        if ($Events.Count -eq $null)
         {
             $Report = New-Object -TypeName PSObject -Property @{
-                MacAddress = $Event20097.Properties[0].Value
-                HostName = $Event20097.Properties[1].Value
-                HWType = $Event20097.Properties[2].Value
-                TimeCreated = $Event20097.TimeCreated
-                Message = $Event20097.Message
+                MacAddress = $Events.Properties[0].Value
+                HostName = $Events.Properties[1].Value
+                HWType = $Events.Properties[2].Value
+                TimeCreated = $Events.TimeCreated
+                Message = $Events.Message
                 }
-            $FileName = "DHCPDeny-$($Event20097.Properties[0].Value).xml"
+            $FileName = "DHCPDeny-$($Events.Properties[0].Value).xml"
             }
         else
         {
             $Report = New-Object -TypeName PSObject -Property @{
-                MacAddress = $Event20097[0].Properties[0].Value
-                HostName = $Event20097[0].Properties[1].Value
-                HWType = $Event20097[0].Properties[2].Value
-                TimeCreated = $Event20097[0].TimeCreated
-                Message = $Event20097[0].Message
+                MacAddress = $Events[0].Properties[0].Value
+                HostName = $Events[0].Properties[1].Value
+                HWType = $Events[0].Properties[2].Value
+                TimeCreated = $Events[0].TimeCreated
+                Message = $Events[0].Message
                 }
-            $FileName = "DHCPDeny-$($Event20097[0].Properties[0].Value).xml"
+            $FileName = "DHCPDeny-$($Events[0].Properties[0].Value).xml"
             }
     }
 End
@@ -87,5 +89,5 @@ End
         {
             New-Item C:\LogFiles -ItemType Directory 
             }
-        Export-Clixml -Path "C:\StorageReports\$($FileName)" -InputObject $Report
+        Export-Clixml -Path "C:\LogFiles\$($FileName)" -InputObject $Report
     }
