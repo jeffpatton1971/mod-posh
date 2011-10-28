@@ -674,7 +674,6 @@ Function Get-PendingUpdates
                 Return $SearchResult.Updates
             }
     }
-
 Function Get-ServiceTag
 {
     <#
@@ -735,7 +734,6 @@ Function Get-ServiceTag
         Return $Return
     }
 }
-
 Function Backup-EventLogs
 {
     <#
@@ -791,7 +789,6 @@ Function Backup-EventLogs
         Return $?
         }
 }
-
 Function Export-EventLogs
 {
     <#
@@ -839,7 +836,6 @@ Function Export-EventLogs
         Return $?
         }
 }
-
 Function Get-SiSReport
 {
     <#
@@ -1174,7 +1170,6 @@ Function Get-PrinterLogs
         Return $PrintLogs
         }
 }
-
 Function Get-OpenSessions
 {
     <#
@@ -1298,5 +1293,316 @@ Function Get-OpenFiles
     End
     {
         Return $OpenFiles
+        }
+    }
+Function Get-RDPLoginEvents
+{
+    <#
+        .SYNOPSIS
+            Return Remote Desktop login attempts
+        .DESCRIPTION
+            This function returns login attempts from the Microsoft Windows TerminalServices RemoteConnectionManager 
+            log. The specific events are logged as EventID 1149, and they are logged whether or not the user actually
+            gets to the desktop.
+        .PARAMETER ComputerName
+            This is the NetBIOS name of the computer to pull events from.
+        .PARAMETER Credentials
+            A user account with the ability to retreive these events.
+        .EXAMPLE
+            Get-RDPLoginEvents -Credentials $Credentials |Export-Csv -Path C:\logfiles\RDP-Attempts.csv
+            
+            Description
+            -----------
+            This example show piping the output of the function to Export-Csv to create a file suitable for import
+            into Excel, or some other spreadsheet software.
+        .EXAMPLE
+            Get-RDPLoginEvents -Credentials $Credentials -ComputerName MyPC |Format-Table
+
+            SourceNetworkAddress        Domain           TimeCreated                User
+            --------------------        ------           -----------                ----
+            192.168.1.1                 MyPC...          4/30/2011 8:20:02 AM       Administrator...
+            192.168.1.1                 MyPC...          4/28/2011 4:53:01 PM       Administrator...
+            192.168.1.1                 MyPC...          4/21/2011 2:01:42 PM       Administrator...
+            192.168.1.1                 MyPC...          4/19/2011 11:42:59 AM      Administrator...
+            192.168.1.1                 MyPC...          4/19/2011 10:30:52 AM      Administrator...
+
+            Description
+            -----------
+            This example shows piping the output to Format-Table
+        .NOTES
+            The Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational needs to be enabled
+            The user account supplied in $Credentials needs to have permission to view this log
+            No output is returned if the log is empty.
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-RDPLoginEvents
+    #>
+    [cmdletbinding()]    
+    Param
+        (
+            [Parameter(ValueFromPipeline=$true, Mandatory=$true)]
+            $ComputerName,
+            $Credentials,
+            $EventID = 1149,
+            $LogName = 'Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational'
+        )
+    Begin
+    {
+        $LoginAttempts = @()
+        }
+    Process
+    {
+        Foreach ($Computer in $ComputerName)
+        {
+            Write-Verbose "Checking $($Computer)"
+            try
+            {
+                if (Test-Connection -ComputerName $Computer -Count 1 -ErrorAction SilentlyContinue)
+                {
+                    $Events = Get-WinEvent -LogName $LogName -ComputerName $ComputerName -Credential $Credentials  -ErrorAction SilentlyContinue `
+                        |Where-Object {$_.ID -eq $EventID}
+                    if ($Events.Count -ne $null)
+                    {
+                        foreach ($Event in $Events)
+                        {
+                            $LoginAttempt = New-Object -TypeName PSObject -Property @{
+                                ComputerName = $Computer
+                                User = $Event.Properties[0].Value
+                                Domain = $Event.Properties[1].Value
+                                SourceNetworkAddress = [net.ipaddress]$Event.Properties[2].Value
+                                TimeCreated = $Event.TimeCreated
+                                }
+                            $LoginAttempts += $LoginAttempt
+                            }
+                        }
+                    }
+                }
+            catch
+            {
+                }
+            }
+        }
+    End
+    {
+        Return $LoginAttempts
+        }
+    }
+Function Get-InvalidLogonAttempts
+{
+    <#
+        .SYNOPSIS
+            Return a list of invalid logon attempts.
+        .DESCRIPTION
+            This function queries the security log of a given computer and 
+            retrieves Event ID 4625, failed logon attempt.
+        .PARAMETER ComputerName
+            The name of the computer to pull logs from 
+        .PARAMETER LogName
+            The name of the Event Log.
+        
+            You will notice that I have set the LogName to Security, since
+            this particular script was designed to find a specific entry.
+            This can be modified to suit your needs.
+        .PARAMETER EventID
+            The Event ID to return.
+        
+            You will notice that I have set the EventID to 4625, since
+            this particular script was designed to find those particular
+            entries. This can be modified to suit your needs.
+        .EXAMPLE
+            Get-InvalidLogonAttempts -ComputerName Desktop-pc1 -LogName 'Security' -EventID 4625
+        
+            Message        MachineName    TimeCreated   IpAddress         LogonType TargetUserNam IpPort
+                                                                                    e
+            -------        -----------    -----------   ---------         --------- ------------- ------
+            An account ... Desktop-pc1... 10/26/2011... ##.###.###...            10 Daniel        62581
+            An account ... Desktop-pc1... 10/26/2011... ##.###.###...            10 Daniel        11369
+            An account ... Desktop-pc1... 10/26/2011... ##.###.###...            10 Daniel        47575
+            An account ... Desktop-pc1... 10/26/2011... ##.###.###...            10 Daniel        51144
+
+            Description
+            -----------
+            This is the basic syntax of the command, the output is returned to stdin.
+        .EXAMPLE
+            Get-InvalidLogonAttempts |Export-Csv -Path .\InvalidLoginAttempts.csv
+        
+            Description
+            -----------
+            This example shows redirecting the output through the Export-CSV command to get
+            a csv file.
+        .NOTES
+            ScriptName : Get-InvalidLogonAttempts
+            Created By : jspatton
+            Date Coded : 10/26/2011 11:20:58
+            ScriptName is used to register events for this script
+            LogName is used to determine which classic log to write to
+ 
+            ErrorCodes
+                100 = Success
+                101 = Error
+                102 = Warning
+                104 = Information
+        
+            If you adjust theh script to look for event id's other than 4625, you will
+            want to examine the Event Properties. This is similar to viewing the 
+            "Friendly" view of an event in the event log. Below are all the properties
+            for Event ID 4625.
+    
+            00  SubjectUserSid S-1-5-18 
+            01  SubjectUserName NODE1$ 
+            02  SubjectDomainName SOECS 
+            03  SubjectLogonId 0x3e7 
+            04  TargetUserSid S-1-0-0 
+            05  TargetUserName Daniel 
+            06  TargetDomainName NODE1 
+            07  Status 0xc000006d 
+            08  FailureReason %%2313 
+            09  SubStatus 0xc0000064 
+            10  LogonType 10 
+            11  LogonProcessName User32  
+            12  AuthenticationPackageName Negotiate 
+            13  WorkstationName NODE1 
+            14  TransmittedServices - 
+            15  LmPackageName - 
+            16  KeyLength 0 
+            17  ProcessId 0x3278 
+            18  ProcessName C:\Windows\System32\winlogon.exe 
+            19  IpAddress ##.###.###.### 
+            20  IpPort 51144 
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-InvalidLogonAttempts
+    #>
+    [cmdletBinding()]
+    Param
+        (
+            [Parameter(ValueFromPipeline=$true, Mandatory=$true)]
+            $ComputerName,
+            $LogName = "Security",
+            $EventID = 4625
+        )
+    Begin
+    {        
+        $Report = @()
+        Write-Verbose "Get all $($EventID) events from the $($LogName) Log on $($ComputerName)"
+        $Events = Get-WinEvent -ComputerName $ComputerName -LogName $LogName -Credential $Credentials |Where-Object {$_.Id -eq $EventID}
+        Write-Verbose "Filter the list of events to only events that happened today"
+        $Events = $Events |Where-Object {(Get-Date($_.TimeCreated) -Format "yyy-MM-dd") -eq (Get-Date -Format "yyy-MM-dd")}
+        }
+    Process
+    {
+        Write-Verbose "Loop through each event that is returned from Get-WinEvent"
+        foreach ($Event in $EventID4625)
+        {
+            Write-Verbose "Create an object to hold the data I'm collecting"
+            $ThisEvent = New-Object -TypeName PSObject -Property @{
+                TimeCreated = $Event.TimeCreated
+                MachineName = $Event.MachineName
+                TargetUserName = $Event.Properties[5].Value
+                LogonType = $Event.Properties[10].Value
+                IpAddress = [net.ipaddress]$Event.Properties[19].Value
+                IpPort = $Event.Properties[20].Value
+                Message = $Event.Message
+                }
+            $Report += $ThisEvent
+            }
+        }
+    End
+    {
+        Return $Report
+        }
+    }
+Function Get-UpTime
+{
+    <#
+        .SYNOPSIS
+            Get uptime of one or more computers
+        .DESCRIPTION
+            This script uses Win32_ComputerSystem to determine how long your system has been running.
+        .PARAMETER ComputerName
+            One or more computer names
+        .EXAMPLE
+            Get-UpTime -ComputerName ".", "server01" |Sort-Object -Property Days -Descending
+
+            ComputerName Days Hours Minutes
+            ------------ ---- ----- -------
+            server01       39    18      25
+            Desktop01       0     1      38
+
+            Description
+            -----------
+            This example shows using the function with an array of computer names, and sorting the output
+            descending order by days.
+        .EXAMPLE
+            $Servers | foreach {Get-UpTime $_.Properties.name} |Sort-Object -Property Days -Descending
+
+            ComputerName    Days Hours Minutes
+            ------------    ---- ----- -------
+            server01         144    22      58
+            server02         144    22      16
+            server03         144    23       9
+            server04         139    22      42
+
+            Description
+            -----------
+            This example shows passing in computer computer names from an object.
+        .NOTES
+            FunctionName : Get-UpTime
+            Created by   : jspatton
+            Date Coded   : 10/19/2011 11:22:34
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-UpTime
+        .LINK
+            http://msdn.microsoft.com/en-us/library/aa394591(VS.85).aspx  
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [parameter(Mandatory=$true,ValueFromPipeline=$true)]
+        $ComputerName = "."
+        )
+    Begin
+    {       
+        $Report = @()
+        }
+    Process
+    {
+        foreach ($Computer in $ComputerName) 
+        {
+            if ($Computer -eq ".")
+            {
+                Write-Verbose "Change the dot to a hostname"
+                $Computer = (& hostname)
+                }
+            Write-Verbose "Make sure that $($Computer) is online with a single ping."
+            Test-Connection -ComputerName $Computer -Count 1 -ErrorAction SilentlyContinue |Out-Null
+            
+            if ($?)
+            {
+                Write-Verbose "Try to connect to $($Computer) fail silently."
+                try
+                {
+                    Write-Verbose "Convert the WMI value for LastBootUpTime into a date, and subtract it from now to get uptime"
+                    $Uptime = (Get-Date) - ([System.Management.ManagementDateTimeconverter]::ToDateTime((Get-WMIObject -class Win32_OperatingSystem -ComputerName $Computer).LastBootUpTime))
+                    $ComputerUpTime = New-Object -TypeName PSObject -Property @{
+                        ComputerName = $Computer
+                        Days = $Uptime.Days
+                        Hours = $Uptime.Hours
+                        Minutes = $uptime.Minutes
+                        }
+                    $Report += $ComputerUpTime
+                    }
+                catch
+                {
+                    Write-Verbose $Error[0].Exception
+                    }
+                }
+            else
+            {
+                Write-Verbose "Unable to connect to $($Computer)"
+                }
+            }
+        }
+    End
+    {
+        Return $Report
         }
     }
