@@ -1,5 +1,4 @@
-﻿
-<#
+﻿<#
     .SYNOPSIS
         Template script
     .DESCRIPTION
@@ -91,21 +90,21 @@ Begin
         }
 Process
     {
-        $Events = Get-WinEvent -LogName $EventLog |Where-Object {$_.Id -eq $EventID}
-        $Event = $Events[0]
+        $Events = Get-WinEvent -FilterHashtable @{LogName=$EventLog;ID=$EventID}
+        $Event = [XML]$Events[0].ToXML()
 
         Write-Verbose "Build report based on EventID $($EventID)" 
         switch ($EventID)
         {
-           #EventID
-           #{
-           #     $EmailSubject = ""
-           #     $EmailBody = $Event.Message
-           #     $Report = New-Object -TypeName PSObject -Property @{
-           #          TimeCreated = $Event.TimeCreated
-           #          MachineName = $Event.MachineName
-           #          }
-           #     }
+           4625
+           {
+                $EmailSubject = ""
+                $EmailBody = $Event.Message
+                $Report = New-Object -TypeName PSObject -Property @{
+                     TimeCreated = $Event.TimeCreated
+                     MachineName = $Event.MachineName
+                     }
+                }
             default
             {
                 }
