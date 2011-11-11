@@ -84,26 +84,298 @@ Begin
  
         #	Dotsource in the functions you need.
         $Report = @()
-        $FileName = "EventID-$($EventID)-$((Get-Date -Format "yyyMMdd-hhmmss")).xml"
-        $LogPath = "$($LogPath)\$($TriggerName)\$($FileName)"
+        $FileName = "EventID-$($EventID)-$((Get-Date -Format "yyyMMdd")).csv"
+        if ($LogPath[($LogPath.Length)-1] -ne '\')
+        {
+            $LogPath += '\'
+            }
+        $FullPath = "$($LogPath)\$($TriggerName)\$($FileName)"
         $EmailFrom = ("$($env:USERNAME)@$($env:COMPUTERNAME).$($env:USERDNSDOMAIN)").ToLower()
+        $EmailFlag = $false
         }
 Process
     {
-        $Events = Get-WinEvent -FilterHashtable @{LogName=$EventLog;ID=$EventID}
-        $Event = [XML]$Events[0].ToXML()
-
+        try
+        {
+            $Events = Get-WinEvent -ErrorAction Stop -FilterHashtable @{LogName=$EventLog;ID=$EventID}
+            }
+        catch
+        {
+            Write-Verbose $Error[0]
+            break
+            }
+        if ($Events.Count)
+        {
+            $Events = $Events[0]
+            }
+        if ($EmailSMTP -and $EmailTo)
+        {
+            $EmailFlag = $true
+            }
+        else
+        {
+            $EmailFlag = $false
+            }
+        
+        $EVTEvent = $Events
+        $XMLEvent = [XML]$Events.ToXML()
+        $Report += $XMLEvent.Event.EventData.Data `
+            |Select-Object -Property @{Label='EventField';Expression="Name"}, @{Label='EventData';Expression="#text"}
+        
         Write-Verbose "Build report based on EventID $($EventID)" 
         switch ($EventID)
         {
-           4625
-           {
-                $EmailSubject = ""
-                $EmailBody = $Event.Message
-                $Report = New-Object -TypeName PSObject -Property @{
-                     TimeCreated = $Event.TimeCreated
-                     MachineName = $Event.MachineName
-                     }
+            4741
+            {
+                $EmailSubject = "Computer account created"
+                Write-Verbose $EmailSubject
+                $EmailBody = $EVTEvent.Message
+                Write-Verbose "Adding MachineName"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'MachineName'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding TimeCreated"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'TimeCreated'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding EventID"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'EventID'
+                    EventData = $EVTEvent.ID
+                    }
+                }
+            4743
+            {
+                $EmailSubject = "Computer account deleted"
+                Write-Verbose $EmailSubject
+                $EmailBody = $EVTEvent.Message
+                Write-Verbose "Adding MachineName"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'MachineName'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding TimeCreated"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'TimeCreated'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding EventID"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'EventID'
+                    EventData = $EVTEvent.ID
+                    }
+                }
+            624
+            {
+                $EmailSubject = "User account created"
+                Write-Verbose $EmailSubject
+                $EmailBody = $EVTEvent.Message
+                Write-Verbose "Adding MachineName"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'MachineName'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding TimeCreated"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'TimeCreated'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding EventID"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'EventID'
+                    EventData = $EVTEvent.ID
+                    }
+                }
+            630
+            {
+                $EmailSubject = "User account deleted"
+                Write-Verbose $EmailSubject
+                $EmailBody = $EVTEvent.Message
+                Write-Verbose "Adding MachineName"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'MachineName'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding TimeCreated"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'TimeCreated'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding EventID"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'EventID'
+                    EventData = $EVTEvent.ID
+                    }
+                }
+            636
+            {
+                $EmailSubject = "Group membership addition"
+                Write-Verbose $EmailSubject
+                $EmailBody = $EVTEvent.Message
+                Write-Verbose "Adding MachineName"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'MachineName'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding TimeCreated"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'TimeCreated'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding EventID"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'EventID'
+                    EventData = $EVTEvent.ID
+                    }
+                }
+            637
+            {
+                $EmailSubject = "Group membership subtraction"
+                Write-Verbose $EmailSubject
+                $EmailBody = $EVTEvent.Message
+                Write-Verbose "Adding MachineName"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'MachineName'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding TimeCreated"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'TimeCreated'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding EventID"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'EventID'
+                    EventData = $EVTEvent.ID
+                    }
+                }
+            4720
+            {
+                $EmailSubject = "User account created"
+                Write-Verbose $EmailSubject
+                $EmailBody = $EVTEvent.Message
+                Write-Verbose "Adding MachineName"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'MachineName'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding TimeCreated"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'TimeCreated'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding EventID"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'EventID'
+                    EventData = $EVTEvent.ID
+                    }
+                }
+            4726
+            {
+                $EmailSubject = "User account deleted"
+                Write-Verbose $EmailSubject
+                $EmailBody = $EVTEvent.Message
+                Write-Verbose "Adding MachineName"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'MachineName'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding TimeCreated"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'TimeCreated'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding EventID"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'EventID'
+                    EventData = $EVTEvent.ID
+                    }
+                }
+            4732
+            {
+                $EmailSubject = "Group membership addition"
+                Write-Verbose $EmailSubject
+                $EmailBody = $EVTEvent.Message
+                Write-Verbose "Adding MachineName"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'MachineName'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding TimeCreated"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'TimeCreated'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding EventID"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'EventID'
+                    EventData = $EVTEvent.ID
+                    }
+                }
+            4733
+            {
+                $EmailSubject = "Group membership subtraction"
+                Write-Verbose $EmailSubject
+                $EmailBody = $EVTEvent.Message
+                Write-Verbose "Adding MachineName"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'MachineName'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding TimeCreated"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'TimeCreated'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding EventID"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'EventID'
+                    EventData = $EVTEvent.ID
+                    }
+                }
+            4728
+            {
+                $EmailSubject = "Group membership addition"
+                Write-Verbose $EmailSubject
+                $EmailBody = $EVTEvent.Message
+                Write-Verbose "Adding MachineName"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'MachineName'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding TimeCreated"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'TimeCreated'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding EventID"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'EventID'
+                    EventData = $EVTEvent.ID
+                    }
+                }
+            4729
+            {
+                $EmailSubject = "Group membership subtraction"
+                Write-Verbose $EmailSubject
+                $EmailBody = $EVTEvent.Message
+                Write-Verbose "Adding MachineName"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'MachineName'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding TimeCreated"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'TimeCreated'
+                    EventData = $EVTEvent.MachineName
+                    }
+                Write-Verbose "Adding EventID"
+                $Report += New-Object -TypeName PSObject -Property @{
+                    EventField = 'EventID'
+                    EventData = $EVTEvent.ID
+                    }
                 }
             default
             {
@@ -114,13 +386,14 @@ End
     {
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
-        if ((Test-Path $LogPath) -ne $true)
+        if ((Test-Path "$($LogPath)\$($TriggerName)") -ne $true)
         {
-            New-Item $LogPath -ItemType Directory -Force
+            New-Item "$($LogPath)\$($TriggerName)" -ItemType Directory -Force
             }
-        Export-Clixml -Path $LogPath -InputObject $Report
-        if ($EmailSMTP -ne $null -and $EmailTo -ne $null)
+        ConvertTo-Csv -InputObject $Report -NoTypeInformation |Out-File $FullPath -Append
+        if ($EmailFlag -eq $true)
         {
+            Write-Verbose "Sending $($EmailSubject) email to $($EmailTo)"
             Send-MailMessage -To $EmailTo -From $EmailFrom -Subject $EmailSubject -Body $EmailBody -SmtpServer $EmailSMTP
             }
         }
