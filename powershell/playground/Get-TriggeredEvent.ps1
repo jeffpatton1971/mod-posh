@@ -97,11 +97,16 @@ Process
     {
         try
         {
-            $Events = Get-WinEvent -ErrorAction Stop -FilterHashtable @{LogName=$EventLog;ID=$EventID}
+            $Events = Get-WinEvent -ErrorAction Stop -FilterHashtable @{LogName=$EventLog;ID=$EventID} 
             }
         catch
         {
             Write-Verbose $Error[0]
+            break
+            }
+        if ($Events -eq $null)
+        {
+            Write-Verbose "No logs found"
             break
             }
         if ($Events.Count)
@@ -138,7 +143,7 @@ Process
                 Write-Verbose "Adding TimeCreated"
                 $Report += New-Object -TypeName PSObject -Property @{
                     EventField = 'TimeCreated'
-                    EventData = $EVTEvent.MachineName
+                    EventData = $EVTEvent.TimeCreated
                     }
                 Write-Verbose "Adding EventID"
                 $Report += New-Object -TypeName PSObject -Property @{
@@ -159,7 +164,7 @@ Process
                 Write-Verbose "Adding TimeCreated"
                 $Report += New-Object -TypeName PSObject -Property @{
                     EventField = 'TimeCreated'
-                    EventData = $EVTEvent.MachineName
+                    EventData = $EVTEvent.TimeCreated
                     }
                 Write-Verbose "Adding EventID"
                 $Report += New-Object -TypeName PSObject -Property @{
@@ -180,7 +185,7 @@ Process
                 Write-Verbose "Adding TimeCreated"
                 $Report += New-Object -TypeName PSObject -Property @{
                     EventField = 'TimeCreated'
-                    EventData = $EVTEvent.MachineName
+                    EventData = $EVTEvent.TimeCreated
                     }
                 Write-Verbose "Adding EventID"
                 $Report += New-Object -TypeName PSObject -Property @{
@@ -201,7 +206,7 @@ Process
                 Write-Verbose "Adding TimeCreated"
                 $Report += New-Object -TypeName PSObject -Property @{
                     EventField = 'TimeCreated'
-                    EventData = $EVTEvent.MachineName
+                    EventData = $EVTEvent.TimeCreated
                     }
                 Write-Verbose "Adding EventID"
                 $Report += New-Object -TypeName PSObject -Property @{
@@ -222,7 +227,7 @@ Process
                 Write-Verbose "Adding TimeCreated"
                 $Report += New-Object -TypeName PSObject -Property @{
                     EventField = 'TimeCreated'
-                    EventData = $EVTEvent.MachineName
+                    EventData = $EVTEvent.TimeCreated
                     }
                 Write-Verbose "Adding EventID"
                 $Report += New-Object -TypeName PSObject -Property @{
@@ -243,7 +248,7 @@ Process
                 Write-Verbose "Adding TimeCreated"
                 $Report += New-Object -TypeName PSObject -Property @{
                     EventField = 'TimeCreated'
-                    EventData = $EVTEvent.MachineName
+                    EventData = $EVTEvent.TimeCreated
                     }
                 Write-Verbose "Adding EventID"
                 $Report += New-Object -TypeName PSObject -Property @{
@@ -264,7 +269,7 @@ Process
                 Write-Verbose "Adding TimeCreated"
                 $Report += New-Object -TypeName PSObject -Property @{
                     EventField = 'TimeCreated'
-                    EventData = $EVTEvent.MachineName
+                    EventData = $EVTEvent.TimeCreated
                     }
                 Write-Verbose "Adding EventID"
                 $Report += New-Object -TypeName PSObject -Property @{
@@ -285,7 +290,7 @@ Process
                 Write-Verbose "Adding TimeCreated"
                 $Report += New-Object -TypeName PSObject -Property @{
                     EventField = 'TimeCreated'
-                    EventData = $EVTEvent.MachineName
+                    EventData = $EVTEvent.TimeCreated
                     }
                 Write-Verbose "Adding EventID"
                 $Report += New-Object -TypeName PSObject -Property @{
@@ -306,7 +311,7 @@ Process
                 Write-Verbose "Adding TimeCreated"
                 $Report += New-Object -TypeName PSObject -Property @{
                     EventField = 'TimeCreated'
-                    EventData = $EVTEvent.MachineName
+                    EventData = $EVTEvent.TimeCreated
                     }
                 Write-Verbose "Adding EventID"
                 $Report += New-Object -TypeName PSObject -Property @{
@@ -327,7 +332,7 @@ Process
                 Write-Verbose "Adding TimeCreated"
                 $Report += New-Object -TypeName PSObject -Property @{
                     EventField = 'TimeCreated'
-                    EventData = $EVTEvent.MachineName
+                    EventData = $EVTEvent.TimeCreated
                     }
                 Write-Verbose "Adding EventID"
                 $Report += New-Object -TypeName PSObject -Property @{
@@ -348,7 +353,7 @@ Process
                 Write-Verbose "Adding TimeCreated"
                 $Report += New-Object -TypeName PSObject -Property @{
                     EventField = 'TimeCreated'
-                    EventData = $EVTEvent.MachineName
+                    EventData = $EVTEvent.TimeCreated
                     }
                 Write-Verbose "Adding EventID"
                 $Report += New-Object -TypeName PSObject -Property @{
@@ -369,7 +374,7 @@ Process
                 Write-Verbose "Adding TimeCreated"
                 $Report += New-Object -TypeName PSObject -Property @{
                     EventField = 'TimeCreated'
-                    EventData = $EVTEvent.MachineName
+                    EventData = $EVTEvent.TimeCreated
                     }
                 Write-Verbose "Adding EventID"
                 $Report += New-Object -TypeName PSObject -Property @{
@@ -390,7 +395,15 @@ End
         {
             New-Item "$($LogPath)\$($TriggerName)" -ItemType Directory -Force
             }
-        ConvertTo-Csv -InputObject $Report -NoTypeInformation |Out-File $FullPath -Append
+        if ((Test-Path $FullPath) -eq $true)
+        {
+            $Report = $Report |ConvertTo-Csv -NoTypeInformation -Delimiter ","
+            $Report[1..($Report.Count-1)] |Out-File $FullPath -Append
+            }
+        else
+        {
+            $Report |ConvertTo-Csv -NoTypeInformation -Delimiter "," |Out-File $FullPath
+            }
         if ($EmailFlag -eq $true)
         {
             Write-Verbose "Sending $($EmailSubject) email to $($EmailTo)"
