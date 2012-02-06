@@ -23,7 +23,7 @@ Function Get-FWServices
                 This example shows the output of the function piped through Format-Table
             .NOTES
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/WindowsFirewallManagement#Get-FWServices
+                https://code.google.com/p/mod-posh/wiki/WindowsFirewallManagement#Get-FWServices
         #>
         
         Begin
@@ -99,7 +99,7 @@ Function Get-FWApplications
                 Sample output piped through Format-Table
             .NOTES
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/WindowsFirewallManagement#Get-FWApplications
+                https://code.google.com/p/mod-posh/wiki/WindowsFirewallManagement#Get-FWApplications
         #>
 
         Begin
@@ -151,7 +151,7 @@ Function Get-FWGloballyOpenPorts
                 Sample output piped through Format-Table
             .NOTES
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/WindowsFirewallManagement#Get-FWGloballyOpenPorts
+                https://code.google.com/p/mod-posh/wiki/WindowsFirewallManagement#Get-FWGloballyOpenPorts
         #>
 
         Begin
@@ -211,7 +211,7 @@ Function New-FWPortOpening
                 In order for this function to work properly you will need to run this function in an elevated PowerShell
                 prompt, as well as have the permissions to modify the firewall.
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/WindowsFirewallManagement#New-FWPortOpening
+                https://code.google.com/p/mod-posh/wiki/WindowsFirewallManagement#New-FWPortOpening
         #>
 
         Param
