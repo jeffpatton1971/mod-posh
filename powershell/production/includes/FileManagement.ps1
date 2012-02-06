@@ -20,7 +20,7 @@ Function Update-Content
                 This example sets a variable named header to be used in the command-line. We then pass the path and
 				header variable into the function for processing.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/FileManagement#Update-Content
+				https://code.google.com/p/mod-posh/wiki/FileManagement#Update-Content
 		#>
 
 		Param
@@ -95,7 +95,7 @@ Function New-LogFile
             .NOTES
                 This space intentionally left blank.
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/FileManagement#New-LogFile
+                https://code.google.com/p/mod-posh/wiki/FileManagement#New-LogFile
         #>
         
         Param
@@ -147,7 +147,7 @@ Function Convert-Delimiter
                 I tweaked it to fit my style of functions,  but otherwise the actual code that does all the 
                 work was left in tact.
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/FileManagement#Convert-Delimiter
+                https://code.google.com/p/mod-posh/wiki/FileManagement#Convert-Delimiter
         #>
         
         Param
@@ -211,7 +211,7 @@ Function Get-FileLogs
             .LINK
                 Convert-Delimiter
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/FileManagement#Get-FileLogs
+                https://code.google.com/p/mod-posh/wiki/FileManagement#Get-FileLogs
         #>
         
         Param
