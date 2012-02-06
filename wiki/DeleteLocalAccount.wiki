@@ -1,4 +1,4 @@
-= Delete-!LocalAccount.ps1 | [https://code.google.com/p/mod-posh/source/browse/powershell/production/Delete-LocalAccount.ps1 | Source Code] =
+= Delete-!LocalAccount.ps1 | [https://code.google.com/p/mod-posh/source/browse/powershell/production/Delete-LocalAccount.ps1 Source Code] =
 {{{
 NAME
     C:\Users\jspatton\My Repositories\scripts\powershell\production\Delete-LocalAccount.ps1
