@@ -37,7 +37,7 @@ Function Get-AverageRunTime
                 This example shows the use of both the ScriptBlock and Counter parameters.
             .NOTES
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/PerformanceTesting#Get-AverageRunTime
+                https://code.google.com/p/mod-posh/wiki/PerformanceTesting#Get-AverageRunTime
         #>
         
         Param
