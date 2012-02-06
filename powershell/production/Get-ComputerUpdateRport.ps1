@@ -37,11 +37,11 @@
         ScriptName is used to register events for this script
         LogName is used to determine which classic log to write to
     .LINK
-        http://scripts.patton-tech.com/wiki/PowerShell/Production/Get-ComputerUpdateReport
+        https://code.google.com/p/mod-posh/wiki/Production/Get-ComputerUpdateReport
     .LINK
-        http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement
+        https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement
     .LINK
-        http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagemenet
+        https://code.google.com/p/mod-posh/wiki/ComputerManagemenet
 #>
 Param
     (

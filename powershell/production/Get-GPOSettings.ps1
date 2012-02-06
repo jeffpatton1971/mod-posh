@@ -29,7 +29,7 @@
         This script relies on the Get-ADObject and Get-GPO cmdlet that are provided from
         the ActiveDirectory and GroupPolicy modules.
     .LINK
-        http://scripts.patton-tech.com/wiki/PowerShell/Production/Get-GPOSettings
+        https://code.google.com/p/mod-posh/wiki/Production/Get-GPOSettings
     .LINK
         http://www.ldap389.info/en/2010/09/17/powershell-search-settings-gpo-parameter-configuration-gpmc/
     .LINK

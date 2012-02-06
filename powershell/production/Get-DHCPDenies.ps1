@@ -34,7 +34,7 @@
             102 = Warning
             104 = Information
     .LINK
-        http://scripts.patton-tech.com/wiki/PowerShell/Production/Get-DHCPDenies.ps1
+        https://code.google.com/p/mod-posh/wiki/Production/Get-DHCPDenies.ps1
 #>
 Param
     (

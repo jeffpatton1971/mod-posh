@@ -29,7 +29,7 @@
             Script Name = PowerShell.exe
             Script Parameters = -noninteractive -command \\server\share\Set-DefaultPrinter.ps1 -Filename \\server\share\map.csv
     .LINK
-        http://scripts.patton-tech.com/wiki/PowerShell/Production/Set-DefaultPrinter
+        https://code.google.com/p/mod-posh/wiki/Production/Set-DefaultPrinter
     .LINK
         http://technet.microsoft.com/en-us/library/ee431705(WS.10).aspx
     .LINK

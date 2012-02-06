@@ -26,7 +26,7 @@
         LogName is used to determine which classic log to write to
         Microsoft .NET Framework 3.5 or greater is required.
     .LINK
-        http://scripts.patton-tech.com/wiki/PowerShell/Production/New-PrintJob
+        https://code.google.com/p/mod-posh/wiki/Production/New-PrintJob
 #>
 Param
     (
