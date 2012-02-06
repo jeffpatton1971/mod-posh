@@ -3,9 +3,9 @@
 ||[FindLocalAdmins Find-LocalAdmins.ps1]||Returns the members of a specified group from computers found in Active Directory||
 ||[UpdateAdminPassword Update-AdminPassword.ps1]||Updates the password of the specified user account from computers found in Active Directory||
 ||[GetSerials Get-Serials.ps1]||This script returns the serialnumber property from computers found in Active Directory||
-||[Update-DeptGPOs Update-DeptGPOs.ps1]||Update permissions on Departmental GPO's||
-||[Get-FreeDiskSpace Get-FreeDiskSpace.ps1]||Return free space on a disk||
-||[Get-DPMRecoveryPointReport Get-DPMRecoveryPointReport.ps1]||Return available recovery points||
+||[UpdateDeptGPOs Update-DeptGPOs.ps1]||Update permissions on Departmental GPO's||
+||[GetFreeDiskSpace Get-FreeDiskSpace.ps1]||Return free space on a disk||
+||[GetDPMRecoveryPointReport Get-DPMRecoveryPointReport.ps1]||Return available recovery points||
 
 
 = !PowerShell Functions =
@@ -32,7 +32,7 @@ The [https://code.google.com/p/mod-posh/source/browse/powershell/production/incl
 
 The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/NetworkManagement.ps1 NetworkManagement] script holds all the functions related to working with networking properties.
 
-== Performance Testing Library [PerformanceTesting Get-Help]
+== Performance Testing Library [PerformanceTesting Get-Help] ==
 The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/PerformanceTesting.ps1 PerformanceTesting] script holds a collection of functions that can be used to test the performance of various scriptblocks, functions or cmdlets.
 
 == !SharePoint Management Library [SharePointManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/c59ba942-0b4a-423f-b9e1-4990264befac Technet Gallery] ==
