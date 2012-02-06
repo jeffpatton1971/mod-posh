@@ -35,7 +35,7 @@ function Get-LPInputFormat{
 			The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
 			into the PowerShell v2 internal help system.
 		.LINK
-			http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#get-LPInputFormat
+			https://code.google.com/p/mod-posh/wiki/MueggeLogParser#get-LPInputFormat
 	#>
  
 	param([String]$InputType)
@@ -82,7 +82,7 @@ function Get-LPOutputFormat{
 			The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
 			into the PowerShell v2 internal help system.		
 		.LINK
-			http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Get-LPOutputFormat
+			https://code.google.com/p/mod-posh/wiki/MueggeLogParser#Get-LPOutputFormat
 	#>
 	param([String]$OutputType)
  
@@ -118,7 +118,7 @@ function Invoke-LPExecute{
 			The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
 			into the PowerShell v2 internal help system.		
 		.LINK
-			http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Invoke-LPExecute
+			https://code.google.com/p/mod-posh/wiki/MueggeLogParser#Invoke-LPExecute
 	#>
  
 	param([string] $query, $inputtype)
@@ -151,7 +151,7 @@ function Invoke-LPExecuteBatch{
 			The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
 			into the PowerShell v2 internal help system.		
 		.LINK
-			http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Invoke-LPExecuteBatch
+			https://code.google.com/p/mod-posh/wiki/MueggeLogParser#Invoke-LPExecuteBatch
 	#>
  
 	param([string]$query, $inputtype, $outputtype)
@@ -177,7 +177,7 @@ function Get-LPRecord{
 			The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
 			into the PowerShell v2 internal help system.		
 		.LINK
-			http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Get-LPRecord
+			https://code.google.com/p/mod-posh/wiki/MueggeLogParser#Get-LPRecord
 	#>
 	
 	param($LPRecordSet)
@@ -210,7 +210,7 @@ function Get-LPRecordSet{
 			The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
 			into the PowerShell v2 internal help system.		
 		.LINK
-			http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Get-LPRecordSet
+			https://code.google.com/p/mod-posh/wiki/MueggeLogParser#Get-LPRecordSet
 	#>
 	
 	param([string]$query)
