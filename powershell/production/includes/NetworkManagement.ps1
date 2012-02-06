@@ -19,7 +19,7 @@ Function Get-HostName
                 The output of the function.
 			.NOTES
 			.LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/NetworkManagement#Get-HostName
+                https://code.google.com/p/mod-posh/wiki/NetworkManagement#Get-HostName
 		#>
 		
 		Param
@@ -58,7 +58,7 @@ Function Get-HostIp
                 This example shows the output of the function.
 			.NOTES
 			.LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/NetworkManagement#Get-HostIp
+                https://code.google.com/p/mod-posh/wiki/NetworkManagement#Get-HostIp
 		#>
 		
 		Param
@@ -97,7 +97,7 @@ Function Get-NetstatReport
                 objectified each line and returned that line. This version creates an object above the for and adds the 
                 noteproperties inside the loop.
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/NetworkManagement#Get-NetstatReport
+                https://code.google.com/p/mod-posh/wiki/NetworkManagement#Get-NetstatReport
         #>
         $netstat = netstat -a -n -o | where-object { $_ -match "(UDP|TCP)" }
         [regex]$regexTCP = '(?<Protocol>\S+)\s+((?<LAddress>(2[0-4]\d|25[0-5]|[01]?\d\d?)\.(2[0-4]\d|25[0-5]|[01]?\d\d?)\.(2[0-4]\d|25[0-5]|[01]?\d\d?)\.(2[0-4]\d|25[0-5]|[01]?\d\d?))|(?<LAddress>\[?[0-9a-fA-f]{0,4}(\:([0-9a-fA-f]{0,4})){1,7}\%?\d?\]))\:(?<Lport>\d+)\s+((?<Raddress>(2[0-4]\d|25[0-5]|[01]?\d\d?)\.(2[0-4]\d|25[0-5]|[01]?\d\d?)\.(2[0-4]\d|25[0-5]|[01]?\d\d?)\.(2[0-4]\d|25[0-5]|[01]?\d\d?))|(?<RAddress>\[?[0-9a-fA-f]{0,4}(\:([0-9a-fA-f]{0,4})){1,7}\%?\d?\]))\:(?<RPort>\d+)\s+(?<State>\w+)\s+(?<PID>\d+$)'
