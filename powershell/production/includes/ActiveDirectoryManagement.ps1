@@ -241,15 +241,16 @@ Function Get-LocalGroupMembers
         {
             Try
             {
-                $Group = [ADSI]("WinNT://$ComputerName/$GroupName,group")
+                $Group = [ADSI]("WinNT://$($ComputerName)/$($GroupName),group")
+                # $Group
                 $Members = @()  
-                $Group.Members() |foreach 
+                $Group.Members() |foreach `
                     {
                     $AdsPath = $_.GetType().InvokeMember("Adspath", 'GetProperty', $null, $_, $null)
                     $AccountArray = $AdsPath.split('/',[StringSplitOptions]::RemoveEmptyEntries)
-                    $AccountName = $AccountArray[-1]
-                    $AccountDomain = $AccountArray[-2]
-                    $AccountClass = $_.GetType().InvokeMember("Class", 'GetProperty', $null, $_, $null)
+                    [string]$AccountName = $AccountArray[-1]
+                    [string]$AccountDomain = $AccountArray[-2]
+                    [string]$AccountClass = $_.GetType().InvokeMember("Class", 'GetProperty', $null, $_, $null)
                         
                     $Member = New-Object PSObject -Property @{
                         Name = $AccountName
