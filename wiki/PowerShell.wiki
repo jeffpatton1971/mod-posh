@@ -1,60 +1,60 @@
 = Production Scripts =
-||[/PowerShell/Production/DeleteLocalAccount Delete-LocalAccount.ps1]||Delete's the specified account from computers found in Active Directory||
-||[/PowerShell/Production/FindLocalAdmins Find-LocalAdmins.ps1]||Returns the members of a specified group from computers found in Active Directory||
-||[/PowerShell/Production/UpdateAdminPassword Update-AdminPassword.ps1]||Updates the password of the specified user account from computers found in Active Directory||
-||[/PowerShell/Production/GetSerials Get-Serials.ps1]||This script returns the serialnumber property from computers found in Active Directory||
-||[/PowerShell/Production/Update-DeptGPOs Update-DeptGPOs.ps1]||Update permissions on Departmental GPO's||
-||[/PowerShell/Production/Get-FreeDiskSpace Get-FreeDiskSpace.ps1]||Return free space on a disk||
-||[/PowerShell/Production/Get-DPMRecoveryPointReport Get-DPMRecoveryPointReport.ps1]||Return available recovery points||
+||[DeleteLocalAccount Delete-LocalAccount.ps1]||Delete's the specified account from computers found in Active Directory||
+||[FindLocalAdmins Find-LocalAdmins.ps1]||Returns the members of a specified group from computers found in Active Directory||
+||[UpdateAdminPassword Update-AdminPassword.ps1]||Updates the password of the specified user account from computers found in Active Directory||
+||[GetSerials Get-Serials.ps1]||This script returns the serialnumber property from computers found in Active Directory||
+||[Update-DeptGPOs Update-DeptGPOs.ps1]||Update permissions on Departmental GPO's||
+||[Get-FreeDiskSpace Get-FreeDiskSpace.ps1]||Return free space on a disk||
+||[Get-DPMRecoveryPointReport Get-DPMRecoveryPointReport.ps1]||Return available recovery points||
 
 
 = !PowerShell Functions =
 
 Here is the home of my !PowerShell functions. I'm taking advantage of !PowerShell's ability to [http://technet.microsoft.com/en-us/library/ee176949.aspx#ECAA dot-source] blocks of code. At the moment I am dividing them up between !ActiveDirectory related functions and !ComputerManagement functions.
 
-== Active Directory Library [PowerShell/ActiveDirectoryManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/3cc670ca-9ddf-45b4-860c-9dec35f33d20 Technet Gallery]==
+== Active Directory Library [ActiveDirectoryManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/3cc670ca-9ddf-45b4-860c-9dec35f33d20 Technet Gallery]==
 
-The [source:powershell/production/includes/ActiveDirectoryManagement.ps1 ActiveDirectoryManagement] script holds all the functions related to working with !ActiveDirectory.
+The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/ActiveDirectoryManagement.ps1 ActiveDirectoryManagement] script holds all the functions related to working with !ActiveDirectory.
 
-== Computer Management Library [PowerShell/ComputerManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/ef8de213-45b6-4751-8c77-01d1b6623e16 Technet Gallery] ==
+== Computer Management Library [ComputerManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/ef8de213-45b6-4751-8c77-01d1b6623e16 Technet Gallery] ==
 
-The [source:powershell/production/includes/ComputerManagement.ps1 ComputerManagement] script holds all the functions related to working with the local computer.
+The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/ComputerManagement.ps1 ComputerManagement] script holds all the functions related to working with the local computer.
 
-== File Management Library [PowerShell/FileManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/6c817b11-0c33-4444-93e5-0a8a51a06c64 Technet Gallery] ==
+== File Management Library [FileManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/6c817b11-0c33-4444-93e5-0a8a51a06c64 Technet Gallery] ==
 
-The [source:powershell/production/includes/FileManagement.ps1 FileManagement] script holds all the functions related to working with files.
+The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/FileManagement.ps1 FileManagement] script holds all the functions related to working with files.
 
-== Muegge's !LogParser Library [PowerShell/MueggeLogParser Get-Help] ==
+== Muegge's !LogParser Library [MueggeLogParser Get-Help] ==
 
-The [source:powershell/production/includes/MueggeLogParser.ps1 MueggeLogParser] script holds all the functions related to working with Microsoft's !LogParser. These functions were copied over from [http://muegge.com/blog/?p=65 Muegge's Blog]
+The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/MueggeLogParser.ps1 MueggeLogParser] script holds all the functions related to working with Microsoft's !LogParser. These functions were copied over from [http://muegge.com/blog/?p=65 Muegge's Blog]
 
-== Network Management library [PowerShell/NetworkManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/f17c7600-5356-4e97-bc76-0551504d06a5 Technet Gallery]==
+== Network Management library [NetworkManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/f17c7600-5356-4e97-bc76-0551504d06a5 Technet Gallery]==
 
-The [source:powershell/production/includes/NetworkManagement.ps1 NetworkManagement] script holds all the functions related to working with networking properties.
+The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/NetworkManagement.ps1 NetworkManagement] script holds all the functions related to working with networking properties.
 
-== Performance Testing Library [PowerShell/PerformanceTesting Get-Help]
-The [source:powershell/production/includes/PerformanceTesting.ps1 PerformanceTesting] script holds a collection of functions that can be used to test the performance of various scriptblocks, functions or cmdlets.
+== Performance Testing Library [PerformanceTesting Get-Help]
+The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/PerformanceTesting.ps1 PerformanceTesting] script holds a collection of functions that can be used to test the performance of various scriptblocks, functions or cmdlets.
 
-== !SharePoint Management Library [PowerShell/SharePointManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/c59ba942-0b4a-423f-b9e1-4990264befac Technet Gallery] ==
+== !SharePoint Management Library [SharePointManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/c59ba942-0b4a-423f-b9e1-4990264befac Technet Gallery] ==
 
-The [source:powershell/production/includes/SharePointManagement.ps1 SharePointManagement] script holds all the functions related to working with a Sharepoint Farm.
+The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/SharePointManagement.ps1 SharePointManagement] script holds all the functions related to working with a Sharepoint Farm.
 
-== Subversion Management Library [PowerShell/SubversionManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/059b4522-5445-47e5-9be4-c4d67571969a Technet Gallery] ==
+== Subversion Management Library [SubversionManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/059b4522-5445-47e5-9be4-c4d67571969a Technet Gallery] ==
 
-The [source:powershell/production/includes/SubversionManagement.ps1 SubversionManagement] script holds all the functions related to working with Subversion.
+The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/SubversionManagement.ps1 SubversionManagement] script holds all the functions related to working with Subversion.
 
-== Windows Firewall Management Library [PowerShell/WindowsFirewallManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/2834b674-7e16-479c-9de1-489903ee2652 Technet Gallery]==
+== Windows Firewall Management Library [WindowsFirewallManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/2834b674-7e16-479c-9de1-489903ee2652 Technet Gallery]==
 
-The [source:powershell/production/includes/WindowsFirewallManagement.ps1 WindowsFirewallManagement] script holds all the functions related to working with Windows Firewall.
+The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/WindowsFirewallManagement.ps1 WindowsFirewallManagement] script holds all the functions related to working with Windows Firewall.
 
-== VMware Management Library [PowerShell/VMWareManagement Get-Help] ==
+== VMware Management Library [VMWareManagement Get-Help] ==
 
-The [source:powershell/production/includes/VMwareManagement.ps1 VMwareManagement] scripts holds all the functions related to working with and managing VMware datacenters.
+The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/VMwareManagement.ps1 VMwareManagement] scripts holds all the functions related to working with and managing VMware datacenters.
 
-== Print Server Management Library [PowerShell/PrintServerManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/PrintServerManagementps1-7676ed28 Technet Gallery]==
+== Print Server Management Library [PrintServerManagement Get-Help] [http://gallery.technet.microsoft.com/scriptcenter/PrintServerManagementps1-7676ed28 Technet Gallery]==
 
-The [source:powershell/production/includes/PrintServerManagement.ps1 PrintServerManagement] script holds all the functions related to working with print servers and queues in a Windows 2008 environment.
+The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/PrintServerManagement.ps1 PrintServerManagement] script holds all the functions related to working with print servers and queues in a Windows 2008 environment.
 
-== PowerShell ISE Library [PowerShell/PSISELibrary Get-Help] [http://gallery.technet.microsoft.com/PSISELibraryps1-ec442972 Technet Gallery] ==
+== PowerShell ISE Library [PSISELibrary Get-Help] [http://gallery.technet.microsoft.com/PSISELibraryps1-ec442972 Technet Gallery] ==
 
-The [source:powershell/production/includes/PSISELibrary.ps1 PSISELibrary] script holds several functions for working with code inside the !PowerShell ISE.
+The [https://code.google.com/p/mod-posh/source/browse/powershell/production/includes/PSISELibrary.ps1 PSISELibrary] script holds several functions for working with code inside the !PowerShell ISE.
