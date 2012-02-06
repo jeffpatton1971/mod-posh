@@ -41,7 +41,7 @@ Function New-Sharepoint3Site
 				You will need to have a managed path setup in advance.
 				If the site already exists the script will error out.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#New-Sharepoint3Site
+				https://code.google.com/p/mod-posh/wiki/SharePointManagement#New-Sharepoint3Site
 		#>
 		
 		Param
@@ -89,7 +89,7 @@ Function Get-Sharepoint3Sites
 			The information returned is in the form of an XML file, you will
 			need to [xml] cast a variable in order to metriculate through it.
 		.LINK
-			http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#Get-Sharepoint3Sites
+			https://code.google.com/p/mod-posh/wiki/SharePointManagement#Get-Sharepoint3Sites
 	#>
 	
 	Param
@@ -116,7 +116,7 @@ Function New-Sharepoint3Path
 			.NOTES
 				The STSADM command needs to be on your path, or run the script from inside the folder
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#New-Sharepoint3Path
+				https://code.google.com/p/mod-posh/wiki/SharePointManagement#New-Sharepoint3Path
 		#>
 		
 		Param
@@ -165,7 +165,7 @@ Function New-Sharepoint3Subweb
                 The STSADM command needs to be on your path, or run the script from inside the folder.
                 http://technet.microsoft.com/en-us/library/cc287718(office.12).aspx
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#New-Sharepoint3Subweb
+                https://code.google.com/p/mod-posh/wiki/SharePointManagement#New-Sharepoint3Subweb
         #>
         
         Param
