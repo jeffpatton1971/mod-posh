@@ -1,4 +1,4 @@
-= New-Sharepoint3Site =
+= New-!Sharepoint3Site =
 {{{
 NAME
     New-Sharepoint3Site
@@ -126,7 +126,7 @@ NOTES
 RELATED LINKS
      http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#New-Sharepoint3Site
 }}}
-= Get-Sharepoint3Sites
+= Get-!Sharepoint3Sites
 {{{
 NAME
     Get-Sharepoint3Sites
@@ -196,7 +196,7 @@ NOTES
 RELATED LINKS
      http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#Get-Sharepoint3Sites
 }}}
-= New-Sharepoint3Path =
+= New-!Sharepoint3Path =
 {{{
 NAME
     New-Sharepoint3Path
@@ -261,7 +261,7 @@ NOTES
 RELATED LINKS
      http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#New-Sharepoint3Path
 }}}
-= New-Sharepoint3Subweb =
+= New-!Sharepoint3Subweb =
 {{{
 NAME
     New-Sharepoint3Subweb
