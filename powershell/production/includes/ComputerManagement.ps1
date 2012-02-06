@@ -23,7 +23,7 @@ Function New-LocalUser
                 -----------
                 Creates a user named MyUserAccount on MyComputer.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#New-LocalUser
+				https://code.google.com/p/mod-posh/wiki/ComputerManagement#New-LocalUser
 		#>
 		Param
 			(
@@ -81,7 +81,7 @@ Function Set-Pass
 			.EXAMPLE
 				Set-Pass -ComputerName MyComputer -UserName MyUserAccount -Password N3wP@ssw0rd
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Set-Pass
+				https://code.google.com/p/mod-posh/wiki/ComputerManagement#Set-Pass
 		#>
 		Param
         (
@@ -134,7 +134,7 @@ Function Add-LocalUserToGroup
 			.EXAMPLE
 				Add-LocalUserToGroup -ComputerName MyComputer -User MyUserAccount -Group Administrators
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Add-LocalUserToGroup
+				https://code.google.com/p/mod-posh/wiki/ComputerManagement#Add-LocalUserToGroup
 		#>
 		Param
 			(
@@ -217,7 +217,7 @@ Function New-ScheduledTask
 			New-ScheduledTask -TaskName "Reboot Computer" -TaskRun "shutdown /r" -TaskSchedule ONCE `
             -StartTime "18:00:00" -StartDate "03/16/2011" -TaskUser SYSTEM -Server MyDesktopPC
 		.LINK
-			http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#New-ScheduledTask
+			https://code.google.com/p/mod-posh/wiki/ComputerManagement#New-ScheduledTask
 		#>
 		
 		Param
@@ -268,7 +268,7 @@ Function Remove-UserFromLocalGroup
                 -----------
                 This example removes a user from the local users group.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Remove-UserFromLocalGroup
+				https://code.google.com/p/mod-posh/wiki/ComputerManagement#Remove-UserFromLocalGroup
 		#>
 		
 		Param
@@ -372,7 +372,7 @@ Function Get-Services
 				-----------
 				This example shows how to specify a remote computer and credentials to authenticate with.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-Services
+				https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-Services
 		#>
 		
 		Param
@@ -459,7 +459,7 @@ Function Get-NonStandardServiceAccounts
 				Powershell may need to be run elevated to run this script.
 				UAC may need to be disabled to run this script.
 			.LINK
-				http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-NonStandardServiceAccounts
+				https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-NonStandardServiceAccounts
 		#>
 		
 		Param
@@ -513,7 +513,7 @@ Function Remove-LocalUser
             .NOTES
                 The user context the script is run under must be able to delete accounts on the remote computer
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Remove-LocalUser
+                https://code.google.com/p/mod-posh/wiki/ComputerManagement#Remove-LocalUser
         #>
         
         Param
@@ -585,7 +585,7 @@ Function Get-LocalUserAccounts
             .NOTES
                 You will need to provide credentials when running this against computers in a diffrent domain.
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-LocalUserAccounts
+                https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-LocalUserAccounts
         #>
         
         Param
@@ -637,7 +637,7 @@ Function Get-PendingUpdates
                 Date Created: 05Mar2011
                 RPC Dynamic Ports need to be enabled on inbound remote servers.
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-PendingUpdates
+                https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-PendingUpdates
         #> 
 
         Param
@@ -697,7 +697,7 @@ Function Get-ServiceTag
         .NOTES
             This space intentionally left blank.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-ServiceTag
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-ServiceTag
     #>
     
     Param
@@ -753,7 +753,7 @@ Function Backup-EventLogs
         .NOTES
             May need to be a user with rights to access various logs, such as security on remote computer.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Backup-EventLogs
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Backup-EventLogs
     #>
     
     Param
@@ -805,7 +805,7 @@ Function Export-EventLogs
         .NOTES
             May need to be a user with rights to access various logs, such as security on remote computer.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Export-EventLogs
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Export-EventLogs
     #>
     
     Param
@@ -865,7 +865,7 @@ Function Get-SiSReport
             This function will return nothing if the drive being analyzed does not have SiS enabled
             This function will return a message if the sisadmin command returns any error
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-SiSReport
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-SiSReport
     #>
     
     Param
@@ -939,7 +939,7 @@ Function Get-PaperCutLogs
             and you can generate graphs based on which printer is used the most, how much paper  
             is consumed by each printer and so on.  
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-PaperCutLogs
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-PaperCutLogs
     #>
     
     Param
@@ -1035,7 +1035,7 @@ Function Set-ShutdownMethod
         .NOTES
             You will need proper credentials on the remote machine for this to work.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Set-ShutdownMethod
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Set-ShutdownMethod
     #>
     
     PARAM
@@ -1112,7 +1112,7 @@ Function Get-PrinterLogs
             The following log will need to be enabled before logs can be generated by the server:
             "Microsoft-Windows-PrintService/Operational"
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-PrinterLogs
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-PrinterLogs
     #>
     
     Param
@@ -1197,7 +1197,7 @@ Function Get-OpenSessions
             Created by   : Jeff Patton
             Date Coded   : 09/26/2011 11:35:40
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-OpenSessions
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-OpenSessions
     #>
     Param
         (
@@ -1260,7 +1260,7 @@ Function Get-OpenFiles
             Created by   : Jeff Patton
             Date Coded   : 09/26/2011 13:01:38
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-OpenFiles
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-OpenFiles
     #>
     Param
         (
@@ -1334,7 +1334,7 @@ Function Get-RDPLoginEvents
             The user account supplied in $Credentials needs to have permission to view this log
             No output is returned if the log is empty.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-RDPLoginEvents
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-RDPLoginEvents
     #>
     [cmdletbinding()]    
     Param
@@ -1469,7 +1469,7 @@ Function Get-InvalidLogonAttempts
             19  IpAddress ##.###.###.### 
             20  IpPort 51144 
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-InvalidLogonAttempts
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-InvalidLogonAttempts
     #>
     [cmdletBinding()]
     Param
@@ -1549,7 +1549,7 @@ Function Get-UpTime
             Created by   : jspatton
             Date Coded   : 10/19/2011 11:22:34
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ComputerManagement#Get-UpTime
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-UpTime
         .LINK
             http://msdn.microsoft.com/en-us/library/aa394591(VS.85).aspx  
     #>
