@@ -1,11 +1,11 @@
 = Production Scripts =
-||[ /PowerShell/Production/DeleteLocalAccount|Delete-LocalAccount.ps1]||Delete's the specified account from computers found in Active Directory||
-||[ /PowerShell/Production/FindLocalAdmins|Find-LocalAdmins.ps1]||Returns the members of a specified group from computers found in Active Directory||
-||[ /PowerShell/Production/UpdateAdminPassword|Update-AdminPassword.ps1]||Updates the password of the specified user account from computers found in Active Directory||
-||[ /PowerShell/Production/GetSerials|Get-Serials.ps1]||This script returns the serialnumber property from computers found in Active Directory||
-||[ /PowerShell/Production/Update-DeptGPOs|Update-DeptGPOs.ps1]||Update permissions on Departmental GPO's||
-||[ /PowerShell/Production/Get-FreeDiskSpace|Get-FreeDiskSpace.ps1]||Return free space on a disk||
-||[ /PowerShell/Production/Get-DPMRecoveryPointReport|Get-DPMRecoveryPointReport.ps1]||Return available recovery points||
+||[/PowerShell/Production/DeleteLocalAccount|Delete-LocalAccount.ps1]||Delete's the specified account from computers found in Active Directory||
+||[/PowerShell/Production/FindLocalAdmins|Find-LocalAdmins.ps1]||Returns the members of a specified group from computers found in Active Directory||
+||[/PowerShell/Production/UpdateAdminPassword|Update-AdminPassword.ps1]||Updates the password of the specified user account from computers found in Active Directory||
+||[/PowerShell/Production/GetSerials|Get-Serials.ps1]||This script returns the serialnumber property from computers found in Active Directory||
+||[/PowerShell/Production/Update-DeptGPOs|Update-DeptGPOs.ps1]||Update permissions on Departmental GPO's||
+||[/PowerShell/Production/Get-FreeDiskSpace|Get-FreeDiskSpace.ps1]||Return free space on a disk||
+||[/PowerShell/Production/Get-DPMRecoveryPointReport|Get-DPMRecoveryPointReport.ps1]||Return available recovery points||
 
 
 = !PowerShell Functions =
