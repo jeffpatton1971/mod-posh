@@ -67,7 +67,7 @@ Function Get-ADObjects
             to view the objects within the domain that the function is currently running
             against.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-ADObjects
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-ADObjects
     #>
     
     Param
@@ -145,7 +145,7 @@ Function Add-UserToLocalGroup
                 to view the objects within the domain that the function is currently running
                 against.
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Add-UserToLocalGroup
+                https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Add-UserToLocalGroup
         #>
         
         Param
@@ -222,7 +222,7 @@ Function Get-LocalGroupMembers
                 Administrator                     mypc                            User
                 My Account                        mypc                            User
             .LINK
-                http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-LocalGroupMembers
+                https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-LocalGroupMembers
         #>
         
         Param
@@ -300,7 +300,7 @@ Function Get-ADGroupMembers
         .NOTES
             The context under which this script is run must have rights to pull infromation from ActiveDirectory.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-ADGroupMembers
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-ADGroupMembers
     #>
     Param
     (
@@ -401,7 +401,7 @@ Function Get-StaleComputerAccounts
             hierarchy. I treat server accounts slightly differently than I do workstations accounts, so I 
             wanted a way to differentiate the two.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-StaleComputerAccounts
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-StaleComputerAccounts
     #>
     
     Param
@@ -476,7 +476,7 @@ Function Set-AccountDisabled
             The context under which this function is run needs to have rights to modify the object in 
             Active Directory. The error I catch is specifically an Access is Denied message.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Set-AccountDisabled
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Set-AccountDisabled
     #>
     
     Param
@@ -536,7 +536,7 @@ Function Reset-ComputerAccount
             Example usage showing single computer account reset.
         .NOTES
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Reset-ComputerAccount
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Reset-ComputerAccount
     #>
     
     Param
@@ -600,7 +600,7 @@ Function Add-DomainGroupToLocalGroup
             Showing the default syntax to add a student admin group to a local computer account.
         .NOTES
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Add-DomainGroupToLocalGroup
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Add-DomainGroupToLocalGroup
     #>
     
     Param
@@ -678,7 +678,7 @@ Function Get-FSMORoleOwner
             -----------
             Retrieves the FSMO role owners each domain in a forest. Also lists the domain and forest.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-FSMORoleOwner
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-FSMORoleOwner
     #>
 
     Begin
@@ -756,7 +756,7 @@ Function Convert-FspToUsername
             as the name property of each object in the ForeignSecurityPrincipals container in your
             domain. 
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Convert-FspToUsername
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Convert-FspToUsername
     #>
     
     Param
@@ -834,7 +834,7 @@ Function Set-ComputerName
             Created by   : Jeff Patton
             Date Coded   : 09/21/2011 10:59:03
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Set-ComputerName
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Set-ComputerName
     #>
     Param
         (
@@ -941,7 +941,7 @@ Function Get-DomainName
             Created by   : Jeff Patton
             Date Coded   : 09/22/2011 09:42:38
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-DomainName
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-DomainName
     #>
     Param
         (
@@ -1015,7 +1015,7 @@ Function Get-UserGroupMembership
             will need to have the requisite permissions to view the group membership
             of a given user object.
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-UserGroupMembership
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-UserGroupMembership
     #>
     Param
         (
@@ -1084,7 +1084,7 @@ Function Add-UserToGroup
             Created by   : Jeff Patton
             Date Coded   : 09/22/2011 14:18:33
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Add-UserToGroup
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Add-UserToGroup
     #>
     Param
         (
@@ -1153,7 +1153,7 @@ Function Set-ADObjectProperties
             Created by   : Jeff Patton
             Date Coded   : 09/23/2011 14:27:19
         .LINK
-            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Set-ADObjectProperties
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Set-ADObjectProperties
     #>
     Param
         (
