@@ -1287,8 +1287,8 @@ Function Get-OpenFiles
             Catch
             {
                 }
+            $OpenFiles += $UserResource
             }
-        $OpenFiles += $UserResource
         }
     End
     {
