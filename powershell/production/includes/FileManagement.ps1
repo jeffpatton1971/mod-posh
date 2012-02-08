@@ -209,9 +209,9 @@ Function Get-FileLogs
                 Each switch creates a temporary file that is removed before processing continues.
                 This function depends on Convert-Delimiter being available.
             .LINK
-                Convert-Delimiter
-            .LINK
                 https://code.google.com/p/mod-posh/wiki/FileManagement#Get-FileLogs
+            .LINK
+                Convert-Delimiter
         #>
         
         Param
