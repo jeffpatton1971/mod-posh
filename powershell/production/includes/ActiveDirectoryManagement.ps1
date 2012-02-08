@@ -242,7 +242,7 @@ Function Get-LocalGroupMembers
             Try
             {
                 $Group = [ADSI]("WinNT://$($ComputerName)/$($GroupName),group")
-                # $Group
+
                 $Members = @()  
                 $Group.Members() |foreach `
                     {
