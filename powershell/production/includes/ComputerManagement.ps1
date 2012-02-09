@@ -231,8 +231,17 @@ Function New-ScheduledTask
 		[Parameter(Mandatory=$true)]
 		[string]$Server	
 		)
-
-	schtasks /create /tn $TaskName /tr $TaskRun /sc $TaskSchedule /st $StartTime /sd $StartDate /ru $TaskUser /s $Server
+    Begin
+    {
+        }
+    Process
+    {
+	    schtasks /create /tn $TaskName /tr $TaskRun /sc $TaskSchedule /st $StartTime /sd $StartDate /ru $TaskUser /s $Server
+        }
+    End
+    {
+        Return $?
+        }
 	}
 Function Remove-UserFromLocalGroup
 {
@@ -274,9 +283,18 @@ Function Remove-UserFromLocalGroup
 		[Parameter(Mandatory=$true)]
 		[string]$GroupName="Administrators"
 		)
-		
-	$Group = $Computer.psbase.children.find($GroupName)
-	$Group.Remove("WinNT://$Computer/$User")
+	Begin
+    {
+        }
+    Process
+    {
+	    $Group = $Computer.psbase.children.find($GroupName)
+	    $Group.Remove("WinNT://$Computer/$User")
+        }
+    End
+    {
+        Return $?
+        }
 	}
 Function Get-Services
 {
@@ -376,22 +394,29 @@ Function Get-Services
 		[string]$State = "Running",
 		[string]$StartMode = "Auto"
 		)
-		
-	If ($Computer -eq (& hostname))
-		{		
-			$Services = Get-WmiObject win32_service -filter "State = '$State' and StartMode = '$StartMode'"
-		}
-	Else
-		{
-			If ($Credential -eq $null)
-				{
-					$Credential = Get-Credential
-				}
-			$Services = Get-WmiObject win32_service -filter "State = '$State' and StartMode = '$StartMode'" `
-						-ComputerName $Computer -Credential $Credential
-		}
-		
-	Return $Services
+    Begin
+    {
+        }
+    Process
+    {
+        If ($Computer -eq (& hostname))
+	    {		
+		    $Services = Get-WmiObject win32_service -filter "State = '$State' and StartMode = '$StartMode'"
+	        }
+        Else
+	    {
+		    If ($Credential -eq $null)
+			{
+				$Credential = Get-Credential
+			    }
+		    $Services = Get-WmiObject win32_service -filter "State = '$State' and StartMode = '$StartMode'" `
+					    -ComputerName $Computer -Credential $Credential
+	        }
+        }
+    End
+    {
+	    Return $Services
+        }
 	}
 Function Get-NonStandardServiceAccounts
 {
@@ -462,30 +487,37 @@ Function Get-NonStandardServiceAccounts
 		$Credentials,
 		[string]$Filter = "localsystem|NT Authority\LocalService|NT Authority\NetworkService"
 		)
-			
-	$Filter = $Filter.Replace("\","\\")
-		
-	If ($Computer -eq (& hostname))
+    Begin
+    {	
+	    $Filter = $Filter.Replace("\","\\")
+        }
+	Process
     {
-		$Services = Get-WmiObject win32_service |Select-Object __Server, StartName, Name, DisplayName
-		}
-	Else
-    {
-		$Result = Test-Connection -Count 1 -Computer $Computer -ErrorAction SilentlyContinue
-				
-		If ($result -ne $null)
-		{
-			$Services = Get-WmiObject win32_service -ComputerName $Computer -Credential $Credentials `
-						|Select-Object __Server, StartName, Name, DisplayName
-			}
-		Else
+	    If ($Computer -eq (& hostname))
         {
-			#	Should do something with unreachable computers here.
-			}
-		}
+		    $Services = Get-WmiObject win32_service |Select-Object __Server, StartName, Name, DisplayName
+		    }
+	    Else
+        {
+		    $Result = Test-Connection -Count 1 -Computer $Computer -ErrorAction SilentlyContinue
+				
+		    If ($result -ne $null)
+		    {
+			    $Services = Get-WmiObject win32_service -ComputerName $Computer -Credential $Credentials `
+						    |Select-Object __Server, StartName, Name, DisplayName
+			    }
+		    Else
+            {
+			    #	Should do something with unreachable computers here.
+			    }
+		    }
 
-	$Suspect = $Services |Where-Object {$_.StartName -notmatch $Filter}
-	Return $Suspect
+	    $Suspect = $Services |Where-Object {$_.StartName -notmatch $Filter}
+        }
+    End
+    {
+	    Return $Suspect
+        }
 	}
 Function Remove-LocalUser
 {
@@ -517,32 +549,38 @@ Function Remove-LocalUser
         [Parameter(Mandatory=$true)]
         $UserName
         )
-
-    $isAlive = Test-Connection -ComputerName $ComputerName -Count 1 -ErrorAction SilentlyContinue
-        
-    if ($isAlive -ne $null)
+    Begin
     {
-        $ADSI = [adsi]"WinNT://$ComputerName"
-        $Users = $ADSI.psbase.children |Where-Object {$_.psBase.schemaClassName -eq "User"} |Select-Object -ExpandProperty Name
-        foreach ($User in $Users)
-        { 
-            if ($User -eq $UserName)
-            {
-                $ADSI.Delete("user", $UserName)
-                $Return = "Deleted"
-                }
-            else
-            {
-                $Return = "User not found"
+        $isAlive = Test-Connection -ComputerName $ComputerName -Count 1 -ErrorAction SilentlyContinue
+        }
+    Process
+    {
+        if ($isAlive -ne $null)
+        {
+            $ADSI = [adsi]"WinNT://$ComputerName"
+            $Users = $ADSI.psbase.children |Where-Object {$_.psBase.schemaClassName -eq "User"} |Select-Object -ExpandProperty Name
+            foreach ($User in $Users)
+            { 
+                if ($User -eq $UserName)
+                {
+                    $ADSI.Delete("user", $UserName)
+                    $Return = "Deleted"
+                    }
+                else
+                {
+                    $Return = "User not found"
+                    }
                 }
             }
+        else
+        {
+            $Return = "$ComputerName not available"
+            }
         }
-    else
+    End
     {
-        $Return = "$ComputerName not available"
+        Return $Return
         }
-
-    Return $Return
     }
 Function Get-LocalUserAccounts
 {
@@ -587,31 +625,37 @@ Function Get-LocalUserAccounts
         [string]$ComputerName = (& hostname),
         [System.Management.Automation.PSCredential]$Credentials
         )
-
-    $Filter = "LocalAccount=True"
-    $ScriptBlock = "Get-WmiObject Win32_UserAccount -Filter $Filter"
-    $isAlive = Test-Connection -ComputerName $ComputerName -Count 1 -ErrorAction SilentlyContinue
-        
-    if ($isAlive -ne $null)
+    Begin
     {
-        $ScriptBlock += " -ComputerName $ComputerName"
-        if ($Credentials)
+        $Filter = "LocalAccount=True"
+        $ScriptBlock = "Get-WmiObject Win32_UserAccount -Filter $Filter"
+        $isAlive = Test-Connection -ComputerName $ComputerName -Count 1 -ErrorAction SilentlyContinue
+        }
+    Process
+    {        
+        if ($isAlive -ne $null)
         {
-            if ($isAlive.__SERVER.ToString() -eq $ComputerName)
+            $ScriptBlock += " -ComputerName $ComputerName"
+            if ($Credentials)
             {
-                }
-            else
-            {
-                $ScriptBlock += " -Credential `$Credentials"
+                if ($isAlive.__SERVER.ToString() -eq $ComputerName)
+                {
+                    }
+                else
+                {
+                    $ScriptBlock += " -Credential `$Credentials"
+                    }
                 }
             }
+        else
+        {
+            Return "Unable to connect to $ComputerName"
+            }
         }
-    else
+    End
     {
-        Return "Unable to connect to $ComputerName"
+        Return Invoke-Expression $ScriptBlock |Select-Object Name, SID
         }
-
-    Return Invoke-Expression $ScriptBlock |Select-Object Name, SID
     }
 Function Get-PendingUpdates
 {
