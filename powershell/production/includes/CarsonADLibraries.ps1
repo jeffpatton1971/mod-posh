@@ -20,6 +20,7 @@ function Convert-ObjectSID
         .NOTES
             This function was originall written by Carson Gee (http://carsongee.com)
         .LINK
+            https://code.google.com/p/mod-posh/wiki/CarsonADLibraries#Convert-ObjectSID
     #>
     
     Param
@@ -53,6 +54,7 @@ function Convert-SIDToUser
         .NOTES
             This function was originall written by Carson Gee (http://carsongee.com)
         .LINK
+            https://code.google.com/p/mod-posh/wiki/CarsonADLibraries#Convert-SIDToUser
     #>
     
     Param
