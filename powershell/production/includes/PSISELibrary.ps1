@@ -22,6 +22,7 @@ Function Replace-TabsWithSpace
             that doesn't tab shift like it should. Since I've been doing some PowerShell ISE stuff lately
             I decided to write a little function that works as an Add-On menu.
         .LINK
+            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Replace-TabsWithSpace
     #>
     Param
     (
@@ -81,7 +82,7 @@ Function New-CommentBlock
             Created by   : Jeff Patton
             Date Coded   : 09/13/2011 12:28:10
         .LINK
-            
+            https://code.google.com/p/mod-posh/wiki/PSISELibrary#New-CommentBlock
      #>
     Param
     (
@@ -165,6 +166,7 @@ Function New-Script
             Created by   : Jeff Patton
             Date Coded   : 09/13/2011 13:37:24
         .LINK
+            https://code.google.com/p/mod-posh/wiki/PSISELibrary#New-Script
      #>
     Param
     (
@@ -303,6 +305,7 @@ Function New-Function
             Created by   : Jeff Patton
             Date Coded   : 09/13/2011 13:37:24
         .LINK
+            https://code.google.com/p/mod-posh/wiki/PSISELibrary#New-Function
      #>
     Param
     (
@@ -393,6 +396,8 @@ Register-ObjectEvent -InputObject $psISE.CurrentPowerShellTab.Files CollectionCh
         .NOTES
             Created by   : Richard Vantreas
             Date Coded   : 10/13/2011 12:06:31
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Register-ObjectEvent
         .LINK
             http://poshcode.org/3000
     #>
