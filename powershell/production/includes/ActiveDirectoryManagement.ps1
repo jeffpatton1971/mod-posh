@@ -69,7 +69,7 @@ Function Get-ADObjects
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-ADObjects
     #>
-    
+    [CmdletBinding()]
     Param
         (
         [Parameter(Mandatory=$true)]
@@ -77,7 +77,6 @@ Function Get-ADObjects
         [string]$SearchFilter = "(objectCategory=computer)",
         [array]$ADProperties="name"
         )
-
     Begin
     {
         if ($ADSPath -notmatch "LDAP://*")
@@ -115,162 +114,156 @@ Function Get-ADObjects
     }    
 Function Add-UserToLocalGroup
 {
-        <#
-            .SYNOPSIS
-                Add a domain user to a local group.
-            .DESCRIPTION
-                Add a domain user to a local group on a computer.
-            .PARAMETER Computer
-                The NetBIOS name of the computer where the local group resides.
-            .PARAMETER UserName
-                The name of the user to add to the group.
-            .PARAMETER LocalGroup
-                The name of the group to add the user to.
-            .PARAMETER UserDomain
-                The NetBIOS name of the domain where the user object is.
-            .EXAMPLE
-                Add-UserToLocalGroup -Computer server -UserName myuser -LocalGroup administrators
+    <#
+        .SYNOPSIS
+            Add a domain user to a local group.
+        .DESCRIPTION
+            Add a domain user to a local group on a computer.
+        .PARAMETER Computer
+            The NetBIOS name of the computer where the local group resides.
+        .PARAMETER UserName
+            The name of the user to add to the group.
+        .PARAMETER LocalGroup
+            The name of the group to add the user to.
+        .PARAMETER UserDomain
+            The NetBIOS name of the domain where the user object is.
+        .EXAMPLE
+            Add-UserToLocalGroup -Computer server -UserName myuser -LocalGroup administrators
 
-                Description
-                -----------
-                Adds a user from the local domain to the specified computer.
-            .EXAMPLE
-                Add-UserToLocalGroup -Computer server -UserName myuser -LocalGroup administrators -UserDomain company
+            Description
+            -----------
+            Adds a user from the local domain to the specified computer.
+        .EXAMPLE
+            Add-UserToLocalGroup -Computer server -UserName myuser -LocalGroup administrators -UserDomain company
 
-                Description
-                -----------
-                Adds a user from the company domain to the specified computer's local Administrators group.
-            .NOTES
-                The script runs under the users context, so the user account must have permissions
-                to view the objects within the domain that the function is currently running
-                against.
-            .LINK
-                https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Add-UserToLocalGroup
-        #>
-        
-        Param
-            (
-                [Parameter(Mandatory=$true)]
-                [string]$Computer,
-                [Parameter(Mandatory=$true)]
-                [string]$UserName,
-                [Parameter(Mandatory=$true)]
-                [string]$LocalGroup,
-                [string]$UserDomain
-            )
-
-        Begin
+            Description
+            -----------
+            Adds a user from the company domain to the specified computer's local Administrators group.
+        .NOTES
+            The script runs under the users context, so the user account must have permissions
+            to view the objects within the domain that the function is currently running
+            against.
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Add-UserToLocalGroup
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$Computer,
+        [Parameter(Mandatory=$true)]
+        [string]$UserName,
+        [Parameter(Mandatory=$true)]
+        [string]$LocalGroup,
+        [string]$UserDomain
+        )
+    Begin
+    {
+        if ($UserDomain -eq $null)
         {
-            if ($UserDomain -eq $null)
-            {
-                $UserDomain = [string]([ADSI] "").name
-                }
+            $UserDomain = [string]([ADSI] "").name
             }
-        
-        Process
+        }        
+    Process
+    {
+        Try
         {
-            Try
-            {
-                ([ADSI]"WinNT://$Computer/$LocalGroup,group").Add("WinNT://$UserDomain/$UserName")
-                if ($? -eq $true)
-                {
-                    $Result = New-Object -TypeName PSObject -Property @{
-                        Computer = $Computer
-                        Group = $LocalGroup
-                        Domain = $UserDomain
-                        User = $UserName
-                        Success = $?
-                        }
-                    }
-                }
-            Catch
+            ([ADSI]"WinNT://$Computer/$LocalGroup,group").Add("WinNT://$UserDomain/$UserName")
+            if ($? -eq $true)
             {
                 $Result = New-Object -TypeName PSObject -Property @{
                     Computer = $Computer
                     Group = $LocalGroup
                     Domain = $UserDomain
                     User = $UserName
-                    Success = $Error[0].Exception.InnerException.Message.ToString().Trim()
+                    Success = $?
                     }
                 }
-        }
-        
-        End
-        {
-            Return $Result
             }
+        Catch
+        {
+            $Result = New-Object -TypeName PSObject -Property @{
+                Computer = $Computer
+                Group = $LocalGroup
+                Domain = $UserDomain
+                User = $UserName
+                Success = $Error[0].Exception.InnerException.Message.ToString().Trim()
+                }
+            }
+        }
+    End
+    {
+        Return $Result
+        }
     }
 Function Get-LocalGroupMembers
 {
-        <#
-            .SYNOPSIS
-                Return a list of user accounts that are in a specified group.
-            .DESCRIPTION
-                This function returns a list of accounts from the provided group. The
-                object returned holds the Name, Domain and type of account that is a member,
-                either a user or group.
-            .PARAMETER ComputerName
-                The name of the computer to connect to.
-            .PARAMETER GroupName
-                The name of the group to search in.
-            .NOTES
-            .EXAMPLE
-                Get-LocalGroupMembers -ComputerName mypc -GroupName Administrators
+    <#
+        .SYNOPSIS
+            Return a list of user accounts that are in a specified group.
+        .DESCRIPTION
+            This function returns a list of accounts from the provided group. The
+            object returned holds the Name, Domain and type of account that is a member,
+            either a user or group.
+        .PARAMETER ComputerName
+            The name of the computer to connect to.
+        .PARAMETER GroupName
+            The name of the group to search in.
+        .NOTES
+        .EXAMPLE
+            Get-LocalGroupMembers -ComputerName mypc -GroupName Administrators
 
-                Name                              Domain                          Class
-                ----                              ------                          -----
-                Administrator                     mypc                            User
-                My Account                        mypc                            User
-            .LINK
-                https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-LocalGroupMembers
-        #>
-        
-        Param
-            (
-                [Parameter(Mandatory=$true)]
-                [string]$ComputerName,
-                [Parameter(Mandatory=$true)]
-                [string]$GroupName
-            )
-        
-        Begin
+            Name                              Domain                          Class
+            ----                              ------                          -----
+            Administrator                     mypc                            User
+            My Account                        mypc                            User
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-LocalGroupMembers
+    #>
+    [CmdletBinding()]        
+    Param
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$ComputerName,
+        [Parameter(Mandatory=$true)]
+        [string]$GroupName
+        )
+    Begin
+    {
+        }
+    Process
+    {
+        Try
         {
-            } 
-        
-        Process
-        {
-            Try
+            $Group = [ADSI]("WinNT://$($ComputerName)/$($GroupName),group")
+
+            $Members = @()  
+            $Group.Members() |foreach `
             {
-                $Group = [ADSI]("WinNT://$($ComputerName)/$($GroupName),group")
-
-                $Members = @()  
-                $Group.Members() |foreach `
-                    {
-                    $AdsPath = $_.GetType().InvokeMember("Adspath", 'GetProperty', $null, $_, $null)
-                    $AccountArray = $AdsPath.split('/',[StringSplitOptions]::RemoveEmptyEntries)
-                    [string]$AccountName = $AccountArray[-1]
-                    [string]$AccountDomain = $AccountArray[-2]
-                    [string]$AccountClass = $_.GetType().InvokeMember("Class", 'GetProperty', $null, $_, $null)
+                $AdsPath = $_.GetType().InvokeMember("Adspath", 'GetProperty', $null, $_, $null)
+                $AccountArray = $AdsPath.split('/',[StringSplitOptions]::RemoveEmptyEntries)
+                [string]$AccountName = $AccountArray[-1]
+                [string]$AccountDomain = $AccountArray[-2]
+                [string]$AccountClass = $_.GetType().InvokeMember("Class", 'GetProperty', $null, $_, $null)
                         
-                    $Member = New-Object PSObject -Property @{
-                        Name = $AccountName
-                        Domain = $AccountDomain
-                        Class = $AccountClass
-                        }
-
-                    $Members += $Member  
+                $Member = New-Object PSObject -Property @{
+                    Name = $AccountName
+                    Domain = $AccountDomain
+                    Class = $AccountClass
                     }
-                }
-            Catch
-            {
-                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+
+                $Members += $Member  
                 }
             }
-        
-        End
+        Catch
         {
-            Return $Members
+            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
             }
+        }
+    End
+    {
+        Return $Members
+        }
     }
 Function Get-ADGroupMembers
 {
@@ -302,70 +295,67 @@ Function Get-ADGroupMembers
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-ADGroupMembers
     #>
+    [CmdletBinding()]
     Param
-    (
+        (
         $UserGroup = "Managers",
         [ADSI]$UserDomain = "LDAP://DC=company,DC=com"
-    )
-
+        )
     Begin
-        {
-            $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($UserDomain.Path)
-            $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+    {
+        $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($UserDomain.Path)
+        $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
 
-            $LDAPFilter = "(&(objectCategory=Group)(name=$($UserGroup)))"
+        $LDAPFilter = "(&(objectCategory=Group)(name=$($UserGroup)))"
 
-            $DirectorySearcher.SearchRoot = $DirectoryEntry
-            $DirectorySearcher.PageSize = 1000
-            $DirectorySearcher.Filter = $LDAPFilter
-            $DirectorySearcher.SearchScope = "Subtree"
+        $DirectorySearcher.SearchRoot = $DirectoryEntry
+        $DirectorySearcher.PageSize = 1000
+        $DirectorySearcher.Filter = $LDAPFilter
+        $DirectorySearcher.SearchScope = "Subtree"
 
-            $SearchResult = $DirectorySearcher.FindAll()
+        $SearchResult = $DirectorySearcher.FindAll()
             
-            $UserAccounts = @()
-            }
-
+        $UserAccounts = @()
+        }
     Process
+    {
+        foreach ($Item in $SearchResult)
         {
-            foreach ($Item in $SearchResult)
-            {
-                $Group = $Item.GetDirectoryEntry()
-                $Members = $Group.member
+            $Group = $Item.GetDirectoryEntry()
+            $Members = $Group.member
                 
-                If ($Members -ne $Null)
+            If ($Members -ne $Null)
+            {
+                foreach ($User in $Members)
                 {
-                    foreach ($User in $Members)
+                    $UserObject = New-Object System.DirectoryServices.DirectoryEntry("LDAP://$($User)")
+                    If ($UserObject.objectCategory.Value.Contains("Group"))
                     {
-                        $UserObject = New-Object System.DirectoryServices.DirectoryEntry("LDAP://$($User)")
-                        If ($UserObject.objectCategory.Value.Contains("Group"))
-                        {
                         }
-                        Else
-                        {
-                            $ThisUser = New-Object -TypeName PSObject -Property @{
-                                cn = $UserObject.cn
-                                distinguishedName = $UserObject.distinguishedName
-                                name = $UserObject.name
-                                nTSecurityDescriptor = $UserObject.nTSecurityDescriptor
-                                objectCategory = $UserObject.objectCategory
-                                objectClass = $UserObject.objectClass
-                                objectGUID = $UserObject.objectGUID
-                                objectSID = $UserObject.objectSID
-                                showInAdvancedViewOnly = $UserObject.showInAdvancedViewOnly
-                                }
+                    Else
+                    {
+                        $ThisUser = New-Object -TypeName PSObject -Property @{
+                            cn = $UserObject.cn
+                            distinguishedName = $UserObject.distinguishedName
+                            name = $UserObject.name
+                            nTSecurityDescriptor = $UserObject.nTSecurityDescriptor
+                            objectCategory = $UserObject.objectCategory
+                            objectClass = $UserObject.objectClass
+                            objectGUID = $UserObject.objectGUID
+                            objectSID = $UserObject.objectSID
+                            showInAdvancedViewOnly = $UserObject.showInAdvancedViewOnly
                             }
-                        $UserAccounts += $ThisUser
                         }
+                    $UserAccounts += $ThisUser
                     }
                 }
             }
-
+        }
     End
-        {
-            Return $UserAccounts
-            }
+    {
+        Return $UserAccounts
+        }
     }
-
 Function Get-StaleComputerAccounts
 {
     <#
@@ -403,15 +393,14 @@ Function Get-StaleComputerAccounts
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-StaleComputerAccounts
     #>
-    
+    [CmdletBinding()]    
     Param
-    (
+        (
         [Parameter(Mandatory=$true)]
         [string]$ADSPath,
         [Parameter(Mandatory=$true)]
         [int]$DayOffset
-    )
-    
+        )
     Begin
     {
         $DateOffset = (Get-Date).AddDays(-$DayOffset)
@@ -431,8 +420,7 @@ Function Get-StaleComputerAccounts
                 }
 
         $ADObjects = $DirectorySearcher.FindAll()
-    }
-    
+        }
     Process
     {
         $StaleComputerAccounts = @()
@@ -442,24 +430,22 @@ Function Get-StaleComputerAccounts
             $WhenChanged = $ADObject.Properties.whenchanged
             $WhenCreated = $ADObject.Properties.whencreated
             if ($WhenChanged -lt $DateOffset -and $ADObject.Properties.adspath -notlike "*OU=Servers*")
-                {
-                    $ThisComputer = New-Object PSObject -Property @{
-                        name = [string]$ADObject.Properties.name
-                        adspath = [string]$ADObject.Properties.adspath
-                        whenchanged = [string]$WhenChanged
-                        whencreated = [string]$WhenCreated
-                        }
-                    $StaleComputerAccounts += $ThisComputer
+            {
+                $ThisComputer = New-Object PSObject -Property @{
+                    name = [string]$ADObject.Properties.name
+                    adspath = [string]$ADObject.Properties.adspath
+                    whenchanged = [string]$WhenChanged
+                    whencreated = [string]$WhenCreated
                     }
+                $StaleComputerAccounts += $ThisComputer
+                }
             }
-        }
-    
+        }    
     End
     {
         Return $StaleComputerAccounts
         }
     }
-
 Function Set-AccountDisabled
 {
     <#
@@ -478,18 +464,16 @@ Function Set-AccountDisabled
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Set-AccountDisabled
     #>
-    
+    [CmdletBinding()]
     Param
-    (
+        (
         [Parameter(Mandatory=$true)]
         [string]$ADSPath
-    )
-    
+        )
     Begin
     {
         $DisableComputer = [ADSI]$ADSPath
         }
-    
     Process
     {
         Try
@@ -512,7 +496,6 @@ Function Set-AccountDisabled
                 }
             }
         }
-    
     End
     {
         Return $Result
@@ -538,18 +521,16 @@ Function Reset-ComputerAccount
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Reset-ComputerAccount
     #>
-    
+    [CmdletBinding()]
     Param
-    (
+        (
         [Parameter(Mandatory=$true)]
         [String]$ADSPath
-    )
-    
+        )
     Begin
     {
         $Computer = [ADSI]$ADSPath
         }
-    
     Process
     {
         Try
@@ -571,7 +552,6 @@ Function Reset-ComputerAccount
                 }
             }
         }
-    
     End
     {
         Return $Result
@@ -602,22 +582,20 @@ Function Add-DomainGroupToLocalGroup
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Add-DomainGroupToLocalGroup
     #>
-    
+    [CmdletBinding()]
     Param
-    (
+        (
         [Parameter(Mandatory=$true)]
         [string]$ComputerName,
         [Parameter(Mandatory=$true)]
         [string]$DomainGroup,
         [string]$LocalGroup="Administrators",
         [string]$UserDomain    
-    )
-    
+        )
     Begin
     {
         $ComputerObject = [ADSI]("WinNT://$($ComputerName),computer")
         }
-    
     Process
     {
         Try
@@ -646,7 +624,6 @@ Function Add-DomainGroupToLocalGroup
                 }
             }
         }
-    
     End
     {
         Return $Result
@@ -680,7 +657,10 @@ Function Get-FSMORoleOwner
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-FSMORoleOwner
     #>
-
+    [CmdletBinding()]
+    Param
+        (
+        )
     Begin
     {
         $forest = [system.directoryservices.activedirectory.Forest]::GetCurrentForest() 
@@ -704,7 +684,6 @@ Function Get-FSMORoleOwner
                 $ForestObject.PSTypeNames.Insert(0,"ForestRoles")
                 }
             }
-
         Catch 
         {
             Return $Error[0].Exception.InnerException.Message.ToString().Trim()
@@ -758,20 +737,15 @@ Function Convert-FspToUsername
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Convert-FspToUsername
     #>
-    
+    [CmdletBinding()]
     Param
-    (
-        [Parameter(
-            Position=0,
-            Mandatory=$true,
-            ValueFromPipeline=$true)]
+        (
+        [Parameter(Position=0,Mandatory=$true,ValueFromPipeline=$true)]
         $UserSID
-    )
-    
+        )
     Begin
     {
         }
-
     Process
     {
         foreach ($Sid in $UserSID)
@@ -795,7 +769,6 @@ Function Convert-FspToUsername
                 }
             }
         }
-
     End
     {
         }
@@ -836,6 +809,7 @@ Function Set-ComputerName
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Set-ComputerName
     #>
+    [CmdletBinding()]
     Param
         (
         [string]$NewName,
@@ -943,6 +917,7 @@ Function Get-DomainName
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-DomainName
     #>
+    [CmdletBinding()]
     Param
         (
         $LdapUrl
@@ -1017,9 +992,11 @@ Function Get-UserGroupMembership
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-UserGroupMembership
     #>
+    [CmdletBinding()]
     Param
         (
-            [Parameter(Mandatory=$true)]$UserDN
+        [Parameter(Mandatory=$true)]
+        $UserDN
         )
     Begin
     {
@@ -1086,6 +1063,7 @@ Function Add-UserToGroup
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Add-UserToGroup
     #>
+    [CmdletBinding()]
     Param
         (
         $GroupDN,
@@ -1124,7 +1102,6 @@ Function Add-UserToGroup
         Return $GroupUpdated
         }
     }
-
 Function Set-ADObjectProperties
 {
     <#
@@ -1155,10 +1132,11 @@ Function Set-ADObjectProperties
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Set-ADObjectProperties
     #>
+    [CmdletBinding()]
     Param
         (
-            $ADObject,
-            $PropertyPairs
+        $ADObject,
+        $PropertyPairs
         )
     Begin
     {
