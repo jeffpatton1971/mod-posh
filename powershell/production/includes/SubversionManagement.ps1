@@ -605,3 +605,60 @@ Function Get-SvnInfo
             }
         }
     }
+Function New-WikiPage
+{
+    <#
+        .SYNOPSIS
+            Create a new wiki page from Get-Help
+        .DESCRIPTION
+            This function reads a file that has functions with auto-help
+            syntax inside is. It pulls out the function name and passes
+            that to Get-Help -Full and sends the result to stdout.
+        .PARAMETER FileSpec
+            One or more PowerShell script files
+        .EXAMPLE
+            New-WikiPage -FileSpec .\scripts
+
+            Description
+            -----------
+            The basic syntax of the command.
+        .NOTES
+            FunctionName : New-WikiPage
+            Created by   : Jeff Patton
+            Date Coded   : 02/09/2012 09:12:10
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/SubversionManagement#New-WikiPage
+    #>
+    Param
+         (
+                [Parameter(ValueFromPipeline=$true)]
+                $FileSpec
+         )
+    Begin
+    {
+        $FilesToOpen = Get-ChildItem $Filespec -Filter "*.ps1"
+        }
+    Process
+    {
+        foreach ($PoshFile in $FilesToOpen)
+        {
+            $Library = Get-Content "$($PoshFile.PSParentPath)\$($PoshFile.Name)"
+            $LibraryName = "$($PoshFile.Name.Substring(0,$PoshFile.Name.Length-4))"
+            Write-Host "= !$($Libraryname) ="
+            foreach ($Line in $Library)
+            {
+                if ($Line -like "Function*")
+                {
+                    $FunctionName = ($Line.Remove(0,9)).Trim()
+                    Write-Host "== $($FunctionName) =="
+                    Write-Host "{{{"
+                    Get-Help $FunctionName -Full
+                    Write-Host "}}}"
+                    }
+                }
+            }
+        }
+    End
+    {
+        }
+    }
