@@ -198,6 +198,7 @@ Function New-Script
         "   .LINK`r`n"
         "       https://code.google.com/p/mod-posh/wiki/Production/$($ScriptName)`r`n"
         "#>`r`n"
+        "[CmdletBinding()]`r`n"
         "Param`r`n"
         "   (`r`n"
         "`r`n"    
@@ -318,6 +319,7 @@ Function New-Function
         $WikiPage = ($psISE.CurrentFile.DisplayName).Substring(0,($psISE.CurrentFile.DisplayName).IndexOf("."))
         $TemplateFunction = @(
         "Function $FunctionName`r`n"
+        "{`r`n"
         "   <#`r`n"
         "       .SYNOPSIS`r`n"
         "       .DESCRIPTION`r`n"
@@ -330,6 +332,7 @@ Function New-Function
         "       .LINK`r`n"
         "           https://code.google.com/p/mod-posh/wiki/$($WikiPage)#$($FunctionName)`r`n"
         "   #>`r`n"
+        "[CmdletBinding()]`r`n"
         "Param`r`n"
         "    (`r`n"
         "    )`r`n"
@@ -342,7 +345,8 @@ Function New-Function
         "    }`r`n"
         "End`r`n"
         "{`r`n"
-        "    }`r`n")
+        "    }`r`n"
+        "}")
         if ($InstallMenu)
         {
             Write-Verbose "Try to install the menu item, and error out if there's an issue."
