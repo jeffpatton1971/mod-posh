@@ -22,14 +22,13 @@ function Convert-ObjectSID
         .LINK
             https://code.google.com/p/mod-posh/wiki/CarsonADLibraries#Convert-ObjectSID
     #>
-    
+    [CmdletBinding()]    
     Param
-    (
+        (
         $ObjectSID
-    )
+        )
 	return New-Object System.Security.Principal.SecurityIdentifier($ObjectSID)
 }
-
 function Convert-SIDToUser
 {
     <#
@@ -56,10 +55,10 @@ function Convert-SIDToUser
         .LINK
             https://code.google.com/p/mod-posh/wiki/CarsonADLibraries#Convert-SIDToUser
     #>
-    
+    [CmdletBinding()]   
     Param
-    (
+        (
         $ObjectSID
-    )
+        )
     return $ObjectSID.Translate([System.Security.Principal.NTAccount])
 }
