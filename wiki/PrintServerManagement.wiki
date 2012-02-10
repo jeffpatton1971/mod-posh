@@ -1,5 +1,6 @@
-= Get-Printers =
+== Get-Printers ==
 {{{
+
 NAME
     Get-Printers
 
@@ -23,13 +24,13 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -48,9 +49,10 @@ OUTPUTS
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/PrintServerManagement#Get-Printers
+     https://code.google.com/p/mod-posh/wiki/PrintServerManagement#Get-Printers
+
 }}}
-= Get-!PrintQueue =
+== Get-PrintQueue ==
 {{{
 NAME
     Get-PrintQueue
@@ -75,7 +77,7 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -Name <Object>
         Name of the print queue
@@ -84,13 +86,13 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -109,9 +111,10 @@ OUTPUTS
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/PrintServertManagement#Get-PrintQueue
+     https://code.google.com/p/mod-posh/wiki/PrintServertManagement#Get-PrintQueue
+
 }}}
-= Get-!PrintJobs = 
+== Get-PrintJobs ==
 {{{
 NAME
     Get-PrintJobs
@@ -135,7 +138,7 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -Name <Object>
         Name of the print queue
@@ -144,13 +147,13 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -169,5 +172,6 @@ OUTPUTS
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/PrintServerManagement#Get-PrintJobs
+     https://code.google.com/p/mod-posh/wiki/PrintServerManagement#Get-PrintJobs
+
 }}}
