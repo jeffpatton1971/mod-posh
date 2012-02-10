@@ -77,7 +77,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/FileManagement#Update-Content
 
 }}}
-== New-LogFile ==
+== New-!LogFile ==
 {{{
 NAME
     New-LogFile
@@ -263,7 +263,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/FileManagement#Convert-Delimiter
 
 }}}
-== Get-FileLogs ==
+== Get-!FileLogs ==
 {{{
 NAME
     Get-FileLogs
