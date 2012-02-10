@@ -32,18 +32,16 @@ Function Update-Repo
         .LINK
             https://code.google.com/p/mod-posh/wiki/SubversionManagement#Update-Repo
     #>
-    
+    [CmdletBinding()]    
     Param
-    (
-    [string]$WorkingPath = (Get-Location).Path
-    )
-    
+        (
+        [string]$WorkingPath = (Get-Location).Path
+        )    
     Begin
     {
         $TSvnCommand = "TortoiseProc.exe /command:update /path:`"$($WorkingPath)`""
         $SvnCommand = "svn update `"$($WorkingPath)`""
         }
-
     Process
     {
         if ($SubversionClient -eq $null)
@@ -54,24 +52,22 @@ Function Update-Repo
             }
 
         Switch ($SubversionClient)
+        {
+            svn
             {
-                svn
-                    {
-                        Invoke-Expression $SvnCommand
-                        }
-                tortoise
-                    {
-                        Invoke-Expression $TSvnCommand
-                        }
+                Invoke-Expression $SvnCommand
                 }
+            tortoise
+            {
+                Invoke-Expression $TSvnCommand
+                }
+            }
         }
-
     End
     {
         Return $?
         }
-}
-
+    }
 Function New-Repo
 {
     <#
@@ -107,22 +103,20 @@ Function New-Repo
         .LINK
             https://code.google.com/p/mod-posh/wiki/SubversionManagement#New-Repo
     #>
-    
+    [CmdletBinding()]
     Param
-    (
-    [string]$RepoUrl,
-    [string]$UserName,
-    [string]$WorkingPath = (Get-Location).Path,
-    [string]$TargetFolder
-    )
-    
+        (
+        [string]$RepoUrl,
+        [string]$UserName,
+        [string]$WorkingPath = (Get-Location).Path,
+        [string]$TargetFolder
+        )    
     Begin
     {
         $CheckoutPath = "$($WorkingPath)\$($TargetFolder)"
         $TSvnCommand = "TortoiseProc.exe /command:checkout /path:`"$($CheckoutPath)`" /url:$($RepoURL)"
         $SvnCommand = "svn checkout $($RepoURL) `"$($CheckoutPath)`" --username $($UserName)"
         }
-
     Process
     {
         if ($SubversionClient -eq $null)
@@ -133,24 +127,22 @@ Function New-Repo
             }
 
         Switch ($SubversionClient)
+        {
+            svn
             {
-                svn
-                    {
-                        Invoke-Expression $SvnCommand
-                        }
-                tortoise
-                    {
-                        Invoke-Expression $TSvnCommand
-                        }
+                Invoke-Expression $SvnCommand
                 }
+            tortoise
+            {
+                Invoke-Expression $TSvnCommand
+                }
+            }
         }
-
     End
     {
         Return $?
         }
-}
-
+    }
 Function Add-RepoItem
 {
     <#
@@ -176,20 +168,18 @@ Function Add-RepoItem
         .LINK
             https://code.google.com/p/mod-posh/wiki/SubversionManagement#Add-RepoItem
     #>
-    
+    [CmdletBinding()]
     Param
-    (
-    [Parameter(Mandatory=$true)]
-    [string]$FileName
-    )
-    
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$FileName
+        )    
     Begin
     {
         $FilePath = (Get-ChildItem $FileName).FullName
         $TSvnCommand = "& TortoiseProc.exe /command:add /path: `"$($FilePath)`""
         $SvnCommand = "& svn add `"$($FilePath)`""
         }
-
     Process
     {
         if ($SubversionClient -eq $null)
@@ -200,24 +190,22 @@ Function Add-RepoItem
             }
 
         Switch ($SubversionClient)
+        {
+            svn
             {
-                svn
-                    {
-                        Invoke-Expression $SvnCommand
-                        }
-                tortoise
-                    {
-                        Invoke-Expression $TSvnCommand
-                        }
+                Invoke-Expression $SvnCommand
                 }
+            tortoise
+            {
+                Invoke-Expression $TSvnCommand
+                }
+            }
         }
-
     End
     {
         Return $?
         }
-}
-
+    }
 Function Remove-RepoItem
 {
     <#
@@ -243,20 +231,18 @@ Function Remove-RepoItem
         .LINK
             https://code.google.com/p/mod-posh/wiki/SubversionManagement#Remove-RepoItem
     #>
-    
+    [CmdletBinding()]
     Param
-    (
-    [Parameter(Mandatory=$true)]
-    [string]$FileName
-    )
-    
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$FileName
+        )    
     Begin
     {
         $FilePath = (Get-ChildItem $FileName).FullName
         $TSvnCommand = "TortoiseProc.exe /command:remove /path: `"$($FilePath)`""
         $SvnCommand = "svn delete `"$($FilePath)`" --force"
         }
-
     Process
     {
         if ($SubversionClient -eq $null)
@@ -267,24 +253,22 @@ Function Remove-RepoItem
             }
 
         Switch ($SubversionClient)
+        {
+            svn
             {
-                svn
-                    {
-                        Invoke-Expression $SvnCommand
-                        }
-                tortoise
-                    {
-                        Invoke-Expression $TSvnCommand
-                        }
+                Invoke-Expression $SvnCommand
                 }
+            tortoise
+            {
+                Invoke-Expression $TSvnCommand
+                }
+            }
         }
-
     End
     {
         Return $?
         }
-}
-
+    }
 Function Set-RepoProps
 {
     <#
@@ -325,21 +309,19 @@ Function Set-RepoProps
         .LINK
             https://code.google.com/p/mod-posh/wiki/SubversionManagement#Set-RepoProps
     #>
-    
+    [CmdletBinding()]
     Param
-    (
-    [string]$PropSet = "svn:mime-type 'text/plain'",
-    [Parameter(Mandatory=$true)]
-    [string]$FileName
-    )
-    
+        (
+        [string]$PropSet = "svn:mime-type 'text/plain'",
+        [Parameter(Mandatory=$true)]
+        [string]$FileName
+        )    
     Begin
     {
         $FilePath = (Get-ChildItem $FileName).FullName
         $TSvnCommand = "TortoiseProc.exe /command:properties /path: `"$($FilePath)`""
         $SvnCommand = "svn propset $($PropSet) `"$($FilePath)`""
         }
-
     Process
     {
         if ($SubversionClient -eq $null)
@@ -350,24 +332,22 @@ Function Set-RepoProps
             }
 
         Switch ($SubversionClient)
+        {
+            svn
             {
-                svn
-                    {
-                        Invoke-Expression $SvnCommand
-                        }
-                tortoise
-                    {
-                        Invoke-Expression $TSvnCommand
-                        }
+                Invoke-Expression $SvnCommand
                 }
+            tortoise
+            {
+                Invoke-Expression $TSvnCommand
+                }
+            }
         }
-
     End
     {
         Return $?
         }
-}
-
+    }
 Function Commit-RepoItem
 {
     <#
@@ -397,22 +377,20 @@ Function Commit-RepoItem
         .LINK
             https://code.google.com/p/mod-posh/wiki/SubversionManagement#Commit-RepoItem
     #>
-    
+    [CmdletBinding()]
     Param
-    (
-    [Parameter(Mandatory=$true)]
-    [string]$FileName,
-    [Parameter(Mandatory=$true)]
-    [string]$CommitMessage
-    )
-    
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$FileName,
+        [Parameter(Mandatory=$true)]
+        [string]$CommitMessage
+        )    
     Begin
     {
         $FilePath = (Get-ChildItem $FileName).FullName
         $TSvnCommand = "& TortoiseProc.exe /command:commit /path: `"$($FilePath)`" /logmsg:`"$($CommitMessage)`""
         $SvnCommand = "& svn commit `"$($FilePath)`" -m `"$($CommitMessage)`""
         }
-
     Process
     {
         if ($SubversionClient -eq $null)
@@ -423,23 +401,22 @@ Function Commit-RepoItem
             }
 
         Switch ($SubversionClient)
+        {
+            svn
             {
-                svn
-                    {
-                        Invoke-Expression $SvnCommand
-                        }
-                tortoise
-                    {
-                        Invoke-Expression $TSvnCommand
-                        }
+                Invoke-Expression $SvnCommand
                 }
+            tortoise
+            {
+                Invoke-Expression $TSvnCommand
+                }
+            }
         }
-
     End
     {
         Return $?
         }
-}
+    }
 Function Get-SvnInfo
 {
     <#
@@ -499,6 +476,7 @@ Function Get-SvnInfo
         .LINK
             https://code.google.com/p/mod-posh/wiki/SubversionManagement#Get-SvnInfo
     #>
+    [CmdletBinding()]    
     Param
         (
         [string]$WorkingPath = (Get-Location).Path
@@ -516,17 +494,17 @@ Function Get-SvnInfo
             }
 
         Switch ($SubversionClient)
+        {
+            svn
             {
-                svn
-                    {
-                        $Info = Invoke-Expression $SvnCommand
-                        }
-                tortoise
-                    {
-                        Write-Host "SVN Info command not supported by Tortoisesvn"
-                        break
-                        }
+                $Info = Invoke-Expression $SvnCommand
                 }
+            tortoise
+            {
+                Write-Host "SVN Info command not supported by Tortoisesvn"
+                break
+                }
+            }
         }
     Process
     {
@@ -629,11 +607,12 @@ Function New-WikiPage
         .LINK
             https://code.google.com/p/mod-posh/wiki/SubversionManagement#New-WikiPage
     #>
+    [CmdletBinding()]
     Param
-         (
-                [Parameter(ValueFromPipeline=$true)]
-                $FileSpec
-         )
+        (
+        [Parameter(ValueFromPipeline=$true)]
+        $FileSpec
+        )
     Begin
     {
         $FilesToOpen = Get-ChildItem $Filespec -Filter "*.ps1"
