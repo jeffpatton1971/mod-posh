@@ -1,5 +1,6 @@
-= Get-LPInputFormat =
+== Get-LPInputFormat ==
 {{{
+
 NAME
     Get-LPInputFormat
 
@@ -21,13 +22,13 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -37,9 +38,11 @@ NOTES
 
 
         You will need to download and install Microsoft's LogParser, you can find it at this URL:
-        http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+        http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975c
+        f8c07
 
-        The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
+        The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his
+        comment blocks down
         into the PowerShell v2 internal help system.
 
     -------------------------- EXAMPLE 1 --------------------------
@@ -55,9 +58,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#get-LPInputFormat
+     https://code.google.com/p/mod-posh/wiki/MueggeLogParser#get-LPInputFormat
+
 }}}
-= Get-LPOutputFormat =
+== Get-LPOutputFormat ==
 {{{
 NAME
     Get-LPOutputFormat
@@ -80,13 +84,13 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -96,9 +100,11 @@ NOTES
 
 
         You will need to download and install Microsoft's LogParser, you can find it at this URL:
-        http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+        http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975c
+        f8c07
 
-        The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
+        The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his
+        comment blocks down
         into the PowerShell v2 internal help system.
 
     -------------------------- EXAMPLE 1 --------------------------
@@ -114,10 +120,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Get-LPOutputFormat
-}}}
+     https://code.google.com/p/mod-posh/wiki/MueggeLogParser#Get-LPOutputFormat
 
-= Invoke-LPExecute =
+}}}
+== Invoke-LPExecute ==
 {{{
 NAME
     Invoke-LPExecute
@@ -140,7 +146,7 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -inputtype <Object>
 
@@ -148,13 +154,13 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -164,9 +170,11 @@ NOTES
 
 
         You will need to download and install Microsoft's LogParser, you can find it at this URL:
-        http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+        http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975c
+        f8c07
 
-        The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
+        The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his
+        comment blocks down
         into the PowerShell v2 internal help system.
 
     -------------------------- EXAMPLE 1 --------------------------
@@ -182,10 +190,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Invoke-LPExecute
-}}}
+     https://code.google.com/p/mod-posh/wiki/MueggeLogParser#Invoke-LPExecute
 
-= Invoke-LPExecuteBatch =
+}}}
+== Invoke-LPExecuteBatch ==
 {{{
 NAME
     Invoke-LPExecuteBatch
@@ -194,7 +202,8 @@ SYNOPSIS
     Executes Log Parser batch query with passed input and output types
 
 SYNTAX
-    Invoke-LPExecuteBatch [[-query] <String>] [[-inputtype] <Object>] [[-outputtype] <Object>] [<CommonParameters>]
+    Invoke-LPExecuteBatch [[-query] <String>] [[-inputtype] <Object>] [[-outputtype] <Object>]
+    [<CommonParameters>]
 
 
 DESCRIPTION
@@ -208,7 +217,7 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -inputtype <Object>
 
@@ -216,7 +225,7 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -outputtype <Object>
 
@@ -224,13 +233,13 @@ PARAMETERS
         Position?                    3
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -240,14 +249,17 @@ NOTES
 
 
         You will need to download and install Microsoft's LogParser, you can find it at this URL:
-        http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+        http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975c
+        f8c07
 
-        The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
+        The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his
+        comment blocks down
         into the PowerShell v2 internal help system.
 
     -------------------------- EXAMPLE 1 --------------------------
 
-    Invoke-LPExecuteBatch -query <string>-inputtype <LogParserInputFormat> -outputtype <LogParserOutputFormat>
+    Invoke-LPExecuteBatch -query <string>-inputtype <LogParserInputFormat> -outputtype
+    <LogParserOutputFormat>
 
 
 
@@ -258,10 +270,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Invoke-LPExecuteBatch
-}}}
+     https://code.google.com/p/mod-posh/wiki/MueggeLogParser#Invoke-LPExecuteBatch
 
-= Get-LPRecord =
+}}}
+== Get-LPRecord ==
 {{{
 NAME
     Get-LPRecord
@@ -284,13 +296,13 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -300,9 +312,11 @@ NOTES
 
 
         You will need to download and install Microsoft's LogParser, you can find it at this URL:
-        http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+        http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975c
+        f8c07
 
-        The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
+        The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his
+        comment blocks down
         into the PowerShell v2 internal help system.
 
     -------------------------- EXAMPLE 1 --------------------------
@@ -318,10 +332,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Get-LPRecord
-}}}
+     https://code.google.com/p/mod-posh/wiki/MueggeLogParser#Get-LPRecord
 
-= Get-LPRecordSet =
+}}}
+== Get-LPRecordSet ==
 {{{
 NAME
     Get-LPRecordSet
@@ -344,13 +358,13 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -360,9 +374,11 @@ NOTES
 
 
         You will need to download and install Microsoft's LogParser, you can find it at this URL:
-        http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975cf8c07
+        http://www.microsoft.com/downloads/en/details.aspx?FamilyID=890cd06b-abf8-4c25-91b2-f8d975c
+        f8c07
 
-        The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his comment blocks down
+        The original code was pulled from http://muegge.com/blog/?p=65 I have just moved his
+        comment blocks down
         into the PowerShell v2 internal help system.
 
     -------------------------- EXAMPLE 1 --------------------------
@@ -378,5 +394,6 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/MueggeLogParser#Get-LPRecordSet
+     https://code.google.com/p/mod-posh/wiki/MueggeLogParser#Get-LPRecordSet
+
 }}}
