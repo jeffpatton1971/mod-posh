@@ -1,4 +1,4 @@
-== New-Sharepoint3Site ==
+== New-!Sharepoint3Site ==
 {{{
 
 NAME
@@ -130,7 +130,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/SharePointManagement#New-Sharepoint3Site
 
 }}}
-== Get-Sharepoint3Sites ==
+== Get-!Sharepoint3Sites ==
 {{{
 NAME
     Get-Sharepoint3Sites
@@ -201,7 +201,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/SharePointManagement#Get-Sharepoint3Sites
 
 }}}
-== New-Sharepoint3Path ==
+== New-!Sharepoint3Path ==
 {{{
 NAME
     New-Sharepoint3Path
@@ -267,7 +267,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/SharePointManagement#New-Sharepoint3Path
 
 }}}
-== New-Sharepoint3Subweb ==
+== New-!Sharepoint3Subweb ==
 {{{
 NAME
     New-Sharepoint3Subweb
