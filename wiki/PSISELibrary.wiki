@@ -1,4 +1,4 @@
-== Replace-TabsWithSpace ==
+== Replace-!TabsWithSpace ==
 {{{
 
 NAME
@@ -72,7 +72,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/PSISELibrary#Replace-TabsWithSpace
 
 }}}
-== New-CommentBlock ==
+== New-!CommentBlock ==
 {{{
 NAME
     New-CommentBlock
