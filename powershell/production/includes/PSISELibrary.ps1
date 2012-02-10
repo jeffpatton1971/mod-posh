@@ -24,11 +24,12 @@ Function Replace-TabsWithSpace
         .LINK
             https://code.google.com/p/mod-posh/wiki/PSISELibrary#Replace-TabsWithSpace
     #>
+    [CmdletBinding()]
     Param
-    (
+        (
         $SelectedText = $psISE.CurrentFile.Editor.SelectedText,
         $InstallMenu
-    )
+        )
     Begin
     {
         if ($InstallMenu)
@@ -60,7 +61,6 @@ Function Replace-TabsWithSpace
     {
         }
     }
-
 Function New-CommentBlock
 {
     <#
@@ -83,11 +83,12 @@ Function New-CommentBlock
             Date Coded   : 09/13/2011 12:28:10
         .LINK
             https://code.google.com/p/mod-posh/wiki/PSISELibrary#New-CommentBlock
-     #>
+    #>
+    [CmdletBinding()]
     Param
-    (
+        (
         $InstallMenu
-    )
+        )
     Begin
     {
         $WikiPage = ($psISE.CurrentFile.DisplayName).Substring(0,($psISE.CurrentFile.DisplayName).IndexOf("."))
@@ -137,7 +138,6 @@ Function New-CommentBlock
     {
         }
     }
-
 Function New-Script
 {
     <#
@@ -167,12 +167,13 @@ Function New-Script
             Date Coded   : 09/13/2011 13:37:24
         .LINK
             https://code.google.com/p/mod-posh/wiki/PSISELibrary#New-Script
-     #>
+    #>
+    [CmdletBinding()]
     Param
-    (
+        (
         $InstallMenu,
         $ScriptName
-    )
+        )
     Begin
     {
         $TemplateScript = @(
@@ -274,7 +275,6 @@ Function New-Script
         Return $NewScript
         }
     }
-
 Function New-Function
 {
     <#
@@ -307,13 +307,14 @@ Function New-Function
             Date Coded   : 09/13/2011 13:37:24
         .LINK
             https://code.google.com/p/mod-posh/wiki/PSISELibrary#New-Function
-     #>
+    #>
+    [CmdletBinding()]
     Param
-    (
+        (
         $SelectedText = $psISE.CurrentFile.Editor.SelectedText,
         $InstallMenu,
         $FunctionName
-    )
+        )
     Begin
     {
         $WikiPage = ($psISE.CurrentFile.DisplayName).Substring(0,($psISE.CurrentFile.DisplayName).IndexOf("."))
@@ -405,9 +406,22 @@ Register-ObjectEvent -InputObject $psISE.CurrentPowerShellTab.Files CollectionCh
         .LINK
             http://poshcode.org/3000
     #>
-    Write-Verbose "Iterate through ISEFile objects"
-    $Event.Sender | foreach {
-        Write-Verbose "Set private field which holds default encoding to ASCII"
-        $_.GetType().GetField("Encodindg","Nonpublic,Instance").SetValue($_, [text.encoding]::ASCII)
+    [CmdletBinding()]
+    Param
+        (
+        )
+    Begin
+    {
+        }
+    Process
+    {
+        Write-Verbose "Iterate through ISEFile objects"
+        $Event.Sender | foreach {
+            Write-Verbose "Set private field which holds default encoding to ASCII"
+            $_.GetType().GetField("Encodindg","Nonpublic,Instance").SetValue($_, [text.encoding]::ASCII)
+            }
+        }
+    End
+    {
         }
     }
