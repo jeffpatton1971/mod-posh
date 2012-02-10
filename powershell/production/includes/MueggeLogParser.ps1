@@ -312,14 +312,14 @@ function Get-LPRecord
 			    $LPRecord | add-member NoteProperty $LPRecordSet.getColumnName($i) -value $Record.getValue($i)
 		        }
 	        }
+        }
     End
     {
 	    return $LPRecord
         }
     }
-
-function Get-LPRecordSet{
-
+function Get-LPRecordSet
+{
 	<#
 		.SYNOPSIS
 			Executes a Log Parser Query and returns a LogRecordSet as a custom powershell object
