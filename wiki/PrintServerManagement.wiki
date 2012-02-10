@@ -52,7 +52,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/PrintServerManagement#Get-Printers
 
 }}}
-== Get-PrintQueue ==
+== Get-!PrintQueue ==
 {{{
 NAME
     Get-PrintQueue
@@ -114,7 +114,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/PrintServertManagement#Get-PrintQueue
 
 }}}
-== Get-PrintJobs ==
+== Get-!PrintJobs ==
 {{{
 NAME
     Get-PrintJobs
