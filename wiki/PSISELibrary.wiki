@@ -1,5 +1,6 @@
-= Replace-!TabsWithSpaces =
+== Replace-TabsWithSpace ==
 {{{
+
 NAME
     Replace-TabsWithSpace
 
@@ -21,9 +22,9 @@ PARAMETERS
 
         Required?                    false
         Position?                    1
-        Default value
+        Default value                $psISE.CurrentFile.Editor.SelectedText
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -InstallMenu <Object>
         Specifies if you want to install this as a PSIE add-on menu
@@ -32,13 +33,13 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -49,8 +50,8 @@ NOTES
 
         This was written specifically for me, I had some code originally created in Notepad++ that
         used actual tabs, later I changed that to spaces, but on occasion I come accross something
-        that doesn't tab shift like it should. Since I've been doing some PowerShell ISE stuff late
-        ly
+        that doesn't tab shift like it should. Since I've been doing some PowerShell ISE stuff
+        lately
         I decided to write a little function that works as an Add-On menu.
 
     -------------------------- EXAMPLE 1 --------------------------
@@ -68,9 +69,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/PSISELibrary#Replace-TabsWithSpace
+     https://code.google.com/p/mod-posh/wiki/PSISELibrary#Replace-TabsWithSpace
+
 }}}
-= New-!CommentBlock = 
+== New-CommentBlock ==
 {{{
 NAME
     New-CommentBlock
@@ -95,13 +97,13 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -129,9 +131,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/PSISELibrary#New-CommentBlock
+     https://code.google.com/p/mod-posh/wiki/PSISELibrary#New-CommentBlock
+
 }}}
-= New-Script =
+== New-Script ==
 {{{
 NAME
     New-Script
@@ -155,7 +158,7 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -ScriptName <Object>
         This is the name of the new script.
@@ -164,13 +167,13 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -211,9 +214,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/PSISELibrary#New-Script
+     https://code.google.com/p/mod-posh/wiki/PSISELibrary#New-Script
+
 }}}
-= New-Function =
+== New-Function ==
 {{{
 NAME
     New-Function
@@ -222,8 +226,8 @@ SYNOPSIS
     Create a new function
 
 SYNTAX
-    New-Function [[-SelectedText] <Object>] [[-InstallMenu] <Object>] [[-FunctionName] <Object>] [<
-    CommonParameters>]
+    New-Function [[-SelectedText] <Object>] [[-InstallMenu] <Object>] [[-FunctionName] <Object>]
+    [<CommonParameters>]
 
 
 DESCRIPTION
@@ -237,9 +241,9 @@ PARAMETERS
 
         Required?                    false
         Position?                    1
-        Default value
+        Default value                $psISE.CurrentFile.Editor.SelectedText
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -InstallMenu <Object>
         Specifies if you want to install this as a PSIE add-on menu
@@ -248,7 +252,7 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -FunctionName <Object>
         This is the name of the new function.
@@ -257,13 +261,13 @@ PARAMETERS
         Position?                    3
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -304,5 +308,6 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/PSISELibrary#New-Function
+     https://code.google.com/p/mod-posh/wiki/PSISELibrary#New-Function
+
 }}}
