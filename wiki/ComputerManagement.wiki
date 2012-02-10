@@ -1,4 +1,4 @@
-== New-LocalUser ==
+== New-!LocalUser ==
 {{{
 
 NAME
@@ -164,7 +164,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Set-Pass
 
 }}}
-== Add-LocalUserToGroup ==
+== Add-!LocalUserToGroup ==
 {{{
 NAME
     Add-LocalUserToGroup
@@ -239,7 +239,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Add-LocalUserToGroup
 
 }}}
-== New-ScheduledTask ==
+== New-!ScheduledTask ==
 {{{
 NAME
     New-ScheduledTask
@@ -374,7 +374,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#New-ScheduledTask
 
 }}}
-== Remove-UserFromLocalGroup ==
+== Remove-!UserFromLocalGroup ==
 {{{
 NAME
     Remove-UserFromLocalGroup
@@ -639,7 +639,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-Services
 
 }}}
-== Get-NonStandardServiceAccounts ==
+== Get-!NonStandardServiceAccounts ==
 {{{
 NAME
     Get-NonStandardServiceAccounts
@@ -777,7 +777,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-NonStandardServiceAccounts
 
 }}}
-== Remove-LocalUser ==
+== Remove-!LocalUser ==
 {{{
 NAME
     Remove-LocalUser
@@ -846,7 +846,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Remove-LocalUser
 
 }}}
-== Get-LocalUserAccounts ==
+== Get-!LocalUserAccounts ==
 {{{
 NAME
     Get-LocalUserAccounts
@@ -945,7 +945,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-LocalUserAccounts
 
 }}}
-== Get-PendingUpdates ==
+== Get-!PendingUpdates ==
 {{{
 NAME
     Get-PendingUpdates
@@ -1006,7 +1006,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-PendingUpdates
 
 }}}
-== Get-ServiceTag ==
+== Get-!ServiceTag ==
 {{{
 NAME
     Get-ServiceTag
@@ -1070,7 +1070,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-ServiceTag
 
 }}}
-== Backup-EventLogs ==
+== Backup-!EventLogs ==
 {{{
 NAME
     Backup-EventLogs
@@ -1149,7 +1149,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Backup-EventLogs
 
 }}}
-== Export-EventLogs ==
+== Export-!EventLogs ==
 {{{
 NAME
     Export-EventLogs
@@ -1278,7 +1278,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-SiSReport
 
 }}}
-== Get-PaperCutLogs ==
+== Get-!PaperCutLogs ==
 {{{
 NAME
     Get-PaperCutLogs
@@ -1346,7 +1346,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-PaperCutLogs
 
 }}}
-== Set-ShutdownMethod ==
+== Set-!ShutdownMethod ==
 {{{
 NAME
     Set-ShutdownMethod
@@ -1459,7 +1459,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Set-ShutdownMethod
 
 }}}
-== Get-PrinterLogs ==
+== Get-!PrinterLogs ==
 {{{
 NAME
     Get-PrinterLogs
@@ -1552,7 +1552,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-PrinterLogs
 
 }}}
-== Get-OpenSessions ==
+== Get-!OpenSessions ==
 {{{
 NAME
     Get-OpenSessions
@@ -1620,7 +1620,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-OpenSessions
 
 }}}
-== Get-OpenFiles ==
+== Get-!OpenFiles ==
 {{{
 NAME
     Get-OpenFiles
@@ -1805,7 +1805,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-RDPLoginEvents
 
 }}}
-== Get-InvalidLogonAttempts ==
+== Get-!InvalidLogonAttempts ==
 {{{
 NAME
     Get-InvalidLogonAttempts
@@ -1951,7 +1951,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-InvalidLogonAttempts
 
 }}}
-== Get-UpTime ==
+== Get-!UpTime ==
 {{{
 NAME
     Get-UpTime
