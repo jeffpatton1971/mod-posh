@@ -1,5 +1,6 @@
-= Get-FWServices =
+== Get-FWServices ==
 {{{
+
 NAME
     Get-FWServices
 
@@ -11,15 +12,16 @@ SYNTAX
 
 
 DESCRIPTION
-    This function returns a list of services and related ports that are allowed through the Windows Firewall
+    This function returns a list of services and related ports that are allowed through the
+    Windows Firewall
 
 
 PARAMETERS
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -31,7 +33,7 @@ OUTPUTS
 
 
     Property  Name           Type Customize IpVersion     Scope RemoteAdd   Enabled Protocol  Port
-                                          d                     resses
+                                            d                     resses
     --------  ----           ---- --------- ---------     ----- ---------   ------- --------  ----
     Service   File a...         0     False         2         1 LocalS...      True -         -
     Port      File a...         -         -         2         1 LocalS...      True 17        138
@@ -50,9 +52,10 @@ OUTPUTS
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/WindowsFirewallManagement#Get-FWServices
+     https://code.google.com/p/mod-posh/wiki/WindowsFirewallManagement#Get-FWServices
+
 }}}
-= Get-FWApplications =
+== Get-FWApplications ==
 {{{
 NAME
     Get-FWApplications
@@ -65,15 +68,16 @@ SYNTAX
 
 
 DESCRIPTION
-    This function returns a list of applications that have been authorized through the Windows Firewall.
+    This function returns a list of applications that have been authorized through the Windows
+    Firewall.
 
 
 PARAMETERS
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -84,14 +88,21 @@ OUTPUTS
     C:\PS>Get-FWApplications |Format-Table
 
 
-    ProcessImageFi Name               IpVersion Property      RemoteAddress       Enabled         Scope
+    ProcessImageFi Name               IpVersion Property      RemoteAddress       Enabled
+    Scope
     leName                                                    es
-    -------------- ----               --------- --------      -------------       -------         -----
-    C:\Program ... VMware Authd               2 Application   *                      True             0
-    C:\Program ... Bonjour Ser...             2 Application   *                      True             0
-    C:\users\je... dropbox.exe                2 Application   *                      True             0
-    C:\program ... Opera Inter...             2 Application   *                      True             0
-    C:\program ... Microsoft O...             2 Application   *                      True             0
+    -------------- ----               --------- --------      -------------       -------
+    -----
+    C:\Program ... VMware Authd               2 Application   *                      True
+       0
+    C:\Program ... Bonjour Ser...             2 Application   *                      True
+       0
+    C:\users\je... dropbox.exe                2 Application   *                      True
+       0
+    C:\program ... Opera Inter...             2 Application   *                      True
+       0
+    C:\program ... Microsoft O...             2 Application   *                      True
+       0
 
     Description
     -----------
@@ -103,9 +114,10 @@ OUTPUTS
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/WindowsFirewallManagement#Get-FWApplications
+     https://code.google.com/p/mod-posh/wiki/WindowsFirewallManagement#Get-FWApplications
+
 }}}
-= Get-FWGloballyOpenPorts =
+== Get-FWGloballyOpenPorts ==
 {{{
 NAME
     Get-FWGloballyOpenPorts
@@ -125,8 +137,8 @@ PARAMETERS
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -137,11 +149,15 @@ OUTPUTS
     C:\PS>Get-FWGloballyOpenPorts |Format-Table
 
 
-    RemoteAddres Name            IpVersion         Port       Scope    Protocol     Enabled     BuiltIn
+    RemoteAddres Name            IpVersion         Port       Scope    Protocol     Enabled
+    BuiltIn
     ses
-    ------------ ----            ---------         ----       -----    --------     -------     -------
-    *            Allowed P...            2          456           0          17        True       False
-    *            Allowed P...            2          123           0           6        True       False
+    ------------ ----            ---------         ----       -----    --------     -------
+    -------
+    *            Allowed P...            2          456           0          17        True
+    False
+    *            Allowed P...            2          123           0           6        True
+    False
 
     Description
     -----------
@@ -153,9 +169,10 @@ OUTPUTS
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/WindowsFirewallManagement#Get-FWGloballyOpenPorts
+     https://code.google.com/p/mod-posh/wiki/WindowsFirewallManagement#Get-FWGloballyOpenPorts
+
 }}}
-= New-FWPortOpening =
+== New-FWPortOpening ==
 {{{
 NAME
     New-FWPortOpening
@@ -164,8 +181,8 @@ SYNOPSIS
     Create a port opening in Windows Firewall.
 
 SYNTAX
-    New-FWPortOpening [[-RuleName] <String>] [[-RuleProtocol] <Int32>] [[-RulePort] <Double>] [[-RuleRemoteAddresses] <
-    String>] [[-RuleEnabled] <Boolean>] [<CommonParameters>]
+    New-FWPortOpening [[-RuleName] <String>] [[-RuleProtocol] <Int32>] [[-RulePort] <Double>]
+    [[-RuleRemoteAddresses] <String>] [[-RuleEnabled] <Boolean>] [<CommonParameters>]
 
 
 DESCRIPTION
@@ -179,23 +196,23 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -RuleProtocol <Int32>
 
         Required?                    false
         Position?                    2
-        Default value
+        Default value                0
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -RulePort <Double>
 
         Required?                    false
         Position?                    3
-        Default value
+        Default value                0
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -RuleRemoteAddresses <String>
 
@@ -203,21 +220,21 @@ PARAMETERS
         Position?                    4
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -RuleEnabled <Boolean>
 
         Required?                    false
         Position?                    5
-        Default value
+        Default value                False
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -226,7 +243,8 @@ OUTPUTS
 NOTES
 
 
-        In order for this function to work properly you will need to run this function in an elevated PowerShell
+        In order for this function to work properly you will need to run this function in an
+        elevated PowerShell
         prompt, as well as have the permissions to modify the firewall.
 
     -------------------------- EXAMPLE 1 --------------------------
@@ -255,5 +273,6 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/WindowsFirewallManagement#New-FWPortOpening
+     https://code.google.com/p/mod-posh/wiki/WindowsFirewallManagement#New-FWPortOpening
+
 }}}
