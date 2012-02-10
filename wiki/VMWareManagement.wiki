@@ -1,5 +1,6 @@
-= Get-VMHostNetworks =
+== Get-VMHostNetworks ==
 {{{
+
 NAME
     Get-VMHostNetworks
 
@@ -11,10 +12,10 @@ SYNTAX
 
 
 DESCRIPTION
-    After connecting to your VI server, we get a list of virtual switches on the datacenter and fro
-    m
-    that we pull out the VHostID that matches the server we passed in at the command-line. Using th
-    e
+    After connecting to your VI server, we get a list of virtual switches on the datacenter and
+    from
+    that we pull out the VHostID that matches the server we passed in at the command-line. Using
+    the
     VHostID we return a list of networks objects on that server.
 
 
@@ -26,7 +27,7 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -VIServer <String>
         The name of your VSPhere Server
@@ -35,13 +36,13 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -74,9 +75,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/VMWareManagement
+     https://code.google.com/p/mod-posh/wiki/VMWareManagement#Get-VMHostNetworks
      http://communities.vmware.com/community/vmtn/server/vsphere/automationtools/powercli
      http://www.vmware.com/support/developer/PowerCLI/PowerCLI41U1/html/Connect-VIServer.html
      http://www.vmware.com/support/developer/PowerCLI/PowerCLI41U1/html/Get-VirtualSwitch.html
      http://www.vmware.com/support/developer/PowerCLI/PowerCLI41U1/html/Get-VirtualPortGroup.html
+
 }}}
