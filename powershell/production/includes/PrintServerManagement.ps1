@@ -13,10 +13,11 @@ Function Get-Printers
     .LINK
         https://code.google.com/p/mod-posh/wiki/PrintServerManagement#Get-Printers
     #>
+    [CmdletBinding()]
     Param
-    (
+        (
         [String]$ComputerName
-    )
+        )
     Begin
     {
         $Host.Runspace.ThreadOptions = "ReuseThread"
@@ -60,7 +61,7 @@ Function Get-Printers
     {
         Return $Printers
         }
-}
+    }
 Function Get-PrintQueue
 {
     <#
@@ -78,11 +79,12 @@ Function Get-PrintQueue
     .LINK
         https://code.google.com/p/mod-posh/wiki/PrintServertManagement#Get-PrintQueue
     #>
+    [CmdletBinding()]
     Param
-    (
+        (
         $ComputerName,
         $Name
-    )
+        )
     Begin
     {
         $Host.Runspace.ThreadOptions = "ReuseThread"
@@ -98,6 +100,9 @@ Function Get-PrintQueue
             $SystemPrintingFile = Get-ChildItem -Name "*system.printing*" -Recurse -Path $SystemPrinting.FullName
             $SystemPrintingFile = "$($SystemPrinting.FullName)\$($SystemPrintingFile)"
             }
+        }
+    Process
+    {
         $ErrorActionPreference = "Stop"
         Try
         {
@@ -111,14 +116,11 @@ Function Get-PrintQueue
             Break
             }
         }
-    Process
-    {
-        }
     End
     {
         Return $PrintQueue
         }
-}
+    }
 Function Get-PrintJobs
 {
     <#
@@ -135,15 +137,16 @@ Function Get-PrintJobs
     .LINK
         https://code.google.com/p/mod-posh/wiki/PrintServerManagement#Get-PrintJobs
     #>
+    [CmdletBinding()]
     Param
-    (
+        (
         $ComputerName,
         $Name
-    )
+        )
     Begin
     {
         $Host.Runspace.ThreadOptions = "ReuseThread"
-            if ((Get-WmiObject -Class Win32_OperatingSystem).OSArchitecture -eq '64-bit')
+        if ((Get-WmiObject -Class Win32_OperatingSystem).OSArchitecture -eq '64-bit')
         {
             $SystemPrinting = Get-ChildItem "$($env:systemroot)\assembly\GAC_64\System.Printing"
             $SystemPrintingFile = Get-ChildItem -Name "*system.printing*" -Recurse -Path $SystemPrinting.FullName
@@ -155,6 +158,9 @@ Function Get-PrintJobs
             $SystemPrintingFile = Get-ChildItem -Name "*system.printing*" -Recurse -Path $SystemPrinting.FullName
             $SystemPrintingFile = "$($SystemPrinting.FullName)\$($SystemPrintingFile)"
             }
+        }
+    Process
+    {
         $ErrorActionPreference = "Stop"
         Try
         {
@@ -169,11 +175,8 @@ Function Get-PrintJobs
             Break
             }
         }
-    Process
-    {
-        }
     End
     {
         Return $PrintJobs
         }
-}
+    }
