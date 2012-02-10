@@ -1,5 +1,6 @@
-= New-!Sharepoint3Site =
+== New-Sharepoint3Site ==
 {{{
+
 NAME
     New-Sharepoint3Site
 
@@ -7,8 +8,8 @@ SYNOPSIS
     Creates a new WSS 3.0 site inside a new SQL database
 
 SYNTAX
-    New-Sharepoint3Site [[-sitetemplate] <String>] [-url] <String> [-ownerlogin] <String> [-owneremail] <String> [-titl
-    e] <String> [-databasename] <String> [<CommonParameters>]
+    New-Sharepoint3Site [[-sitetemplate] <String>] [-url] <String> [-ownerlogin] <String>
+    [-owneremail] <String> [-title] <String> [-databasename] <String> [<CommonParameters>]
 
 
 DESCRIPTION
@@ -26,9 +27,9 @@ PARAMETERS
 
         Required?                    false
         Position?                    1
-        Default value
+        Default value                STS#0
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -url <String>
         This is the FQDN of your sharepoint installation.
@@ -37,7 +38,7 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -ownerlogin <String>
         This parameter needs the Domain credentials of the user who will
@@ -47,7 +48,7 @@ PARAMETERS
         Position?                    3
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -owneremail <String>
         This is the email address that corresponds to the ownerlogin parameter.
@@ -56,7 +57,7 @@ PARAMETERS
         Position?                    4
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -title <String>
         This will be the title of the site that will be displayed in
@@ -66,7 +67,7 @@ PARAMETERS
         Position?                    5
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -databasename <String>
         This parameter is the name of the database you wish to hold the
@@ -77,13 +78,13 @@ PARAMETERS
         Position?                    6
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -104,7 +105,8 @@ NOTES
     C:\PS>New-Sharepoint3Site -url https://intranet.company.com/team -ownerlogin administrator `
 
 
-    -owneremail administrator@company.com -title "Company Team Site" -databasename WSS_CompanyIntranet
+    -owneremail administrator@company.com -title "Company Team Site" -databasename
+    WSS_CompanyIntranet
 
 
 
@@ -115,8 +117,9 @@ NOTES
     C:\PS>New-Sharepoint3Site -sitetemplate STS#2 -url https://intranet.company.com/documents `
 
 
-    -ownerlogin administrator -owneremail administrator@company.com -title "Company Dodcument Site" `
-                -databasename WSS_CompanyDocument
+    -ownerlogin administrator -owneremail administrator@company.com -title "Company Dodcument
+    Site" `
+             -databasename WSS_CompanyDocument
 
 
 
@@ -124,9 +127,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#New-Sharepoint3Site
+     https://code.google.com/p/mod-posh/wiki/SharePointManagement#New-Sharepoint3Site
+
 }}}
-= Get-!Sharepoint3Sites
+== Get-Sharepoint3Sites ==
 {{{
 NAME
     Get-Sharepoint3Sites
@@ -151,13 +155,13 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -194,9 +198,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#Get-Sharepoint3Sites
+     https://code.google.com/p/mod-posh/wiki/SharePointManagement#Get-Sharepoint3Sites
+
 }}}
-= New-!Sharepoint3Path =
+== New-Sharepoint3Path ==
 {{{
 NAME
     New-Sharepoint3Path
@@ -220,7 +225,7 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -SitePath <String>
         This is the path to the new site from the RootURL
@@ -229,13 +234,13 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -259,9 +264,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#New-Sharepoint3Path
+     https://code.google.com/p/mod-posh/wiki/SharePointManagement#New-Sharepoint3Path
+
 }}}
-= New-!Sharepoint3Subweb =
+== New-Sharepoint3Subweb ==
 {{{
 NAME
     New-Sharepoint3Subweb
@@ -270,8 +276,8 @@ SYNOPSIS
     Creates a subsite at the specified Uniform Resource Locator (URL).
 
 SYNTAX
-    New-Sharepoint3Subweb [-SiteURL] <String> [[-SiteTemplate] <String>] [[-Title] <String>] [[-Description] <String>]
-    [<CommonParameters>]
+    New-Sharepoint3Subweb [-SiteURL] <String> [[-SiteTemplate] <String>] [[-Title] <String>]
+    [[-Description] <String>] [<CommonParameters>]
 
 
 DESCRIPTION
@@ -280,31 +286,35 @@ DESCRIPTION
 
 PARAMETERS
     -SiteURL <String>
-        The URL where the subsite should be created. This should be a path below an existing site collection or
+        The URL where the subsite should be created. This should be a path below an existing site
+        collection or
         subsite.
 
         Required?                    true
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -SiteTemplate <String>
         Specifies the type of template to be used by the newly created site.
-        If you do not specify a template to use, the owner can choose a template when he or she first browses to
+        If you do not specify a template to use, the owner can choose a template when he or she
+        first browses to
         the site.
 
-        The value must be in the form name#configuration. If you do not specify the configuration, (for example,
+        The value must be in the form name#configuration. If you do not specify the configuration,
+        (for example,
         STS) configuration 0 is the default (for example, STS#0).
 
-        The list of available templates can be customized to include templates you create. To display a list of
+        The list of available templates can be customized to include templates you create. To
+        display a list of
         custom templates, use the Enumtemplates operation.
 
         Required?                    false
         Position?                    2
-        Default value
+        Default value                sts#2
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -Title <String>
         The title of the new subsite.
@@ -312,24 +322,24 @@ PARAMETERS
 
         Required?                    false
         Position?                    3
-        Default value
+        Default value                New Web
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -Description <String>
         Description of the new subsite.
 
         Required?                    false
         Position?                    4
-        Default value
+        Default value                Sample description for website.
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -343,7 +353,8 @@ NOTES
 
     -------------------------- EXAMPLE 1 --------------------------
 
-    C:\PS>New-Sharepoint3Subweb -SiteURL http://schmoopy/subweb2 -SiteTemplate sts#2 -Title "This is my subweb" `
+    C:\PS>New-Sharepoint3Subweb -SiteURL http://schmoopy/subweb2 -SiteTemplate sts#2 -Title "This
+    is my subweb" `
 
 
     -Description "This is an awesome description for my site."
@@ -358,5 +369,350 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/SharePointManagement#New-Sharepoint3Subweb
+     https://code.google.com/p/mod-posh/wiki/SharePointManagement#New-Sharepoint3Subweb
+
+}}}
+== Get-SPListIds ==
+{{{
+NAME
+    Get-SPListIds
+
+SYNOPSIS
+    Get the ID's and titles from a given list
+
+SYNTAX
+    Get-SPListIds [[-Site] <Object>] [[-SitePath] <Object>] [<CommonParameters>]
+
+
+DESCRIPTION
+    This function returns the ID and Title from a given list.
+
+
+PARAMETERS
+    -Site <Object>
+        The URL of the sharepoint web
+
+        Required?                    false
+        Position?                    1
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    -SitePath <Object>
+        The path to the sharepoint site
+
+        Required?                    false
+        Position?                    2
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
+INPUTS
+
+OUTPUTS
+
+    -------------------------- EXAMPLE 1 --------------------------
+
+    C:\PS>Get-SPListIds -Site "http://intranet.company.com" -SitePath "Blog/Lists/Categories/"
+
+
+
+
+
+
+
+
+
+RELATED LINKS
+
+}}}
+== New-SPListItem ==
+{{{
+NAME
+    New-SPListItem
+
+SYNOPSIS
+    Add an item to an existing list
+
+SYNTAX
+    New-SPListItem [[-Site] <Object>] [[-SitePath] <Object>] [[-ItemValue] <Object>]
+    [<CommonParameters>]
+
+
+DESCRIPTION
+    This function adds and item to an existing list and returns that item's ID.
+
+
+PARAMETERS
+    -Site <Object>
+        The URL of the sharepoint web
+
+        Required?                    false
+        Position?                    1
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    -SitePath <Object>
+        The path to the sharepoint site
+
+        Required?                    false
+        Position?                    2
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    -ItemValue <Object>
+        The item to be added to the list
+
+        Required?                    false
+        Position?                    3
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
+INPUTS
+
+OUTPUTS
+
+    -------------------------- EXAMPLE 1 --------------------------
+
+    C:\PS>New-SPListItem -Site "http://intranet.company.com" -SitePath "Blog/Lists/Categories/"
+    -ItemValue "SharePoint"
+
+
+
+
+
+
+
+
+
+RELATED LINKS
+
+}}}
+== Get-SPListItem ==
+{{{
+NAME
+    Get-SPListItem
+
+SYNOPSIS
+    Get the ID's and titles from a given list
+
+SYNTAX
+    Get-SPListItem [[-Site] <Object>] [[-SitePath] <Object>] [[-LookupValue] <Object>]
+    [<CommonParameters>]
+
+
+DESCRIPTION
+    This function returns the ID and Title from a given list.
+
+
+PARAMETERS
+    -Site <Object>
+        The URL of the sharepoint web
+
+        Required?                    false
+        Position?                    1
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    -SitePath <Object>
+        The path to the sharepoint site
+
+        Required?                    false
+        Position?                    2
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    -LookupValue <Object>
+
+        Required?                    false
+        Position?                    3
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
+INPUTS
+
+OUTPUTS
+
+    -------------------------- EXAMPLE 1 --------------------------
+
+    C:\PS>Get-SPListItem -Site "http://intranet.company.com" -SitePath "Blog/Lists/Categories/"
+    -LookupValue "cat1"
+
+
+
+
+
+
+
+
+
+RELATED LINKS
+
+}}}
+== New-SPDocLibFolder ==
+{{{
+NAME
+    New-SPDocLibFolder
+
+SYNOPSIS
+    Create a new folder in a SharePoint Document Library
+
+SYNTAX
+    New-SPDocLibFolder [[-Site] <Object>] [[-SitePath] <Object>] [[-Folder] <Object>]
+    [<CommonParameters>]
+
+
+DESCRIPTION
+    This function will create a folder inside the Document Library, the return is the ID of
+    the folder.
+
+
+PARAMETERS
+    -Site <Object>
+        The URL of the SharePoint site
+
+        Required?                    false
+        Position?                    1
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    -SitePath <Object>
+        The path to the application on the site
+
+        Required?                    false
+        Position?                    2
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    -Folder <Object>
+        The name of the folder to create
+
+        Required?                    false
+        Position?                    3
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
+INPUTS
+
+OUTPUTS
+
+    -------------------------- EXAMPLE 1 --------------------------
+
+    C:\PS>New-SPDocLibFolder -Site "http://intranet.company.com/" -SitePath "Shared Documents"
+    -Folder "New Folder"
+
+
+
+
+
+
+
+
+
+RELATED LINKS
+
+}}}
+== Add-SPFileToDocLib ==
+{{{
+NAME
+    Add-SPFileToDocLib
+
+SYNOPSIS
+    Add a file to a SharePoint Document Library
+
+SYNTAX
+    Add-SPFileToDocLib [[-Site] <Object>] [[-SitePath] <Object>] [[-FilePath] <Object>]
+    [<CommonParameters>]
+
+
+DESCRIPTION
+    This function will add a file to a Dcoument Library and return the resulting object
+
+
+PARAMETERS
+    -Site <Object>
+        The URL of the SharePoint site
+
+        Required?                    false
+        Position?                    1
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    -SitePath <Object>
+        The path to the application on the site
+
+        Required?                    false
+        Position?                    2
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    -FilePath <Object>
+        The fileobject to upload to the server
+
+        Required?                    false
+        Position?                    3
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
+INPUTS
+
+OUTPUTS
+
+    -------------------------- EXAMPLE 1 --------------------------
+
+    C:\PS>Add-SPFileToDocLib -Site "http://intranet.company.com/" -SitePath "Shared Documents"
+    -FilePath (Get-ChildItem .\image.png)
+
+
+
+
+
+
+
+
+
+RELATED LINKS
+
 }}}
