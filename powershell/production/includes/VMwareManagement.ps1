@@ -36,13 +36,12 @@ Function Get-VMHostNetworks
         .LINK
             http://www.vmware.com/support/developer/PowerCLI/PowerCLI41U1/html/Get-VirtualPortGroup.html
     #>
-    
+    [CmdletBinding()]
     Param
-    (
+        (
         [string]$VMHost,
         [string]$VIServer
-    )
-    
+        )
     Begin
     {
         Try
@@ -58,7 +57,6 @@ Function Get-VMHostNetworks
             Return $Error[0]
             }
         }
-
     Process
     {
         foreach ($Vswitch in $VSwitches)
@@ -71,9 +69,8 @@ Function Get-VMHostNetworks
 
         $VMNetworks = Get-VirtualPortGroup |Where-Object {$_.VMhostID -eq $VhostID}
         }
-
     End
     {
         Return $VMNetworks
         }
-}
+    }
