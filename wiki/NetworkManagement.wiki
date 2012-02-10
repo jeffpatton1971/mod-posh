@@ -1,4 +1,4 @@
-== Get-HostName ==
+== Get-!HostName ==
 {{{
 
 NAME
@@ -58,7 +58,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/NetworkManagement#Get-HostName
 
 }}}
-== Get-HostIp ==
+== Get-!HostIp ==
 {{{
 NAME
     Get-HostIp
@@ -135,7 +135,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/NetworkManagement#Get-HostIp
 
 }}}
-== Get-NetstatReport ==
+== Get-!NetstatReport ==
 {{{
 NAME
     Get-NetstatReport
