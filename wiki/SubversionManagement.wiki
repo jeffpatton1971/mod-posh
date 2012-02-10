@@ -179,7 +179,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/SubversionManagement#New-Repo
 
 }}}
-== Add-RepoItem ==
+== Add-!RepoItem ==
 {{{
 NAME
     Add-RepoItem
@@ -244,7 +244,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/SubversionManagement#Add-RepoItem
 
 }}}
-== Remove-RepoItem ==
+== Remove-!RepoItem ==
 {{{
 NAME
     Remove-RepoItem
@@ -309,7 +309,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/SubversionManagement#Remove-RepoItem
 
 }}}
-== Set-RepoProps ==
+== Set-!RepoProps ==
 {{{
 NAME
     Set-RepoProps
@@ -404,7 +404,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/SubversionManagement#Set-RepoProps
 
 }}}
-== Commit-RepoItem ==
+== Commit-!RepoItem ==
 {{{
 NAME
     Commit-RepoItem
@@ -481,7 +481,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/SubversionManagement#Commit-RepoItem
 
 }}}
-== Get-SvnInfo ==
+== Get-!SvnInfo ==
 {{{
 NAME
     Get-SvnInfo
@@ -586,7 +586,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/SubversionManagement#Get-SvnInfo
 
 }}}
-== New-WikiPage ==
+== New-!WikiPage ==
 {{{
 NAME
     New-WikiPage
