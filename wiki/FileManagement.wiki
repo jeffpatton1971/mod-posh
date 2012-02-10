@@ -1,5 +1,6 @@
-= Update-Content =
+== Update-Content ==
 {{{
+
 NAME
     Update-Content
 
@@ -7,11 +8,13 @@ SYNOPSIS
     Updates the contents of a file.
 
 SYNTAX
-    Update-Content [-FileName] <String> [-Content] <String> [[-Beginning] <Boolean>] [<CommonParameters>]
+    Update-Content [-FileName] <String> [-Content] <String> [[-Beginning] <Boolean>]
+    [<CommonParameters>]
 
 
 DESCRIPTION
-    This function adds content to the top or bottom of an existing file. By default the function will update
+    This function adds content to the top or bottom of an existing file. By default the function
+    will update
     the beginning of a file.
 
 
@@ -23,7 +26,7 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -Content <String>
         Content to add to the file
@@ -32,22 +35,22 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -Beginning <Boolean>
         True or False to add content to top (true) or bottom (false) of file
 
         Required?                    false
         Position?                    3
-        Default value
+        Default value                True
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -55,13 +58,14 @@ OUTPUTS
 
     -------------------------- EXAMPLE 1 --------------------------
 
-    C:\PS>Update-Content -FileName "C:\logfiles\access.log" -Content "Host Identity User DateTime Offset Request Status
-     Size Referrer UserAgent"
+    C:\PS>Update-Content -FileName "C:\logfiles\access.log" -Content "Host Identity User DateTime
+    Offset Request Status Size Referrer UserAgent"
 
 
     Description
-                -----------
-                This example sets a variable named header to be used in the command-line. We then pass the path and
+             -----------
+             This example sets a variable named header to be used in the command-line. We then
+    pass the path and
     header variable into the function for processing.
 
 
@@ -70,9 +74,10 @@ OUTPUTS
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/FileManagement#Update-Content
+     https://code.google.com/p/mod-posh/wiki/FileManagement#Update-Content
+
 }}}
-= New-!LogFile =
+== New-LogFile ==
 {{{
 NAME
     New-LogFile
@@ -85,9 +90,12 @@ SYNTAX
 
 
 DESCRIPTION
-    This function create's a log file in the provided folder, whose data can be piped in via the command
-    line or passed directly to the function. The filename for the log is generated from the current system
-    date, and if a file with same name exists, a new file is created with an incremented digit for each
+    This function create's a log file in the provided folder, whose data can be piped in via the
+    command
+    line or passed directly to the function. The filename for the log is generated from the
+    current system
+    date, and if a file with same name exists, a new file is created with an incremented digit for
+    each
     matched filename.
 
 
@@ -99,23 +107,24 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       true (ByValue)
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -LogPath <Object>
-        This is the destination of the log file. If the provided folder doesn't exist on the computer, it
+        This is the destination of the log file. If the provided folder doesn't exist on the
+        computer, it
         is created automatically.
 
         Required?                    false
         Position?                    2
-        Default value
+        Default value                C:\LogFiles
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -133,7 +142,8 @@ NOTES
 
     Description
     -----------
-    This example shows piping the output from Get-Process into the New-LogFile function, the default
+    This example shows piping the output from Get-Process into the New-LogFile function, the
+    default
     log folder (C:\LogFiles) is used.
 
 
@@ -147,7 +157,8 @@ NOTES
 
     Description
     -----------
-    This example shows piping the output from Get-Process into the New-LogFile function and specifying a
+    This example shows piping the output from Get-Process into the New-LogFile function and
+    specifying a
     different folder to store the logs in.
 
 
@@ -161,7 +172,8 @@ NOTES
 
     Description
     -----------
-    This example shows passing in the LogPath and LogData parameters to the New-LogFile function directly.
+    This example shows passing in the LogPath and LogData parameters to the New-LogFile function
+    directly.
 
 
 
@@ -169,9 +181,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/FileManagement#New-LogFile
+     https://code.google.com/p/mod-posh/wiki/FileManagement#New-LogFile
+
 }}}
-= Convert-Delimiter =
+== Convert-Delimiter ==
 {{{
 NAME
     Convert-Delimiter
@@ -202,7 +215,7 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -To <String>
         The delimiter to replace with
@@ -211,13 +224,13 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -227,7 +240,8 @@ NOTES
 
 
         This function was taken from http://poshcode.org/146
-        I tweaked it to fit my style of functions,  but otherwise the actual code that does all the
+        I tweaked it to fit my style of functions,  but otherwise the actual code that does all
+        the
         work was left in tact.
 
     -------------------------- EXAMPLE 1 --------------------------
@@ -246,9 +260,10 @@ NOTES
 
 
 RELATED LINKS
-     http://scripts.patton-tech.com/wiki/PowerShell/FileManagement#Convert-Delimiter
+     https://code.google.com/p/mod-posh/wiki/FileManagement#Convert-Delimiter
+
 }}}
-= Get-!FileLogs =
+== Get-FileLogs ==
 {{{
 NAME
     Get-FileLogs
@@ -257,11 +272,13 @@ SYNOPSIS
     Get log data from requested log file.
 
 SYNTAX
-    Get-FileLogs [-LogFile] <Object> [-LogType] <Object> [<CommonParameters>]
+    Get-FileLogs [-LogFile] <Object> [-LogType] <Object> [[-TempPath] <Object>]
+    [<CommonParameters>]
 
 
 DESCRIPTION
-    This function returns the data from either an Apache, Windows Firewall or IIS log file. Very simple
+    This function returns the data from either an Apache, Windows Firewall or IIS log file. Very
+    simple
     routine, it simply returns the data to be handled by some other function.
 
 
@@ -273,7 +290,7 @@ PARAMETERS
         Position?                    1
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
 
     -LogType <Object>
         The kind of logfile to work with, Apache, WFW or IIS.
@@ -282,13 +299,22 @@ PARAMETERS
         Position?                    2
         Default value
         Accept pipeline input?       false
-        Accept wildcard characters?
+        Accept wildcard characters?  false
+
+    -TempPath <Object>
+        A temporary path to write the output to.
+
+        Required?                    false
+        Position?                    3
+        Default value                C:\Temp
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
 
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 INPUTS
 
@@ -305,14 +331,21 @@ NOTES
     C:\PS>Get-FileLogs -LogFile 'C:\LogFiles\scripts_access.log' -LogType apache |Format-Table
 
 
-    RemoteHost  RemoteLogN RemoteUser Time       Request    Status     Size       Referer    UserAgent
+    RemoteHost  RemoteLogN RemoteUser Time       Request    Status     Size       Referer
+    UserAgent
                 ame
-    ----------  ---------- ---------- ----       -------    ------     ----       -------    ---------
-    192.168.... -          -          [02/Mar... GET / H... 200        6730       -          Mozilla...
-    192.168.... -          -          [02/Mar... GET /ch... 200        2457       http://... Mozilla...
-    192.168.... -          -          [02/Mar... GET /ch... 200        3836       http://... Mozilla...
-    192.168.... -          -          [02/Mar... GET /ch... 200        18449      http://... Mozilla...
-    192.168.... -          -          [02/Mar... GET /ch... 200        4907       http://... Mozilla...
+    ----------  ---------- ---------- ----       -------    ------     ----       -------
+    ---------
+    192.168.... -          -          [02/Mar... GET / H... 200        6730       -
+    Mozilla...
+    192.168.... -          -          [02/Mar... GET /ch... 200        2457       http://...
+    Mozilla...
+    192.168.... -          -          [02/Mar... GET /ch... 200        3836       http://...
+    Mozilla...
+    192.168.... -          -          [02/Mar... GET /ch... 200        18449      http://...
+    Mozilla...
+    192.168.... -          -          [02/Mar... GET /ch... 200        4907       http://...
+    Mozilla...
 
     Description
     -----------
@@ -324,6 +357,7 @@ NOTES
 
 
 RELATED LINKS
+     https://code.google.com/p/mod-posh/wiki/FileManagement#Get-FileLogs
     Convert-Delimiter
-     http://scripts.patton-tech.com/wiki/PowerShell/FileManagement#Get-FileLogs
+
 }}}
