@@ -382,8 +382,7 @@ Function New-Function
     {
         }
     }
-Register-ObjectEvent -InputObject $psISE.CurrentPowerShellTab.Files CollectionChanged -Action
-{
+Register-ObjectEvent -InputObject $psISE.CurrentPowerShellTab.Files CollectionChanged -Action{
     <#
         .SYNOPSIS
             This command register an event handler for new files created within the ISE
