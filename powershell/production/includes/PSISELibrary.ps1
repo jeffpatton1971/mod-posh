@@ -445,47 +445,102 @@ Function Edit-File
     #>    
     Param
         (
-            [Parameter(ValueFromPipeline=$true)]
-            $FileSpec
+        [Parameter(ValueFromPipeline=$true)]
+        $FileSpec
         )
     Begin
-        {
-            $FilesToOpen = Get-ChildItem $Filespec
-            }
+    {
+        $FilesToOpen = Get-ChildItem $Filespec
+        }
     Process
+    {
+        Foreach ($File in $FilesToOpen)
         {
-            Foreach ($File in $FilesToOpen)
+            Try
             {
-                Try
+                if ($POSHEditor -ne $null)
                 {
-                    if ($POSHEditor -ne $null)
-                    {
-                        Invoke-Expression "$POSHEditor $File"
-                        }
-                    else
-                    {
-                        $psISE.CurrentPowerShellTab.Files.Add($File.FullName)
-                        }
+                    Invoke-Expression "$POSHEditor $File"
                     }
-                Catch
+                else
                 {
-                    if ((Get-Host).Name -eq 'Windows PowerShell ISE Host')
-                    {
-                        Return $Error[0].Exception
-                        }
-                    else
-                    {
-                        $Message = "You appear to be running in the console. "
-                        $Message += "Please set `$Global:POSHEditor equalto the "
-                        $Message += "path of your favorite text editor. Such as "
-                        $Message += "`$Global:POSHEditor = c:\windows\notepad.exe `r`n"
-                        $Message += "You can access your profile by typing 'notepad `$profile'"
-                        Return $Message
-                        }
+                    $psISE.CurrentPowerShellTab.Files.Add($File.FullName)
+                    }
+                }
+            Catch
+            {
+                if ((Get-Host).Name -eq 'Windows PowerShell ISE Host')
+                {
+                    Return $Error[0].Exception
+                    }
+                else
+                {
+                    $Message = "You appear to be running in the console. "
+                    $Message += "Please set `$Global:POSHEditor equalto the "
+                    $Message += "path of your favorite text editor. Such as "
+                    $Message += "`$Global:POSHEditor = c:\windows\notepad.exe `r`n"
+                    $Message += "You can access your profile by typing 'notepad `$profile'"
+                    Return $Message
                     }
                 }
             }
+        }
     End
+    {
+        }
+    }
+Function Save-All
+{
+    <#
+        .SYNOPSIS
+            Save all unsaved files in the editor
+        .DESCRIPTION
+            This function will save all unsaved files in the editor
+        .EXAMPLE
+            Save-All
+            
+            Description
+            -----------
+            The only syntax for the command.
+        .NOTES
+            FunctionName : Save-All
+            Created by   : jspatton
+            Date Coded   : 02/13/2012 15:08:51
+            
+            Routinely I have a need to have open and be editing several files
+            at once. Decided to write a function to save them all since there
+            isn't one currently available.
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Save-All
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        )
+    Begin
+    {
+        Write-Verbose "Check if we're in ISE"
+        if ((Get-Host).Name -ne 'Windows PowerShell ISE Host')
         {
+            Write-Verbose "Not in the ISE exiting."
+            Return
             }
+        }
+    Process
+    {
+        Write-Verbose "Iterate through each tab"
+        foreach ($PSFile in $psISE.CurrentPowerShellTab.Files)
+        {
+            Write-Verbose "Check if $($PSFile.DisplayName) is saved"
+            if ($psfile.IsSaved -eq $false)
+            {
+                Write-Verbose "Saving $($PSFile.DisplayName)" 
+                $PSFile.Save()
+                }
+            
+            }
+        }
+    End
+    {
+        }
     }
