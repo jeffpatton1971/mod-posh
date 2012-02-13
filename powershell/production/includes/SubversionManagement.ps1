@@ -611,7 +611,8 @@ Function New-WikiPage
     Param
         (
         [Parameter(ValueFromPipeline=$true)]
-        $FileSpec
+        $FileSpec,
+        $Library = $true
         )
     Begin
     {
@@ -621,19 +622,29 @@ Function New-WikiPage
     {
         foreach ($PoshFile in $FilesToOpen)
         {
-            $Library = Get-Content "$($PoshFile.PSParentPath)\$($PoshFile.Name)"
-            $LibraryName = "$($PoshFile.Name.Substring(0,$PoshFile.Name.Length-4))"
-            Write-Host "= !$($Libraryname) ="
-            foreach ($Line in $Library)
+            if ($LIbrary -eq $true)
             {
-                if ($Line -like "Function*")
+                $Library = Get-Content "$($PoshFile.PSParentPath)\$($PoshFile.Name)"
+                $LibraryName = "$($PoshFile.Name.Substring(0,$PoshFile.Name.Length-4))"
+                Write-Host "= !$($Libraryname) ="
+                foreach ($Line in $Library)
                 {
-                    $FunctionName = ($Line.Remove(0,9)).Trim()
-                    Write-Host "== $($FunctionName) =="
-                    Write-Host "{{{"
-                    Get-Help $FunctionName -Full
-                    Write-Host "}}}"
+                    if ($Line -like "Function*")
+                    {
+                        $FunctionName = ($Line.Remove(0,9)).Trim()
+                        Write-Host "== $($FunctionName) =="
+                        Write-Host "{{{"
+                        Get-Help $FunctionName -Full
+                        Write-Host "}}}"
+                        }
                     }
+                }
+            else
+            {
+                Write-Host "= !$($PoshFile.Name) ="
+                Write-Host "{{{"
+                Get-Help ".\$($PoshFile.Name)" -Full
+                Write-Host "}}}"
                 }
             }
         }
