@@ -79,57 +79,57 @@
         19  IpAddress 75.127.226.131 
         20  IpPort 51144 
     .LINK
-        https://code.google.com/p/mod-posh/wiki/Production/Get-InvalidLogonAttempts.ps1
+        https://code.google.com/p/mod-posh/wiki/Get-InvalidLogonAttempts
 #>
 [cmdletBinding()]
 Param
     (
-        $ComputerName,
-        $LogName = "Security",
-        $EventID = 4625
+    $ComputerName,
+    $LogName = "Security",
+    $EventID = 4625
     )
 Begin
-    {
-        
-        $ScriptName = $MyInvocation.MyCommand.ToString()
-        $LogName = "Application"
-        $ScriptPath = $MyInvocation.MyCommand.Path
-        $Username = $env:USERDOMAIN + "\" + $env:USERNAME
+{
+    
+    $ScriptName = $MyInvocation.MyCommand.ToString()
+    $LogName = "Application"
+    $ScriptPath = $MyInvocation.MyCommand.Path
+    $Username = $env:USERDOMAIN + "\" + $env:USERNAME
  
-        New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
+    New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
  
-        $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
+    $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
+    Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
  
-        #	Dotsource in the functions you need.
+    #	Dotsource in the functions you need.
 
-        $Report = @()
-        Write-Verbose "Get all $($EventID) events from the $($LogName) Log on $($ComputerName)"
-        $Events = Get-WinEvent -ComputerName $ComputerName -LogName $LogName -Credential $Credentials |Where-Object {$_.Id -eq $EventID}
-        Write-Verbose "Filter the list of events to only events that happened today"
-        $Events = $Events |Where-Object {(Get-Date($_.TimeCreated) -Format "yyy-MM-dd") -eq (Get-Date -Format "yyy-MM-dd")}
-        }
+    $Report = @()
+    Write-Verbose "Get all $($EventID) events from the $($LogName) Log on $($ComputerName)"
+    $Events = Get-WinEvent -ComputerName $ComputerName -LogName $LogName -Credential $Credentials |Where-Object {$_.Id -eq $EventID}
+    Write-Verbose "Filter the list of events to only events that happened today"
+    $Events = $Events |Where-Object {(Get-Date($_.TimeCreated) -Format "yyy-MM-dd") -eq (Get-Date -Format "yyy-MM-dd")}
+    }
 Process
+{
+    Write-Verbose "Loop through each event that is returned from Get-WinEvent"
+    foreach ($Event in $EventID4625)
     {
-        Write-Verbose "Loop through each event that is returned from Get-WinEvent"
-        foreach ($Event in $EventID4625)
-        {
-            Write-Verbose "Create an object to hold the data I'm collecting"
-            $ThisEvent = New-Object -TypeName PSObject -Property @{
-                TimeCreated = $Event.TimeCreated
-                MachineName = $Event.MachineName
-                TargetUserName = $Event.Properties[5].Value
-                LogonType = $Event.Properties[10].Value
-                IpAddress = [net.ipaddress]$Event.Properties[19].Value
-                IpPort = $Event.Properties[20].Value
-                Message = $Event.Message
-                }
-            $Report += $ThisEvent
+        Write-Verbose "Create an object to hold the data I'm collecting"
+        $ThisEvent = New-Object -TypeName PSObject -Property @{
+            TimeCreated = $Event.TimeCreated
+            MachineName = $Event.MachineName
+            TargetUserName = $Event.Properties[5].Value
+            LogonType = $Event.Properties[10].Value
+            IpAddress = [net.ipaddress]$Event.Properties[19].Value
+            IpPort = $Event.Properties[20].Value
+            Message = $Event.Message
             }
+        $Report += $ThisEvent
         }
- End
-    {
-        $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
-        Return $Report
-        }
+    }
+End
+{
+    $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
+    Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
+    Return $Report
+    }

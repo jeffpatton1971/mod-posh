@@ -8,6 +8,7 @@
         The LDAP URL to where the computers you are interested in are located
         in the directory.
     .EXAMPLE
+        .\Get-LocalProfiles.ps1 -ADSPath 'OU=Workstations,OU=ADmin,DC=company,DC=com'
     .NOTES
         ScriptName : Get-LocalProfiles
         Created By : jspatton
@@ -21,64 +22,66 @@
             102 = Warning
             104 = Information
     .LINK
- #>
+        https://code.google.com/p/mod-posh/wiki/Get-LocalProfiles
+#>
+[cmdletBinding()]
 Param
     (
-        $ADSPath
+    $ADSPath
     )
 Begin
-    {
-        $ScriptName = $MyInvocation.MyCommand.ToString()
-        $LogName = "Application"
-        $ScriptPath = $MyInvocation.MyCommand.Path
-        $Username = $env:USERDOMAIN + "\" + $env:USERNAME
+{
+    $ScriptName = $MyInvocation.MyCommand.ToString()
+    $LogName = "Application"
+    $ScriptPath = $MyInvocation.MyCommand.Path
+    $Username = $env:USERDOMAIN + "\" + $env:USERNAME
  
-        New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
+    New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
  
-        $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
-        
-        $Report = @()
+    $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
+    Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
+    
+    $Report = @()
  
-        #	Dotsource in the functions you need.
-        . .\includes\ActiveDirectoryManagement.ps1
-        
-        $Computers = Get-ADObjects -ADSPath "OU=Labs,DC=soecs,DC=ku,DC=edu" 
-        }
+    #	Dotsource in the functions you need.
+    . .\includes\ActiveDirectoryManagement.ps1
+    
+    $Computers = Get-ADObjects -ADSPath "OU=Labs,DC=soecs,DC=ku,DC=edu" 
+    }
 Process
+{
+    foreach ($Computer in $Computers)
     {
-        foreach ($Computer in $Computers)
+        Write-Verbose "$($Computer.Properties.name) is accessible over the network"
+        if (!(Test-Connection -ComputerName $Computer.Properties.name -Count 1 -Quiet))
         {
-            Write-Verbose "$($Computer.Properties.name) is accessible over the network"
-            if (!(Test-Connection -ComputerName $Computer.Properties.name -Count 1 -Quiet))
+            Write-Verbose "Count the folders in the Users directory"
+            try
             {
-                Write-Verbose "Count the folders in the Users directory"
-                try
-                {
-                    $UserCount = (Get-ChildItem -Path "\\$($Computer.Properties.name)\c$\users").Count
-                    }
-                Catch
-                {
-                    $UserCount = "Directory doesn't exist"
-                    }
-                
+                $UserCount = (Get-ChildItem -Path "\\$($Computer.Properties.name)\c$\users").Count
                 }
-            else
+            Catch
             {
-                Write-Verbose "Set the message to display"
-                $UserCount = "Unable to connect"
+                $UserCount = "Directory doesn't exist"
                 }
-            Write-Verbose "Create the object to return in the report"
-            $LineItem = New-Object -TypeName PSobject -Property @{
-                Computer = $Computer.Properties.name
-                UserCount = $UserCount
-                }
-            $Report += $LineItem
+            
             }
+        else
+        {
+            Write-Verbose "Set the message to display"
+            $UserCount = "Unable to connect"
+            }
+        Write-Verbose "Create the object to return in the report"
+        $LineItem = New-Object -TypeName PSobject -Property @{
+            Computer = $Computer.Properties.name
+            UserCount = $UserCount
+            }
+        $Report += $LineItem
         }
+    }
 End
-    {
-        $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message	
-        Return $Report
-        }
+{
+    $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
+    Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message	
+    Return $Report
+    }
