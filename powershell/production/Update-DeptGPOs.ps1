@@ -47,7 +47,7 @@
         
         If a backup cannot be made the script terminates.
     .LINK
-        https://code.google.com/p/mod-posh/wiki/Production/Update-DeptGPOs
+        https://code.google.com/p/mod-posh/wiki/Update-DeptGPOs
     .LINK
         http://technet.microsoft.com/en-us/library/ee461059.aspx
     .LINK

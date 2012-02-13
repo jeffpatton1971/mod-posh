@@ -37,7 +37,7 @@
         I've not added credentials for this, so it will need to be run from an account that has the ability to 
         change passwords on your computers.
     .LINK
-        https://code.google.com/p/mod-posh/wiki/Production/UpdateAdminPassword
+        https://code.google.com/p/mod-posh/wiki/UpdateAdminPassword
     .LINK
         https://code.google.com/p/mod-posh/wiki/ComputerManagemenet
     .LINK

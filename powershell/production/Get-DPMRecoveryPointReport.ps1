@@ -39,7 +39,7 @@
         You could adjust this script to suit your needs, I am really only interested
         in the date and size of a given Recovery Point.
     .LINK
-        https://code.google.com/p/mod-posh/wiki/Production/Get-RecoveryPointReport
+        https://code.google.com/p/mod-posh/wiki/Get-RecoveryPointReport
  #>
 [CmdletBinding()]
 Param

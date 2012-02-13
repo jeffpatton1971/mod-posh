@@ -29,7 +29,7 @@
         This example shows piping the output to a csv file.
     .NOTES
     .LINK
-        https://code.google.com/p/mod-posh/wiki/Production/GetSerials
+        https://code.google.com/p/mod-posh/wiki/GetSerials
 #>
 
 Param

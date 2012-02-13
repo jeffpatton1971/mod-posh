@@ -23,7 +23,7 @@
         is not the case you may receive a FullyQualifiedErrorId : CommandNotFoundException when
         attempting to dot-source in the libraries.
     .LINK
-        https://code.google.com/p/mod-posh/wiki/Production/DeleteLocalAccount
+        https://code.google.com/p/mod-posh/wiki/DeleteLocalAccount
     .LINK
         https://code.google.com/p/mod-posh/wiki/ComputerManagemenet
     .LINK

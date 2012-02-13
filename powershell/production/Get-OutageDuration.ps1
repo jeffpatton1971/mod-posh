@@ -30,7 +30,7 @@
             102 = Warning
             104 = Information
     .LINK
-        https://code.google.com/p/mod-posh/wiki/Production/Get-OutageDuration.ps1
+        https://code.google.com/p/mod-posh/wiki/Get-OutageDuration.ps1
 #>
 Param
     (

@@ -37,7 +37,7 @@
         ScriptName is used to register events for this script
         LogName is used to determine which classic log to write to
     .LINK
-        https://code.google.com/p/mod-posh/wiki/Production/Get-ComputerUpdateReport
+        https://code.google.com/p/mod-posh/wiki/Get-ComputerUpdateReport
     .LINK
         https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement
     .LINK

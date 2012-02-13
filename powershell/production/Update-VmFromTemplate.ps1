@@ -25,7 +25,7 @@
         You will need the HyperV Module from Codeplex
             http://pshyperv.codeplex.com/
     .LINK
-        https://code.google.com/p/mod-posh/wiki/Production/Update-VmFromTemplate
+        https://code.google.com/p/mod-posh/wiki/Update-VmFromTemplate
     .LINK
         http://technet.microsoft.com/en-us/magazine/ff458346.aspx
     .LINK

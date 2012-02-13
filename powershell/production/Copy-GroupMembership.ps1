@@ -50,7 +50,7 @@
             102 = Warning
             104 = Information
     .LINK
-        https://code.google.com/p/mod-posh/wiki/Production/Copy-GroupMembership
+        https://code.google.com/p/mod-posh/wiki/Copy-GroupMembership
  #>
 Param
     (

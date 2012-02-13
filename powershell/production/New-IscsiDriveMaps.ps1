@@ -72,7 +72,7 @@
         Import CSV for the list of Hostnames, Portals and Targets (volumes)
         The comma seperated file is easily managed with native powershell cmdlets.
     .LINK
-        https://code.google.com/p/mod-posh/wiki/Production/New-IscsiDriveMaps.ps1
+        https://code.google.com/p/mod-posh/wiki/New-IscsiDriveMaps.ps1
     .LINK
         http://blogs.technet.com/b/mpsc_dynamic_it/archive/2010/01/30/using-powershell-remoting-iscsicli-exe-to-connect-your-clustered-shared-volumes.aspx
     .LINK
