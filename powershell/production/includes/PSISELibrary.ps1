@@ -436,7 +436,10 @@ Function Edit-File
         .EXAMPLE
             Edit-File -FileSpec c:\powershell\*.ps1
         .NOTES
-            Set the variable $POSHEditor to the full path and filename to your editor of choice.
+            Set $Global:POSHEditor in your $profile to the path of your favorite
+            text editor or to C:\Windows\notepad.exe. If that variable is not set
+            we'll try and open the file in the PowerShell ISE otherwise give
+            the user a polite message telling them what to do.
         .LINK
             https://code.google.com/p/mod-posh/wiki/PSISELibrary#Edit-File
     #>    
@@ -455,11 +458,30 @@ Function Edit-File
             {
                 Try
                 {
-                    $psISE.CurrentPowerShellTab.Files.Add($File.FullName)
+                    if ($POSHEditor -ne $null)
+                    {
+                        Invoke-Expression "$POSHEditor $File"
+                        }
+                    else
+                    {
+                        $psISE.CurrentPowerShellTab.Files.Add($File.FullName)
+                        }
                     }
                 Catch
                 {
-                    Return $Error[0].Exception
+                    if ((Get-Host).Name -eq 'Windows PowerShell ISE Host')
+                    {
+                        Return $Error[0].Exception
+                        }
+                    else
+                    {
+                        $Message = "You appear to be running in the console. "
+                        $Message += "Please set `$Global:POSHEditor equalto the "
+                        $Message += "path of your favorite text editor. Such as "
+                        $Message += "`$Global:POSHEditor = c:\windows\notepad.exe `r`n"
+                        $Message += "You can access your profile by typing 'notepad `$profile'"
+                        Return $Message
+                        }
                     }
                 }
             }
