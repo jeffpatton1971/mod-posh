@@ -46,7 +46,7 @@ Process
 {
     #    Check if that site already exists
     $SP3Sites = [xml](Get-Sharepoint3Sites $RootURL)
-    if (($SP3sites.Sites.Site | where-object{$_.Url -eq $RootUrl +"/"+ $SitePath-}) -eq $null)
+    if (($SP3sites.Sites.Site | where-object{$_.Url -eq $RootUrl +"/"+ $SitePath}) -eq $null)
     {
         #    Create new site
         $databasename = Read-Host "Please enter DB Name"
