@@ -682,10 +682,11 @@ Function New-WikiPage
                     if (($PoshFile.Name.IndexOfAny("-")) -gt -1)
                     {
                         $WikiFile = $PoshFile.Name.Replace("-","")
+                        $WikiFile = $WikiFile.Replace(".ps1","")
                         }
                     else
                     {
-                        $WikiFile = $PoshFile.Name
+                        $WikiFile = $PoshFile.Name.Replace(".ps1","")
                         }
                     "= !$($PoshFile.Name) =" |Out-File ".\$($WikiFile).wiki" -Append
                     "{{{" |Out-File ".\$($WikiFile).wiki" -Append
