@@ -659,21 +659,21 @@ Function New-WikiPage
                     $LibraryName = "$($PoshFile.Name.Substring(0,$PoshFile.Name.Length-4))"
                     if (($LibraryName.IndexOfAny("-")) -gt -1)
                     {
-                        $WikiFile = $LibraryName.Replace("-","")
+                        $WikiFileName = $LibraryName.Replace("-","")
                         }
                     else
                     {
-                        $WikiFile = $LibraryName
+                        $WikiFileName = $LibraryName
                         }
                     foreach ($Line in $Library)
                     {
                         if ($Line -like "Function*")
                         {
                             $FunctionName = ($Line.Remove(0,9)).Trim()
-                            "== $($FunctionName) ==" |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
-                            "{{{" |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
-                            Get-Help $FunctionName -Full |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
-                            "}}}" |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
+                            "== $($FunctionName) ==" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
+                            "{{{" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
+                            Get-Help $FunctionName -Full |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
+                            "}}}" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
                             }
                         }
                     }
@@ -681,17 +681,17 @@ Function New-WikiPage
                 {
                     if (($PoshFile.Name.IndexOfAny("-")) -gt -1)
                     {
-                        $WikiFile = $PoshFile.Name.Replace("-","")
-                        $WikiFile = $WikiFile.Replace(".ps1","")
+                        $WikiFileName = $PoshFile.Name.Replace("-","")
+                        $WikiFileName = $WikiFileName.Replace(".ps1","")
                         }
                     else
                     {
-                        $WikiFile = $PoshFile.Name.Replace(".ps1","")
+                        $WikiFileName = $PoshFile.Name.Replace(".ps1","")
                         }
-                    "= !$($PoshFile.Name) =" |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
-                    "{{{" |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
-                    Get-Help (Get-Item $PoshFile).FullName -Full |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
-                    "}}}" |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
+                    "= !$($PoshFile.Name) =" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
+                    "{{{" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
+                    Get-Help (Get-Item $PoshFile).FullName -Full |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
+                    "}}}" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
                     }
                 }
             }
