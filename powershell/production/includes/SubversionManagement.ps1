@@ -612,7 +612,7 @@ Function New-WikiPage
         (
         [Parameter(ValueFromPipeline=$true)]
         $FileSpec,
-        $Library = $true,
+        $LibraryFile = $true,
         $WikiFile = $false
         )
     Begin
@@ -623,19 +623,33 @@ Function New-WikiPage
     {
         foreach ($PoshFile in $FilesToOpen)
         {
+            Write-Verbose $PoshFile
             if ($WikiFile -eq $false)
             {
-                if ($Library -eq $true)
+                if ($LibraryFile -eq $true)
                 {
-                    . (Get-Item $PoshFile).FullName
-                    $Library = Get-Content "$($PoshFile.PSParentPath)\$($PoshFile.Name)"
+                    Write-Verbose "Dot source $($PoshFile.FullName)"
+                    . $PoshFile.FullName
+                    Write-Verbose "Read the contents of $($PoshFile.FullName)"
+                    $Library = Get-Content $PoshFile.FullName
                     $LibraryName = "$($PoshFile.Name.Substring(0,$PoshFile.Name.Length-4))"
                     foreach ($Line in $Library)
                     {
                         if ($Line -like "Function*")
                         {
                             $FunctionName = ($Line.Remove(0,9)).Trim()
-                            Write-Host "== $($FunctionName) =="
+                            Write-Verbose $FunctionName
+                            if (($FunctionName -cmatch "-[A-Z][A-Z]") -eq $true)
+                            {
+                                Write-Host "== $($FunctionName) =="
+                                }
+                            else
+                            {
+                                $ThisVerb = $FunctionName.Substring(0,$FunctionName.IndexOfAny("-"))
+                                $ThisCommand = $FunctionName.Substring($FunctionName.IndexOfAny("-")+1,($FunctionName.Length)-($FunctionName.IndexOfAny("-")+1))
+                                Write-Verbose "==$($ThisVerb)-!$($ThisCommand)=="
+                                Write-Host "==$($ThisVerb)-!$($ThisCommand)=="
+                                }
                             Write-Host "{{{"
                             Get-Help $FunctionName -Full
                             Write-Host "}}}"
@@ -646,16 +660,18 @@ Function New-WikiPage
                 {
                     Write-Host "= !$($PoshFile.Name) ="
                     Write-Host "{{{"
-                    Get-Help (Get-Item $PoshFile).FullName -Full
+                    Get-Help $PoshFile.FullName -Full
                     Write-Host "}}}"
                     }
                 }
             else
             {
-                if ($Library -eq $true)
+                if ($LibraryFile -eq $true)
                 {
-                    . (Get-Item $PoshFile).FullName
-                    $Library = Get-Content "$($PoshFile.PSParentPath)\$($PoshFile.Name)"
+                    Write-Verbose "Dot source $($PoshFile.FullName)"
+                    . $PoshFile.FullName
+                    Write-Verbose "Read the contents of $($PoshFile.FullName)"
+                    $Library = Get-Content $PoshFile.FullName
                     $LibraryName = "$($PoshFile.Name.Substring(0,$PoshFile.Name.Length-4))"
                     if (($LibraryName.IndexOfAny("-")) -gt -1)
                     {
@@ -670,8 +686,20 @@ Function New-WikiPage
                         if ($Line -like "Function*")
                         {
                             $FunctionName = ($Line.Remove(0,9)).Trim()
-                            "== $($FunctionName) ==" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
+                            Write-Verbose $FunctionName
+                            if (($FunctionName -cmatch "-[A-Z][A-Z]") -eq $true)
+                            {
+                                "== $($FunctionName) ==" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
+                                }
+                            else
+                            {
+                                $ThisVerb = $FunctionName.Substring(0,$FunctionName.IndexOfAny("-"))
+                                $ThisCommand = $FunctionName.Substring($FunctionName.IndexOfAny("-")+1,($FunctionName.Length)-($FunctionName.IndexOfAny("-")+1))
+                                Write-Verbose "==$($ThisVerb)-!$($ThisCommand)=="
+                                "==$($ThisVerb)-!$($ThisCommand)==" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
+                                }
                             "{{{" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
+                            Write-Verbose "Get-Help $($FunctionName)"
                             Get-Help $FunctionName -Full |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
                             "}}}" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
                             }
@@ -690,7 +718,8 @@ Function New-WikiPage
                         }
                     "= !$($PoshFile.Name) =" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
                     "{{{" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
-                    Get-Help (Get-Item $PoshFile).FullName -Full |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
+                    Write-Verbose "Get-Help $($PoshFile.FullName)"
+                    Get-Help $PoshFile.FullName -Full |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
                     "}}}" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
                     }
                 }
