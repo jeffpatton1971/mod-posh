@@ -625,12 +625,11 @@ Function New-WikiPage
         {
             if ($WikiFile -eq $false)
             {
-                if ($LIbrary -eq $true)
+                if ($Library -eq $true)
                 {
                     . (Get-Item $PoshFile).FullName
                     $Library = Get-Content "$($PoshFile.PSParentPath)\$($PoshFile.Name)"
                     $LibraryName = "$($PoshFile.Name.Substring(0,$PoshFile.Name.Length-4))"
-                    Write-Host "= !$($Libraryname) ="
                     foreach ($Line in $Library)
                     {
                         if ($Line -like "Function*")
@@ -649,6 +648,49 @@ Function New-WikiPage
                     Write-Host "{{{"
                     Get-Help (Get-Item $PoshFile).FullName -Full
                     Write-Host "}}}"
+                    }
+                }
+            else
+            {
+                if ($Library -eq $true)
+                {
+                    . (Get-Item $PoshFile).FullName
+                    $Library = Get-Content "$($PoshFile.PSParentPath)\$($PoshFile.Name)"
+                    $LibraryName = "$($PoshFile.Name.Substring(0,$PoshFile.Name.Length-4))"
+                    if (($LibraryName.IndexOfAny("-")) -gt -1)
+                    {
+                        $WikiFile = $LibraryName.Replace("-","")
+                        }
+                    else
+                    {
+                        $WikiFile = $LibraryName
+                        }
+                    foreach ($Line in $Library)
+                    {
+                        if ($Line -like "Function*")
+                        {
+                            $FunctionName = ($Line.Remove(0,9)).Trim()
+                            "== $($FunctionName) ==" |Out-File ".\$($WikiFile).wiki" -Append
+                            "{{{" |Out-File ".\$($WikiFile).wiki" -Append
+                            Get-Help $FunctionName -Full |Out-File ".\$($WikiFile).wiki" -Append
+                            "}}}" |Out-File ".\$($WikiFile).wiki" -Append
+                            }
+                        }
+                    }
+                else
+                {
+                    if (($PoshFile.Name.IndexOfAny("-")) -gt -1)
+                    {
+                        $WikiFile = $PoshFile.Name.Replace("-","")
+                        }
+                    else
+                    {
+                        $WikiFile = $PoshFile.Name
+                        }
+                    "= !$($PoshFile.Name) =" |Out-File ".\$($WikiFile).wiki" -Append
+                    "{{{" |Out-File ".\$($WikiFile).wiki" -Append
+                    Get-Help (Get-Item $PoshFile).FullName -Full |Out-File ".\$($WikiFile).wiki" -Append
+                    "}}}" |Out-File ".\$($WikiFile).wiki" -Append
                     }
                 }
             }
