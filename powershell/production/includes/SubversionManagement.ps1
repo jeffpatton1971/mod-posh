@@ -670,10 +670,10 @@ Function New-WikiPage
                         if ($Line -like "Function*")
                         {
                             $FunctionName = ($Line.Remove(0,9)).Trim()
-                            "== $($FunctionName) ==" |Out-File ".\$($WikiFile).wiki" -Append
-                            "{{{" |Out-File ".\$($WikiFile).wiki" -Append
-                            Get-Help $FunctionName -Full |Out-File ".\$($WikiFile).wiki" -Append
-                            "}}}" |Out-File ".\$($WikiFile).wiki" -Append
+                            "== $($FunctionName) ==" |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
+                            "{{{" |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
+                            Get-Help $FunctionName -Full |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
+                            "}}}" |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
                             }
                         }
                     }
@@ -688,10 +688,10 @@ Function New-WikiPage
                     {
                         $WikiFile = $PoshFile.Name.Replace(".ps1","")
                         }
-                    "= !$($PoshFile.Name) =" |Out-File ".\$($WikiFile).wiki" -Append
-                    "{{{" |Out-File ".\$($WikiFile).wiki" -Append
-                    Get-Help (Get-Item $PoshFile).FullName -Full |Out-File ".\$($WikiFile).wiki" -Append
-                    "}}}" |Out-File ".\$($WikiFile).wiki" -Append
+                    "= !$($PoshFile.Name) =" |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
+                    "{{{" |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
+                    Get-Help (Get-Item $PoshFile).FullName -Full |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
+                    "}}}" |Out-File ".\$($WikiFile).wiki" -Append -encoding ASCII
                     }
                 }
             }
