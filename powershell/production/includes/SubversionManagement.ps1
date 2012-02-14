@@ -612,7 +612,8 @@ Function New-WikiPage
         (
         [Parameter(ValueFromPipeline=$true)]
         $FileSpec,
-        $Library = $true
+        $Library = $true,
+        $WikiFile = $false
         )
     Begin
     {
@@ -622,29 +623,33 @@ Function New-WikiPage
     {
         foreach ($PoshFile in $FilesToOpen)
         {
-            if ($LIbrary -eq $true)
+            if ($WikiFile -eq $false)
             {
-                $Library = Get-Content "$($PoshFile.PSParentPath)\$($PoshFile.Name)"
-                $LibraryName = "$($PoshFile.Name.Substring(0,$PoshFile.Name.Length-4))"
-                Write-Host "= !$($Libraryname) ="
-                foreach ($Line in $Library)
+                if ($LIbrary -eq $true)
                 {
-                    if ($Line -like "Function*")
+                    . (Get-Item $PoshFile).FullName
+                    $Library = Get-Content "$($PoshFile.PSParentPath)\$($PoshFile.Name)"
+                    $LibraryName = "$($PoshFile.Name.Substring(0,$PoshFile.Name.Length-4))"
+                    Write-Host "= !$($Libraryname) ="
+                    foreach ($Line in $Library)
                     {
-                        $FunctionName = ($Line.Remove(0,9)).Trim()
-                        Write-Host "== $($FunctionName) =="
-                        Write-Host "{{{"
-                        Get-Help $FunctionName -Full
-                        Write-Host "}}}"
+                        if ($Line -like "Function*")
+                        {
+                            $FunctionName = ($Line.Remove(0,9)).Trim()
+                            Write-Host "== $($FunctionName) =="
+                            Write-Host "{{{"
+                            Get-Help $FunctionName -Full
+                            Write-Host "}}}"
+                            }
                         }
                     }
-                }
-            else
-            {
-                Write-Host "= !$($PoshFile.Name) ="
-                Write-Host "{{{"
-                Get-Help ".\$($PoshFile.Name)" -Full
-                Write-Host "}}}"
+                else
+                {
+                    Write-Host "= !$($PoshFile.Name) ="
+                    Write-Host "{{{"
+                    Get-Help (Get-Item $PoshFile).FullName -Full
+                    Write-Host "}}}"
+                    }
                 }
             }
         }
