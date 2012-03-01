@@ -639,7 +639,7 @@ Function New-WikiPage
                         {
                             $FunctionName = ($Line.Remove(0,9)).Trim()
                             Write-Verbose $FunctionName
-                            if (($FunctionName -cmatch "-[A-Z][A-Z]") -eq $true)
+                            if (($FunctionName -cmatch "-[A-Z]([^A-Z]*)[A-Z]([^A-Z]*)") -ne $true)
                             {
                                 Write-Host "== $($FunctionName) =="
                                 }
