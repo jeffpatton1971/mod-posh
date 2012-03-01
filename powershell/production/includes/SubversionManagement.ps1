@@ -641,27 +641,27 @@ Function New-WikiPage
                             Write-Verbose $FunctionName
                             if (($FunctionName -cmatch "-[A-Z]([^A-Z]*)[A-Z]([^A-Z]*)") -ne $true)
                             {
-                                Write-Host "== $($FunctionName) =="
+                                Write-Output "== $($FunctionName) =="
                                 }
                             else
                             {
                                 $ThisVerb = $FunctionName.Substring(0,$FunctionName.IndexOfAny("-"))
                                 $ThisCommand = $FunctionName.Substring($FunctionName.IndexOfAny("-")+1,($FunctionName.Length)-($FunctionName.IndexOfAny("-")+1))
                                 Write-Verbose "==$($ThisVerb)-!$($ThisCommand)=="
-                                Write-Host "==$($ThisVerb)-!$($ThisCommand)=="
+                                Write-Output "==$($ThisVerb)-!$($ThisCommand)=="
                                 }
-                            Write-Host "{{{"
+                            Write-Output "{{{"
                             Get-Help $FunctionName -Full
-                            Write-Host "}}}"
+                            Write-Output "}}}"
                             }
                         }
                     }
                 else
                 {
-                    Write-Host "= !$($PoshFile.Name) ="
-                    Write-Host "{{{"
+                    Write-Output "= !$($PoshFile.Name) ="
+                    Write-Output "{{{"
                     Get-Help $PoshFile.FullName -Full
-                    Write-Host "}}}"
+                    Write-Output "}}}"
                     }
                 }
             else
