@@ -544,3 +544,82 @@ Function Save-All
     {
         }
     }
+Function Set-SecureString
+{
+    <#
+        .SYNOPSIS
+            Create a file with encrypted contents
+        .DESCRIPTION
+            This function creates an encrypted function to store data, typically
+            you would use this store an encrypted password for an administrator
+            account.
+        .PARAMETER FilePath
+            The full path and filename to send the encrypted contents to
+        .EXAMPLE
+            Set-SecureString -FilePath C:\Users\Auser\AdminCredentials.txt
+            
+            Description
+            -----------
+            This is the only syntax for this command.
+        .NOTES
+            FunctionName : Set-SecureString
+            Created by   : jspatton
+            Date Coded   : 03/01/2012 13:45:13
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Set-SecureString
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [string]$FilePath
+        )
+    Begin
+    {
+        }
+    Process
+    {
+        $SecureString = Read-Host -AsSecureString
+        $EncryptedString = ConvertFrom-SecureString $SecureString -Key (1..16)
+        $EncryptedString |Out-File -FilePath $FilePath -Force
+        }
+    End
+    {
+        }
+    }
+Function Get-SecureString
+ {
+    <#
+        .SYNOPSIS
+            Stores the contents of an encrypted file as a secure string
+        .DESCRIPTION
+            This function reads the contents of an encrypted file and returns it as
+            a secure string object. This is ideally suited to reading in the contents
+            of a file that contained an administrators password
+        .PARAMETER FilePath
+            The full path and filename of the encrypted file
+        .EXAMPLE
+            Get-SecureString -FilePath C:\Users\Auser\AdminCredentials.txt
+        .NOTES
+            FunctionName : Get-SecureString
+            Created by   : jspatton
+            Date Coded   : 03/01/2012 13:51:53
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Get-SecureString
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [string]$FilePath
+        )
+    Begin
+    {
+        }
+    Process
+    {
+        $SecureString = ConvertTo-SecureString (Get-Content -Path $FilePath) -Key (1..16)
+        }
+    End
+    {
+        Return $SecureString
+        }
+    }
