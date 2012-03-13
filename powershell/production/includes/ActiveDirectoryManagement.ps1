@@ -396,11 +396,15 @@ Function Get-StaleComputerAccounts
     Param
         (
         [string]$ADSPath = (([ADSI]"").distinguishedName),
-        [Parameter(Mandatory=$true)]
-        [int]$DayOffset
+        [int]$DayOffset = 90
         )
     Begin
     {
+        if ($ADSPath -notmatch "LDAP://*")
+        {
+            $ADSPath = "LDAP://$($ADSPath)"
+            }
+            
         $DateOffset = (Get-Date).AddDays(-$DayOffset)
         [string]$SearchFilter = "(objectCategory=computer)"
         [array]$ADProperties= "name", "whenChanged", "whenCreated"
