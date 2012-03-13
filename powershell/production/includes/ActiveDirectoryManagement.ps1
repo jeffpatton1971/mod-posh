@@ -1192,3 +1192,48 @@ Function Set-ADObjectProperties
     {
         }
     }
+Function Get-GPO
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER Domain
+        .EXAMPLE
+        .NOTES
+            FunctionName : Get-GPO
+            Created by   : Jeff Patton
+            Date Coded   : 03/13/2012 18:37:08
+        .LINK
+            http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-GPO
+        .LINK
+            http://blogs.technet.com/b/grouppolicy/archive/2011/06/10/listing-all-gpos-in-the-current-forest.aspx
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [string]$Domain = $env:userDNSdomain
+        )
+    Begin
+    {
+        Try
+        {
+            Write-Verbose "Instantiating GroupPolicy Management API"
+            $GpoMgmt = New-Object -ComObject gpmgmt.gpm
+            }
+        catch
+        {
+            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+            }
+        }
+    Process
+    {
+        $GpoConstants = $GpoMgmt.GetConstants()
+        $GpoDomain = $GpoMgmt.GetDomain($Domain,$null,$GpoConstants.UseAnyDC)
+        $GpoSearchCriteria = $GpoMgmt.CreateSearchCriteria()
+        $GroupPolicyObjects = $GpoDomain.SearchGPOs($GpoSearchCriteria)
+        }
+    End
+    {
+        Return $GroupPolicyObjects
+        }
+    }
