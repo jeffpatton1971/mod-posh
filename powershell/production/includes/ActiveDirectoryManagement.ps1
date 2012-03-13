@@ -72,8 +72,7 @@ Function Get-ADObjects
     [CmdletBinding()]
     Param
         (
-        [Parameter(Mandatory=$true)]
-        [string]$ADSPath,
+        [string]$ADSPath = (([ADSI]"").distinguishedName),
         [string]$SearchFilter = "(objectCategory=computer)",
         [array]$ADProperties="name"
         )
@@ -396,8 +395,7 @@ Function Get-StaleComputerAccounts
     [CmdletBinding()]    
     Param
         (
-        [Parameter(Mandatory=$true)]
-        [string]$ADSPath,
+        [string]$ADSPath = (([ADSI]"").distinguishedName),
         [Parameter(Mandatory=$true)]
         [int]$DayOffset
         )
