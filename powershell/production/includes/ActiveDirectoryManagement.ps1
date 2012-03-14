@@ -1241,10 +1241,16 @@ Function Get-GPO
             FunctionName : Get-GPO
             Created by   : Jeff Patton
             Date Coded   : 03/13/2012 18:37:08
+
+            You will need the Group Policy Managment console or RSAT installed.
         .LINK
             http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-GPO
         .LINK
             http://blogs.technet.com/b/grouppolicy/archive/2011/06/10/listing-all-gpos-in-the-current-forest.aspx
+        .LINK
+            http://www.microsoft.com/download/en/search.aspx?q=gpmc
+        .LINK
+            http://www.microsoft.com/download/en/search.aspx?q=remote%20server%20administration%20tools
     #>
     [CmdletBinding()]
     Param
@@ -1265,10 +1271,17 @@ Function Get-GPO
         }
     Process
     {
-        $GpoConstants = $GpoMgmt.GetConstants()
-        $GpoDomain = $GpoMgmt.GetDomain($Domain,$null,$GpoConstants.UseAnyDC)
-        $GpoSearchCriteria = $GpoMgmt.CreateSearchCriteria()
-        $GroupPolicyObjects = $GpoDomain.SearchGPOs($GpoSearchCriteria)
+        try
+        {
+            $GpoConstants = $GpoMgmt.GetConstants()
+            $GpoDomain = $GpoMgmt.GetDomain($Domain,$null,$GpoConstants.UseAnyDC)
+            $GpoSearchCriteria = $GpoMgmt.CreateSearchCriteria()
+            $GroupPolicyObjects = $GpoDomain.SearchGPOs($GpoSearchCriteria)
+            }
+        catch
+        {
+            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+            }
         }
     End
     {
@@ -1325,10 +1338,16 @@ Function Get-UnlinkedGPO
             FunctionName : Get-UnlinkedGPO
             Created by   : Jeff Patton
             Date Coded   : 03/13/2012 18:54:38
+
+            You will need the Group Policy Management Console or RSAT installed
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-UnlinkedGPO
         .LINK
             http://blogs.technet.com/b/heyscriptingguy/archive/2009/02/10/how-can-get-a-list-of-all-my-orphaned-group-policy-objects.aspx
+        .LINK
+            http://www.microsoft.com/download/en/search.aspx?q=gpmc
+        .LINK
+            http://www.microsoft.com/download/en/search.aspx?q=remote%20server%20administration%20tools
     #>
     [CmdletBinding()]
     Param
@@ -1351,20 +1370,27 @@ Function Get-UnlinkedGPO
         }
     Process
     {
-        $GpoConstants = $GpoMgmt.GetConstants()
-        $GpoDomain = $GpoMgmt.GetDomain($Domain,$null,$GpoConstants.UseAnyDC)
-        $GpoSearchCriteria = $GpoMgmt.CreateSearchCriteria()
-        $GroupPolicyObjects = $GpoDomain.SearchGPOs($GpoSearchCriteria)
-
-        foreach ($GroupPolicyObject in $GroupPolicyObjects)
+        try
         {
+            $GpoConstants = $GpoMgmt.GetConstants()
+            $GpoDomain = $GpoMgmt.GetDomain($Domain,$null,$GpoConstants.UseAnyDC)
             $GpoSearchCriteria = $GpoMgmt.CreateSearchCriteria()
-            $GpoSearchCriteria.Add($GpoConstants.SearchPropertySomLinks, $GpoConstants.SearchOpContains, $GroupPolicyObject)
-            $GpoSomLinks = $GpoDomain.SearchSoms($GpoSearchCriteria)
-            if ($GpoSomLinks.Count -eq 0)
+            $GroupPolicyObjects = $GpoDomain.SearchGPOs($GpoSearchCriteria)
+
+            foreach ($GroupPolicyObject in $GroupPolicyObjects)
             {
-                $unlinkedGPO += $GroupPolicyObject
+                $GpoSearchCriteria = $GpoMgmt.CreateSearchCriteria()
+                $GpoSearchCriteria.Add($GpoConstants.SearchPropertySomLinks, $GpoConstants.SearchOpContains, $GroupPolicyObject)
+                $GpoSomLinks = $GpoDomain.SearchSoms($GpoSearchCriteria)
+                if ($GpoSomLinks.Count -eq 0)
+                {
+                    $unlinkedGPO += $GroupPolicyObject
+                    }
                 }
+            }
+        catch
+        {
+            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
             }
         }
     End
