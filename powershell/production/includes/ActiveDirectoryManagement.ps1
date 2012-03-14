@@ -1408,12 +1408,31 @@ Function Get-UnlinkedGPO
         }
     }
 Function Get-DomainInfo
- {
+{
     <#
         .SYNOPSIS
+            Get basic information about the current domain
         .DESCRIPTION
+            Get basic information about the current domain, or from an external domain
+            that you have rights to by setting TargetDomain to it's FQDN.
         .PARAMETER TargetDomain
+            The FQDN of the domain to return information from.
         .EXAMPLE
+            Get-DomainInfo
+
+            Forest                  : company.com
+            DomainControllers       : {dc1.company.com,dc2.company.com}
+            Children                : {}
+            DomainMode              : Windows2003Domain
+            Parent                  : 
+            PdcRoleOwner            : dc1.company.com
+            RidRoleOwner            : dc1.company.com
+            InfrastructureRoleOwner : dc1.company.com
+            Name                    : company.com
+            
+            Description
+            -----------
+            Show the basic syntax of the command.
         .NOTES
             FunctionName : Get-DomainInfo
             Created by   : jspatton
@@ -1429,10 +1448,12 @@ Function Get-DomainInfo
     Begin
     {
         $ContextType = "Domain"
+        Write-Verbose "Creating the Domain context to pass to the GetDomain method"
         $DomainContext = New-Object System.DirectoryServices.ActiveDirectory.DirectoryContext($ContextType,$TargetDomain)
         }
     Process
     {
+        Write-Verbose "Call GetDomain to return information aobut the specified TargetDomain: $($TargetDomain)"
         $Domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetDomain($DomainContext)
         }
     End
@@ -1441,12 +1462,32 @@ Function Get-DomainInfo
         }
     }
 Function Get-ForestInfo
- {
+{
     <#
         .SYNOPSIS
+            Get basic information aobut the current forest.
         .DESCRIPTION
+            Get basic information about the current forest, or from an external domain
+            that you have rights to by setting TargetDomain to it's FQDN.
         .PARAMETER TargetDomain
+            The FQDN of the domain to return information from.
         .EXAMPLE
+            Get-ForestInfo
+
+            Name                  : company.com
+            Sites                 : 
+            Domains               : {company.com}
+            GlobalCatalogs        : {dc1.company.com}
+            ApplicationPartitions : {DC=DomainDnsZones,DC=company,DC=com, DC=ForestDnsZones,DC=company,DC=com}
+            ForestMode            : Windows2003Forest
+            RootDomain            : company.com
+            Schema                : CN=Schema,CN=Configuration,DC=company,DC=com
+            SchemaRoleOwner       : dc1.company.com
+            NamingRoleOwner       : dc1.company.com
+            
+            Description
+            -----------
+            Show the basic syntax of the command.
         .NOTES
             FunctionName : Get-ForestInfo
             Created by   : jspatton
@@ -1462,10 +1503,12 @@ Function Get-ForestInfo
     Begin
     {
         $ContextType = "Forest"
+        Write-Verbose "Creating the Forest context to pass to the GetForest method"
+        $ForestContext = New-Object System.DirectoryServices.ActiveDirectory.DirectoryContext($ContextType,$TargetDomain)
         }
     Process
     {
-        $ForestContext = New-Object System.DirectoryServices.ActiveDirectory.DirectoryContext($ContextType,$TargetDomain)
+        Write-Verbose "Call GetForest to return information aobut the specified TargetDomain: $($TargetDomain)"
         $Forest = [system.directoryservices.activedirectory.Forest]::GetForest($ForestContext) 
         }
     End
