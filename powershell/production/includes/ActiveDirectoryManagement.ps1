@@ -274,7 +274,7 @@ Function Get-ADGroupMembers
             works for small groups as well as groups in excess of 1000.
         .PARAMETER UserGroup
             The name of the group to get membership from.
-        .PARAMETER UserDomain
+        .PARAMETER ADSPath
             The LDAP URL of the domain that the group resides in.
         .EXAMPLE
             Get-ADGroupMembers -UserGroup Managers |Format-Table -Property name, distinguishedName, cn
@@ -297,12 +297,17 @@ Function Get-ADGroupMembers
     [CmdletBinding()]
     Param
         (
-        $UserGroup = "Managers",
-        [ADSI]$UserDomain = "LDAP://DC=company,DC=com"
+        [string]$UserGroup = "Managers",
+        [string]$ADSPath = (([ADSI]"").distinguishedName)
         )
     Begin
     {
-        $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($UserDomain.Path)
+        if ($ADSPath -notmatch "LDAP://*")
+        {
+            $ADSPath = "LDAP://$($ADSPath)"
+            }
+
+        $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
         $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
 
         $LDAPFilter = "(&(objectCategory=Group)(name=$($UserGroup)))"
@@ -334,11 +339,11 @@ Function Get-ADGroupMembers
                     Else
                     {
                         $ThisUser = New-Object -TypeName PSObject -Property @{
-                            cn = $UserObject.cn
-                            distinguishedName = $UserObject.distinguishedName
-                            name = $UserObject.name
+                            cn = [string]$UserObject.cn
+                            distinguishedName = [string]$UserObject.distinguishedName
+                            name = [string]$UserObject.name
                             nTSecurityDescriptor = $UserObject.nTSecurityDescriptor
-                            objectCategory = $UserObject.objectCategory
+                            objectCategory = [string]$UserObject.objectCategory
                             objectClass = $UserObject.objectClass
                             objectGUID = $UserObject.objectGUID
                             objectSID = $UserObject.objectSID
@@ -638,6 +643,8 @@ Function Get-FSMORoleOwner
             Retrieves the list of FSMO role owners of a forest and domain  
         .DESCRIPTION  
             Retrieves the list of FSMO role owners of a forest and domain
+        .PARMETER TargetDomain
+            The FQDN of the domain to query on
         .NOTES  
             Name: Get-FSMORoleOwner
             Author: Boe Prox
@@ -662,10 +669,12 @@ Function Get-FSMORoleOwner
     [CmdletBinding()]
     Param
         (
+        [string]$TargetDomain
         )
     Begin
     {
-        $forest = [system.directoryservices.activedirectory.Forest]::GetCurrentForest() 
+        $ForestContext = New-Object System.DirectoryServices.ActiveDirectory.DirectoryContext("Forest",$TargetDomain)
+        $Forest = [system.directoryservices.activedirectory.Forest]::GetForest($ForestContext)
         }
     Process
     {
