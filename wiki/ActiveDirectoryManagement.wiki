@@ -8,13 +8,13 @@ SYNOPSIS
     Returns a list of objects from ActiveDirectory
     
 SYNTAX
-    Get-ADObjects [-ADSPath] <String> [[-SearchFilter] <String>] [[-ADProperties] <Array>] [<Common
-    Parameters>]
+    Get-ADObjects [[-ADSPath] <String>] [[-SearchFilter] <String>] [[-ADProperties] <Array>] 
+    [<CommonParameters>]
     
     
 DESCRIPTION
-    This function will return a list of objects from ActiveDirectory. It will start at the provided
-     ADSPath 
+    This function will return a list of objects from ActiveDirectory. It will start at the 
+    provided ADSPath 
     and find each object that matches the provided SearchFilter. For each object returned only the 
     specified properties will be provided.
     
@@ -25,25 +25,25 @@ PARAMETERS
         can be an 
         OU, CN or even the root of your domain.
         
-        Required?                    true
+        Required?                    false
         Position?                    1
-        Default value                
+        Default value                (([ADSI]"").distinguishedName)
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -SearchFilter <String>
-        This parameter is specified in the same format as an LDAP Search Filter. For more informati
-        on on the 
-        format please visit Microsoft (http://msdn.microsoft.com/en-us/library/aa746475.aspx). If n
-        othing is 
+        This parameter is specified in the same format as an LDAP Search Filter. For more 
+        information on the 
+        format please visit Microsoft (http://msdn.microsoft.com/en-us/library/aa746475.aspx). If 
+        nothing is 
         specified on the command-line the default filter is used:
             (objectCategory=computer)
         
         Required?                    false
         Position?                    2
-        Default value                
+        Default value                (objectCategory=computer)
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -ADProperties <Array>
         If you want specific properties returned like name, or distinguishedName 
@@ -51,15 +51,15 @@ PARAMETERS
         
         Required?                    false
         Position?                    3
-        Default value                
+        Default value                name
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -91,8 +91,8 @@ NOTES
     
     Description
     -----------
-    When specifying just the ADSPath computer objects and their associated name properties are retu
-    rned
+    When specifying just the ADSPath computer objects and their associated name properties are 
+    returned
     by default.
     
     
@@ -110,14 +110,14 @@ NOTES
                                                                 
     ----                                                                  ----------               
                                                                 
-    LDAP://CN=Computer-pc01,OU=Workstations,DC=company,DC=com             {name, adspath, distingui
-    shedname}                                                   
-    LDAP://CN=Computer-pc02,OU=Workstations,DC=company,DC=com             {name, adspath, distingui
-    shedname}                                                   
-    LDAP://CN=Computer-pc03,OU=Workstations,DC=company,DC=com             {name, adspath, distingui
-    shedname}                                                   
-    LDAP://CN=Computer-pc04,OU=Workstations,DC=company,DC=com             {name, adspath, distingui
-    shedname}
+    LDAP://CN=Computer-pc01,OU=Workstations,DC=company,DC=com             {name, adspath, 
+    distinguishedname}                                                   
+    LDAP://CN=Computer-pc02,OU=Workstations,DC=company,DC=com             {name, adspath, 
+    distinguishedname}                                                   
+    LDAP://CN=Computer-pc03,OU=Workstations,DC=company,DC=com             {name, adspath, 
+    distinguishedname}                                                   
+    LDAP://CN=Computer-pc04,OU=Workstations,DC=company,DC=com             {name, adspath, 
+    distinguishedname}
     
     Description
     -----------
@@ -140,19 +140,19 @@ NOTES
                                                                 
     ----                                                                  ----------               
                                                                 
-    LDAP://CN=Group-01,OU=Groups,DC=Company,DC=com                        {name, adspath, distingui
-    shedname}                                                   
-    LDAP://CN=Group-02,OU=Groups,DC=Company,DC=com                        {name, adspath, distingui
-    shedname}                                                   
-    LDAP://CN=Group-03,OU=Groups,DC=Company,DC=com                        {name, adspath, distingui
-    shedname}                                                   
-    LDAP://CN=Group-04,OU=Groups,DC=Company,DC=com                        {name, adspath, distingui
-    shedname}
+    LDAP://CN=Group-01,OU=Groups,DC=Company,DC=com                        {name, adspath, 
+    distinguishedname}                                                   
+    LDAP://CN=Group-02,OU=Groups,DC=Company,DC=com                        {name, adspath, 
+    distinguishedname}                                                   
+    LDAP://CN=Group-03,OU=Groups,DC=Company,DC=com                        {name, adspath, 
+    distinguishedname}                                                   
+    LDAP://CN=Group-04,OU=Groups,DC=Company,DC=com                        {name, adspath, 
+    distinguishedname}
     
     Description
     -----------
-    This example shows multiple properties as well as setting the SearchFilter to be groups that ar
-    e 
+    This example shows multiple properties as well as setting the SearchFilter to be groups that 
+    are 
     returned.
     
     
@@ -176,8 +176,8 @@ SYNOPSIS
     Add a domain user to a local group.
     
 SYNTAX
-    Add-UserToLocalGroup [-Computer] <String> [-UserName] <String> [-LocalGroup] <String> [[-UserDo
-    main] <String>] [<CommonParameters>]
+    Add-UserToLocalGroup [-Computer] <String> [-UserName] <String> [-LocalGroup] <String> 
+    [[-UserDomain] <String>] [<CommonParameters>]
     
     
 DESCRIPTION
@@ -192,7 +192,7 @@ PARAMETERS
         Position?                    1
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -UserName <String>
         The name of the user to add to the group.
@@ -201,7 +201,7 @@ PARAMETERS
         Position?                    2
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -LocalGroup <String>
         The name of the group to add the user to.
@@ -210,7 +210,7 @@ PARAMETERS
         Position?                    3
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -UserDomain <String>
         The NetBIOS name of the domain where the user object is.
@@ -219,13 +219,13 @@ PARAMETERS
         Position?                    4
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -253,8 +253,8 @@ NOTES
     
     -------------------------- EXAMPLE 2 --------------------------
     
-    C:\PS>Add-UserToLocalGroup -Computer server -UserName myuser -LocalGroup administrators -UserDo
-    main company
+    C:\PS>Add-UserToLocalGroup -Computer server -UserName myuser -LocalGroup administrators 
+    -UserDomain company
     
     
     Description
@@ -299,7 +299,7 @@ PARAMETERS
         Position?                    1
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -GroupName <String>
         The name of the group to search in.
@@ -308,13 +308,13 @@ PARAMETERS
         Position?                    2
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -351,13 +351,13 @@ SYNOPSIS
     Return a collection of users in an ActiveDirectory group.
     
 SYNTAX
-    Get-ADGroupMembers [[-UserGroup] <Object>] [[-UserDomain] <DirectoryEntry>] [<CommonParameters>
-    ]
+    Get-ADGroupMembers [[-UserGroup] <Object>] [[-UserDomain] <DirectoryEntry>] 
+    [<CommonParameters>]
     
     
 DESCRIPTION
-    This function returns an object that contains all the properties of a user object. This functio
-    n
+    This function returns an object that contains all the properties of a user object. This 
+    function
     works for small groups as well as groups in excess of 1000.
     
 
@@ -367,24 +367,24 @@ PARAMETERS
         
         Required?                    false
         Position?                    1
-        Default value                
+        Default value                Managers
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -UserDomain <DirectoryEntry>
         The LDAP URL of the domain that the group resides in.
         
         Required?                    false
         Position?                    2
-        Default value                
+        Default value                LDAP://DC=company,DC=com
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -393,13 +393,13 @@ OUTPUTS
 NOTES
     
     
-        The context under which this script is run must have rights to pull infromation from Active
-        Directory.
+        The context under which this script is run must have rights to pull infromation from 
+        ActiveDirectory.
     
     -------------------------- EXAMPLE 1 --------------------------
     
-    C:\PS>Get-ADGroupMembers -UserGroup Managers |Format-Table -Property name, distinguishedName, c
-    n
+    C:\PS>Get-ADGroupMembers -UserGroup Managers |Format-Table -Property name, distinguishedName, 
+    cn
     
     
     name                             distinguishedName                cn                           
@@ -408,10 +408,10 @@ NOTES
        
     {Steve Roberts}                  {CN=Steve Roberts,CN=Users,DC... {Steve Roberts}              
        
-    {S-1-5-21-57989841-1078081533... {CN=S-1-5-21-57989841-1078081... {S-1-5-21-57989841-1078081533
-    ...
-    {S-1-5-21-57989841-1078081533... {CN=S-1-5-21-57989841-1078081... {S-1-5-21-57989841-1078081533
-    ...
+    {S-1-5-21-57989841-1078081533... {CN=S-1-5-21-57989841-1078081... 
+    {S-1-5-21-57989841-1078081533...
+    {S-1-5-21-57989841-1078081533... {CN=S-1-5-21-57989841-1078081... 
+    {S-1-5-21-57989841-1078081533...
     {Matt Temple}                    {CN=Matt Temple,CN=Users,DC=c... {Matt Temple}                
        
     ...
@@ -440,7 +440,7 @@ SYNOPSIS
     Return a collection of computer accounts older than a set number of days.
     
 SYNTAX
-    Get-StaleComputerAccounts [-ADSPath] <String> [-DayOffset] <Int32> [<CommonParameters>]
+    Get-StaleComputerAccounts [[-ADSPath] <String>] [[-DayOffset] <Int32>] [<CommonParameters>]
     
     
 DESCRIPTION
@@ -454,26 +454,26 @@ PARAMETERS
     -ADSPath <String>
         This is an LDAP url that will become the base of your search.
         
-        Required?                    true
+        Required?                    false
         Position?                    1
-        Default value                
+        Default value                (([ADSI]"").distinguishedName)
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -DayOffset <Int32>
         Am integer that represents the number of days in which an account is considered stale.
         
-        Required?                    true
+        Required?                    false
         Position?                    2
-        Default value                
+        Default value                90
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -484,12 +484,12 @@ NOTES
     
         90 is a default value, when run in production you should use the number of days that you
         consider an account to be stale.
-        The If statement that checks if adsPath contains OU=Servers is specifically for our product
-        ion
-        environment. All "servers", regardless of OS, are placed in the Servers OU in their respect
-        ive 
-        hierarchy. I treat server accounts slightly differently than I do workstations accounts, so
-         I 
+        The If statement that checks if adsPath contains OU=Servers is specifically for our 
+        production
+        environment. All "servers", regardless of OS, are placed in the Servers OU in their 
+        respective 
+        hierarchy. I treat server accounts slightly differently than I do workstations accounts, 
+        so I 
         wanted a way to differentiate the two.
     
     -------------------------- EXAMPLE 1 --------------------------
@@ -545,13 +545,13 @@ PARAMETERS
         Position?                    1
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -607,13 +607,13 @@ PARAMETERS
         Position?                    1
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -649,8 +649,8 @@ SYNOPSIS
     Add a Domain security group to a local computer group
     
 SYNTAX
-    Add-DomainGroupToLocalGroup [-ComputerName] <String> [-DomainGroup] <String> [[-LocalGroup] <St
-    ring>] [[-UserDomain] <String>] [<CommonParameters>]
+    Add-DomainGroupToLocalGroup [-ComputerName] <String> [-DomainGroup] <String> [[-LocalGroup] 
+    <String>] [[-UserDomain] <String>] [<CommonParameters>]
     
     
 DESCRIPTION
@@ -665,7 +665,7 @@ PARAMETERS
         Position?                    1
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -DomainGroup <String>
         The name of the Domain security group
@@ -674,16 +674,16 @@ PARAMETERS
         Position?                    2
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -LocalGroup <String>
         The name of the local group to update, if not provided Administrators is assumed.
         
         Required?                    false
         Position?                    3
-        Default value                
+        Default value                Administrators
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -UserDomain <String>
         The NetBIOS domain name.
@@ -692,13 +692,13 @@ PARAMETERS
         Position?                    4
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -706,8 +706,8 @@ OUTPUTS
     
     -------------------------- EXAMPLE 1 --------------------------
     
-    C:\PS>Add-DomainGroupToLocalGroup -ComputerName "Desktop-PC01" -DomainGroup "StudentAdmins" -Us
-    erDomain "COMPANY"
+    C:\PS>Add-DomainGroupToLocalGroup -ComputerName "Desktop-PC01" -DomainGroup "StudentAdmins" 
+    -UserDomain "COMPANY"
     
     
     Description
@@ -746,8 +746,8 @@ PARAMETERS
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -814,13 +814,13 @@ PARAMETERS
         Position?                    1
         Default value                
         Accept pipeline input?       true (ByValue)
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -854,8 +854,8 @@ NOTES
     
     -------------------------- EXAMPLE 2 --------------------------
     
-    C:\PS>Get-ADObjects -ADSPath "LDAP://CN=ForeignSecurityPrincipals,DC=company,DC=com" -SearchFil
-    ter "(objectClass=foreignSecurityPrincipal)" |
+    C:\PS>Get-ADObjects -ADSPath "LDAP://CN=ForeignSecurityPrincipals,DC=company,DC=com" 
+    -SearchFilter "(objectClass=foreignSecurityPrincipal)" |
     
     
     foreach {$_.Properties.name} |Convert-FspToUsername
@@ -868,8 +868,8 @@ NOTES
     
     Description
     ===========
-    This example takes the output of the Get-ADObjects function, and pipes it through foreach to ge
-    t to the name
+    This example takes the output of the Get-ADObjects function, and pipes it through foreach to 
+    get to the name
     property, and the resulting output is piped through Convert-FspToUsername.
     
     
@@ -893,8 +893,8 @@ SYNOPSIS
     Change the name of the computer
     
 SYNTAX
-    Set-ComputerName [[-NewName] <String>] [[-ComputerName] <String>] [[-Credentials] <Object>] [[-
-    Reboot] <Boolean>] [<CommonParameters>]
+    Set-ComputerName [[-NewName] <String>] [[-ComputerName] <String>] [[-Credentials] <Object>] 
+    [[-Reboot] <Boolean>] [<CommonParameters>]
     
     
 DESCRIPTION
@@ -911,40 +911,40 @@ PARAMETERS
         Position?                    1
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -ComputerName <String>
         The NetBIOS name of the computer
         
         Required?                    false
         Position?                    2
-        Default value                
+        Default value                (hostname)
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -Credentials <Object>
         Provide administrator credentials
         
         Required?                    false
         Position?                    3
-        Default value                
+        Default value                (Get-Credential)
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -Reboot <Boolean>
         True to reboot
         
         Required?                    false
         Position?                    4
-        Default value                
+        Default value                False
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -1008,13 +1008,13 @@ PARAMETERS
         Position?                    1
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -1077,13 +1077,13 @@ PARAMETERS
         Position?                    1
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -1120,8 +1120,8 @@ NOTES
     
     -------------------------- EXAMPLE 2 --------------------------
     
-    C:\PS>Get-UserGroupMembership -UserDN "CN=S-1-5-17,CN=ForeignSecurityPrincipals,DC=company,DC=c
-    om"
+    C:\PS>Get-UserGroupMembership -UserDN 
+    "CN=S-1-5-17,CN=ForeignSecurityPrincipals,DC=company,DC=com"
     
     
     GroupDN
@@ -1168,7 +1168,7 @@ PARAMETERS
         Position?                    1
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -UserDN <Object>
         The distinguishedName of the user account to add
@@ -1177,13 +1177,13 @@ PARAMETERS
         Position?                    2
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -1198,8 +1198,8 @@ NOTES
     
     -------------------------- EXAMPLE 1 --------------------------
     
-    C:\PS>Add-UserToGroup -GroupDN 'CN=AdminStaff,OU=Groups,DC=company,DC=com' -UserDN 'CN=UserAcco
-    unt,OU=Employees,DC=company,DC=com'
+    C:\PS>Add-UserToGroup -GroupDN 'CN=AdminStaff,OU=Groups,DC=company,DC=com' -UserDN 
+    'CN=UserAccount,OU=Employees,DC=company,DC=com'
     
     
     GroupDN : LDAP://CN=AdminStaff,OU=Groups,DC=company,DC=com
@@ -1248,7 +1248,7 @@ PARAMETERS
         Position?                    1
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     -PropertyPairs <Object>
         The PropertyName and PropertyValue to be set. This can be an array
@@ -1261,13 +1261,13 @@ PARAMETERS
         Position?                    2
         Default value                
         Accept pipeline input?       false
-        Accept wildcard characters?  
+        Accept wildcard characters?  false
         
     <CommonParameters>
         This cmdlet supports the common parameters: Verbose, Debug,
         ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer and OutVariable. For more information, type,
-        "get-help about_commonparameters".
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
     
 INPUTS
     
@@ -1282,8 +1282,8 @@ NOTES
     
     -------------------------- EXAMPLE 1 --------------------------
     
-    C:\PS>Set-ADObjectProperties -ADObject 'LDAP://CN=UserAccount,CN=Users,DC=company,DC=com' -Prop
-    ertyPairs "Description,New User Account"
+    C:\PS>Set-ADObjectProperties -ADObject 'LDAP://CN=UserAccount,CN=Users,DC=company,DC=com' 
+    -PropertyPairs "Description,New User Account"
     
     
     Description
@@ -1297,6 +1297,225 @@ NOTES
     
 RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Set-ADObjectProperties
+
+
+
+}}}
+== Get-GPO ==
+{{{
+
+NAME
+    Get-GPO
+    
+SYNOPSIS
+    Return a list of all GPO's in a domain.
+    
+SYNTAX
+    Get-GPO [[-Domain] <String>] [<CommonParameters>]
+    
+    
+DESCRIPTION
+    This function returns a list of all GPO's in the specified domain.
+    
+
+PARAMETERS
+    -Domain <String>
+        The FQDN of the domain to search
+        
+        Required?                    false
+        Position?                    1
+        Default value                $env:userDNSdomain
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
+    
+INPUTS
+    
+OUTPUTS
+    
+NOTES
+    
+    
+        FunctionName : Get-GPO
+        Created by   : Jeff Patton
+        Date Coded   : 03/13/2012 18:37:08
+        
+        You will need the Group Policy Managment console or RSAT installed.
+    
+    -------------------------- EXAMPLE 1 --------------------------
+    
+    C:\PS>Get-GPO
+    
+    
+    DisplayName                 : Default Domain Policy
+    Path                        : 
+    cn={31B2F340-016D-11D2-945F-00C04FB984F9},cn=policies,cn=system,DC=COMPANY,DC=COM
+    ID                          : {31B2F340-016D-11D2-945F-00C04FB984F9}
+    DomainName                  : COMPANY.COM
+    CreationTime                : 9/1/2004 10:49:52 AM
+    ModificationTime            : 6/14/2011 10:21:20 AM
+    UserDSVersionNumber         : 33
+    ComputerDSVersionNumber     : 255
+    UserSysvolVersionNumber     : 33
+    ComputerSysvolVersionNumber : 255
+    Description                 :
+    
+    Description
+    -----------
+    This example shows the basic syntax of the command.
+    
+    
+    
+    
+    
+    -------------------------- EXAMPLE 2 --------------------------
+    
+    C:\PS>Get-GPO -Domain COMPANY.NET
+    
+    
+    DisplayName                 : Default Domain Policy
+    Path                        : 
+    cn={31B2F340-016D-11D2-945F-00C04FB984F9},cn=policies,cn=system,DC=COMPANY,DC=NET
+    ID                          : {31B2F340-016D-11D2-945F-00C04FB984F9}
+    DomainName                  : COMPANY.NET
+    CreationTime                : 9/1/2004 10:49:52 AM
+    ModificationTime            : 6/14/2011 10:21:20 AM
+    UserDSVersionNumber         : 33
+    ComputerDSVersionNumber     : 255
+    UserSysvolVersionNumber     : 33
+    ComputerSysvolVersionNumber : 255
+    Description                 :
+    
+    Description
+    -----------
+    This example shows using the domain parameter to specify an alternate domain.
+    
+    
+    
+    
+    
+    
+RELATED LINKS
+     http://scripts.patton-tech.com/wiki/PowerShell/ActiveDirectoryManagement#Get-GPO
+     http://blogs.technet.com/b/grouppolicy/archive/2011/06/10/listing-all-gpos-in-the-current-fore
+    st.aspx
+     http://www.microsoft.com/download/en/search.aspx?q=gpmc
+     http://www.microsoft.com/download/en/search.aspx?q=remote%20server%20administration%20tools
+
+
+
+}}}
+==Get-UnlinkedGPO==
+{{{
+
+NAME
+    Get-UnlinkedGPO
+    
+SYNOPSIS
+    Return a list of unlinked Group Policy Objects
+    
+SYNTAX
+    Get-UnlinkedGPO [[-Domain] <String>] [<CommonParameters>]
+    
+    
+DESCRIPTION
+    This function will return a list of unlinked Group Policy Objects from
+    the specified domain.
+    
+
+PARAMETERS
+    -Domain <String>
+        The FQDN of the domain to search
+        
+        Required?                    false
+        Position?                    1
+        Default value                $env:userDNSdomain
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer and OutVariable. For more information, see 
+        about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216). 
+    
+INPUTS
+    
+OUTPUTS
+    
+NOTES
+    
+    
+        FunctionName : Get-UnlinkedGPO
+        Created by   : Jeff Patton
+        Date Coded   : 03/13/2012 18:54:38
+        
+        You will need the Group Policy Management Console or RSAT installed
+    
+    -------------------------- EXAMPLE 1 --------------------------
+    
+    C:\PS>Get-UnlinkedGPO
+    
+    
+    DisplayName                 : No Offline Files GPO
+    Path                        : 
+    cn={7BE5802A-3A76-411E-B685-C2DE9A8DE8B9},cn=policies,cn=system,DC=COMPANY,DC=COM
+    ID                          : {7BE5802A-3A76-411E-B685-C2DE9A8DE8B9}
+    DomainName                  : COMPANY.COM
+    CreationTime                : 11/2/2005 11:06:34 AM
+    ModificationTime            : 6/14/2011 10:21:38 AM
+    UserDSVersionNumber         : 0
+    ComputerDSVersionNumber     : 14
+    UserSysvolVersionNumber     : 0
+    ComputerSysvolVersionNumber : 14
+    Description                 :
+    
+    Description
+    -----------
+    This shows the basic syntax of the command.
+    
+    
+    
+    
+    
+    -------------------------- EXAMPLE 2 --------------------------
+    
+    C:\PS>Get-UnlinkedGPO -Domain COMPANY.NET
+    
+    
+    DisplayName                 : PartialPath
+    Path                        : 
+    cn={D074F8A6-CA41-464F-96A6-9155C96B486B},cn=policies,cn=system,DC=COMPANY,DC=NET
+    ID                          : {D074F8A6-CA41-464F-96A6-9155C96B486B}
+    DomainName                  : COMPANY.NET
+    CreationTime                : 1/11/2010 11:11:14 AM
+    ModificationTime            : 6/14/2011 10:21:40 AM
+    UserDSVersionNumber         : 0
+    ComputerDSVersionNumber     : 4
+    UserSysvolVersionNumber     : 0
+    ComputerSysvolVersionNumber : 4
+    Description                 :
+    
+    Description
+    -----------
+    This example shows using the domain parameter to specify an alternate domain.
+    
+    
+    
+    
+    
+    
+RELATED LINKS
+     https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-UnlinkedGPO
+     http://blogs.technet.com/b/heyscriptingguy/archive/2009/02/10/how-can-get-a-list-of-all-my-orp
+    haned-group-policy-objects.aspx
+     http://www.microsoft.com/download/en/search.aspx?q=gpmc
+     http://www.microsoft.com/download/en/search.aspx?q=remote%20server%20administration%20tools
 
 
 
