@@ -1237,3 +1237,61 @@ Function Get-GPO
         Return $GroupPolicyObjects
         }
     }
+Function Get-UnlinkedGPO
+ {
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER Domain
+        .EXAMPLE
+        .NOTES
+            FunctionName : Get-UnlinkedGPO
+            Created by   : Jeff Patton
+            Date Coded   : 03/13/2012 18:54:38
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-UnlinkedGPO
+        .LINK
+            http://blogs.technet.com/b/heyscriptingguy/archive/2009/02/10/how-can-get-a-list-of-all-my-orphaned-group-policy-objects.aspx
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [string]$Domain = $env:userDNSdomain
+        )
+    Begin
+    {
+        Try
+        {
+            Write-Verbose "Instantiating GroupPolicy Management API"
+            $GpoMgmt = New-Object -ComObject gpmgmt.gpm
+            }
+        catch
+        {
+            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+            }
+        
+        $unlinkedGPO = @()
+        }
+    Process
+    {
+        $GpoConstants = $GpoMgmt.GetConstants()
+        $GpoDomain = $GpoMgmt.GetDomain($Domain,$null,$GpoConstants.UseAnyDC)
+        $GpoSearchCriteria = $GpoMgmt.CreateSearchCriteria()
+        $GroupPolicyObjects = $GpoDomain.SearchGPOs($GpoSearchCriteria)
+
+        foreach ($GroupPolicyObject in $GroupPolicyObjects)
+        {
+            $GpoSearchCriteria = $GpoMgmt.CreateSearchCriteria()
+            $GpoSearchCriteria.Add($GpoConstants.SearchPropertySomLinks, $GpoConstants.SearchOpContains, $GroupPolicyObject)
+            $GpoSomLinks = $GpoDomain.SearchSoms($GpoSearchCriteria)
+            if ($GpoSomLinks.Count -eq 0)
+            {
+                $unlinkedGPO += $GroupPolicyObject
+                }
+            }
+        }
+    End
+    {
+        Return $unlinkedGPO
+        }
+    }
