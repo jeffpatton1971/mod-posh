@@ -669,7 +669,7 @@ Function Get-FSMORoleOwner
     [CmdletBinding()]
     Param
         (
-        [string]$TargetDomain = $env:userdnsdomain
+        [string]$TargetDomain = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().Name
         )
     Begin
     {
