@@ -1264,7 +1264,7 @@ Function Get-GPO
     [CmdletBinding()]
     Param
         (
-        [string]$Domain = $env:userDNSdomain
+        [string]$Domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().Name
         )
     Begin
     {
@@ -1361,7 +1361,7 @@ Function Get-UnlinkedGPO
     [CmdletBinding()]
     Param
         (
-        [string]$Domain = $env:userDNSdomain
+        [string]$Domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().Name
         )
     Begin
     {
