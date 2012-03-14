@@ -1196,9 +1196,47 @@ Function Get-GPO
 {
     <#
         .SYNOPSIS
+            Return a list of all GPO's in a domain.
         .DESCRIPTION
+            This function returns a list of all GPO's in the specified domain.
         .PARAMETER Domain
+            The FQDN of the domain to search
         .EXAMPLE
+            Get-GPO
+
+            DisplayName                 : Default Domain Policy
+            Path                        : cn={31B2F340-016D-11D2-945F-00C04FB984F9},cn=policies,cn=system,DC=COMPANY,DC=COM
+            ID                          : {31B2F340-016D-11D2-945F-00C04FB984F9}
+            DomainName                  : COMPANY.COM
+            CreationTime                : 9/1/2004 10:49:52 AM
+            ModificationTime            : 6/14/2011 10:21:20 AM
+            UserDSVersionNumber         : 33
+            ComputerDSVersionNumber     : 255
+            UserSysvolVersionNumber     : 33
+            ComputerSysvolVersionNumber : 255
+            Description                 :
+
+            Description
+            -----------
+            This example shows the basic syntax of the command.
+        .EXAMPLE
+            Get-GPO -Domain COMPANY.NET
+
+            DisplayName                 : Default Domain Policy
+            Path                        : cn={31B2F340-016D-11D2-945F-00C04FB984F9},cn=policies,cn=system,DC=COMPANY,DC=NET
+            ID                          : {31B2F340-016D-11D2-945F-00C04FB984F9}
+            DomainName                  : COMPANY.NET
+            CreationTime                : 9/1/2004 10:49:52 AM
+            ModificationTime            : 6/14/2011 10:21:20 AM
+            UserDSVersionNumber         : 33
+            ComputerDSVersionNumber     : 255
+            UserSysvolVersionNumber     : 33
+            ComputerSysvolVersionNumber : 255
+            Description                 :
+
+            Description
+            -----------
+            This example shows using the domain parameter to specify an alternate domain.
         .NOTES
             FunctionName : Get-GPO
             Created by   : Jeff Patton
@@ -1241,9 +1279,48 @@ Function Get-UnlinkedGPO
  {
     <#
         .SYNOPSIS
+            Return a list of unlinked Group Policy Objects
         .DESCRIPTION
+            This function will return a list of unlinked Group Policy Objects from
+            the specified domain.
         .PARAMETER Domain
+            The FQDN of the domain to search
         .EXAMPLE
+            Get-UnlinkedGPO
+
+            DisplayName                 : No Offline Files GPO
+            Path                        : cn={7BE5802A-3A76-411E-B685-C2DE9A8DE8B9},cn=policies,cn=system,DC=COMPANY,DC=COM
+            ID                          : {7BE5802A-3A76-411E-B685-C2DE9A8DE8B9}
+            DomainName                  : COMPANY.COM
+            CreationTime                : 11/2/2005 11:06:34 AM
+            ModificationTime            : 6/14/2011 10:21:38 AM
+            UserDSVersionNumber         : 0
+            ComputerDSVersionNumber     : 14
+            UserSysvolVersionNumber     : 0
+            ComputerSysvolVersionNumber : 14
+            Description                 :
+
+            Description
+            -----------
+            This shows the basic syntax of the command.
+        .EXAMPLE
+            Get-UnlinkedGPO -Domain COMPANY.NET
+
+            DisplayName                 : PartialPath
+            Path                        : cn={D074F8A6-CA41-464F-96A6-9155C96B486B},cn=policies,cn=system,DC=COMPANY,DC=NET
+            ID                          : {D074F8A6-CA41-464F-96A6-9155C96B486B}
+            DomainName                  : COMPANY.NET
+            CreationTime                : 1/11/2010 11:11:14 AM
+            ModificationTime            : 6/14/2011 10:21:40 AM
+            UserDSVersionNumber         : 0
+            ComputerDSVersionNumber     : 4
+            UserSysvolVersionNumber     : 0
+            ComputerSysvolVersionNumber : 4
+            Description                 :
+
+            Description
+            -----------
+            This example shows using the domain parameter to specify an alternate domain.
         .NOTES
             FunctionName : Get-UnlinkedGPO
             Created by   : Jeff Patton
