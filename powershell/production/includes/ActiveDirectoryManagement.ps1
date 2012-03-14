@@ -1407,3 +1407,69 @@ Function Get-UnlinkedGPO
         Return $unlinkedGPO
         }
     }
+Function Get-DomainInfo
+ {
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER TargetDomain
+        .EXAMPLE
+        .NOTES
+            FunctionName : Get-DomainInfo
+            Created by   : jspatton
+            Date Coded   : 03/14/2012 15:56:20
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-DomainInfo
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [string]$TargetDomain = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().Name
+        )
+    Begin
+    {
+        $ContextType = "Domain"
+        $DomainContext = New-Object System.DirectoryServices.ActiveDirectory.DirectoryContext($ContextType,$TargetDomain)
+        }
+    Process
+    {
+        $Domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetDomain($DomainContext)
+        }
+    End
+    {
+        Return $Domain
+        }
+    }
+Function Get-ForestInfo
+ {
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER TargetDomain
+        .EXAMPLE
+        .NOTES
+            FunctionName : Get-ForestInfo
+            Created by   : jspatton
+            Date Coded   : 03/14/2012 15:56:29
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-ForestInfo
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [string]$TargetDomain = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().Name
+        )
+    Begin
+    {
+        $ContextType = "Forest"
+        }
+    Process
+    {
+        $ForestContext = New-Object System.DirectoryServices.ActiveDirectory.DirectoryContext($ContextType,$TargetDomain)
+        $Forest = [system.directoryservices.activedirectory.Forest]::GetForest($ForestContext) 
+        }
+    End
+    {
+        Return $Forest
+        }
+    }
