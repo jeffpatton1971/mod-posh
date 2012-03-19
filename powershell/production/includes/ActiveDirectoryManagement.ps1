@@ -105,7 +105,7 @@ Function Get-ADObjects
                 $objResult = New-Object -TypeName PSObject
                 foreach ($ADProperty in $ADProperties)
                 {
-                    Add-Member -InputObject $objResult -MemberType NoteProperty -Name $ADProperty -Value $ADObject.Properties.$ADProperty
+                    Add-Member -InputObject $objResult -MemberType NoteProperty -Name $ADProperty -Value $ADObject.Properties.($ADProperty.ToLower())
                     }
                 Add-Member -InputObject $objResult -MemberType NoteProperty -Name 'adsPath' -Value $ADObject.Properties.adspath
                 $ADObjects += $objResult
@@ -113,7 +113,7 @@ Function Get-ADObjects
             }
         Catch
         {
-            Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+            Return $Error[0].Exception
             }
         }
     End
