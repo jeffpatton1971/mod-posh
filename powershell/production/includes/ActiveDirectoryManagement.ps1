@@ -99,7 +99,17 @@ Function Get-ADObjects
                     [void]$DirectorySearcher.PropertiesToLoad.Add($Property)
                     }
 
-            $ADObjects = $DirectorySearcher.FindAll()
+            $ADObjects = @()
+            foreach ($ADObject in $DirectorySearcher.FindAll())
+            {
+                $objResult = New-Object -TypeName PSObject
+                foreach ($ADProperty in $ADProperties)
+                {
+                    Add-Member -InputObject $objResult -MemberType NoteProperty -Name $ADProperty -Value $ADObject.Properties.$ADProperty
+                    }
+                Add-Member -InputObject $objResult -MemberType NoteProperty -Name 'adsPath' -Value $ADObject.Properties.adspath
+                $ADObjects += $objResult
+                }
             }
         Catch
         {
