@@ -52,7 +52,7 @@
 [CmdletBinding()]
 Param
     (
-    [string]$ADSPath = 'DC=soecs,DC=ku,DC=edu' #(([ADSI]"").distinguishedName)
+    [string]$ADSPath = (([ADSI]"").distinguishedName)
     )
 Begin
     {
