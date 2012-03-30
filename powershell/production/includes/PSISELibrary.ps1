@@ -247,21 +247,21 @@ Function New-Script
             Write-Verbose "Don't create a script if we're installing the menu"
             try
             {
-                Write-Verbose "Create a new blank tab for the script"
-                $NewScript = $psISE.CurrentPowerShellTab.Files.Add()
                 Write-Verbose "Create a new empty script, return an error if there's an issue."
-                $NewScript.Editor.InsertText($TemplateScript)
-                $NewScript.Editor.InsertText(($NewScript.Editor.Select(22,1,22,2) -replace " ",""))
-                $NewScript.Editor.InsertText(($NewScript.Editor.Select(26,1,26,2) -replace " ",""))
-                $NewScript.Editor.InsertText(($NewScript.Editor.Select(40,1,40,2) -replace " ",""))
-                $NewScript.Editor.InsertText(($NewScript.Editor.Select(43,1,43,2) -replace " ",""))
-                $NewScript.Editor.Select(1,1,1,1)
                 if ($ScriptName.Substring(($ScriptName.Length)-4,4) -ne ".ps1")
                 {
                     $ScriptName += ".ps1"
                     }
-                Write-Verbose "Change encoding from Unicode BigEndian to ASCII"
-                $psISE.CurrentFile.GetType().GetField("Encoding","NonPublic,Instance").SetValue($psISE.CurrentFile, [text.encoding]::ASCII)
+                New-Item -Path (Get-Location) -Name $ScriptName -ItemType File |Out-Null
+                $NewScript = $psISE.CurrentPowerShellTab.Files.Add((Get-ChildItem $ScriptName)) 
+                $NewScript.Editor.InsertText($TemplateScript)
+                $NewScript.Editor.InsertText(($NewScript.Editor.Select(22,1,22,2) -replace " ",""))
+                $NewScript.Editor.InsertText(($NewScript.Editor.Select(23,1,23,2) -replace " ",""))
+                $NewScript.Editor.InsertText(($NewScript.Editor.Select(24,1,24,2) -replace " ",""))
+                $NewScript.Editor.InsertText(($NewScript.Editor.Select(28,1,28,2) -replace " ",""))
+                $NewScript.Editor.InsertText(($NewScript.Editor.Select(42,1,42,2) -replace " ",""))
+                $NewScript.Editor.InsertText(($NewScript.Editor.Select(45,1,45,2) -replace " ",""))
+                $NewScript.Editor.Select(1,1,1,1)
                 $NewScript.SaveAs("$((Get-Location).Path)\$($ScriptName)")
                 }
             catch
