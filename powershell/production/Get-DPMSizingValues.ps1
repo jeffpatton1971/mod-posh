@@ -174,7 +174,7 @@ Process
         Foreach ($VolumeIdentifier in $Volumes)
         {
             Write-Verbose 'This formula is located at G2 on the spreadsheet (=IF(J2>=100%,E2*J2,E2*1.5)). '
-            if ($ReplicaOverheadFactor -gt 1)
+            if (($ReplicaOverheadFactor/100) -gt 1)
             {
                 $ReplicaVolume = $VolumeIdentifier.Used * ($ReplicaOverheadFactor/100)
                 }
