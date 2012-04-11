@@ -12,6 +12,12 @@
         It appends to a CSV log file if it exists, or creates a new file if it doesn't.
     .PARAMETER FileName
         The fully qualified path and filename for the report.
+    .PARAMETER eventRecordID
+        This value is passed in from the even that triggered the task. This is the
+        record number of the event in the log. This is used to grab the specific
+        event that the script will query data from.
+    .PARAMETER eventChannel
+        This is the name of the log, as passed in from the Event subsystem.
     .EXAMPLE
         .\New-PrintJob.ps1
         
@@ -24,9 +30,16 @@
         Date Coded: August 17, 2011
         ScriptName is used to register events for this script
         LogName is used to determine which classic log to write to
+        
         Microsoft .NET Framework 3.5 or greater is required.
+        
+        This script was modified to pull the record id directly from the
+        event subsystem to work around an issue that is potentially caused
+        from pulling in all event id's.
     .LINK
         https://code.google.com/p/mod-posh/wiki/New-PrintJob
+    .LINK
+        http://www.patton-tech.com/2012/04/updated-new-printjob-script.html
 #>
 Param
     (
