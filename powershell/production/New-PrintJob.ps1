@@ -86,7 +86,7 @@ Process
             }
             
         $PrintLog = New-Object -TypeName PSObject -Property @{
-            Time = $Event307XML.Event.System.TimeCreated.SystemTime
+            Time = $Event307.TimeCreated
             Job = $Event307XML.Event.UserData.DocumentPrinted.Param1
             Document = $Event307XML.Event.UserData.DocumentPrinted.Param2
             User = $Event307XML.Event.UserData.DocumentPrinted.Param3
