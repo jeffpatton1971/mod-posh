@@ -30,7 +30,9 @@
 #>
 Param
     (
-        $FileName = "PrintLog-$((get-date -format "yyyMMdd")).csv"
+    $FileName = "PrintLog-$((get-date -format "yyyMMdd")).csv",
+    $eventRecordID,
+    $eventChannel
     )
 Begin
     {
@@ -46,29 +48,24 @@ Begin
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
 
         #	Dotsource in the functions you need.
-    }
+        }
 Process
     {
         Try
         {
-            $Event307 = Get-WinEvent -LogName $LogName |Where-Object {$_.id -eq 307}
+            $Event307 = Get-WinEvent -LogName $eventChannel -FilterXPath "<QueryList><Query Id='0' Path='$eventChannel'><Select Path='$eventChannel'>*[System[(EventRecordID=$eventRecordID)]]</Select></Query></QueryList>"
+            $Event307XML = ([xml]$Event307.ToXml())
             }
         Catch
         {
-            Write-Warning "This script requires Microsoft .NET Framework version 3.5 or greater"
+            $Message = $Error[0]
+            Write-Warning $Message
+            Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message 
             Break
             }
             
-        if ($Event307.Count -eq $null)
-        {
-            $PrintJob = $Event307
-            }
-        else
-        {
-            $PrintJob = $Event307[0]
-            }
 
-        $Client = $PrintJob.Properties[3].Value
+        $Client = $Event307.Properties[3].Value
         if($Client.IndexOf("\\") -gt -1)
         {
             $Lookup = "nslookup $($Client.Substring(2,($Client.Length)-2)) |Select-String 'Name:'"
@@ -89,22 +86,22 @@ Process
             }
             
         $PrintLog = New-Object -TypeName PSObject -Property @{
-            Time = $PrintJob.TimeCreated
-            Job = $PrintJob.Properties[0].Value
-            Document = $PrintJob.Properties[1].Value
-            User = $PrintJob.Properties[2].Value
+            Time = $Event307XML.Event.System.TimeCreated.SystemTime
+            Job = $Event307XML.Event.UserData.DocumentPrinted.Param1
+            Document = $Event307XML.Event.UserData.DocumentPrinted.Param2
+            User = $Event307XML.Event.UserData.DocumentPrinted.Param2
             Client = $Client
-            Printer = $PrintJob.Properties[4].Value
-            Port = $PrintJob.Properties[5].Value
-            Size = $PrintJob.Properties[6].Value
-            Pages = $PrintJob.Properties[7].Value
-            }        
+            Printer = $Event307XML.Event.UserData.DocumentPrinted.Param6
+            Port = $Event307XML.Event.UserData.DocumentPrinted.Param5
+            Size = $Event307XML.Event.UserData.DocumentPrinted.Param7
+            Pages = $Event307XML.Event.UserData.DocumentPrinted.Param8
+            }
+
+        $PrintLog = $PrintLog |Select-Object -Property Size, Time, User, Job, Client, Port, PRinter, Pages, Document
         $PrintLog = ConvertTo-Csv -InputObject $PrintLog -NoTypeInformation
-    }
+        }
 End
     {
-        $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message
         if ((Test-Path -Path "P:\PrintLogs\$($FileName)") -eq $true)
         {
             $PrintLog |Select-Object -Skip 1 |Out-File -FilePath $FileName -Append
@@ -113,4 +110,6 @@ End
         {
             $PrintLog |Out-File -FilePath $FileName
             }
-    }
+        $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
+        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message
+        }
