@@ -30,7 +30,7 @@
 #>
 Param
     (
-    $FileName = "PrintLog-$((get-date -format "yyyMMdd")).csv",
+    $FileName = "TEMP-PrintLog-$((get-date -format "yyyMMdd")).csv",
     $eventRecordID,
     $eventChannel
     )
@@ -89,7 +89,7 @@ Process
             Time = $Event307XML.Event.System.TimeCreated.SystemTime
             Job = $Event307XML.Event.UserData.DocumentPrinted.Param1
             Document = $Event307XML.Event.UserData.DocumentPrinted.Param2
-            User = $Event307XML.Event.UserData.DocumentPrinted.Param2
+            User = $Event307XML.Event.UserData.DocumentPrinted.Param3
             Client = $Client
             Printer = $Event307XML.Event.UserData.DocumentPrinted.Param6
             Port = $Event307XML.Event.UserData.DocumentPrinted.Param5
