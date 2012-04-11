@@ -104,11 +104,11 @@ End
     {
         if ((Test-Path -Path "P:\PrintLogs\$($FileName)") -eq $true)
         {
-            $PrintLog |Select-Object -Skip 1 |Out-File -FilePath $FileName -Append
+            $PrintLog |Select-Object -Skip 1 |Out-File -FilePath "P:\PrintLogs\$($FileName)" -Append
             }
         else
         {
-            $PrintLog |Out-File -FilePath $FileName
+            $PrintLog |Out-File -FilePath "P:\PrintLogs\$($FileName)"
             }
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message
