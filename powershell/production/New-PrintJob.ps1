@@ -66,7 +66,7 @@ Process
     {
         Try
         {
-            $Event307 = Get-WinEvent -LogName $eventChannel -FilterXPath "<QueryList><Query Id='0' Path='$eventChannel'><Select Path='$eventChannel'>*[System[(EventRecordID=$eventRecordID)]]</Select></Query></QueryList>"
+            $Event307 = Get-WinEvent -ErrorAction Stop -LogName $eventChannel -FilterXPath "<QueryList><Query Id='0' Path='$eventChannel'><Select Path='$eventChannel'>*[System[(EventRecordID=$eventRecordID)]]</Select></Query></QueryList>"
             $Event307XML = ([xml]$Event307.ToXml())
             }
         Catch
