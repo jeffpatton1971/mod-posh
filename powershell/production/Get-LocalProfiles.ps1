@@ -46,35 +46,34 @@ Begin
     #	Dotsource in the functions you need.
     . .\includes\ActiveDirectoryManagement.ps1
     
-    $Computers = Get-ADObjects -ADSPath "OU=Labs,DC=soecs,DC=ku,DC=edu" 
+    $Computers = Get-ADObjects -ADSPath $ADSPath 
     }
 Process
 {
     foreach ($Computer in $Computers)
     {
-        Write-Verbose "$($Computer.Properties.name) is accessible over the network"
-        if (!(Test-Connection -ComputerName $Computer.Properties.name -Count 1 -Quiet))
+        $ErrorActionPreference = "SilentlyContinue"
+        [string]$ComputerName = $Computer.name
+        Write-Verbose "Count the folders in \\$($ComputerName)\c$\users"
+        try
         {
-            Write-Verbose "Count the folders in the Users directory"
-            try
-            {
-                $UserCount = (Get-ChildItem -Path "\\$($Computer.Properties.name)\c$\users").Count
-                }
-            Catch
-            {
-                $UserCount = "Directory doesn't exist"
-                }
-            
+            $UserCount = (Get-ChildItem "\\$($ComputerName)\c$\users" -ErrorAction SilentlyContinue).Count
+            $UserFolderSize = Get-DiskUsage -Path "\\$($ComputerName)\c$\users"
+            $UserFolderSize = ($UserFolderSize |Measure-Object -Property FolderSize -Sum).Sum
+            Write-Verbose "Found $($UserCount) folders."
             }
-        else
+        Catch
         {
-            Write-Verbose "Set the message to display"
-            $UserCount = "Unable to connect"
             }
+        if ($UserCount -eq $null)
+        {
+            $UserCount = 0
+            }   
         Write-Verbose "Create the object to return in the report"
         $LineItem = New-Object -TypeName PSobject -Property @{
-            Computer = $Computer.Properties.name
+            Computer = $ComputerName
             UserCount = $UserCount
+            UserFolderSize = $UserFolderSize
             }
         $Report += $LineItem
         }

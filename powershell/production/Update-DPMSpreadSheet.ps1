@@ -74,9 +74,9 @@
 [CmdletBinding()]
 Param
     (
-    $ComputerName = @('fs1.company.com','fs2.company.com'),
-    $SharedDrives = @('G','W','U'),
-    $FileName = 'C:\Users\jspatton\DPMvolumeSizing v3.3\DPMvolumeSizing.xlsx',
+    $ComputerName = @('people.soecs.ku.edu','fs.soecs.ku.edu'),
+    $SharedDrives = @('L','P','R','S','W','Y','H','I','J','K','L','M','N','O','Q','T','U','V'),
+    $FileName = 'C:\Users\jspatton\SyncStuff\DPMvolumeSizing v3.3\DPMvolumeSizing.xlsx',
     $WorkSheetName = 'DPM File Volume',
     $VolumeIDColumn = 'D:D',
     $TargetColumn = 'E'

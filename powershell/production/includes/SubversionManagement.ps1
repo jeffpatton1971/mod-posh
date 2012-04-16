@@ -623,7 +623,7 @@ Function New-WikiPage
     {
         foreach ($PoshFile in $FilesToOpen)
         {
-            Write-Verbose $PoshFile
+            Write-Verbose "$($PoshFile)"
             if ($WikiFile -eq $false)
             {
                 if ($LibraryFile -eq $true)
