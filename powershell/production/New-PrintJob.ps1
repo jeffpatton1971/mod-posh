@@ -43,9 +43,16 @@
 #>
 Param
     (
-    $FileName = "TEMP-PrintLog-$((get-date -format "yyyMMdd")).csv",
+    $FileName = "PrintLog-$((get-date -format "yyyMMdd")).csv",
     $eventRecordID,
-    $eventChannel
+    $eventChannel,
+    $SqlUser = ,
+    $SqlPass = ,
+    $SqlServer = 'SQL',
+    $SqlDatabase = 'Printing',
+    $SqlTable = 'JobLog',
+    $Logged = $True,
+    $Email = $True
     )
 Begin
     {
@@ -61,6 +68,9 @@ Begin
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
 
         #	Dotsource in the functions you need.
+        $From = 'printserver@company.com'
+        $To = 'administrator@company.com'
+        $SMTPServer = 'smtp.company.com'
         }
 Process
     {
@@ -109,19 +119,55 @@ Process
             Size = $Event307XML.Event.UserData.DocumentPrinted.Param7
             Pages = $Event307XML.Event.UserData.DocumentPrinted.Param8
             }
-
-        $PrintLog = $PrintLog |Select-Object -Property Size, Time, User, Job, Client, Port, PRinter, Pages, Document
-        $PrintLog = ConvertTo-Csv -InputObject $PrintLog -NoTypeInformation
+        $DocumentName = ($PrintLog.Document).Replace("'","``")
+        $Size = $PrintLog.Size
+        try
+        {
+            $ErrorActionPreference = 'Stop'
+            $SqlConn = New-Object System.Data.SqlClient.SqlConnection("Server=$($SqlServer);Database=$($SqlDatabase);Uid=$($SqlUser);Pwd=$($SqlPass)")
+            $SqlConn.Open()
+            $Sqlcmd = $SqlConn.CreateCommand()
+            $Sqlcmd.CommandText = "INSERT INTO [dbo].[$($SqlTable)] ([Time],[UserName],[Pages],[DocumentName],[Client],[Size],[Printer],[Port],[Job]) `
+                VALUES ('$($PrintLog.Time)','$($PrintLog.User)',$([int]$PrintLog.Pages),'$($DocumentName)','$($PrintLog.Client)',$Size,'$($PrintLog.Printer)','$($PrintLog.Port)',$([int]$PrintLog.Job))"
+            $Sqlcmd.ExecuteNonQuery() |Out-Null
+            $SqlConn.Close()
+            }
+        catch
+        {
+            $SqlConn.Close()
+            $MyError = New-Object -TypeName PSObject -Property @{
+                SQLStatement = $Sqlcmd.CommandText
+                ErrorDate = Get-Date
+                Error = $Error[0].exception.message.tostring()
+                Data = $PrintLog
+                }
+            $SqlConn.Close()
+            $ErrorLog = ConvertTo-Csv -InputObject $MyError -NoTypeInformation
+            $ErrorLog |Select-Object -Skip 1 |Out-File -FilePath C:\TEMP\ErrorLog.csv -Append
+            
+            if ($Email -eq $true)
+            {
+                $BodyHtml = $MyError |ConvertTo-Html
+                [string]$Body = $BodyHtml
+                Send-MailMessage -BodyAsHtml $Body -From $From -SmtpServer $SMTPServer -Subject $Error[0].exception.message.tostring() -To $To
+                }
+            }
         }
 End
     {
-        if ((Test-Path -Path "P:\PrintLogs\$($FileName)") -eq $true)
+        if ($Logged -eq $true)
         {
-            $PrintLog |Select-Object -Skip 1 |Out-File -FilePath "P:\PrintLogs\$($FileName)" -Append
-            }
-        else
-        {
-            $PrintLog |Out-File -FilePath "P:\PrintLogs\$($FileName)"
+            $PrintLog = $PrintLog |Select-Object -Property Size, Time, User, Job, Client, Port, Printer, Pages, Document
+            $PrintLog = ConvertTo-Csv -InputObject $PrintLog -NoTypeInformation
+
+            if ((Test-Path -Path "P:\PrintLogs\$($FileName)") -eq $true)
+            {
+                $PrintLog |Select-Object -Skip 1 |Out-File -FilePath "P:\PrintLogs\$($FileName)" -Append
+                }
+            else
+            {
+                $PrintLog |Out-File -FilePath "P:\PrintLogs\$($FileName)"
+                }
             }
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message
