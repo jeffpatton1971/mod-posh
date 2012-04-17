@@ -382,48 +382,6 @@ Function New-Function
     {
         }
     }
-Register-ObjectEvent -InputObject $psISE.CurrentPowerShellTab.Files CollectionChanged -Action{
-    <#
-        .SYNOPSIS
-            This command register an event handler for new files created within the ISE
-        .DESCRIPTION
-            The default encoding for PowerShell ISE is Unicode BigEndian, for some unknown
-            reason, and for those of us who use version control systems, like Subversion,
-            may have come across those files being set as binary.
-
-            I got around this issue by creating a function to change the RepoProps attribute,
-            but this solution is much more elegant. Once executed, this handler waits for a new
-            file to be created, once that happens, it immediately sets the Encoding property 
-            to ASCII.
-        .PARAMETER
-        .EXAMPLE
-        .NOTES
-            Created by   : Richard Vantreas
-            Date Coded   : 10/13/2011 12:06:31
-        .LINK
-            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Register-ObjectEvent
-        .LINK
-            http://poshcode.org/3000
-    #>
-    [CmdletBinding()]
-    Param
-        (
-        )
-    Begin
-    {
-        }
-    Process
-    {
-        Write-Verbose "Iterate through ISEFile objects"
-        $Event.Sender | foreach {
-            Write-Verbose "Set private field which holds default encoding to ASCII"
-            $_.GetType().GetField("Encodindg","Nonpublic,Instance").SetValue($_, [text.encoding]::ASCII)
-            }
-        }
-    End
-    {
-        }
-    }
 Function Edit-File
 {
     <#
