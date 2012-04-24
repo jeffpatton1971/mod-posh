@@ -1239,7 +1239,7 @@ Function Get-OpenSessions
                     User = $Session.GetType().InvokeMember("User","GetProperty",$null,$Session,$null)
                     Computer = $Session.GetType().InvokeMember("Computer","GetProperty",$null,$Session,$null)
                     ConnectTime = $Session.GetType().InvokeMember("ConnectTime","GetProperty",$null,$Session,$null)
-                    IdelTime = $Session.GetType().InvokeMember("IdleTime","GetProperty",$null,$Session,$null)
+                    IdleTime = $Session.GetType().InvokeMember("IdleTime","GetProperty",$null,$Session,$null)
                     }
                 }
             Catch
