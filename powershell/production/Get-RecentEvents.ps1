@@ -59,12 +59,13 @@ Begin
  
         #	Dotsource in the functions you need.
         Write-Verbose "Setting checkpoint to $($Hours) ago."
-        $CheckPoint = (Get-Date).AddHours(-($Hours))
+        $CheckPoint = Get-Date
+        $TimeStamp = Get-Date -f MMddyyy-HHMMss
         
-        if ((Test-Path $FilePath) -ne $true)
+        if ((Test-Path "$($FilePath)\$($TimeStamp)") -ne $true)
         {
             Write-Verbose "Creating $($FilePath)"
-            New-Item -Path $FilePath -ItemType Directory -Force |Out-Null
+            New-Item -Path "$($FilePath)\$($TimeStamp)" -ItemType Directory -Force |Out-Null
             }
         }
 Process
@@ -84,7 +85,8 @@ Process
                 try
                 {
                     Write-Verbose "Connect to $($ServerName) and return a list of logs that were written within the last ($Hours) hour(s)"
-                    $ThisLog = Get-WinEvent -LogName $Log.LogName -ComputerName $ServerName |Where-Object {(Get-Date($_.TimeCreated)) -gt ($CheckPoint)}
+                    $ThisLog = Get-WinEvent -LogName $Log.LogName -ComputerName $ServerName `
+                        |Where-Object {(Get-Date($_.TimeCreated)) -gt $CheckPoint.AddHours(-($Hours)) -and (Get-Date($_.TimeCreated)) -lt $CheckPoint}
                     if ($ThisLog)
                     {
                         Write-Verbose "Events were found in $($Log.LogName)"
