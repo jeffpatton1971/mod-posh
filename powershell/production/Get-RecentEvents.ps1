@@ -96,7 +96,7 @@ Process
                             Write-Verbose "$($FilePath)\$($ServerName) not found, creating."
                             New-Item -Path "$($FilePath)\$($ServerName)" -ItemType Directory -Force |Out-Null
                             }
-                        Write-Verbose "Exporting log entries to $($FilePath)\$($ServerName)\$($FileName)"
+                        Write-Verbose "Exporting $($ThisLog.Count)log entries to $($FilePath)\$($ServerName)\$($FileName)"
                         $ThisLog |Export-Csv -Path "$($FilePath)\$($ServerName)\$($FileName)" -NoTypeInformation
                         }
                     }
