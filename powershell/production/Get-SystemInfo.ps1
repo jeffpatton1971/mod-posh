@@ -7,12 +7,10 @@
         processor ID, MAC address of the primary network interface, operating system version 
         (including service pack level), and the amount of physical memory that is installed 
         (displayed in the most logical units).
-        
-        The output should be stored in an XML-formatted file in the Documents special folder.
     .PARAMETER ComputerName
         The name of the computer
     .PARAMETER FilePath
-        The path to store the output xml. The default path is the Documents special folder.
+        The path to store the output xml. The default path is C:\LogFiles
     .EXAMPLE
         .\Get-SystemInfo.ps1 -ComputerName 'server01','server02'
         
@@ -57,7 +55,7 @@
 Param
     (
     $ComputerName = '.',
-    $FilePath = "$([environment]::getfolderpath("mydocuments"))"
+    $FilePath = 'C:\LogFiles'
     )
 Begin
     {
@@ -72,6 +70,14 @@ Begin
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
  
         #	Dotsource in the functions you need.
+        $TimeStamp = Get-Date -f MMddyyy
+        $LogPath = "$($FilePath)\$($TimeStamp)"
+        
+        if ((Test-Path $LogPath) -ne $true)
+        {
+            Write-Verbose "Creating $($LogPath)"
+            New-Item -Path $LogPath -ItemType Directory -Force |Out-Null
+            }
         }
 Process
     {
@@ -79,14 +85,7 @@ Process
         {
             Write-Verbose "Connecting to $($Computer)"
             Write-Verbose 'Create filename'
-            if ($Computer -eq '.')
-            {
-                $FileName = "$(& hostname).$((get-date -format "yyyMMdd")).xml"
-                }
-            else
-            {
-                $FileName = "$($Computer).$((get-date -format "yyyMMdd")).xml"
-                }
+            $FileName = "System-Information.$((get-date -format "yyyMMdd")).csv"
             
             $Cores = $null
             $ClockSpeed = $null
@@ -181,11 +180,20 @@ Process
                 Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
                 }
 
-            Write-Verbose "Store inventory report in $($FilePath)"
+            Write-Verbose "Store inventory report in $($LogPath)\$($Computer)"
             try
             {
+                if ($Computer -eq '.')
+                {
+                    $Computer = (& hostname)
+                    }
+                if ((Test-Path "$($LogPath)\$($Computer)") -ne $true)
+                {
+                    Write-Verbose "$($LogPath)\$($Computer) not found, creating."
+                    New-Item -Path "$($LogPath)\$($Computer)" -ItemType Directory -Force |Out-Null
+                    }
                 $InventoryReport |Select-Object -Property ComputerName, DomainName, Manufacturer, Model, NumProcessors, NumCores, ClockSpeed, ProcessorID, MACAddress, OperatingSystemVersion, PhysicalRam `
-                 |Export-Clixml -Path "$($FilePath)\$($FileName)"  -ErrorAction Stop
+                 |Export-Csv -Path "$($LogPath)\$($Computer)\$($FileName)" -NoTypeInformation -ErrorAction Stop
                 }
             catch
             {
