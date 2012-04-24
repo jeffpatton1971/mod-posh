@@ -41,7 +41,7 @@
 [CmdletBinding()]
 Param
     (
-        $Servers,
+        $Servers = (& hostname),
         $Hours = 2,
         $FilePath = 'C:\LogFiles'
     )
@@ -60,7 +60,7 @@ Begin
         #	Dotsource in the functions you need.
         Write-Verbose "Setting checkpoint to $(Get-Date)."
         $CheckPoint = Get-Date
-        $TimeStamp = Get-Date -f MMddyyy-HHMMss
+        $TimeStamp = Get-Date -f MMddyyy
         $LogPath = "$($FilePath)\$($TimeStamp)"
         
         if ((Test-Path $LogPath) -ne $true)
