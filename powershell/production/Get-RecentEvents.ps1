@@ -61,51 +61,51 @@ Begin
         Write-Verbose "Setting checkpoint to $(Get-Date)."
         $CheckPoint = Get-Date
         $TimeStamp = Get-Date -f MMddyyy-HHMMss
-        $FilePath = "$($FilePath)\$($TimeStamp)"
+        $LogPath = "$($FilePath)\$($TimeStamp)"
         
-        if ((Test-Path $FilePath) -ne $true)
+        if ((Test-Path $LogPath) -ne $true)
         {
-            Write-Verbose "Creating $($FilePath)"
-            New-Item -Path $FilePath -ItemType Directory -Force |Out-Null
+            Write-Verbose "Creating $($LogPath)"
+            New-Item -Path $LogPath -ItemType Directory -Force |Out-Null
             }
         }
 Process
     {
         foreach ($ServerName in $Servers)
         {
-            Write-Verbose "Get a list of logs that have records from $($ServerName)"
-            $ActiveLogs = Get-WinEvent -ListLog * -ComputerName $ServerName |Where-Object {$_.RecordCount -gt 0}
-            Write-Verbose "Found $($ActiveLogs.Count) logs"
-            
-            foreach ($Log in $ActiveLogs)
+            try
             {
-                Write-Verbose "Build filename"
-                $FileName = "$(($Log.LogName).Replace('/','-')).csv"
-                Write-Verbose "$($FileName)"
+                Write-Verbose "Get a list of logs that have records from $($ServerName)"
+                $ActiveLogs = Get-WinEvent -ListLog * -ComputerName $ServerName |Where-Object {$_.RecordCount -gt 0}
+                Write-Verbose "Found $($ActiveLogs.Count) logs"
                 
-                try
-                {
-                    Write-Verbose "Connect to $($ServerName) and return a list of logs that were written within the last ($Hours) hour(s)"
+                foreach ($Log in $ActiveLogs)
+                {                   
+                    Write-Verbose "Connect to $($ServerName) and return a list of logs that were written within the last $($Hours) hour(s)"
                     $ThisLog = Get-WinEvent -LogName $Log.LogName -ComputerName $ServerName `
                         |Where-Object {(Get-Date($_.TimeCreated)) -gt $CheckPoint.AddHours(-($Hours)) -and (Get-Date($_.TimeCreated)) -lt $CheckPoint}
+                    
                     if ($ThisLog)
                     {
-                        Write-Verbose "Events were found in $($Log.LogName)"
-                        if ((Test-Path "$($FilePath)\$($ServerName)") -ne $true)
+                        Write-Verbose "$($ThisLog.Count) event(s) were found in $($Log.LogName)"
+                        Write-Verbose "Building filename from $($Log.LogName)"
+                        $FileName = "$(($Log.LogName).Replace('/','-')).csv"
+                        Write-Verbose "$($FileName)"
+                        if ((Test-Path "$($LogPath)\$($ServerName)") -ne $true)
                         {
-                            Write-Verbose "$($FilePath)\$($ServerName) not found, creating."
-                            New-Item -Path "$($FilePath)\$($ServerName)" -ItemType Directory -Force |Out-Null
+                            Write-Verbose "$($LogPath)\$($ServerName) not found, creating."
+                            New-Item -Path "$($LogPath)\$($ServerName)" -ItemType Directory -Force |Out-Null
                             }
-                        Write-Verbose "Exporting $($ThisLog.Count)log entries to $($FilePath)\$($ServerName)\$($FileName)"
-                        $ThisLog |Export-Csv -Path "$($FilePath)\$($ServerName)\$($FileName)" -NoTypeInformation
+                        Write-Verbose "Exporting $($ThisLog.Count) log entries to $($LogPath)\$($ServerName)\$($FileName)"
+                        $ThisLog |Export-Csv -Path "$($LogPath)\$($ServerName)\$($FileName)" -NoTypeInformation
                         }
                     }
-                catch
-                {
-                    $Message = $Error[0].Exception
-                    Write-Verbose $Message
-                    Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message	
-                    }
+                }
+            catch
+            {
+                $Message = $Error[0].Exception
+                Write-Verbose $Message
+                Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message	
                 }
             }
         }
