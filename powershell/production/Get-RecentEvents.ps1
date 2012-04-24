@@ -61,11 +61,12 @@ Begin
         Write-Verbose "Setting checkpoint to $($Hours) ago."
         $CheckPoint = Get-Date
         $TimeStamp = Get-Date -f MMddyyy-HHMMss
+        $FilePath = "$($FilePath)\$($TimeStamp)"
         
-        if ((Test-Path "$($FilePath)\$($TimeStamp)") -ne $true)
+        if ((Test-Path $FilePath) -ne $true)
         {
             Write-Verbose "Creating $($FilePath)"
-            New-Item -Path "$($FilePath)\$($TimeStamp)" -ItemType Directory -Force |Out-Null
+            New-Item -Path $FilePath -ItemType Directory -Force |Out-Null
             }
         }
 Process
