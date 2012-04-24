@@ -80,7 +80,7 @@ Process
             foreach ($Log in $ActiveLogs)
             {
                 Write-Verbose "Build filename"
-                $FileName = "$($Log.LogName).csv"
+                $FileName = "$(($Log.LogName).Replace('/','-')).csv"
                 Write-Verbose "$($FileName)"
                 
                 try
