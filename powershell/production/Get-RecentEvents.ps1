@@ -79,7 +79,7 @@ Process
             {
                 Write-Verbose "Build filename"
                 $FileName = "$($Log.LogName).csv"
-                Write-Verbose "$(FileName)"
+                Write-Verbose "$($FileName)"
                 
                 try
                 {
