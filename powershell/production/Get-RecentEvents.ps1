@@ -58,7 +58,7 @@ Begin
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
  
         #	Dotsource in the functions you need.
-        Write-Verbose "Setting checkpoint to $($Hours) ago."
+        Write-Verbose "Setting checkpoint to $(Get-Date)."
         $CheckPoint = Get-Date
         $TimeStamp = Get-Date -f MMddyyy-HHMMss
         $FilePath = "$($FilePath)\$($TimeStamp)"
