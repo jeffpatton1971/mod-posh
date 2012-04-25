@@ -154,7 +154,26 @@ Process
                         }
                     }
                 Write-Verbose 'Pull in the MAC address, this could contain an array on multi-homed machines'
-                $MacAddress = $Adapter |Select-Object -Property MACAddress -ExpandProperty MACAddress
+                if ($Adapter.Count -ne $null)
+                {
+                    $Adapters = $Adapter |Where-Object {$_.MACAddress -ne $null} |Select-Object -Property MACAddress
+                    foreach ($Mac in $Adapters)
+                    {
+                        $Counter ++
+                        if ($Counter -eq $Adapters.Count)
+                        {
+                            $MacAddress += "$($Mac.MACAddress)"
+                            }
+                        else
+                        {
+                            $MacAddress += "$($Mac.MACAddress), "
+                            }
+                        }
+                    }
+                else
+                {
+                    $MacAddress = $Adapter.MACAddress
+                    }
                 
                 Write-Verbose 'Determine ServicePack level'
                 if ($OS.ServicePackMajorVersion -gt 0)
@@ -176,7 +195,7 @@ Process
                     NumCores = $Cores
                     ClockSpeed = $ClockSpeed/$ComputerSystem.NumberOfProcessors
                     ProcessorID = $ProcessorId
-                    MACAddress = $MACAddress
+                    MACAddress = $MACAddress.tostring()
                     OperatingSystemVersion = $OSCaption
                     PhysicalRam = $PhysicalRam
                     }
