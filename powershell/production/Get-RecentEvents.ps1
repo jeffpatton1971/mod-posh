@@ -41,7 +41,7 @@
 [CmdletBinding()]
 Param
     (
-        $Servers = (& hostname),
+        $ComputerName = (& hostname),
         $Hours = 2,
         $FilePath = 'C:\LogFiles'
     )
@@ -71,7 +71,7 @@ Begin
         }
 Process
     {
-        foreach ($ServerName in $Servers)
+        foreach ($ServerName in $ComputerName)
         {
             try
             {
