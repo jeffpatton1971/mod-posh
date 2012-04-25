@@ -71,33 +71,53 @@ Begin
         }
 Process
     {
-        foreach ($ServerName in $ComputerName)
+        foreach ($Computer in $ComputerName)
         {
             try
             {
-                Write-Verbose "Get a list of logs that have records from $($ServerName)"
-                $ActiveLogs = Get-WinEvent -ListLog * -ComputerName $ServerName |Where-Object {$_.RecordCount -gt 0}
-                Write-Verbose "Found $($ActiveLogs.Count) logs"
-                
+                $OS = Get-WmiObject -Class Win32_OperatingSystem -ComputerName $Computer -ErrorAction Stop
+                Write-Verbose "Get a list of logs that have records from $($Computer)"
+                if ($OS.Version -ge 6)
+                {
+                    $ActiveLogs = Get-WinEvent -ListLog * -ComputerName $Computer |Where-Object {$_.RecordCount -gt 0}
+                    Write-Verbose "Found $($ActiveLogs.Count) logs"
+                    }
+                else
+                {
+                    $ActiveLogs = @()
+                    ($Log = New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value 'System'
+                    $ActiveLogs += $Log
+                    ($Log = New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value 'Application'
+                    $ActiveLogs += $Log
+                    ($Log = New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value 'Security'
+                    $ActiveLogs += $Log
+                    }
                 foreach ($Log in $ActiveLogs)
                 {                   
-                    Write-Verbose "Connect to $($ServerName) and return a list of logs that were written within the last $($Hours) hour(s)"
-                    $ThisLog = Get-WinEvent -LogName $Log.LogName -ComputerName $ServerName `
-                        |Where-Object {(Get-Date($_.TimeCreated)) -gt $CheckPoint.AddHours(-($Hours)) -and (Get-Date($_.TimeCreated)) -lt $CheckPoint}
-                    
+                    Write-Verbose "Connect to $($Computer) and return a list of logs that were written within the last $($Hours) hour(s)"
+                    if ($OS.Version -ge 6)
+                    {
+                        $ThisLog = Get-WinEvent -LogName $Log.LogName -ComputerName $Computer `
+                            |Where-Object {(Get-Date($_.TimeCreated)) -gt $CheckPoint.AddHours(-($Hours)) -and (Get-Date($_.TimeCreated)) -lt $CheckPoint}
+                        }
+                    else
+                    {
+                        $ThisLog = Get-EventLog -LogName $Log.LogName -ComputerName $Computer `
+                            |Where-Object {(Get-Date($_.TimeGenerated)) -gt $CheckPoint.AddHours(-($Hours)) -and (Get-Date($_.TimeGenerated)) -lt $CheckPoint}
+                        }
                     if ($ThisLog)
                     {
                         Write-Verbose "$($ThisLog.Count) event(s) were found in $($Log.LogName)"
                         Write-Verbose "Building filename from $($Log.LogName)"
                         $FileName = "$(($Log.LogName).Replace('/','-')).csv"
                         Write-Verbose "$($FileName)"
-                        if ((Test-Path "$($LogPath)\$($ServerName)") -ne $true)
+                        if ((Test-Path "$($LogPath)\$($Computer)") -ne $true)
                         {
-                            Write-Verbose "$($LogPath)\$($ServerName) not found, creating."
-                            New-Item -Path "$($LogPath)\$($ServerName)" -ItemType Directory -Force |Out-Null
+                            Write-Verbose "$($LogPath)\$($Computer) not found, creating."
+                            New-Item -Path "$($LogPath)\$($Computer)" -ItemType Directory -Force |Out-Null
                             }
-                        Write-Verbose "Exporting $($ThisLog.Count) log entries to $($LogPath)\$($ServerName)\$($FileName)"
-                        $ThisLog |Export-Csv -Path "$($LogPath)\$($ServerName)\$($FileName)" -NoTypeInformation
+                        Write-Verbose "Exporting $($ThisLog.Count) log entries to $($LogPath)\$($Computer)\$($FileName)"
+                        $ThisLog |Export-Csv -Path "$($LogPath)\$($Computer)\$($FileName)" -NoTypeInformation
                         }
                     }
                 }
