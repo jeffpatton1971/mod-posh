@@ -85,12 +85,9 @@ Process
                 else
                 {
                     $ActiveLogs = @()
-                    ($Log = New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value 'System'
-                    $ActiveLogs += $Log
-                    ($Log = New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value 'Application'
-                    $ActiveLogs += $Log
-                    ($Log = New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value 'Security'
-                    $ActiveLogs += $Log
+                    $ActiveLogs += ((New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value 'System' -PassThru)
+                    $ActiveLogs += ((New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value 'Application' -PassThru)
+                    $ActiveLogs += ((New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value 'Security' -PassThru)
                     }
                 foreach ($Log in $ActiveLogs)
                 {                   
