@@ -102,12 +102,20 @@ Process
                 Write-Verbose 'Get details about the processor'
                 $Processor = Get-WmiObject -Class Win32_Processor -ComputerName $Computer -ErrorAction Stop
                 
-                Write-Verbose 'Determine the physical adapter'
-                $Adapter = Get-WmiObject -Class Win32_NetworkAdapter -Filter "NetEnabled = True AND NOT PNPDeviceID LIKE 'ROOT\\%'" -ComputerName $Computer -ErrorAction Stop
-                
                 Write-Verbose 'Get OperatingSystem information'
                 $OS = Get-WmiObject -Class Win32_OperatingSystem -ComputerName $Computer -ErrorAction Stop
 
+                Write-Verbose 'Determine the physical adapter'
+                if ($OS.Version -lt 6)
+                {
+                    Write-Verbose 'Running on a version of Windows less than Vista'
+                    $Adapter = Get-WmiObject -Class Win32_NetworkAdapter -Filter "NOT PNPDeviceID LIKE 'ROOT\\%'" -ComputerName $Computer -ErrorAction Stop
+                    }
+                else
+                {
+                    $Adapter = Get-WmiObject -Class Win32_NetworkAdapter -Filter "NetEnabled = True AND NOT PNPDeviceID LIKE 'ROOT\\%'" -ComputerName $Computer -ErrorAction Stop
+                    }
+                
                 Write-Verbose 'Calculating amount of ram'
                 if ($ComputerSystem.TotalPhysicalMemory -gt [math]::Pow(1024,3))
                 {
