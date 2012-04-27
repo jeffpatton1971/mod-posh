@@ -9,9 +9,14 @@
         This should be the same event that triggered this script to
         run in the first place.
         
+        This script will read in the output of the Get-PrintJobId script and use that to 
+        store the value of copies in the database as well as in the log file.
+        
         It appends to a CSV log file if it exists, or creates a new file if it doesn't.
     .PARAMETER FileName
         The fully qualified path and filename for the report.
+    .PARAMETER FilePath
+        The path to where the files should be stored.
     .PARAMETER eventRecordID
         This value is passed in from the even that triggered the task. This is the
         record number of the event in the log. This is used to grab the specific
@@ -44,6 +49,7 @@
 Param
     (
     $FileName = "PrintLog-$((get-date -format "yyyMMdd")).csv",
+    $FilePath = "P:\PrintLogs",
     $eventRecordID,
     $eventChannel,
     $SqlUser ,
@@ -57,15 +63,14 @@ Param
 Begin
     {
         $ScriptName = $MyInvocation.MyCommand.ToString()
-        $LogName = "Microsoft-Windows-PrintService/Operational"
         $ScriptPath = $MyInvocation.MyCommand.Path
         $Username = $env:USERDOMAIN + "\" + $env:USERNAME
         $ErrorActionPreference = "Stop"
         
-        New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
+        New-EventLog -Source $ScriptName -LogName 'Windows Powershell' -ErrorAction SilentlyContinue
 
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
+        Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
 
         #	Dotsource in the functions you need.
         $From = 'printserver@company.com'
@@ -83,7 +88,7 @@ Process
         {
             $Message = $Error[0]
             Write-Warning $Message
-            Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message 
+            Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message 
             Break
             }
             
@@ -107,6 +112,15 @@ Process
         {
             $Client = $PrintJob.Properties[3].Value
             }
+        if ((Test-Path -Path "$($FilePath)\$($Event307XML.Event.UserData.DocumentPrinted.Param1).xml") -eq $true)
+        {
+            $Copies = (Import-Clixml "$($FilePath)\$($Event307XML.Event.UserData.DocumentPrinted.Param1).xml").Copies
+            Remove-Item "C:\PrintLogs\$($Event307XML.Event.UserData.DocumentPrinted.Param1).xml"
+            }
+        else
+        {
+            $Copies = 1
+            }
             
         $PrintLog = New-Object -TypeName PSObject -Property @{
             Time = $Event307.TimeCreated
@@ -118,6 +132,7 @@ Process
             Port = $Event307XML.Event.UserData.DocumentPrinted.Param5
             Size = $Event307XML.Event.UserData.DocumentPrinted.Param7
             Pages = $Event307XML.Event.UserData.DocumentPrinted.Param8
+            Copies = $Copies
             }
         $DocumentName = ($PrintLog.Document).Replace("'","``")
         $Size = $PrintLog.Size
@@ -127,8 +142,8 @@ Process
             $SqlConn = New-Object System.Data.SqlClient.SqlConnection("Server=$($SqlServer);Database=$($SqlDatabase);Uid=$($SqlUser);Pwd=$($SqlPass)")
             $SqlConn.Open()
             $Sqlcmd = $SqlConn.CreateCommand()
-            $Sqlcmd.CommandText = "INSERT INTO [dbo].[$($SqlTable)] ([Time],[UserName],[Pages],[DocumentName],[Client],[Size],[Printer],[Port],[Job]) `
-                VALUES ('$($PrintLog.Time)','$($PrintLog.User)',$([int]$PrintLog.Pages),'$($DocumentName)','$($PrintLog.Client)',$Size,'$($PrintLog.Printer)','$($PrintLog.Port)',$([int]$PrintLog.Job))"
+            $Sqlcmd.CommandText = "INSERT INTO [dbo].[$($SqlTable)] ([Time],[UserName],[Pages],[DocumentName],[Client],[Size],[Printer],[Port],[Job],[Copies]) `
+                VALUES ('$($PrintLog.Time)','$($PrintLog.User)',$([int]$PrintLog.Pages),'$($DocumentName)','$($PrintLog.Client)',$Size,'$($PrintLog.Printer)','$($PrintLog.Port)',$([int]$PrintLog.Job),$([int]$PrintLog.Copies))"
             $Sqlcmd.ExecuteNonQuery() |Out-Null
             $SqlConn.Close()
             }
@@ -143,7 +158,7 @@ Process
                 }
             $SqlConn.Close()
             $ErrorLog = ConvertTo-Csv -InputObject $MyError -NoTypeInformation
-            $ErrorLog |Select-Object -Skip 1 |Out-File -FilePath C:\TEMP\ErrorLog.csv -Append
+            $ErrorLog |Select-Object -Skip 1 |Out-File -FilePath "$($FilePath)\ErrorLog.csv" -Append
             
             if ($Email -eq $true)
             {
@@ -160,15 +175,15 @@ End
             $PrintLog = $PrintLog |Select-Object -Property Size, Time, User, Job, Client, Port, Printer, Pages, Document
             $PrintLog = ConvertTo-Csv -InputObject $PrintLog -NoTypeInformation
 
-            if ((Test-Path -Path "P:\PrintLogs\$($FileName)") -eq $true)
+            if ((Test-Path -Path "$($FilePath)\$($FileName)") -eq $true)
             {
-                $PrintLog |Select-Object -Skip 1 |Out-File -FilePath "P:\PrintLogs\$($FileName)" -Append
+                $PrintLog |Select-Object -Skip 1 |Out-File -FilePath "$($FilePath)\$($FileName)" -Append
                 }
             else
             {
-                $PrintLog |Out-File -FilePath "P:\PrintLogs\$($FileName)"
+                $PrintLog |Out-File -FilePath "$($FilePath)\$($FileName)"
                 }
             }
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message
+        Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message
         }
