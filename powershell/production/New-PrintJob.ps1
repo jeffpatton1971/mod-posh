@@ -24,11 +24,11 @@
     .PARAMETER eventChannel
         This is the name of the log, as passed in from the Event subsystem.
     .EXAMPLE
-        .\New-PrintJob.ps1
+        P:\Scripts\New-PrintJob.ps1 -eventRecordID $(eventRecordID) -eventChannel $(eventChannel)
         
         Description
         -----------
-        This is the only syntax for this script.
+        This is how you would call the script when you attach it to an Event Triggered Task.
     .NOTES
         ScriptName: New-PrintJob.ps1
         Created By: Jeff Patton
