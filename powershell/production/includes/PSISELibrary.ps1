@@ -189,7 +189,6 @@ Function New-Script
         "       Created By : $($env:Username)`r`n"
         "       Date Coded : $(Get-Date)`r`n"
         "       ScriptName is used to register events for this script`r`n"
-        "       LogName is used to determine which classic log to write to`r`n"
         "`r`n"        
         "       ErrorCodes`r`n"
         "           100 = Success`r`n"
@@ -207,14 +206,13 @@ Function New-Script
         "Begin`r`n"
         "   {`r`n"
         "       `$ScriptName = `$MyInvocation.MyCommand.ToString()`r`n"
-        "       `$LogName = `"Application`"`r`n"
         "       `$ScriptPath = `$MyInvocation.MyCommand.Path`r`n"
         "       `$Username = `$env:USERDOMAIN + `"\`" + `$env:USERNAME`r`n"
         "`r`n"
         "       New-EventLog -Source `$ScriptName -LogName `$LogName -ErrorAction SilentlyContinue`r`n"
         "`r`n"
         "       `$Message = `"Script: `" + `$ScriptPath + `"``nScript User: `" + `$Username + `"``nStarted: `" + (Get-Date).toString()`n"
-        "       Write-EventLog -LogName `$LogName -Source `$ScriptName -EventID `"104`" -EntryType `"Information`" -Message `$Message`r`n"
+        "       Write-EventLog -LogName `'Windows Powershell`' -Source `$ScriptName -EventID `"104`" -EntryType `"Information`" -Message `$Message`r`n"
         "`r`n"
         "       #	Dotsource in the functions you need.`r`n"
         "       }`r`n"
@@ -224,7 +222,7 @@ Function New-Script
         "End`r`n"
         "   {`r`n"
         "       `$Message = `"Script: `" + `$ScriptPath + `"``nScript User: `" + `$Username + `"``nFinished: `" + (Get-Date).toString()`n"
-        "       Write-EventLog -LogName `$LogName -Source `$ScriptName -EventID `"104`" -EntryType `"Information`" -Message `$Message	`r`n"
+        "       Write-EventLog -LogName `'Windows Powershell`' -Source `$ScriptName -EventID `"104`" -EntryType `"Information`" -Message `$Message	`r`n"
         "       }`r`n")
         if ($InstallMenu)
         {
