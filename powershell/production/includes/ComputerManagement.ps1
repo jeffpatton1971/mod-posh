@@ -899,6 +899,7 @@ Function Export-EventLog
          )
     Begin
     {
+        $Remote = $false
         if (!($ComputerName))
         {
             Write-Verbose "No ComputerName passed, setting ComputerName to $(& hostname)"
@@ -911,23 +912,10 @@ Function Export-EventLog
                                                                                           $Credential.GetNetworkCredential().Domain, `
                                                                                           $Credential.GetNetworkCredential().Username, `
                                                                                           $Credential.Password,'Default')
-            
-            Write-Verbose "Checking to see if \\$($ComputerName)\$((([System.IO.Directory]::GetParent($Destination)).FullName).Replace(":","$")) exists"
-            if (!($ListLog) -and (Test-Path -Path "\\$($ComputerName)\$((([System.IO.Directory]::GetParent($Destination)).FullName).Replace(":","$"))") -ne $true)
-            {
-                Write-Verbose "Creating $((([System.IO.Directory]::GetParent($Destination)).FullName).Replace(":","$"))"
-                $ScriptBlock = {New-Item -Path $args[0] -ItemType Directory -Force}
-                Invoke-Command -ScriptBlock $ScriptBlock -ComputerName $ComputerName -Credential $Credential -ArgumentList (([System.IO.Directory]::GetParent($Destination)).FullName) |Out-Null
-                }
+            $Remote = $true
             }
         else
         {
-            Write-Verbose "Checking to see if $($Destination) exists."
-            if (!($ListLog) -and (Test-Path $Destination) -ne $true)
-            {
-                Write-Verbose "Creating $((([System.IO.Directory]::GetParent($Destination)).FullName).Replace(":","$"))"
-                New-Item -Path (([System.IO.Directory]::GetParent($Destination)).FullName) -ItemType Directory -Force |Out-Null
-                }
             Write-Verbose "Connecting to $($ComputerName)"
             $EventSession = New-Object System.Diagnostics.Eventing.Reader.EventLogSession($ComputerName)
             }
@@ -959,6 +947,25 @@ Function Export-EventLog
                         }
                     else
                     {
+                        if ($Remote)
+                        {
+                            Write-Verbose "Checking to see if \\$($ComputerName)\$((([System.IO.Directory]::GetParent($Destination)).FullName).Replace(":","$")) exists"
+                            if ((Test-Path -Path "\\$($ComputerName)\$((([System.IO.Directory]::GetParent($Destination)).FullName).Replace(":","$"))") -ne $true)
+                            {
+                                Write-Verbose "Creating $((([System.IO.Directory]::GetParent($Destination)).FullName).Replace(":","$"))"
+                                $ScriptBlock = {New-Item -Path $args[0] -ItemType Directory -Force}
+                                Invoke-Command -ScriptBlock $ScriptBlock -ComputerName $ComputerName -Credential $Credential -ArgumentList (([System.IO.Directory]::GetParent($Destination)).FullName) |Out-Null
+                                }
+                            }
+                        else
+                        {
+                            Write-Verbose "Checking to see if $($Destination) exists."
+                            if ((Test-Path $Destination) -ne $true)
+                            {
+                                Write-Verbose "Creating $((([System.IO.Directory]::GetParent($Destination)).FullName).Replace(":","$"))"
+                                New-Item -Path (([System.IO.Directory]::GetParent($Destination)).FullName) -ItemType Directory -Force |Out-Null
+                                }
+                            }
                         Write-Verbose "Exporting event log $($LogName) to the following location $($Destination)"
                         $EventSession.ExportLogAndMessages($LogName,'LogName','*',$Destination)
                         }
