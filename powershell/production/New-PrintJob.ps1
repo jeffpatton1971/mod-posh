@@ -172,7 +172,7 @@ End
     {
         if ($Logged -eq $true)
         {
-            $PrintLog = $PrintLog |Select-Object -Property Size, Time, User, Job, Client, Port, Printer, Pages, Document
+            $PrintLog = $PrintLog |Select-Object -Property Size, Time, User, Job, Client, Port, Printer, Pages, Document, Copies
             $PrintLog = ConvertTo-Csv -InputObject $PrintLog -NoTypeInformation
 
             if ((Test-Path -Path "$($FilePath)\$($FileName)") -eq $true)
