@@ -579,3 +579,125 @@ Function Get-SecureString
         Return $SecureString
         }
     }
+Function Print-IseFile
+{
+    <#
+        .SYNOPSIS
+            Print the current file
+        .DESCRIPTION
+            This simple script will print the currently opened
+            file in the ISE to the default printer.
+        .PARAMETER InstallMenu
+            If this switch is passed a new menu item will appear 
+            under Add-ons
+        .EXAMPLE
+            Print-IseFile
+            
+            Description
+            -----------
+            The default syntax of the command
+        .NOTES
+            FunctionName : Print-IseFile
+            Created by   : jspatton
+            Date Coded   : 05/03/2012 09:49:01
+            
+            This function was inspired by
+            http://jdhitsolutions.com/blog/2011/09/friday-fun-add-a-print-menu-to-the-powershell-ise/
+            
+            My change was not opening the script in Notepad, I don't 
+            mind the non-monospaced fonts.
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Print-IseFile
+    #>
+    [CmdletBinding()]
+    Param
+         (
+         [switch]$InstallMenu
+         )
+    Begin
+    {
+        Write-Verbose "Check if we're in ISE"
+        if ((Get-Host).Name -ne 'Windows PowerShell ISE Host')
+        {
+            Write-Verbose "Not in the ISE exiting."
+            Return
+            }
+        }
+    Process
+    {
+        switch ($InstallMenu)
+        {
+            $true
+            {
+                $psISE.CurrentPowerShellTab.AddOnsMenu.submenus.Add("Print Script",{Print-ISEFile},"CTRL+ALT+P") | Out-Null
+                }
+            default
+            {
+                Get-Content $psISE.CurrentFile.FullPath |Out-Printer
+                }
+            }
+        }
+    End
+    {
+        }
+    }
+
+Function Print-SelectedText
+{
+    <#
+        .SYNOPSIS
+            Print text selected in the ISE
+        .DESCRIPTION
+            This simple function will send whatever text is currently 
+            selected in the PowerShell ISE to the printer.
+        .PARAMETER InstallMenu
+            If this switch is passed a new menu item will appear 
+            under Add-ons
+        .EXAMPLE
+            Print-SelectedText
+            
+            Description
+            -----------
+            The default syntax of the command
+        .NOTES
+            FunctionName : Print-SelectedText
+            Created by   : jspatton
+            Date Coded   : 05/03/2012 09:55:00
+            
+            The idea for this came from 
+            http://jdhitsolutions.com/blog/2011/09/friday-fun-add-a-print-menu-to-the-powershell-ise/
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Print-SelectedText
+    #>
+    [CmdletBinding()]
+    Param
+         (
+         [switch]$InstallMenu
+         )
+    Begin
+    {
+        Write-Verbose "Check if we're in ISE"
+        if ((Get-Host).Name -ne 'Windows PowerShell ISE Host')
+        {
+            Write-Verbose "Not in the ISE exiting."
+            Return
+            }
+        }
+    Process
+    {
+        switch ($InstallMenu)
+        {
+            $true
+            {
+                $psISE.CurrentPowerShellTab.AddOnsMenu.submenus.Add("Print Selected",{Print-SelectedText},"CTRL+ALT+S") | Out-Null
+                }
+            default
+            {
+                $psISE.CurrentFile.Editor.SelectedText |Out-Printer
+                }
+            }
+        }
+    End
+    {
+        }
+    }
