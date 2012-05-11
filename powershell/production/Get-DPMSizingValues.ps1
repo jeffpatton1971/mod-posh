@@ -139,7 +139,7 @@ Begin
 
         $Volumes = @()
         $DPMData = @()
-        $ScriptBlock = {Get-PSDrive -PSProvider FileSystem |Where-Object {$_.Used -gt 0} |Select-Object -Property Name, @{Label='Used';Expression={$_.Used /1gb}}}
+        $ScriptBlock = {Get-PSDrive -PSProvider FileSystem |Where-Object {$_.Used -gt 0} |Select-Object -Property Free, Name, @{Label='Used';Expression={$_.Used /1gb}}}
         }
 Process
     {
@@ -191,6 +191,7 @@ Process
             $Return = New-Object -TypeName PSObject -Property @{
                 Name = $VolumeIdentifier.Name
                 UsedSpace = $VolumeIdentifier.Used
+                TotalSpace = (($VolumeIdentifier.Free)/1gb + ($VolumeIdentifier.Used))
                 Retention = $RetentionRange
                 Replica = $ReplicaVolume
                 ShadowCopy = $ShadowCopyVolume
@@ -203,7 +204,7 @@ Process
         }
 End
     {
-        Return $DPMData |Select-Object -Property Name, UsedSpace, Retention, Replica, ShadowCopy, DataChange, ReplicaOverhead
+        Return $DPMData |Select-Object -Property Name, UsedSpace, TotalSpace, Retention, Replica, ShadowCopy, DataChange, ReplicaOverhead
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message	
         }
