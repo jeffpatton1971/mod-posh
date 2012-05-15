@@ -106,18 +106,18 @@ Begin
 Process
     {
         $Drives = @()
-        Write-Verbose 'Create a scriptblock that will collect the Name and used space in GB from the remote server'
+        Write-Verbose "Create a scriptblock that will collect the Name and used space in GB from the remote server"
         $ScriptBlock = {Get-PSDrive -PSProvider FileSystem |Select-Object -Property Name, @{Label='Used';Expression={$_.Used /1gb}}}
 
         try
         {
             foreach ($Computer in $ComputerName)
             {
-                Write-Verbose 'Create a new session for $($Computer)'
+                Write-Verbose "Create a new session for $($Computer)"
                 $ThisSession = New-PSSession -ComputerName $Computer -Credential $Credentials
-                Write-Verbose 'Connect to the session, and collect the results of the scriptblock'
+                Write-Verbose "Connect to the session, and collect the results of the scriptblock"
                 $Drives += Invoke-Command -Session $ThisSession -ScriptBlock $ScriptBlock
-                Write-Verbose 'Close sesion when done.'
+                Write-Verbose "Close sesion when done."
                 Remove-PSSession -Session $ThisSession
                 }
             }
@@ -170,6 +170,7 @@ Process
         }
 End
     {
+        [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Excel)
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message	
         }
