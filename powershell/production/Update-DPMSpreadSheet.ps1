@@ -153,6 +153,7 @@ Process
                 $WorkSheet.Range($TargetReference).Value2 = $Used.Used
                 Write-Verbose "Updated"
                 }
+            $Excel.DisplayAlerts = $false
             Write-Verbose "Saving $($FileName)"
             $Excel.Save()
             Write-Verbose "Closing $($WorkSheetName)"
