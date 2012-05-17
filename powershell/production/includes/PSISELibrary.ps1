@@ -209,7 +209,7 @@ Function New-Script
         "       `$ScriptPath = `$MyInvocation.MyCommand.Path`r`n"
         "       `$Username = `$env:USERDOMAIN + `"\`" + `$env:USERNAME`r`n"
         "`r`n"
-        "       New-EventLog -Source `$ScriptName -LogName `$LogName -ErrorAction SilentlyContinue`r`n"
+        "       New-EventLog -Source `$ScriptName -LogName `'Windows Powershell`' -ErrorAction SilentlyContinue`r`n"
         "`r`n"
         "       `$Message = `"Script: `" + `$ScriptPath + `"``nScript User: `" + `$Username + `"``nStarted: `" + (Get-Date).toString()`n"
         "       Write-EventLog -LogName `'Windows Powershell`' -Source `$ScriptName -EventID `"104`" -EntryType `"Information`" -Message `$Message`r`n"
