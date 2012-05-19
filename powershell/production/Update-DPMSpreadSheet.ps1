@@ -106,19 +106,13 @@ Begin
 Process
     {
         $Drives = @()
-        Write-Verbose "Create a scriptblock that will collect the Name and used space in GB from the remote server"
-        $ScriptBlock = {Get-PSDrive -PSProvider FileSystem |Select-Object -Property Name, @{Label='Used';Expression={$_.Used /1gb}}}
-
         try
         {
             foreach ($Computer in $ComputerName)
             {
-                Write-Verbose "Create a new session for $($Computer)"
-                $ThisSession = New-PSSession -ComputerName $Computer -Credential $Credentials
-                Write-Verbose "Connect to the session, and collect the results of the scriptblock"
-                $Drives += Invoke-Command -Session $ThisSession -ScriptBlock $ScriptBlock
-                Write-Verbose "Close sesion when done."
-                Remove-PSSession -Session $ThisSession
+                Write-Verbose "Get a listing of all local disks from the server"
+                $Drives += Get-WmiObject -Class Win32_LogicalDisk -ComputerName $Computer -Credential $Credentials -Filter "DriveType = 3"
+                $Drives |Format-Table -AutoSize
                 }
             }
         catch
@@ -126,8 +120,6 @@ Process
             $Message = $Error[0]
             Write-Verbose $Message
             Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
-            Remove-PSSession -Session $ThisSession
-            break
             }
         try
         {
@@ -146,11 +138,16 @@ Process
                 $Target = $Range.Find($SharedDrive)
                 Write-Verbose "Found $($SharedDrive) at $($Target.AddressLocal($true,$true,$true))"
                 Write-Verbose "Get the used space for $($SharedDrive)"
-                $Used = $Drives |Where-Object {$_.Name -eq $SharedDrive} |Select-Object -Property Used
-                Write-Verbose "$($SharedDrive) : $($Used.Used)GB Used"
+                $Used = $Drives |Where-Object {$_.DeviceID -eq "$($SharedDrive):"}
+                if ($Used.Count)
+                {
+                    $Used = $Used[0]
+                    }
+                $UsedSpace = ($Used.Size - $Used.FreeSapce)
+                Write-Verbose "$($SharedDrive): $($UsedSpace/1gb)GB Used"
                 $TargetReference = "$($TargetColumn)$($Target.Row)"
-                Write-Verbose "Updating $($TargetReference) with value $($Used.Used)"
-                $WorkSheet.Range($TargetReference).Value2 = $Used.Used
+                Write-Verbose "Updating $($TargetReference) with value $($UsedSpace/1gb)"
+                $WorkSheet.Range($TargetReference).Value2 = $UsedSpace/1gb
                 Write-Verbose "Updated"
                 }
             $Excel.DisplayAlerts = $false
@@ -171,7 +168,10 @@ Process
         }
 End
     {
-        [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Excel)
+        while( [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Target)){}
+        while( [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Range)){}
+        while( [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Worksheet)){}
+        while( [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Excel)){}
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message	
         }
