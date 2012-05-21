@@ -112,7 +112,6 @@ Process
             {
                 Write-Verbose "Get a listing of all local disks from the server"
                 $Drives += Get-WmiObject -Class Win32_LogicalDisk -ComputerName $Computer -Credential $Credentials -Filter "DriveType = 3"
-                $Drives |Format-Table -AutoSize
                 }
             }
         catch
@@ -124,7 +123,7 @@ Process
         try
         {
             Write-Verbose "Create an Excel instance"
-            $Excel = New-Object -ComObject Excel.Application
+            $Excel = New-Object -ComObject Excel.Application |Out-Null
             Write-Verbose "Open the $($FileName) spreadsheet"
             $Excel.Workbooks.Open($FileName)
             Write-Verbose "Open the $($WorkSheetName) worksheet"
@@ -168,10 +167,10 @@ Process
         }
 End
     {
-        while( [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Target)){}
-        while( [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Range)){}
-        while( [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Worksheet)){}
-        while( [System.Runtime.Interopservices.Marshal]::ReleaseComObject($Excel)){}
+        [void][System.Runtime.Interopservices.Marshal]::FinalReleaseComObject($Target)
+        [void][System.Runtime.Interopservices.Marshal]::FinalReleaseComObject($Range)
+        [void][System.Runtime.Interopservices.Marshal]::FinalReleaseComObject($Worksheet)
+        [void][System.Runtime.Interopservices.Marshal]::FinalReleaseComObject($Excel)
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message	
         }
