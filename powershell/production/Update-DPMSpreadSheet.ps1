@@ -123,9 +123,9 @@ Process
         try
         {
             Write-Verbose "Create an Excel instance"
-            $Excel = New-Object -ComObject Excel.Application |Out-Null
+            $Excel = New-Object -ComObject Excel.Application
             Write-Verbose "Open the $($FileName) spreadsheet"
-            $Excel.Workbooks.Open($FileName)
+            $Excel.Workbooks.Open($FileName) |Out-Null
             Write-Verbose "Open the $($WorkSheetName) worksheet"
             $WorkSheet = $Excel.Worksheets.Item($WorkSheetName)
             Write-Verbose "Select column $($VolumeIDColumn), the Volume Identification column"
