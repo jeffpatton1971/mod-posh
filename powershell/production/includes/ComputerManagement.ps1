@@ -1946,3 +1946,87 @@ Function Get-DiskUsage
     {
         }
     }
+Function Enum-NameSpaces
+{
+    <#
+        .SYNOPSIS
+            Return a collection of classes from a namespace
+        .DESCRIPTION
+            This function will return a collection of classes from the provided namespace.
+            This method uses SWbemLocator to connect to a computer, the resulting
+            SWbemServices object is used to return the SubclassesOf() the given namespace.
+        .PARAMETER NameSpace
+            The WMI namespace to enumerate
+        .PARAMETER ComputerName
+            The computer to connect to
+        .EXAMPLE
+            Enum-NameSpaces -Namespace 'root\ccm' -ComputerName 'sccm'
+
+            Path            : \\SCCM\ROOT\ccm:__NAMESPACE
+            RelPath         : __NAMESPACE
+            Server          : SCCM
+            Namespace       : ROOT\ccm
+            ParentNamespace : ROOT
+            DisplayName     : WINMGMTS:{authenticationLevel=pkt,impersonationLevel=impersonate}!\\SCCM\ROOT\ccm:__NAMESPACE
+            Class           : __NAMESPACE
+            IsClass         : True
+            IsSingleton     : False
+            Keys            : System.__ComObject
+            Security_       : System.__ComObject
+            Locale          :
+            Authority       :
+
+            Description
+            -----------
+            A simple example showing usage and output of the command.
+        .EXAMPLE
+            Enum-NameSpaces -Namespace $NameSpace -ComputerName $ComputerName |Select-Object -Property Class
+
+            Class
+            -----
+            __SystemClass
+            __thisNAMESPACE
+            __NAMESPACE
+            __Provider
+            __Win32Provider
+            __ProviderRegistration
+            __EventProviderRegistration
+            __EventConsumerProviderRegistration
+            
+            Description
+            -----------
+            This example shows piping the output of the Enum-Namespaces function to Select-Object to return 
+            one of the properties of a class.
+        .NOTES
+            FunctionName : Enum-NameSpaces
+            Created by   : jspatton
+            Date Coded   : 05/21/2012 12:50:50
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Enum-NameSpaces
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [parameter(Mandatory=$true,ValueFromPipeline=$true)]
+        [string]$Namespace,
+        [parameter(Mandatory=$true)]
+        [string]$ComputerName
+        )
+    Begin
+    {
+        Write-Verbose 'Create an SWbemLocator object to connect to the computer'
+        $WbemLocator = New-Object -ComObject "WbemScripting.SWbemLocator"
+        Write-Verbose "Make a connection to $($ComputerName) and access $($Namespace)"
+        $WbemServices = $WbemLocator.ConnectServer($ComputerName, $Namespace)
+        Write-Verbose "Use the SubClassesOf() method of the SWbemServices object to return an SWbemObjectSet"
+        $WbemObjectSet = $WbemServices.SubclassesOf()
+        }
+    Process
+    {
+        }
+    End
+    {
+        Write-Verbose 'Return the Path_ property of the ObjectSet as this seems to contain useful information'
+        Return $WbemObjectSet |Select-Object -Property Path_ -ExpandProperty Path_
+        }
+    }
