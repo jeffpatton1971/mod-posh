@@ -512,3 +512,109 @@ Function Add-SPFileToDocLib
         Return $Return
         }
     }
+Function Stop-AppPool
+{
+    <#
+        .SYNOPSIS
+            Stop Application pool in IIS 6.0
+        .DESCRIPTION
+            This function will stop the AppPool in IIS 6.0
+        .PARAMETER AppPool
+            This is the name of the Application pool you wish to stop. The
+            default value of Sharepoint - 80, is the default AppPool when
+            configuring Sharepoint.
+        .EXAMPLE
+            Stop-AppPool -AppPool 'MySite - 88'
+            
+            Description
+            -----------
+            This is the basic syntax of the script.
+        .NOTES
+            FunctionName : Stop-AppPool
+            Created by   : jspatton
+            Date Coded   : 05/22/2012 08:13:12
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/SharePointManagement#Stop-AppPool
+        .LINK
+            http://blogs.technet.com/b/manharsharma/archive/2012/05/22/stop-start-the-application-pool-in-iis-6-0.aspx
+    #>
+[CmdletBinding()]
+Param
+    (
+    [string]$AppPool = "SharePoint - 80"
+    )
+Begin
+{
+    $Namespace = 'root\MicrosoftIISv2'
+    $Class = 'IIsApplicationPool'
+    $ThisPool = "W3SVC/AppPools/$($AppPool)"
+    }
+Process
+{
+    try
+    {
+        $Service = Get-WmiObject -Namespace $Namespace -Class $Class |Where-Object {$_.Name -eq $ThisPool}
+        $Service.Stop()
+        }
+    catch
+    {
+        return $Error[0]
+        }
+    }
+End
+{
+    }
+}
+Function Start-AppPool
+{
+    <#
+        .SYNOPSIS
+            Start Application pool in IIS 6.0
+        .DESCRIPTION
+            This function will start the AppPool in IIS 6.0
+        .PARAMETER AppPool
+            This is the name of the Application pool you wish to start. The
+            default value of Sharepoint - 80, is the default AppPool when
+            configuring Sharepoint.
+        .EXAMPLE
+            Start-AppPool -AppPool 'MySite - 88'
+            
+            Description
+            -----------
+            This is the basic syntax of the script.
+        .NOTES
+            FunctionName : Start-AppPool
+            Created by   : jspatton
+            Date Coded   : 05/22/2012 08:13:20
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/SharePointManagement#Start-AppPool
+        .LINK
+            http://blogs.technet.com/b/manharsharma/archive/2012/05/22/stop-start-the-application-pool-in-iis-6-0.aspx
+    #>
+[CmdletBinding()]
+Param
+    (
+    [string]$AppPool
+    )
+Begin
+{
+    $Namespace = 'root\MicrosoftIISv2'
+    $Class = 'IIsApplicationPool'
+    $ThisPool = "W3SVC/AppPools/$($AppPool)"
+    }
+Process
+{
+    try
+    {
+        $Service = Get-WmiObject -Namespace $Namespace -Class $Class |Where-Object {$_.Name -eq $ThisPool}
+        $Service.Start()
+        }
+    catch
+    {
+        return $Error[0]
+        }
+    }
+End
+{
+     }
+}
