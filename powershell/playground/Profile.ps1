@@ -11,31 +11,71 @@
 	
 #>
 $Global:Admin="$"
+$Global:SubversionClient="svn"
 $CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $principal = new-object System.Security.principal.windowsprincipal($CurrentUser)
+if ($Host.Name -eq 'ConsoleHost')
+{
+    $Global:POSHEditor = 'c:\windows\notepad.exe'
+    }
 
-Add-PSSnapin -Name VMware.VimAutomation.Core
+#
+# Load the VMware Extensions
+#
+try
+{
+    Add-PSSnapin -Name VMware.VimAutomation.Core -ErrorAction Stop
+    }
+catch
+{
+    Write-Warning 'VMware PowerShell tools not installed'
+    }
+#
+# Load the DPM Extensions
+#
+try
+{
+    Add-PSSnapin -Name Microsoft.DataProtectionManager.PowerShell -ErrorAction Stop
+    }
+catch
+{
+    Write-Warning 'DPM PowerShell tools not installed'
+    }
 
-Set-Location $env:HOMEDRIVE$env:HOMEPATH"\My Repositories\scripts\powershell\production"
+#
+# Move me into my code location
+#
+Set-Location "C:\scripts\powershell\production"
 
-#   Dot source in my functions
+#
+# Dot source in my functions
+#
 foreach ($file in Get-ChildItem .\includes\*.ps1){. $file.fullname}
 
-$Password = Get-Content C:\Users\jspatton\cred.txt |ConvertTo-SecureString
-$Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "SOECS\jeffpatton.admin", $Password
+#
+# Update repo
+#
+Update-Repo -WorkingPath 'C:\scripts' |Out-Null
 
-#	Import the PoshCode functions 
-. "C:\Users\jspatton\PoshCode.ps1"
+#
+# Create my Credentials Object
+#
+$Password = Get-SecureString -FilePath C:\Users\jspatton\cred.txt
+$Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "HOME\jspatton_a", $Password
 
+#
+# Change prompt to # if i have admin rights
+#
 if ($principal.IsInRole("Administrators")) 
-	{
-		$Admin="#"
-	}
+{
+    $Admin="#"
+    }
 
+#
+# Setup my custom prompt
+#
 Function prompt 
-	{
-		$Now = $(get-date).Tostring("HH:mm:ss | MM-dd-yyy")
-		"$env:username@$env:computername | $Now | $(get-location) $Admin `n"
-	}
-
-$Pscx:Preferences['TextEditor'] = 'Notepad++'
+{
+    $Now = $(get-date).Tostring("HH:mm:ss | MM-dd-yyy")
+    "# $env:username@$env:computername | $Now | $(Get-Location) $Admin `n"
+    }
