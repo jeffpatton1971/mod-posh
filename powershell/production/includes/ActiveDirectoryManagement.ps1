@@ -158,8 +158,8 @@ Function Add-UserToLocalGroup
     [CmdletBinding()]
     Param
         (
-        [Parameter(Mandatory=$true)]
-        [string]$Computer,
+        [Parameter(ValueFromPipeline=$True,ValueFromPipelinebyPropertyName=$True)]
+        [string]$ComputerName,
         [Parameter(Mandatory=$true)]
         [string]$UserName,
         [Parameter(Mandatory=$true)]
@@ -175,34 +175,36 @@ Function Add-UserToLocalGroup
         }        
     Process
     {
-        Try
+        foreach ($Computer in $ComputerName)
         {
-            ([ADSI]"WinNT://$Computer/$LocalGroup,group").Add("WinNT://$UserDomain/$UserName")
-            if ($? -eq $true)
+            Try
             {
-                $Result = New-Object -TypeName PSObject -Property @{
+                ([ADSI]"WinNT://$Computer/$LocalGroup,group").Add("WinNT://$UserDomain/$UserName")
+                if ($? -eq $true)
+                {
+                    New-Object -TypeName PSObject -Property @{
+                        Computer = $Computer
+                        Group = $LocalGroup
+                        Domain = $UserDomain
+                        User = $UserName
+                        Success = $?
+                        }
+                    }
+                }
+            Catch
+            {
+                New-Object -TypeName PSObject -Property @{
                     Computer = $Computer
                     Group = $LocalGroup
                     Domain = $UserDomain
                     User = $UserName
-                    Success = $?
+                    Success = $Error[0].Exception.InnerException.Message.ToString().Trim()
                     }
-                }
-            }
-        Catch
-        {
-            $Result = New-Object -TypeName PSObject -Property @{
-                Computer = $Computer
-                Group = $LocalGroup
-                Domain = $UserDomain
-                User = $UserName
-                Success = $Error[0].Exception.InnerException.Message.ToString().Trim()
                 }
             }
         }
     End
     {
-        Return $Result
         }
     }
 Function Get-LocalGroupMembers
