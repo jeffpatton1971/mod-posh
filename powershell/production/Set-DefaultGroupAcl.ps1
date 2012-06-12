@@ -42,8 +42,12 @@
             101 = Error
             102 = Warning
             104 = Information
+
+        My code was based on the code snippet at the Washington.edu link below.
     .LINK
         https://code.google.com/p/mod-posh/wiki/Production/Set-DefaultGroupAcl.ps1
+    .LINK
+        http://www.netid.washington.edu/documentation/courseGroupPrivacy.aspx
 #>
 [CmdletBinding()]
 Param
