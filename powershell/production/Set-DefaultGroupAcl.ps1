@@ -67,15 +67,6 @@ Begin
         Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
  
         #	Dotsource in the functions you need.
-        try
-        {
-            Add-PSSnapin -Name Quest.ActiveRoles.ADManagement
-            }
-        catch
-        {
-            Write-Error "Please install the Quest ActiveDirectory Cmdlets."
-            break
-            }
         }
 Process
     {
