@@ -79,3 +79,13 @@ Function prompt
     $Now = $(get-date).Tostring("HH:mm:ss | MM-dd-yyy")
     "# $env:username@$env:computername | $Now | $(Get-Location) $Admin `n"
     }
+
+#
+# SCOM console slow tabexpand fix
+#
+$tabExpand = (get-item function:\tabexpansion).Definition
+if($tabExpand -match 'try {Resolve-Path.{49}(?=;)')
+{
+   $tabExpand = $tabExpand.Replace($matches[0], "if((get-location).Provider.Name -ne 'OperationsManagerMonitoring'){ $($matches[0]) }" )
+   invoke-expression "function TabExpansion{$tabExpand}"
+   }
