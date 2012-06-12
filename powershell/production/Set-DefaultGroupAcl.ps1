@@ -75,6 +75,7 @@ Process
             [boolean]$Commit = $true
             try
             {
+                $ErrorActionPreference = 'Stop'
                 Write-Verbose "Create an object for $($GroupName)"
                 $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry
                 $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
@@ -85,19 +86,20 @@ Process
                 $DirectorySearcher.SearchScope = "Subtree"
 
                 $SearchResult = $DirectorySearcher.FindOne()
+
+                Write-Verbose "Connect to the $($GroupName) object" 
+                $Group = $SearchResult.GetDirectoryEntry()
+                Write-Verbose "Pull the SID from the object"
+                $GroupSid = New-Object System.Security.Principal.SecurityIdentifier($Group.objectSid[0],0)
                 }
             catch
             {
                 $Message = $Error[0].Exception
                 Write-Verbose $Message
                 Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+                $ErrorActionPreference = 'Continue'
                 break
                 }
-
-            Write-Verbose "Connect to the $($GroupName) object" 
-            $Group = $SearchResult.GetDirectoryEntry()
-            Write-Verbose "Pull the SID from the object"
-            $GroupSid = New-Object System.Security.Principal.SecurityIdentifier($Group.objectSid[0],0)
 
             Write-Verbose "Build the SID object for AuthenticatedUsers"
             $authUsers = New-Object System.Security.Principal.SecurityIdentifier([Security.Principal.WellKnownSidType]"AuthenticatedUserSid", $GroupSid.ToString())
