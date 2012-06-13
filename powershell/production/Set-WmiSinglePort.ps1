@@ -1,4 +1,3 @@
-#requires -version 2.0
 <#
     .SYNOPSIS
         A script to either enable or disable WMI fixed port on a computer.
@@ -95,6 +94,7 @@
     .LINK
         http://msdn.microsoft.com/en-us/library/windows/desktop/bb219447(v=vs.85).aspx
 #>
+#requires -version 2.0
 [CmdletBinding()]
 Param
     (
