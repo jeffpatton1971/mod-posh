@@ -53,14 +53,13 @@ Process
         [xml]$OrphanedGptFile = Get-Content $XmlFile
         $Orphans = $OrphanedGptFile.WorkItem.Data.OrphanedGPT.Domain |Where-Object {$_.name -eq 'home.ku.edu'} |Select-Object -Property GPT
 
-        $Folders = @()
         foreach ($Guid in $Orphans.GPT)
         {
             try
             {
                 $Message = "Remove-Item \\adhome-idm-01\SYSVOL\home.ku.edu\Policies\$($Guid.GUID.Trim().tostring())"
                 Write-Verbose $Message
-                Remove-Item -Path "\\adhome-idm-01\SYSVOL\home.ku.edu\Policies\$($Guid.GUID.Trim().tostring())" -ErrorAction Stop -Confirm
+                Remove-Item -Path "\\adhome-idm-01\SYSVOL\home.ku.edu\Policies\$($Guid.GUID.Trim().tostring())" -Recurse -ErrorAction Stop -Confirm
                 Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
                 }
             catch
