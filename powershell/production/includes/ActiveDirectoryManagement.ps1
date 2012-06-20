@@ -1222,6 +1222,8 @@ Function Get-GPO
             This function returns a list of all GPO's in the specified domain.
         .PARAMETER Domain
             The FQDN of the domain to search
+        .PARAMETER GpoID
+            The GUID of the GPO you are looking for.
         .EXAMPLE
             Get-GPO
 
@@ -1258,6 +1260,24 @@ Function Get-GPO
             Description
             -----------
             This example shows using the domain parameter to specify an alternate domain.
+        .EXAMPLE
+            Get-GPO -GpoID '31B2F340-016D-11D2-945F-00C04FB984F9'
+
+            DisplayName                 : Default Domain Policy
+            Path                        : cn={31B2F340-016D-11D2-945F-00C04FB984F9},cn=policies,cn=system,DC=COMPANY,DC=NET
+            ID                          : {31B2F340-016D-11D2-945F-00C04FB984F9}
+            DomainName                  : COMPANY.NET
+            CreationTime                : 9/1/2004 10:49:52 AM
+            ModificationTime            : 6/14/2011 10:21:20 AM
+            UserDSVersionNumber         : 33
+            ComputerDSVersionNumber     : 255
+            UserSysvolVersionNumber     : 33
+            ComputerSysvolVersionNumber : 255
+            Description                 :
+
+            Description
+            -----------
+            This example shows passing the GUID of a gpo into the function.
         .NOTES
             FunctionName : Get-GPO
             Created by   : Jeff Patton
@@ -1276,7 +1296,8 @@ Function Get-GPO
     [CmdletBinding()]
     Param
         (
-        [string]$Domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().Name
+        [string]$Domain = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().Name,
+        [string]$GpoID
         )
     Begin
     {
@@ -1289,6 +1310,7 @@ Function Get-GPO
         {
             Return $Error[0].Exception.InnerException.Message.ToString().Trim()
             }
+        $GpoGuid = "{$($GpoID.Replace('{','').Replace('}',''))}"
         }
     Process
     {
@@ -1297,6 +1319,10 @@ Function Get-GPO
             $GpoConstants = $GpoMgmt.GetConstants()
             $GpoDomain = $GpoMgmt.GetDomain($Domain,$null,$GpoConstants.UseAnyDC)
             $GpoSearchCriteria = $GpoMgmt.CreateSearchCriteria()
+            if ($GpoID)
+            {
+                $GpoSearchCriteria.Add($GpoConstants.SearchPropertyGPOID, $GpoConstants.SearchOpEquals, $GpoGuid)
+                }
             $GroupPolicyObjects = $GpoDomain.SearchGPOs($GpoSearchCriteria)
             }
         catch
