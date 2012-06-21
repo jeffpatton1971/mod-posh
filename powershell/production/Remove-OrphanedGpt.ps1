@@ -11,7 +11,7 @@
     .PARAMETER XmlFile
         The full path and filename to the output file from the ADRAP
     .EXAMPLE
-        .\Remove-OrphanedGpt.ps1 -XmlFile C:\adrap\output\findorphanedgpts.xml
+        .\Remove-OrphanedGpt.ps1 -XmlFile C:\adrap\output\findorphanedgpts.xml -SysvolPath \\dc.company.com\SYSVOL\company.com
         
         Description
         -----------
@@ -33,7 +33,8 @@
 [CmdletBinding(SupportsShouldProcess=$True,ConfirmImpact='High')]
 Param
     (
-    [string]$XmlFile
+    [string]$XmlFile,
+    [string]$SysvolPath
     )
 Begin
     {
@@ -57,9 +58,9 @@ Process
         {
             try
             {
-                $Message = "Remove-Item \\adhome-idm-01\SYSVOL\home.ku.edu\Policies\$($Guid.GUID.Trim().tostring())"
+                $Message = "Remove-Item $($SysvolPath)\Policies\$($Guid.GUID.Trim().tostring())"
                 Write-Verbose $Message
-                Remove-Item -Path "\\adhome-idm-01\SYSVOL\home.ku.edu\Policies\$($Guid.GUID.Trim().tostring())" -Recurse -ErrorAction Stop -Confirm
+                Remove-Item -Path "$($SysvolPath)\Policies\$($Guid.GUID.Trim().tostring())" -Recurse -ErrorAction Stop -Confirm
                 Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
                 }
             catch
