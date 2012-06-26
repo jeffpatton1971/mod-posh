@@ -1554,3 +1554,178 @@ Function Get-ForestInfo
         Return $Forest
         }
     }
+Function ConvertTo-SidString
+{
+    <#
+        .SYNOPSIS
+            Convert a Sid byte array to a string
+        .DESCRIPTION
+            This function takes the Sid as a byte array and returns it as an
+            object that has the Sid as a string.
+        .PARAMETER ObjectSid
+            This is a Sid object, these are usually stored in a binary form inside 
+            the object in Active Directory. When displayed they typically appear to
+            be a column of numbers like this:
+
+                1
+                5
+                0
+                0
+                0
+                0
+                0
+                5
+                21
+                0
+                0
+                0
+                209
+                218
+                116
+                3
+                253
+                55
+                66
+                64
+                130
+                139
+                166
+                40
+                196
+                109
+                2
+                0
+                0
+            This is converted to an object of type System.Security.Principal.IdentityReference.
+        .EXAMPLE
+            ConvertTo-SidString -ObjectSid $Sid
+            
+            BinaryLength AccountDomainSid                       Value                                        
+            ------------ ----------------                       -----                                        
+                      28 S-1-5-21-57989841-1078081533-682003330 S-1-5-21-57989841-1078081533-682003330-159172
+
+            Description
+            -----------
+            This is the basic syntax of the command and shows the default output.
+            
+        .EXAMPLE
+            (ConvertTo-SidString -ObjectSid $Computer.objectSid).Value
+
+            S-1-5-21-57989841-1078081533-682003330-159172
+            
+            Description
+            -----------
+            This example shows how to display just the Sid as a string.
+
+        .NOTES
+            FunctionName : ConvertTo-SidString
+            Created by   : jspatton
+            Date Coded   : 06/26/2012 09:41:02
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertTo-SidString
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        $ObjectSid        
+        )
+    Begin
+    {
+        $ErrorActionPreference = 'Stop'
+        }
+    Process
+    {
+        try
+        {
+            $Sid = New-Object System.Security.Principal.SecurityIdentifier($ObjectSid[0],0)
+            Return $Sid
+            }
+        catch
+        {
+            $Message = $Error[0].Exception
+            Return $Message
+            }
+        }
+    End
+    {
+        }
+    }
+Function ConvertTo-SidObject
+{
+    <#
+        .SYNOPSIS
+            Convert a string Sid back to a byte array
+        .DESCRIPTION
+            This function takes the Sid as a string and converts it back to a byte array
+            that can be used by other functions which may be looking for the Sid as
+            a byte.
+        .PARAMETER StringSid
+            A string representation of a Sid object, for example:
+            
+                S-1-5-21-57989841-1078081533-682003330
+        .EXAMPLE
+            ConvertTo-SidObject -StringSid S-1-5-21-57989841-1078081533-682003330
+            
+            1
+            4
+            0
+            0
+            0
+            0
+            0
+            5
+            21
+            0
+            0
+            0
+            209
+            218
+            116
+            3
+            253
+            55
+            66
+            64
+            130
+            139
+            166
+            40
+
+            Description
+            -----------
+            
+        .NOTES
+            FunctionName : ConvertTo-SidObject
+            Created by   : jspatton
+            Date Coded   : 06/26/2012 09:41:06
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertTo-SidObject
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        $StringSid
+        )
+    Begin
+    {
+        $ErrorActionPreference = 'Stop'
+        }
+    Process
+    {
+        try
+        {
+            $Sid = New-Object System.Security.Principal.SecurityIdentifier($StringSid)
+            [byte[]]$ObjectSid = ,0 * $Sid.BinaryLength
+            $Sid.GetBinaryForm($ObjectSid,0)
+            Return $ObjectSid
+            }
+        catch
+        {
+            $Message = $Error[0].Exception
+            Return $Message
+            }
+        }
+    End
+    {
+        }
+    }
