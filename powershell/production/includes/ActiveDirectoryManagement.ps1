@@ -1554,7 +1554,7 @@ Function Get-ForestInfo
         Return $Forest
         }
     }
-Function ConvertTo-SidString
+Function ConvertFrom-Sid
 {
     <#
         .SYNOPSIS
@@ -1598,7 +1598,7 @@ Function ConvertTo-SidString
                 0
             This is converted to an object of type System.Security.Principal.IdentityReference.
         .EXAMPLE
-            ConvertTo-SidString -ObjectSid $Sid
+            ConvertFrom-Sid -ObjectSid $Sid
             
             BinaryLength AccountDomainSid                       Value                                        
             ------------ ----------------                       -----                                        
@@ -1609,7 +1609,7 @@ Function ConvertTo-SidString
             This is the basic syntax of the command and shows the default output.
             
         .EXAMPLE
-            (ConvertTo-SidString -ObjectSid $Computer.objectSid).Value
+            (ConvertFrom-Sid -ObjectSid $Computer.objectSid).Value
 
             S-1-5-21-57989841-1078081533-682003330-159172
             
@@ -1618,11 +1618,11 @@ Function ConvertTo-SidString
             This example shows how to display just the Sid as a string.
 
         .NOTES
-            FunctionName : ConvertTo-SidString
+            FunctionName : ConvertFrom-Sid
             Created by   : jspatton
             Date Coded   : 06/26/2012 09:41:02
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertTo-SidString
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertFrom-Sid
     #>
     [CmdletBinding()]
     Param
@@ -1650,7 +1650,7 @@ Function ConvertTo-SidString
     {
         }
     }
-Function ConvertTo-SidObject
+Function ConvertTo-Sid
 {
     <#
         .SYNOPSIS
@@ -1664,7 +1664,7 @@ Function ConvertTo-SidObject
             
                 S-1-5-21-57989841-1078081533-682003330
         .EXAMPLE
-            ConvertTo-SidObject -StringSid S-1-5-21-57989841-1078081533-682003330
+            ConvertTo-Sid -StringSid S-1-5-21-57989841-1078081533-682003330
             
             1
             4
@@ -1695,11 +1695,11 @@ Function ConvertTo-SidObject
             -----------
             
         .NOTES
-            FunctionName : ConvertTo-SidObject
+            FunctionName : ConvertTo-Sid
             Created by   : jspatton
             Date Coded   : 06/26/2012 09:41:06
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertTo-SidObject
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertTo-Sid
     #>
     [CmdletBinding()]
     Param
