@@ -740,28 +740,33 @@ Function Get-ServiceTag
     [CmdletBinding()]    
     Param
         (
-        $ComputerName
+        $ComputerName = (& hostname)
         )
     Begin
     {
-        $ErrorActionPreference = "SilentlyContinue"
+        $ErrorActionPreference = "Stop"
         }
     Process
     {
         Try
         {
-            $null = Test-Connection -ComputerName $ComputerName -Count 1 -quiet
+            $null = Test-Connection -ComputerName $ComputerName -Count 1
+            if ($ComputerName -eq (& hostname))
+            {
+                $SerialNumber = (Get-WmiObject -Class Win32_BIOS).SerialNumber 
+                }
+            else
+            {
+                $SerialNumber = (Get-WmiObject -Class Win32_BIOS -ComputerName $ComputerName -Credential $Credentials).SerialNumber 
+                }
             $Return = New-Object PSObject -Property @{
                 ComputerName = $ComputerName
-                SerialNumber = (Get-WmiObject -Class Win32_BIOS -ComputerName $ComputerName -Credential $Credentials).SerialNumber 
+                SerialNumber = $SerialNumber
                 }
             }
         Catch
         {
-            $Return = New-Object PSObject -Property @{
-                ComputerName = $ComputerName
-                SerialNumber = "Offline"
-                }
+            $Return = $Error[0].Exception
             }
         }
     End
