@@ -73,7 +73,7 @@ Process
         $Jobs = @()
     	foreach ($Workstation in $Workstations)
             {
-                [string]$ThisWorkstation = $Workstation.Properties.name
+                [string]$ThisWorkstation = $Workstation.name
                 $ThisJob = New-Object PSobject
 
                 [string]$Retval = Set-Pass -ComputerName $ThisWorkstation -UserName $AdminAccount -Password $NewPassword
