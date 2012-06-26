@@ -744,20 +744,19 @@ Function Get-ServiceTag
         )
     Begin
     {
-        $ErrorActionPreference = "Stop"
         }
     Process
     {
         Try
         {
-            $null = Test-Connection -ComputerName $ComputerName -Count 1
+            $null = Test-Connection -ComputerName $ComputerName -Count 1 -ErrorAction 'Stop'
             if ($ComputerName -eq (& hostname))
             {
-                $SerialNumber = (Get-WmiObject -Class Win32_BIOS).SerialNumber 
+                $SerialNumber = (Get-WmiObject -Class Win32_BIOS -ErrorAction 'Stop').SerialNumber 
                 }
             else
             {
-                $SerialNumber = (Get-WmiObject -Class Win32_BIOS -ComputerName $ComputerName -Credential $Credentials).SerialNumber 
+                $SerialNumber = (Get-WmiObject -Class Win32_BIOS -ComputerName $ComputerName -Credential $Credentials -ErrorAction 'Stop').SerialNumber 
                 }
             $Return = New-Object PSObject -Property @{
                 ComputerName = $ComputerName
