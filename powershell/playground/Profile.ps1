@@ -89,3 +89,13 @@ if($tabExpand -match 'try {Resolve-Path.{49}(?=;)')
    $tabExpand = $tabExpand.Replace($matches[0], "if((get-location).Provider.Name -ne 'OperationsManagerMonitoring'){ $($matches[0]) }" )
    invoke-expression "function TabExpansion{$tabExpand}"
    }
+
+#
+# Display a list of appointments for today
+#
+C:\scripts\powershell\production\Get-ExchangeCalendar.ps1 -MailboxName jspatton@ku.edu -StartDate (Get-Date) -EndDate (Get-Date) -ErrorAction SilentlyContinue |Format-List
+
+#
+# Toggle wireless on or off
+#
+Start-Process "$psHome\powershell.exe" -Verb Runas -ArgumentList '-command "C:\scripts\powershell\production\Toggle-Wireless.ps1"'
