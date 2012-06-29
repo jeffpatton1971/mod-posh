@@ -1783,3 +1783,57 @@ Function ConvertTo-Accountname
     {
         }
     }
+Function Get-Fqdn
+{
+    <#
+        .SYNOPSIS
+            A simple function to return the FQDN from a distinguishedName
+        .DESCRIPTION
+            This function converts the distinguishedName into a proper
+            FQDN (Fully Qualified Domain Name).
+        .PARAMETER DistinguishedName
+            A proper dn, for example:
+                DC=Company,DC=com
+        .EXAMPLE
+            Get-Fqdn -DistinguishedName 'DC=Company,DC=com'
+            Company.com
+            
+            Description
+            -----------
+            This is the only syntax for this command.
+        .NOTES
+            FunctionName : Get-Fqdn
+            Created by   : jspatton
+            Date Coded   : 06/29/2012 16:32:23
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-Fqdn
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [string]$DistinguishedName = ([adsi]"").DistinguishedName
+        )
+    Begin
+    {
+        }
+    Process
+    {
+        $DnPart = $DistinguishedName.Split(',')
+        foreach ($Attrib in $DnPart)
+        {
+            if ($Counter -ne ($DnPart.Count) -1)
+            {
+                $Fqdn += $Attrib.Substring(3,$Attrib.Length -3) + '.'
+                }
+            else
+            {
+                $Fqdn += $Attrib.Substring(3,$Attrib.Length -3)
+                }
+            $Counter += 1
+            }
+        }
+    End
+    {
+        Return $Fqdn
+        }
+    }
