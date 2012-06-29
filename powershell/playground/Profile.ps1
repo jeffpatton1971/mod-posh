@@ -100,5 +100,5 @@ C:\scripts\powershell\production\Get-ExchangeCalendar.ps1 -MailboxName jspatton@
 #
 if ($Host.Name -eq 'ConsoleHost')
 {
-    Start-Process "$psHome\powershell.exe" -Verb Runas -ArgumentList '-command "C:\scripts\powershell\production\Toggle-Wireless.ps1"'
+    Start-Process "$psHome\powershell.exe" -Verb Runas -ArgumentList '-NoProfile -command "C:\scripts\powershell\production\Toggle-Wireless.ps1"'
     }
