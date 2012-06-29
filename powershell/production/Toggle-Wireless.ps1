@@ -67,6 +67,7 @@ Begin
         #	Dotsource in the functions you need.
         $Wifi = Get-WmiObject -Class Win32_NetworkAdapter -Filter "NetConnectionID = '$($ConnectionID)'"
         $Battery = Get-WmiObject -Class Win32_Battery -Property BatteryStatus
+        $CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
         $principal = new-object System.Security.principal.windowsprincipal($CurrentUser)
         }
 Process
