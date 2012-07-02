@@ -102,3 +102,28 @@ if ($Host.Name -eq 'ConsoleHost')
 {
     Start-Process "$psHome\powershell.exe" -Verb Runas -ArgumentList '-NoProfile -command "C:\scripts\powershell\production\Toggle-Wireless.ps1"'
     }
+
+#
+# Load Ops Shell
+#
+Function Load-OpsShell
+{
+    Param
+    (
+    $rms = 'scom-01.home.ku.edu'
+    )
+    try
+    {
+        $ErrorActionPreference = 'stop'
+        Add-PSSnapin -Name Microsoft.EnterpriseManagement.OperationsManager.Client
+        [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.EnterpriseManagement.OperationsManager")
+        [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.EnterpriseManagement.OperationsManager.Common")
+        Set-Location "OperationsManagerMonitoring::" 
+        $MG = New-ManagementGroupConnection -ConnectionString:$rms
+        Set-Location $rms 
+        }
+    catch
+    {
+        Return $Error[0]
+        }
+    }
