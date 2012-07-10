@@ -1,4 +1,4 @@
-==New-!QfePatch==
+== New-!QfePatch ==
 {{{
 
 NAME
@@ -151,7 +151,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/QfeLIbrary#New-QfePatch
 
 }}}
-==Test-!QfePatch==
+== Test-!QfePatch ==
 {{{
 NAME
     Test-QfePatch
@@ -231,7 +231,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/QfeLIbrary#Test-QfePatch
 
 }}}
-==Get-!QfeList==
+== Get-!QfeList ==
 {{{
 NAME
     Get-QfeList
@@ -393,7 +393,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/QfeLIbrary#Get-QfeList
 
 }}}
-==Set-!QfeServer==
+== Set-!QfeServer ==
 {{{
 NAME
     Set-QfeServer
@@ -473,7 +473,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/QfeLIbrary#Set-QfeServer
 
 }}}
-==Install-!QfePatch==
+== Install-!QfePatch ==
 {{{
 NAME
     Install-QfePatch
@@ -568,7 +568,7 @@ RELATED LINKS
      http://support.microsoft.com/kb/934307
 
 }}}
-==Uninstall-!QfePatch==
+== Uninstall-!QfePatch ==
 {{{
 NAME
     Uninstall-QfePatch
@@ -761,7 +761,7 @@ RELATED LINKS
      https://code.google.com/p/mod-posh/wiki/QfeLIbrary#Get-Qfe
 
 }}}
-==Clear-!QfeLocalStore==
+== Clear-!QfeLocalStore ==
 {{{
 NAME
     Clear-QfeLocalStore
