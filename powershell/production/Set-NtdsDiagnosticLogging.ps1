@@ -41,17 +41,29 @@
         Currently these keys are stored in HKLM:\SYSTEM\CurrentControlSet\services\NTDS\Diagnostics
         this is the default value for this parameter.
     .EXAMPLE
-        .\Set-NtdsDiagnosticLogging.ps1 -DiagnosticSubKey '1 Knowledge Consistency Checker'
+        .\Set-NtdsDiagnosticLogging.ps1 -DiagnosticSubKey '6 Garbage Collection'
+
+        DiagnosticSubkey         Value
+        ----------------         -----
+        6 Garbage Collection         1
+        6 Garbage Collection         0
         
         Description
         -----------
-        This example shows the basic syntax of the command, and set's the value of KCC Logging to 0
+        This example shows the basic syntax of the command, and set's the value of 6 Garbage Collection
+        to the default value of 0.
     .EXAMPLE
-        .\Set-NtdsDiagnosticLogging.ps1 -LoggingLevel 3 -DiagnosticSubKey '1 Knowledge Consistency Checker'
+        .\Set-NtdsDiagnosticLogging.ps1 -LoggingLevel 3 -DiagnosticSubKey '6 Garbage Collection'
+        
+        DiagnosticSubkey         Value
+        ----------------         -----
+        6 Garbage Collection         0
+        6 Garbage Collection         1
         
         Description
         -----------
-        This example shows the basic syntax of the command, and set's the value of KCC Logging to 3
+        This example shows the basic syntax of the command, and set's the value of 6 Garbage Collection 
+        back to its original value of 1.
     .NOTES
         ScriptName : Set-NtdsDiagnosticLogging.ps1
         Created By : jspatton
@@ -73,7 +85,17 @@ Param
     (
     [ValidateRange(0,5)]
     [int]$LoggingLevel = 0,
-    [ValidateSet('1 Knowledge Consistency Checker','2 Security Events','3 ExDS Interface Events','4 MAPI Interface Events','5 Replication Events','6 Garbage Collection','7 Internal Configuration','8 Directory Access','9 Internal Processing','10 Performance Counters','11 Initialization/Termination','12 Service Control','13 Name Resolution','14 Backup','15 Field Engineering','16 LDAP Interface Events','17 Setup','18 Global Catalog','19 Inter-site Messaging', '20 Group Caching','21 Linked-Value Replication','22 DS RPC Client','23 DS RPC Server','24 DS Schema')]
+    [ValidateSet('1 Knowledge Consistency Checker','2 Security Events',
+                '3 ExDS Interface Events','4 MAPI Interface Events',
+                '5 Replication Events','6 Garbage Collection',
+                '7 Internal Configuration','8 Directory Access',
+                '9 Internal Processing','10 Performance Counters',
+                '11 Initialization/Termination','12 Service Control',
+                '13 Name Resolution','14 Backup','15 Field Engineering',
+                '16 LDAP Interface Events','17 Setup','18 Global Catalog',
+                '19 Inter-site Messaging', '20 Group Caching','21 Linked-Value Replication',
+                '22 DS RPC Client','23 DS RPC Server','24 DS Schema')]
+    [Parameter(ValueFromPipeline=$True,ValueFromPipelinebyPropertyName=$True)]
     [string]$DiagnosticSubkey,
     [string]$RegPath = 'HKLM:\SYSTEM\CurrentControlSet\services\NTDS\Diagnostics\'
     )
@@ -90,28 +112,50 @@ Begin
  
         #	Dotsource in the functions you need.
 
+        $CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+        $principal = new-object System.Security.principal.windowsprincipal($CurrentUser)
         }
 Process
-    {
-        Write-Verbose "Storing previous logging level in the log"
-        [int]$CurrentLoggingLevel = (Get-ItemProperty -Path $RegPath).$DiagnosticSubkey
-        $Message = "The exising level for $($RegPath)\$($DiagnosticSubkey) is $($CurrentLoggingLevel)"
-        Write-Verbose $Message
-        Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
-        
-        Write-Verbose "Setting new logging level"
-        try
+    {      
+        if (!$principal.IsInRole("Administrators")) 
         {
-            Set-ItemProperty -Path $RegPath -Name $DiagnosticSubkey -Value $LoggingLevel
-            $Message = "Updated $($RegPath)\$($DiagnosticSubkey) to $($LoggingLevel)"
-            Write-Verbose $Message
-            Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
-            }
-        catch
-        {
-            $Message = $Error[0].Exception
+            $Message = 'You need to run this from an elevated prompt'
             Write-Error $Message
             Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+            }
+        else
+        {
+            Write-Verbose "Storing previous logging level in the log"
+            [int]$CurrentLoggingLevel = (Get-ItemProperty -Path $RegPath).$DiagnosticSubkey
+            $Message = "The exising level for $($RegPath)\$($DiagnosticSubkey) is $($CurrentLoggingLevel)"
+            Write-Verbose $Message
+            Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
+
+            $Return = New-Object -TypeName PSObject -Property @{
+                DiagnosticSubkey = $DiagnosticSubkey
+                Value = $CurrentLoggingLevel
+                }
+            $Return |Select-Object -Property DiagnosticSubkey, Value
+                
+            Write-Verbose "Setting new logging level"
+            try
+            {
+                Set-ItemProperty -Path $RegPath -Name $DiagnosticSubkey -Value $LoggingLevel
+                $Return = New-Object -TypeName PSObject -Property @{
+                    DiagnosticSubkey = $DiagnosticSubkey
+                    Value = $LoggingLevel
+                    }
+                $Return |Select-Object -Property DiagnosticSubkey, Value
+                $Message = "Updated $($RegPath)\$($DiagnosticSubkey) to $($LoggingLevel)"
+                Write-Verbose $Message
+                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
+                }
+            catch
+            {
+                $Message = $Error[0].Exception
+                Write-Error $Message
+                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+                }
             }
         }
 End
