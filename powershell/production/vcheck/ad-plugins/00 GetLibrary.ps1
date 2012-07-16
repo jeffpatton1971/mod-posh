@@ -5,11 +5,17 @@
     Otherwise this updated file will dot-source the stub library that
     has only the functions required for the plug-in to work.
 #>
+$Title = "Library Settings for AD-Plugins"
+$Comments = "Define how to grab functions"
+$Display = "List"
+$Author = "Jeff Patton"
+$PluginVersion = 1
+
 $Global:LoadLibFromURL = $false
 
 if ($LoadLibFromURL -eq $false)
 {
-    . .\ADStubLibrary.ps1
+    . .\Plugins\ADStubLibrary.ps1
     }
 else
 {
