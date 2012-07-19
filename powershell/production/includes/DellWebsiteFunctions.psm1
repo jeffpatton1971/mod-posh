@@ -1,4 +1,4 @@
-oFunction Get-DellDownloadURL
+Function Get-DellDownloadURL
 {
     <#
     #>
