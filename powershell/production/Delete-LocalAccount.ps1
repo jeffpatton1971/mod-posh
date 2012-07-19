@@ -48,8 +48,17 @@ Begin
     	$Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
     	Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
     	
-    	. .\includes\ComputerManagement.ps1
-        . .\includes\ActiveDirectoryManagement.ps1
+        Try
+        {
+            Import-Module .\includes\ComputerManagement.psm1
+            Import-Module .\includes\ActiveDirectoryManagement.psm1
+            }
+        Catch
+        {
+            Write-Warning "Must have the ActiveDirectoryManagement or ComputerManagement Modules available."
+            Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message "ActiveDirectoryManagement or ComputerManagement Modules Not Found"
+            Break
+            }
     }
 Process
     {    
