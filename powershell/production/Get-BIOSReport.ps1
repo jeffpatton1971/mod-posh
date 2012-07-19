@@ -31,8 +31,17 @@ Begin
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
 
-        . .\includes\ActiveDirectoryManagement.ps1
-        . .\includes\DellWebsiteFunctions.ps1
+        Try
+        {
+            Import-Module .\includes\ActiveDirectoryManagement.psm1
+            Import-Module .\includes\DellWebsiteFunctions.psm1
+            }
+        Catch
+        {
+            Write-Warning "Must have the ActiveDirectoryManagement or DellWebsiteFunctions Modules available."
+            Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message "ActiveDirectoryManagement or DellWebsiteFunctions Modules Not Found"
+            Break
+            }
         
         $Computers = Get-ADObjects -ADSPath $ADSPath
     }
