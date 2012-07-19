@@ -53,8 +53,16 @@ Begin
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
 
         #	Dotsource in the functions you need.
-        . .\includes\ActiveDirectoryManagement.ps1
-        
+        Try
+        {
+            Import-Module .\includes\ActiveDirectoryManagement.psm1
+            }
+        Catch
+        {
+            Write-Warning "Must have the ActiveDirectoryManagement Module available."
+            Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message "ActiveDirectoryManagement Module Not Found"
+            Break
+            }
         $LabComputers = Get-ADObjects -ADSPath $ADSPath
 		$Jobs = @()
     }
