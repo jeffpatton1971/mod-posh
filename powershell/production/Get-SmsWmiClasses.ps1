@@ -59,7 +59,16 @@ Begin
         Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
  
         #	Dotsource in the functions you need.
-        . .\includes\ComputerManagement.ps1
+        Try
+        {
+            Import-Module .\includes\ComputerManagement.psm1
+            }
+        Catch
+        {
+            Write-Warning "Must have the ComputerManagement Module available."
+            Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message "ComputerManagement Module Not Found"
+            Break
+            }
         
         $FullPath = "$($LogFolder)\$($LogFile)"
         }
