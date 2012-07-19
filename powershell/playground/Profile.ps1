@@ -50,7 +50,7 @@ Set-Location "C:\scripts\powershell\production"
 #
 # Dot source in my functions
 #
-foreach ($file in Get-ChildItem .\includes\*.ps1){. $file.fullname}
+foreach ($file in Get-ChildItem .\includes\*.psm1){Import-Module $file.fullname}
 
 #
 # Update repo
