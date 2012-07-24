@@ -48,6 +48,11 @@ catch
 Set-Location "C:\scripts\powershell\production"
 
 #
+# Start transcription
+#
+Start-Transcript
+
+#
 # Dot source in my functions
 #
 foreach ($file in Get-ChildItem .\includes\*.psm1){Import-Module $file.fullname}
