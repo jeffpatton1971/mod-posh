@@ -16,7 +16,15 @@ $CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $principal = new-object System.Security.principal.windowsprincipal($CurrentUser)
 if ($Host.Name -eq 'ConsoleHost')
 {
+    #
+    # Set default editor
+    #
     $Global:POSHEditor = 'c:\windows\notepad.exe'
+    
+    #
+    # Start transcription
+    #
+    Start-Transcript
     }
 
 #
@@ -46,11 +54,6 @@ catch
 # Move me into my code location
 #
 Set-Location "C:\scripts\powershell\production"
-
-#
-# Start transcription
-#
-Start-Transcript
 
 #
 # Dot source in my functions
