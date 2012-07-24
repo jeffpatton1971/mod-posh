@@ -1837,5 +1837,443 @@ Function Get-Fqdn
         Return $Fqdn
         }
     }
+Function ConvertTo-Rfc1779
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : ConvertTo-Rfc1779
+            Created by   : jspatton
+            Date Coded   : 07/24/2012 16:06:10
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertTo-Rfc1779
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$Name,
+        [ValidateSet(1,2,3)]
+        [int]$InitType = 3,
+        [string]$ConnectionObject
+        )
+    Begin
+    {
+        $AdsNameType = 4
+        $ReturnType = 1
+
+        if ($Name.IndexOf('cn=') -ne -1){$AdsNameType = 1}
+        if ($Name.IndexOf('/') -ne -1){$AdsNameType = 2}
+        if ($Name.IndexOf('\') -ne -1){$AdsNameType = 3}
+        if ($Name.IndexOf('@') -ne -1){$AdsNameType = 5}
+        if ($Name.IndexOf('{') -ne -1){$AdsNameType = 7}
+
+        if (($InitType -eq 1) -and ($ConnectionObject -eq ""))
+        {
+            Write-Host 'setting connectionobject to domain'
+            $ConnectionObject = ([adsi]"").Name
+            }
+        if (($InitType -eq 2) -and ($ConnectionObject -eq ""))
+        {
+            Write-Host 'setting connectionobject to dc'
+            $Forest = [system.directoryservices.activedirectory.forest]::GetCurrentForest()
+            $ConnectionObject = $Forest.SchemaRoleOwner.Name
+            }
+        if ($InitType -eq 3){$ConnectionObject = $null}
+        }
+    Process
+    {
+        $NameTranslate = New-Object -ComObject NameTranslate
+        $type = $NameTranslate.GetType()
+        $type.InvokeMember("Init","InvokeMethod",$null,$NameTranslate,($InitType,$ConnectionObject))
+        $type.InvokeMember("Set","InvokeMethod",$null,$NameTranslate,($AdsNameType, $Name))
+        try
+        {
+            $NameTranslated = $type.InvokeMember("Get","InvokeMethod",$null,$NameTranslate,$ReturnType)
+            $ADS_NAME_TYPE_1779 = New-Object -TypeName PSObject -Property @{
+                Name = $Name
+                ADS_NAME_TYPE = $AdsNameType
+                Value = $NameTranslated
+                }
+            }
+        catch
+        {
+            Write-Error $Error[0]
+            break
+            }
+        }
+    End
+    {
+        Return $ADS_NAME_TYPE_1779
+        }
+    }
+Function ConvertTo-Canonical
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : ConvertTo-Canonical
+            Created by   : jspatton
+            Date Coded   : 07/24/2012 16:57:11
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertTo-Canonical
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$Name,
+        [ValidateSet(1,2,3)]
+        [int]$InitType = 3,
+        [string]$ConnectionObject
+        )
+    Begin
+    {
+        $AdsNameType = 4
+        $ReturnType = 2
+
+        if ($Name.IndexOf('cn=') -ne -1){$AdsNameType = 1}
+        if ($Name.IndexOf('/') -ne -1){$AdsNameType = 2}
+        if ($Name.IndexOf('\') -ne -1){$AdsNameType = 3}
+        if ($Name.IndexOf('@') -ne -1){$AdsNameType = 5}
+        if ($Name.IndexOf('{') -ne -1){$AdsNameType = 7}
+
+        if (($InitType -eq 1) -and ($ConnectionObject -eq ""))
+        {
+            Write-Host 'setting connectionobject to domain'
+            $ConnectionObject = ([adsi]"").Name
+            }
+        if (($InitType -eq 2) -and ($ConnectionObject -eq ""))
+        {
+            Write-Host 'setting connectionobject to dc'
+            $Forest = [system.directoryservices.activedirectory.forest]::GetCurrentForest()
+            $ConnectionObject = $Forest.SchemaRoleOwner.Name
+            }
+        if ($InitType -eq 3){$ConnectionObject = $null}
+        }
+    Process
+    {
+        $NameTranslate = New-Object -ComObject NameTranslate
+        $type = $NameTranslate.GetType()
+        $type.InvokeMember("Init","InvokeMethod",$null,$NameTranslate,($InitType,$ConnectionObject))
+        $type.InvokeMember("Set","InvokeMethod",$null,$NameTranslate,($AdsNameType, $Name))
+        try
+        {
+            $NameTranslated = $type.InvokeMember("Get","InvokeMethod",$null,$NameTranslate,$ReturnType)
+            $ADS_NAME_TYPE_CANONICAL = New-Object -TypeName PSObject -Property @{
+                Name = $Name
+                ADS_NAME_TYPE = $AdsNameType
+                Value = $NameTranslated
+                }
+            }
+        catch
+        {
+            Write-Error $Error[0]
+            break
+            }
+        }
+    End
+    {
+        Return $ADS_NAME_TYPE_CANONICAL
+        }
+    }
+Function ConvertTo-Nt4
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : ConvertTo-Nt4
+            Created by   : jspatton
+            Date Coded   : 07/24/2012 16:57:30
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertTo-Nt4
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$Name,
+        [ValidateSet(1,2,3)]
+        [int]$InitType = 3,
+        [string]$ConnectionObject
+        )
+    Begin
+    {
+        $AdsNameType = 4
+        $ReturnType = 3
+
+        if ($Name.IndexOf('cn=') -ne -1){$AdsNameType = 1}
+        if ($Name.IndexOf('/') -ne -1){$AdsNameType = 2}
+        if ($Name.IndexOf('\') -ne -1){$AdsNameType = 3}
+        if ($Name.IndexOf('@') -ne -1){$AdsNameType = 5}
+        if ($Name.IndexOf('{') -ne -1){$AdsNameType = 7}
+
+        if (($InitType -eq 1) -and ($ConnectionObject -eq ""))
+        {
+            Write-Host 'setting connectionobject to domain'
+            $ConnectionObject = ([adsi]"").Name
+            }
+        if (($InitType -eq 2) -and ($ConnectionObject -eq ""))
+        {
+            Write-Host 'setting connectionobject to dc'
+            $Forest = [system.directoryservices.activedirectory.forest]::GetCurrentForest()
+            $ConnectionObject = $Forest.SchemaRoleOwner.Name
+            }
+        if ($InitType -eq 3){$ConnectionObject = $null}
+        }
+    Process
+    {
+        $NameTranslate = New-Object -ComObject NameTranslate
+        $type = $NameTranslate.GetType()
+        $type.InvokeMember("Init","InvokeMethod",$null,$NameTranslate,($InitType,$ConnectionObject))
+        $type.InvokeMember("Set","InvokeMethod",$null,$NameTranslate,($AdsNameType, $Name))
+        try
+        {
+            $NameTranslated = $type.InvokeMember("Get","InvokeMethod",$null,$NameTranslate,$ReturnType)
+            $ADS_NAME_TYPE_NT4 = New-Object -TypeName PSObject -Property @{
+                Name = $Name
+                ADS_NAME_TYPE = $AdsNameType
+                Value = $NameTranslated
+                }
+            }
+        catch
+        {
+            Write-Error $Error[0]
+            break
+            }
+        }
+    End
+    {
+        Return $ADS_NAME_TYPE_NT4
+        }
+    }
+Function ConvertTo-Upn
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : ConvertTo-Upn
+            Created by   : jspatton
+            Date Coded   : 07/24/2012 16:58:06
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertTo-Upn
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$Name,
+        [ValidateSet(1,2,3)]
+        [int]$InitType = 3,
+        [string]$ConnectionObject
+        )
+    Begin
+    {
+        $AdsNameType = 4
+        $ReturnType = 9
+
+        if ($Name.IndexOf('cn=') -ne -1){$AdsNameType = 1}
+        if ($Name.IndexOf('/') -ne -1){$AdsNameType = 2}
+        if ($Name.IndexOf('\') -ne -1){$AdsNameType = 3}
+        if ($Name.IndexOf('@') -ne -1){$AdsNameType = 5}
+        if ($Name.IndexOf('{') -ne -1){$AdsNameType = 7}
+
+        if (($InitType -eq 1) -and ($ConnectionObject -eq ""))
+        {
+            Write-Host 'setting connectionobject to domain'
+            $ConnectionObject = ([adsi]"").Name
+            }
+        if (($InitType -eq 2) -and ($ConnectionObject -eq ""))
+        {
+            Write-Host 'setting connectionobject to dc'
+            $Forest = [system.directoryservices.activedirectory.forest]::GetCurrentForest()
+            $ConnectionObject = $Forest.SchemaRoleOwner.Name
+            }
+        if ($InitType -eq 3){$ConnectionObject = $null}
+        }
+    Process
+    {
+        $NameTranslate = New-Object -ComObject NameTranslate
+        $type = $NameTranslate.GetType()
+        $type.InvokeMember("Init","InvokeMethod",$null,$NameTranslate,($InitType,$ConnectionObject))
+        $type.InvokeMember("Set","InvokeMethod",$null,$NameTranslate,($AdsNameType, $Name))
+        try
+        {
+            $NameTranslated = $type.InvokeMember("Get","InvokeMethod",$null,$NameTranslate,$ReturnType)
+            $ADS_NAME_TYPE_USER_PRINCIPAL_NAME = New-Object -TypeName PSObject -Property @{
+                Name = $Name
+                ADS_NAME_TYPE = $AdsNameType
+                Value = $NameTranslated
+                }
+            }
+        catch
+        {
+            Write-Error $Error[0]
+            break
+            }
+        }
+    End
+    {
+        Return $ADS_NAME_TYPE_USER_PRINCIPAL_NAME
+        }
+    }
+Function ConvertTo-Guid
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : ConvertTo-Guid
+            Created by   : jspatton
+            Date Coded   : 07/24/2012 16:58:46
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertTo-Guid
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$Name,
+        [ValidateSet(1,2,3)]
+        [int]$InitType = 3,
+        [string]$ConnectionObject
+        )
+    Begin
+    {
+        $AdsNameType = 4
+        $ReturnType = 7
+
+        if ($Name.IndexOf('cn=') -ne -1){$AdsNameType = 1}
+        if ($Name.IndexOf('/') -ne -1){$AdsNameType = 2}
+        if ($Name.IndexOf('\') -ne -1){$AdsNameType = 3}
+        if ($Name.IndexOf('@') -ne -1){$AdsNameType = 5}
+        if ($Name.IndexOf('{') -ne -1){$AdsNameType = 7}
+
+        if (($InitType -eq 1) -and ($ConnectionObject -eq ""))
+        {
+            Write-Host 'setting connectionobject to domain'
+            $ConnectionObject = ([adsi]"").Name
+            }
+        if (($InitType -eq 2) -and ($ConnectionObject -eq ""))
+        {
+            Write-Host 'setting connectionobject to dc'
+            $Forest = [system.directoryservices.activedirectory.forest]::GetCurrentForest()
+            $ConnectionObject = $Forest.SchemaRoleOwner.Name
+            }
+        if ($InitType -eq 3){$ConnectionObject = $null}
+        }
+    Process
+    {
+        $NameTranslate = New-Object -ComObject NameTranslate
+        $type = $NameTranslate.GetType()
+        $type.InvokeMember("Init","InvokeMethod",$null,$NameTranslate,($InitType,$ConnectionObject))
+        $type.InvokeMember("Set","InvokeMethod",$null,$NameTranslate,($AdsNameType, $Name))
+        try
+        {
+            $NameTranslated = $type.InvokeMember("Get","InvokeMethod",$null,$NameTranslate,$ReturnType)
+            $ADS_NAME_TYPE_GUID = New-Object -TypeName PSObject -Property @{
+                Name = $Name
+                ADS_NAME_TYPE = $AdsNameType
+                Value = $NameTranslated
+                }
+            }
+        catch
+        {
+            Write-Error $Error[0]
+            break
+            }
+        }
+    End
+    {
+        Return $ADS_NAME_TYPE_GUID
+        }
+    }
+Function ConvertTo-Display
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : ConvertTo-Display
+            Created by   : jspatton
+            Date Coded   : 07/24/2012 16:58:55
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertTo-Display
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$Name,
+        [ValidateSet(1,2,3)]
+        [int]$InitType = 3,
+        [string]$ConnectionObject
+        )
+    Begin
+    {
+        $AdsNameType = 4
+        $ReturnType = 4
+
+        if ($Name.IndexOf('cn=') -ne -1){$AdsNameType = 1}
+        if ($Name.IndexOf('/') -ne -1){$AdsNameType = 2}
+        if ($Name.IndexOf('\') -ne -1){$AdsNameType = 3}
+        if ($Name.IndexOf('@') -ne -1){$AdsNameType = 5}
+        if ($Name.IndexOf('{') -ne -1){$AdsNameType = 7}
+
+        if (($InitType -eq 1) -and ($ConnectionObject -eq ""))
+        {
+            Write-Host 'setting connectionobject to domain'
+            $ConnectionObject = ([adsi]"").Name
+            }
+        if (($InitType -eq 2) -and ($ConnectionObject -eq ""))
+        {
+            Write-Host 'setting connectionobject to dc'
+            $Forest = [system.directoryservices.activedirectory.forest]::GetCurrentForest()
+            $ConnectionObject = $Forest.SchemaRoleOwner.Name
+            }
+        if ($InitType -eq 3){$ConnectionObject = $null}
+        }
+    Process
+    {
+        $NameTranslate = New-Object -ComObject NameTranslate
+        $type = $NameTranslate.GetType()
+        $type.InvokeMember("Init","InvokeMethod",$null,$NameTranslate,($InitType,$ConnectionObject))
+        $type.InvokeMember("Set","InvokeMethod",$null,$NameTranslate,($AdsNameType, $Name))
+        try
+        {
+            $NameTranslated = $type.InvokeMember("Get","InvokeMethod",$null,$NameTranslate,$ReturnType)
+            $ADS_NAME_TYPE_DISPLAY = New-Object -TypeName PSObject -Property @{
+                Name = $Name
+                ADS_NAME_TYPE = $AdsNameType
+                Value = $NameTranslated
+                }
+            }
+        catch
+        {
+            Write-Error $Error[0]
+            break
+            }
+        }
+    End
+    {
+        Return $ADS_NAME_TYPE_DISPLAY
+        }
+    }
 
 Export-ModuleMember *
