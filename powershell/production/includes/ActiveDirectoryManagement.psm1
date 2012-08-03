@@ -1850,6 +1850,10 @@ Function ConvertTo-Rfc1779
             Date Coded   : 07/24/2012 16:06:10
         .LINK
             https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#ConvertTo-Rfc1779
+        .LINK
+            http://msdn.microsoft.com/en-us/library/aa706049(v=vs.85)
+        .LINK
+            http://msdn.microsoft.com/en-us/library/aa772267(v=vs.85).aspx
     #>
     [CmdletBinding()]
     Param
@@ -1938,7 +1942,7 @@ Function ConvertTo-Canonical
         $AdsNameType = 4
         $ReturnType = 2
 
-        if ($Name.IndexOf('cn=') -ne -1){$AdsNameType = 1}
+        if ($Name.IndexOf('dc=') -ne -1){$AdsNameType = 1}
         if ($Name.IndexOf('/') -ne -1){$AdsNameType = 2}
         if ($Name.IndexOf('\') -ne -1){$AdsNameType = 3}
         if ($Name.IndexOf('@') -ne -1){$AdsNameType = 5}
