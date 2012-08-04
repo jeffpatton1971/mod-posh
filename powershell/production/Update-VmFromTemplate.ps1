@@ -52,7 +52,7 @@ Begin
 
         #	Dotsource in the functions you need.
         
-        if ($modules.Name -contains "HyperV")
+        if (Get-Module -Name 'HyperV')
         {}
         else
         {
