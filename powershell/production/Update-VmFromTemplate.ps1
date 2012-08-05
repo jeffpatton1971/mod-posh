@@ -7,7 +7,7 @@
         I don't implement that bit in this script.
     .PARAMETER TargetVM
         This is the name of the imported VM Template
-    .PARAMETER NewVMName
+    .PARAMETER VmName
         This is the name you wish to give your new VM
     .EXAMPLE
         .\Update-VmFromTemplate.ps1 -TargetVM "2008 Core Server" -NewVMName "IIS Web Server"
@@ -33,69 +33,90 @@
 #>
 Param
     (
-        [Parameter(Mandatory=$true)]
-        [string]$TargetVM,
-        [Parameter(Mandatory=$true)]
-        [string]$NewVMName
+    [Parameter(Mandatory=$true)]
+    [string]$TargetVM,
+    [Parameter(Mandatory=$true)]
+    [string]$VmName,
+    [Parameter(Mandatory=$true)]
+    [string]$ExportPath
     )
 Begin
     {
         $ScriptName = $MyInvocation.MyCommand.ToString()
-        $LogName = "Application"
         $ScriptPath = $MyInvocation.MyCommand.Path
         $Username = $env:USERDOMAIN + "\" + $env:USERNAME
 
-        New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
+        New-EventLog -Source $ScriptName -LogName 'Windows Powershell' -ErrorAction SilentlyContinue
 
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
+        Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
 
-        #	Dotsource in the functions you need.
-        
-        if (Get-Module -Name 'HyperV')
-        {}
+        # Dotsource in the functions you need.
+        if (Get-Module -Name HyperV)
+        {
+            }
         else
         {
-            Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message "Loading HyperV Module"
+            Write-Verbose "Importing HyperV Module"
             Import-Module 'C:\Program Files\modules\HyperV\HyperV.psd1'
             }
-        
-        # Set the name of the VM we're working with
-        $VirtualMachine = Get-VM |Where-Object {$_.VMElementName -eq $TargetVM}
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message "Get the Working VM, $($VirtualMachine.VMElementName)"
-        # Get the disk information for the rename
-        $VMDiskPath = Get-VMDisk -VM $VirtualMachine.VMElementName |Where-Object {$_.DriveName -eq "Hard Drive"}
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message "Get the disk to work with, $($VMDiskPath.DiskImage)"
-        # Split the path up on slash
-        $NewDiskPath = $VMDiskPath.DiskImage.Split("\")
-        
-        # The last item in the array is the filename, so update it.
-        $NewDiskPath[$NewDiskPath.Count -1] = "$($NewVMName).vhd"
-        
-        # Cat the string back together
-        $NewDiskPath = [string]::join("\",$NewDiskPath)
-    }
+
+        if ((Test-Path "$($ExportPath)\$($TargetVM)"))
+        {
+            Write-Verbose "Read in the config.xml from $($TargetVM)"
+            [xml]$Config = Get-Content "$($ExportPath)\$($TargetVM)\config.xml"
+            Write-Verbose "Get the vhd location of $($TargetVM)"
+            $VMDiskPath = $Config.configuration.vhd.source."#text"
+            Write-Verbose "Get the vhd"
+            $ExportedDisk = Get-ChildItem "$($ExportPath)\$($TargetVM)\Virtual Hard Disks"
+            }
+        else
+        {
+            Write-Host "Exported VM(s)"
+            Get-ChildItem $ExportPath |Select-Object -Property Name
+            break
+            }
+        }
 Process
     {
-        # Remove any disks that are attached to the newly imported VM
-        Get-VMDisk -VM $VirtualMachine.VMElementName | `
-            foreach {Remove-VMDrive -Diskonly -VM $_.VMElementName -ControllerID $_.ControllerID -LUN $_.DriveLUN}
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message "Removed all disks"
-        # Rename the existing imported disk, to the new VM name
-        Rename-Item $VMDiskPath.DiskImage $NewDiskPath
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message "Renamed disk to $($NewDiskPath)"
-        # Attach the newly renamed VHD back to the VM
-        Set-VMDisk -VM $TargetVM -Path $NewDiskPath
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message "Added new disk to VM"
-        # Change the name of the VM to the new name, and add a note about what happened
-        Set-VM -VM $TargetVM -Name $NewVMName -Notes "Imported $($TargetVM) to $($NewVMName) on $(Get-Date)"
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message "Changed the VM name to $($NewVMName) and wrote a note"
-        # Create an initial snapshot after the import
-        New-VMSnapshot -VM $NewVMName -Note "Creating initial snapshot after Import" -Force
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message "Creating initial snapshot after Import"
-    }
+        foreach ($NewVMName in $VmName)
+        {
+            Write-Verbose "Copying disk for $($NewVMName)"
+            try
+            {
+                Write-Verbose "Create diskpath for $($NewVMName)"
+                $NewDiskPath = $VMDiskPath.Split("\")          
+                $NewDiskPath[$NewDiskPath.Count -1] = "$($NewVMName).vhd"
+                $NewDiskPath = [string]::join("\",$NewDiskPath)
+                Write-Verbose "Copy disk from $($ExportedDisk.Fullname) to $($NewDiskPath)"
+                Copy-Item $ExportedDisk.FullName $NewDiskPath
+                }
+            catch
+            {
+                Write-Error $Error[0]
+                break
+                }
+
+            try
+            {
+                Write-Verbose "Create VM $($NewVMName)"
+                $NewVM = New-VM -Name $NewVMName
+                Write-Verbose "Attach the disk in $($NewDiskPath) to $($NewVMName)"
+                $VmDiskReturn = Set-VMDisk -VM $NewVM -Path $NewDiskPath
+                Write-Verbose "Add a note to $($NewVMName)"
+                Set-VM -VM $NewVM -Name $NewVMName -Notes "Imported $($TargetVM) to $($NewVMName) on $(Get-Date)" |Out-Null
+                Write-Verbose "Create the initial snapshot"
+                New-VMSnapshot -VM $NewVM -Note "Creating initial snapshot after Import" -Force
+                }
+            catch
+            {
+                Write-Error $Error[0]
+                break
+                }
+            }
+        }
 End
     {
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message	
-    }
+        Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message
+        }
