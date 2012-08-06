@@ -101,6 +101,10 @@ Process
             {
                 Write-Verbose "Create VM $($NewVMName)"
                 $NewVM = New-VM -Name $NewVMName
+                Write-Verbose "Adding CD/DVD-ROM to $($NewVMName)"
+                Add-VMDisk -VM $NewVM -ControllerID 0 -LUN 1 -Path C:\VirtualMachines\ISOs\SW_DVD5_Windows_Svr_DC_EE_SE_Web_2008_R2_64Bit_English_w_SP1_MLF_X17-22580.ISO -OpticalDrive
+                Write-Verbose "Adding legacy network card to $($NewVMName)"
+                Add-VMNIC -VM $NewVM -Legacy
                 Write-Verbose "Attach the disk in $($NewDiskPath) to $($NewVMName)"
                 $VmDiskReturn = Set-VMDisk -VM $NewVM -Path $NewDiskPath
                 Write-Verbose "Add a note to $($NewVMName)"
