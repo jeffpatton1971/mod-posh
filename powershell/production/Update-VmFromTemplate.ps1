@@ -36,7 +36,7 @@ Param
     [Parameter(Mandatory=$true)]
     [string]$TargetVM,
     [Parameter(Mandatory=$true)]
-    [string]$VmName,
+    $VmName,
     [Parameter(Mandatory=$true)]
     [string]$ExportPath
     )
@@ -52,29 +52,42 @@ Begin
         Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "100" -EntryType "Information" -Message $Message 
 
         # Dotsource in the functions you need.
-        if (Get-Module -Name HyperV)
-        {
-            }
-        else
-        {
-            Write-Verbose "Importing HyperV Module"
-            Import-Module 'C:\Program Files\modules\HyperV\HyperV.psd1'
-            }
+        $CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+        $principal = New-Object System.Security.principal.windowsprincipal($CurrentUser)
 
-        if ((Test-Path "$($ExportPath)\$($TargetVM)"))
+        if ($principal.IsInRole("Administrators") -eq $false) 
         {
-            Write-Verbose "Read in the config.xml from $($TargetVM)"
-            [xml]$Config = Get-Content "$($ExportPath)\$($TargetVM)\config.xml"
-            Write-Verbose "Get the vhd location of $($TargetVM)"
-            $VMDiskPath = $Config.configuration.vhd.source."#text"
-            Write-Verbose "Get the vhd"
-            $ExportedDisk = Get-ChildItem "$($ExportPath)\$($TargetVM)\Virtual Hard Disks"
+            $Message = 'This script must be run as an administrator from an elevated prompt.'
+            Write-Error $Message
+            Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message -ErrorAction SilentlyContinue
+            break
             }
         else
         {
-            Write-Host "Exported VM(s)"
-            Get-ChildItem $ExportPath |Select-Object -Property Name
-            break
+            if (Get-Module -Name HyperV)
+            {
+                }
+            else
+            {
+                Write-Verbose "Importing HyperV Module"
+                Import-Module 'C:\Program Files\modules\HyperV\HyperV.psd1'
+                }
+
+            if ((Test-Path "$($ExportPath)\$($TargetVM)"))
+            {
+                Write-Verbose "Read in the config.xml from $($TargetVM)"
+                [xml]$Config = Get-Content "$($ExportPath)\$($TargetVM)\config.xml"
+                Write-Verbose "Get the vhd location of $($TargetVM)"
+                $VMDiskPath = $Config.configuration.vhd.source."#text"
+                Write-Verbose "Get the vhd"
+                $ExportedDisk = Get-ChildItem "$($ExportPath)\$($TargetVM)\Virtual Hard Disks"
+                }
+            else
+            {
+                Write-Host "Exported VM(s)"
+                Get-ChildItem $ExportPath |Select-Object -Property Name
+                break
+                }
             }
         }
 Process
@@ -93,7 +106,9 @@ Process
                 }
             catch
             {
-                Write-Error $Error[0]
+                $Message = $Error[0]
+                Write-Error $Message
+                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
                 break
                 }
 
@@ -114,7 +129,9 @@ Process
                 }
             catch
             {
-                Write-Error $Error[0]
+                $Message = $Error[0]
+                Write-Error $Message
+                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
                 break
                 }
             }
