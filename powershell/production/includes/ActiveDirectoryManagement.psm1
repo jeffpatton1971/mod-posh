@@ -74,7 +74,7 @@ Function Get-ADObjects
         (
         [string]$ADSPath = (([ADSI]"").distinguishedName),
         [string]$SearchFilter = "(objectCategory=computer)",
-        [array]$ADProperties="name"
+        [array]$ADProperties
         )
     Begin
     {
@@ -94,21 +94,27 @@ Function Get-ADObjects
             $DirectorySearcher.Filter = $SearchFilter
             $DirectorySearcher.SearchScope = "Subtree"
 
-            foreach ($Property in $ADProperties)
-                {
-                    [void]$DirectorySearcher.PropertiesToLoad.Add($Property)
-                    }
-
-            $ADObjects = @()
-            foreach ($ADObject in $DirectorySearcher.FindAll())
+            if ($ADProperties -ne $null)
             {
-                $objResult = New-Object -TypeName PSObject
-                foreach ($ADProperty in $ADProperties)
-                {
-                    Add-Member -InputObject $objResult -MemberType NoteProperty -Name $ADProperty -Value $ADObject.Properties.($ADProperty.ToLower())
-                    }
-                Add-Member -InputObject $objResult -MemberType NoteProperty -Name 'adsPath' -Value $ADObject.Properties.adspath
-                $ADObjects += $objResult
+                    foreach ($Property in $ADProperties)
+                        {
+                            [void]$DirectorySearcher.PropertiesToLoad.Add($Property)
+                            }
+                    $ADObjects = @()
+                    foreach ($ADObject in $DirectorySearcher.FindAll())
+                    {
+                        $objResult = New-Object -TypeName PSObject
+                        foreach ($ADProperty in $ADProperties)
+                        {
+                            Add-Member -InputObject $objResult -MemberType NoteProperty -Name $ADProperty -Value $ADObject.Properties.($ADProperty.ToLower())
+                            }
+                        Add-Member -InputObject $objResult -MemberType NoteProperty -Name 'adsPath' -Value $ADObject.Properties.adspath
+                        $ADObjects += $objResult
+                        }
+                }
+            else
+            {
+                $ADObjects = $DirectorySearcher.FindAll()
                 }
             }
         Catch
