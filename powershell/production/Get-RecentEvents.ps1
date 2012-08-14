@@ -41,9 +41,10 @@
 [CmdletBinding()]
 Param
     (
-        $ComputerName = (& hostname),
-        $Hours = 2,
-        $FilePath = 'C:\LogFiles'
+    [string]$ComputerName = (& hostname),
+    [int]$Hours = 2,
+    [string]$FilePath = 'C:\LogFiles',
+    [switch]$ErrorsOnly
     )
 Begin
     {
@@ -94,8 +95,16 @@ Process
                     Write-Verbose "Connect to $($Computer) and return a list of logs that were written within the last $($Hours) hour(s)"
                     if ($OS.Version -ge 6)
                     {
-                        $ThisLog = Get-WinEvent -LogName $Log.LogName -ComputerName $Computer `
-                            |Where-Object {(Get-Date($_.TimeCreated)) -gt $CheckPoint.AddHours(-($Hours)) -and (Get-Date($_.TimeCreated)) -lt $CheckPoint}
+                        if ($ErrorsOnly)
+                        {
+                            $ThisLog = Get-WinEvent -ComputerName $Computer -FilterHashtable @{LogName = $Log.LogName; Level = 2}`
+                                |Where-Object {(Get-Date($_.TimeCreated)) -gt $CheckPoint.AddHours(-($Hours)) -and (Get-Date($_.TimeCreated)) -lt $CheckPoint}
+                            }
+                        else
+                        {
+                            $ThisLog = Get-WinEvent -LogName $Log.LogName -ComputerName $Computer `
+                                |Where-Object {(Get-Date($_.TimeCreated)) -gt $CheckPoint.AddHours(-($Hours)) -and (Get-Date($_.TimeCreated)) -lt $CheckPoint}
+                            }
                         }
                     else
                     {
