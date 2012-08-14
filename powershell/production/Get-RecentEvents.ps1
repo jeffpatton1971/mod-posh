@@ -15,6 +15,8 @@
         A value indicating how many hours to go back
     .PARAMETER FilePath
         This is the location of the exported logs
+    .PARAMETER ErrorsOnly
+        This switch will tell the script to grab only error entries from the logs.
     .EXAMPLE
         .\Get-RecentEvents -Servers 'fs1','fs2' -Hours 3 -FilePath 'C:\Logs'
         
