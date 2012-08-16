@@ -17,6 +17,8 @@
         This is the location of the exported logs
     .PARAMETER ErrorsOnly
         This switch will tell the script to grab only error entries from the logs.
+    .PARAMETER Logs
+        A comma seperated list of specific logs to query.
     .EXAMPLE
         .\Get-RecentEvents -Servers 'fs1','fs2' -Hours 3 -FilePath 'C:\Logs'
         
@@ -46,7 +48,8 @@ Param
     [string]$ComputerName = (& hostname),
     [int]$Hours = 2,
     [string]$FilePath = 'C:\LogFiles',
-    [switch]$ErrorsOnly
+    [switch]$ErrorsOnly,
+    $Logs
     )
 Begin
     {
@@ -91,6 +94,14 @@ Process
                     $ActiveLogs += ((New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value 'System' -PassThru)
                     $ActiveLogs += ((New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value 'Application' -PassThru)
                     $ActiveLogs += ((New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value 'Security' -PassThru)
+                    }
+                if ($Logs)
+                {
+                    $ActiveLogs = @()
+                    foreach ($Log in $Logs)
+                    {
+                        $ActiveLogs += ((New-Object -TypeName PSObject) |Add-Member -MemberType NoteProperty -Name LogName -Value $Log  -PassThru)
+                        }
                     }
                 foreach ($Log in $ActiveLogs)
                 {                   
