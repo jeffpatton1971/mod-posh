@@ -9,7 +9,7 @@
         
         All logs are stored in a subfolder of FilePath that is the name of the server
         that we are connecting to.
-    .PARAMETER Servers
+    .PARAMETER ComputerName
         One or more servers to query
     .PARAMETER Hours
         A value indicating how many hours to go back
