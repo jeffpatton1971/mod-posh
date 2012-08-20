@@ -96,21 +96,21 @@ Function Get-ADObjects
 
             if ($ADProperties -ne $null)
             {
-                    foreach ($Property in $ADProperties)
-                        {
-                            [void]$DirectorySearcher.PropertiesToLoad.Add($Property)
-                            }
-                    $ADObjects = @()
-                    foreach ($ADObject in $DirectorySearcher.FindAll())
+                foreach ($Property in $ADProperties)
                     {
-                        $objResult = New-Object -TypeName PSObject
-                        foreach ($ADProperty in $ADProperties)
-                        {
-                            Add-Member -InputObject $objResult -MemberType NoteProperty -Name $ADProperty -Value $ADObject.Properties.($ADProperty.ToLower())
-                            }
-                        Add-Member -InputObject $objResult -MemberType NoteProperty -Name 'adsPath' -Value $ADObject.Properties.adspath
-                        $ADObjects += $objResult
+                        [void]$DirectorySearcher.PropertiesToLoad.Add($Property)
                         }
+                $ADObjects = @()
+                foreach ($ADObject in $DirectorySearcher.FindAll())
+                {
+                    $objResult = New-Object -TypeName PSObject
+                    foreach ($ADProperty in $ADProperties)
+                    {
+                        Add-Member -InputObject $objResult -MemberType NoteProperty -Name $ADProperty -Value $ADObject.Properties.($ADProperty.ToLower())
+                        }
+                    Add-Member -InputObject $objResult -MemberType NoteProperty -Name 'adsPath' -Value $ADObject.Properties.adspath
+                    $ADObjects += $objResult
+                    }
                 }
             else
             {
@@ -2283,6 +2283,68 @@ Function ConvertTo-Display
     End
     {
         Return $ADS_NAME_TYPE_DISPLAY
+        }
+    }
+Function Get-GpoLink
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : Get-GpoLink
+            Created by   : jspatton
+            Date Coded   : 08/20/2012 14:44:26
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Get-GpoLink
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [string]$Gpo,
+        [switch]$Path
+        )
+    Begin
+    {
+        $AdsPath = "LDAP://"+([adsi]"").distinguishedName
+        if ($Path)
+        {
+            if ($Gpo -notmatch "LDAP://*")
+            {
+                $SearchFilter = "(gPlink=[LDAP://$($GPO);0])"
+                }
+            else
+            {
+                $SearchFilter = "(gPlink=[$($GPO);0])"
+                }
+            }
+        else
+        {
+            $SearchFilter = "(gplink=[*$($Gpo)*;0])"
+            }
+        }
+    Process
+    {
+        Try
+        {
+            $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
+            $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+            $DirectorySearcher.SearchRoot = $DirectoryEntry
+            $DirectorySearcher.PageSize = 1000
+            $DirectorySearcher.Filter = $SearchFilter
+            $DirectorySearcher.SearchScope = "Subtree"
+            
+            $GpoLink = $DirectorySearcher.FindAll()
+            }
+        catch
+        {
+            }
+
+        }
+    End
+    {
+        Return $GpoLink
         }
     }
 
