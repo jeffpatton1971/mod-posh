@@ -82,6 +82,7 @@ Process
         Try
         {
             $Event307 = Get-WinEvent -ErrorAction Stop -LogName $eventChannel -FilterXPath "<QueryList><Query Id='0' Path='$eventChannel'><Select Path='$eventChannel'>*[System[(EventRecordID=$eventRecordID)]]</Select></Query></QueryList>"
+            $PaperSize = Get-WmiObject -Class Win32_PrintJob -Filter "JobId=$Event307XML.Event.UserData.DocumentPrinted.Param1"
             $Event307XML = ([xml]$Event307.ToXml())
             }
         Catch
@@ -133,6 +134,7 @@ Process
             Size = $Event307XML.Event.UserData.DocumentPrinted.Param7
             Pages = $Event307XML.Event.UserData.DocumentPrinted.Param8
             Copies = $Copies
+            PaperSize = $PaperSize
             }
         $DocumentName = ($PrintLog.Document).Replace("'","``")
         $Size = $PrintLog.Size
@@ -142,8 +144,8 @@ Process
             $SqlConn = New-Object System.Data.SqlClient.SqlConnection("Server=$($SqlServer);Database=$($SqlDatabase);Uid=$($SqlUser);Pwd=$($SqlPass)")
             $SqlConn.Open()
             $Sqlcmd = $SqlConn.CreateCommand()
-            $Sqlcmd.CommandText = "INSERT INTO [dbo].[$($SqlTable)] ([Time],[UserName],[Pages],[DocumentName],[Client],[Size],[Printer],[Port],[Job],[Copies]) `
-                VALUES ('$($PrintLog.Time)','$($PrintLog.User)',$([int]$PrintLog.Pages),'$($DocumentName)','$($PrintLog.Client)',$Size,'$($PrintLog.Printer)','$($PrintLog.Port)',$([int]$PrintLog.Job),$([int]$PrintLog.Copies))"
+            $Sqlcmd.CommandText = "INSERT INTO [dbo].[$($SqlTable)] ([Time],[UserName],[Pages],[DocumentName],[Client],[Size],[Printer],[Port],[Job],[Copies],[PaperSize]) `
+                VALUES ('$($PrintLog.Time)','$($PrintLog.User)',$([int]$PrintLog.Pages),'$($DocumentName)','$($PrintLog.Client)',$Size,'$($PrintLog.Printer)','$($PrintLog.Port)',$([int]$PrintLog.Job),$([int]$PrintLog.Copies).$([int]$PrintLog.PaperSize))"
             $Sqlcmd.ExecuteNonQuery() |Out-Null
             $SqlConn.Close()
             }
@@ -172,7 +174,7 @@ End
     {
         if ($Logged -eq $true)
         {
-            $PrintLog = $PrintLog |Select-Object -Property Size, Time, User, Job, Client, Port, Printer, Pages, Document, Copies
+            $PrintLog = $PrintLog |Select-Object -Property Size, Time, User, Job, Client, Port, Printer, Pages, Document, Copies, PaperSize
             $PrintLog = ConvertTo-Csv -InputObject $PrintLog -NoTypeInformation
 
             if ((Test-Path -Path "$($FilePath)\$($FileName)") -eq $true)
