@@ -148,7 +148,7 @@ Process
             
             $Installer = $UpdateSession.CreateUpdateInstaller()
             $Installer.Updates = $UpdatesToInstall
-            $InstallationResult = $Installer.Install()
+            $InstallationResult = $Installer.Install() |Out-Null
             
             Write-Verbose "Installation Result: $($InstallationResult.ResultCode)"
             Write-Verbose "Reboot Required: $($InstallationResult.RebootRequired)"
@@ -157,7 +157,7 @@ Process
             for($i=0; $i -lt $UpdatesToInstall.Count; $i++)
             {
                 New-Object -TypeName PSObject -Property @{
-                    Title = $Update.Title
+                    Title = $UpdatesToInstall.Item($i).Title
                     Result = $InstallationResult.GetUpdateResult($i).ResultCode
                     }
                 }
