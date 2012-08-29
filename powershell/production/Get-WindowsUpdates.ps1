@@ -166,7 +166,7 @@ Process
         {
             if ($SearchResult.Updates.Count -ne 0)
             {
-                $SearchResult.Updates |Select-Object -Property Title
+                $SearchResult.Updates |Select-Object -Property Title, Description, SupportUrl, UninstallationNotes, RebootRequired |Format-List
                 }
             else
             {
