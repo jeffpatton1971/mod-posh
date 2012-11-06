@@ -43,9 +43,10 @@
         LogName." So, for the Security log it is "Archive-Security" which is what the 
         default value of this parameter is.
     .PARAMETER ArchivePath
-        This is the location where the zipfiles should be stored.
+        This is the location where the zipfiles should be stored, the default location is
+        c:\temp
     .PARAMETER RetentionDays
-        The number of days to retain the zip'd archived log files.
+        The number of days to retain the zip'd archived log files, the default value is 90
     .EXAMPLE
         .\Push-SecurityLogs.ps1 -Copy -Purge
 
@@ -105,43 +106,60 @@ Process
             [string]$HostPart = (& hostname).ToLower()
             [string]$ArchiveFile = "$($HostPart)-$($FilePart).zip"
 
-            $ArchivedLogFiles = Get-ChildItem $LogPath -Filter "$($LogPrefix)*"
-
-            if ($ArchivedLogFiles)
+            try
             {
-                $ZipFilename = "$($ArchivePath)\$($ArchiveFile)"
+                $ArchivedLogFiles = Get-ChildItem $LogPath -Filter "$($LogPrefix)*"
 
-                Set-Content $ZipFilename ("PK" + [char]5 + [char]6 + ("$([char]0)" * 18))
-                (Get-ChildItem $ZipFilename).IsReadOnly = $false
-
-                $ZipFile = (New-Object -ComObject Shell.Application).Namespace($ZipFilename)
-
-                foreach ($ArchivedLogFile in $ArchivedLogFiles)
+                if ($ArchivedLogFiles)
                 {
-                    $ZipFile.CopyHere($ArchivedLogFile.FullName)
-                    if ($Purge)
+                    $ZipFilename = "$($ArchivePath)\$($ArchiveFile)"
+
+                    Set-Content $ZipFilename ("PK" + [char]5 + [char]6 + ("$([char]0)" * 18))
+                    (Get-ChildItem $ZipFilename).IsReadOnly = $false
+
+                    $ZipFile = (New-Object -ComObject Shell.Application).Namespace($ZipFilename)
+
+                    foreach ($ArchivedLogFile in $ArchivedLogFiles)
                     {
-                        Remove-Item $ArchivedLogFile.FullName -Force
+                        $ZipFile.CopyHere($ArchivedLogFile.FullName)
+                        if ($Purge)
+                        {
+                            Remove-Item $ArchivedLogFile.FullName -Force
+                            }
                         }
                     }
+                else
+                {
+                    $Message = "No archived logs found"
+                    Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Information" -Message $Message
+                    }
                 }
-            else
+            catch
             {
-                Write-Error "No archived logs found"
+                $Message = $Error[0].Exception
+                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Information" -Message $Message
                 }
             }
 
         if ($Archive)
         {
-            $ZipFiles = Get-ChildItem $ArchivePath
-
-            foreach ($ZipFile in $ZipFiles)
+            try
             {
-                [int]$ZipFileAge = ((Get-Date) - $ZipFile.CreationTime).Days
-                if ($ZipFileAge -gt $RetentionDays)
+                $ZipFiles = Get-ChildItem $ArchivePath
+
+                foreach ($ZipFile in $ZipFiles)
                 {
-                    Remove-Item $ZipFile.FullName
+                    [int]$ZipFileAge = ((Get-Date) - $ZipFile.CreationTime).Days
+                    if ($ZipFileAge -gt $RetentionDays)
+                    {
+                        Remove-Item $ZipFile.FullName
+                        }
                     }
+                }
+            catch
+            {
+                $Message = $Error[0].Exception
+                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Information" -Message $Message
                 }
             }
         }
