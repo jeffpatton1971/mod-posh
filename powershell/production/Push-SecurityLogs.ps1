@@ -71,8 +71,20 @@
             101 = Error
             102 = Warning
             104 = Information
+
+        I use 7-zip in order to create the compressed file, I tried several methods for
+        doing this without any additional tools, but the accepted method thus far for 
+        powershell requires that an interface be present otherwise it won't work. Since 
+        this script is running from a scheduled task, that's not actually possible.
+
+        In my case I have downloaded the 64-bit version of 7-zip and copied the following
+        two files to a directory called c:\scripts. 
+            7z.exe
+            7z.dll
     .LINK
         https://code.google.com/p/mod-posh/wiki/Production/Push-SecurityLogs.ps1
+    .LINK
+        http://www.7-zip.org/download.html
 #>
 [CmdletBinding()]
 Param
@@ -114,14 +126,9 @@ Process
                 {
                     $ZipFilename = "$($ArchivePath)\$($ArchiveFile)"
 
-                    Set-Content $ZipFilename ("PK" + [char]5 + [char]6 + ("$([char]0)" * 18))
-                    (Get-ChildItem $ZipFilename).IsReadOnly = $false
-
-                    $ZipFile = (New-Object -ComObject Shell.Application).Namespace($ZipFilename)
-
                     foreach ($ArchivedLogFile in $ArchivedLogFiles)
                     {
-                        $ZipFile.CopyHere($ArchivedLogFile.FullName)
+                        (& C:\scripts\7z.exe a "$($ZipFilename)" $ArchivedLogFile.FullName)
                         if ($Purge)
                         {
                             Remove-Item $ArchivedLogFile.FullName -Force
@@ -131,13 +138,13 @@ Process
                 else
                 {
                     $Message = "No archived logs found"
-                    Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Information" -Message $Message
+                    Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
                     }
                 }
             catch
             {
                 $Message = $Error[0].Exception
-                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Information" -Message $Message
+                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
                 }
             }
 
@@ -159,7 +166,7 @@ Process
             catch
             {
                 $Message = $Error[0].Exception
-                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Information" -Message $Message
+                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
                 }
             }
         }
