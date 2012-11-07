@@ -126,9 +126,19 @@ Process
                 {
                     $ZipFilename = "$($ArchivePath)\$($ArchiveFile)"
 
+                    if (!(Test-Path $ArchivePath))
+                    {
+                        New-Item $ArchivePath -ItemType Directory -Force |Out-Null
+                        }
+
                     foreach ($ArchivedLogFile in $ArchivedLogFiles)
                     {
                         (& C:\scripts\7z.exe a "$($ZipFilename)" $ArchivedLogFile.FullName)
+                        if ($LASTEXITCODE -ne 0)
+                        {
+                            $Message = "An error occured, the software returned exit code: $($LASTEXITCODE)"
+                            Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+                            }
                         if ($Purge)
                         {
                             Remove-Item $ArchivedLogFile.FullName -Force
@@ -138,7 +148,7 @@ Process
                 else
                 {
                     $Message = "No archived logs found"
-                    Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+                    Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Warning" -Message $Message
                     }
                 }
             catch
