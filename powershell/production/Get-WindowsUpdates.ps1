@@ -126,7 +126,7 @@ Process
                 if ($Update.IsDownloaded)
                 {
                     Write-Verbose "> $($Update.Title)"
-                    $UpdatesToInstall.Add($Update)
+                    $UpdatesToInstall.Add($Update) |Out-Null
                     
                     if ($Update.InstallationBehavior.RebootBehavior -gt 0)
                     {
@@ -148,7 +148,7 @@ Process
             
             $Installer = $UpdateSession.CreateUpdateInstaller()
             $Installer.Updates = $UpdatesToInstall
-            $InstallationResult = $Installer.Install() |Out-Null
+            $InstallationResult = $Installer.Install()
             
             Write-Verbose "Installation Result: $($InstallationResult.ResultCode)"
             Write-Verbose "Reboot Required: $($InstallationResult.RebootRequired)"
