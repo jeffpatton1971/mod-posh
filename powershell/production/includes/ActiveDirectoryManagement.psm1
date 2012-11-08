@@ -2446,4 +2446,75 @@ Function Get-NetlogonLog
         Return $Object
         }
     }
+Function Set-NetlogonDebugging
+{
+    <#
+        .SYNOPSIS
+            This function enables/disables debugging on the netlogon service
+        .DESCRIPTION
+            This function enables/disables debugging on the netlogon service when passed the
+            Enable switch. When not present this has the effect of turning off debugging.
+
+            Please see the support article under the related links section.
+        .PARAMETER Enable
+            This parameter if present will enable debugging.
+        .EXAMPLE
+            Set-NetlogonDebugging -Enable
+
+            Description
+            -----------
+            This example shows how to turn on debugging.
+        .EXAMPLE
+            Set-NetlogonDebugging
+
+            Description
+            -----------
+            This example shows how to turn off debugging.
+        .NOTES
+            FunctionName : Set-NetlogonDebugging
+            Created by   : jspatton
+            Date Coded   : 11/08/2012 15:51:51
+
+            You may need to run this from an elevated prompt.
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Set-NetlogonDebugging
+        .LINK
+            http://support.microsoft.com/kb/109626
+    #>
+    [CmdletBinding()]
+    Param
+         (
+         [switch]$Enable
+         )
+    Begin
+    {
+        }
+    Process
+    {
+        try
+        {
+            if ($Enable)
+            {
+                Write-Verbose "Running : nltest /dbflag:0x2080ffff"
+                (& nltest /dbflag:0x2080ffff)
+                Restart-Service -Name netlogon -Force
+                }
+            else
+            {
+                Write-Verbose "Running : nltest /dbflag:0x0"
+                (& nltest /dbflag:0x0)
+                Restart-Service -Name netlogon -Force
+                }
+            }
+        catch
+        {
+            Write-Error $Error[0]
+            break
+            }
+        }
+    End
+    {
+        }
+    }
+
 Export-ModuleMember *
