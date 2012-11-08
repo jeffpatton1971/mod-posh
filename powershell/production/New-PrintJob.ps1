@@ -116,7 +116,7 @@ Process
         if ((Test-Path -Path "$($FilePath)\$($Event307XML.Event.UserData.DocumentPrinted.Param1).xml") -eq $true)
         {
             $Copies = (Import-Clixml "$($FilePath)\$($Event307XML.Event.UserData.DocumentPrinted.Param1).xml").Copies
-            Remove-Item "C:\PrintLogs\$($Event307XML.Event.UserData.DocumentPrinted.Param1).xml"
+            Remove-Item "$($FilePath)\$($Event307XML.Event.UserData.DocumentPrinted.Param1).xml"
             }
         else
         {
