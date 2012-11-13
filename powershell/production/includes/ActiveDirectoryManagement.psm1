@@ -2366,20 +2366,36 @@ Function Get-NetlogonLog
             location
 
             C:\Windows\Debug\netlogon.log
+        .PARAMETER DebugLog
+            This switch if present directs the script to parse the debug version of
+            the log as opposed to what normally shows up in the log.
         .EXAMPLE
             Get-NetlogonLog
-
-            Date  Time     Type  Message                                                                                                                                           
-            ----  ----     ----  -------                                                                                                                                           
-            11/08 12:23:01 LOGON HOME: NlPickDomainWithAccount: WORKGROUP\Administrator: Algorithm entered. UPN:0 Sam:1 Exp:0 Cross: 0 Root:1 DC:0
-            11/08 12:23:01 LOGON HOME: SamLogon: Transitive Network logon of WORKGROUP\Administrator from WEB (via RESSTAT1) Returns 0xC0000064 : The specified user does not exist
-            11/08 12:23:01 LOGON HOME: SamLogon: Transitive Network logon of WORKGROUP\Administrator from WEB (via RESSTAT1) Entered
-            11/08 12:23:01 LOGON HOME: NlPickDomainWithAccount: WORKGROUP\Administrator: Algorithm entered. UPN:0 Sam:1 Exp:0 Cross: 0 Root:1 DC:0
-            11/08 12:23:01 LOGON HOME: SamLogon: Transitive Network logon of WORKGROUP\Administrator from WEB (via RESSTAT1) Returns 0xC0000064 : The specified user does not exist
+            Date  Time     Message         Computer        Address
+            ----  ----     -------         --------        -------
+            10/13 15:08:30 NO_CLIENT_SITE: EBL2006         169.147.3.25
+            10/13 15:38:30 NO_CLIENT_SITE: EBL2006         169.147.3.25
+            10/13 16:08:30 NO_CLIENT_SITE: EBL2006         169.147.3.25
 
             Description
             -----------
-            The only syntax for this command, and the associated output.
+            This example shows the basic syntax of the command when parsing a regular
+            log file.
+        .EXAMPLE
+            Get-NetlogonLog -DebugLog
+
+            Date  Time     Type  Message                                                                                                                                           
+            ----  ----     ----  -------                                                                                                                                           
+            11/08 12:23:01 LOGON HOME: NlPickDomainWithAccount: WORKGROUP\Administrator:...
+            11/08 12:23:01 LOGON HOME: SamLogon: Transitive Network logon of WORKGROUP\A...
+            11/08 12:23:01 LOGON HOME: SamLogon: Transitive Network logon of WORKGROUP\A...
+            11/08 12:23:01 LOGON HOME: NlPickDomainWithAccount: WORKGROUP\Administrator:...
+            11/08 12:23:01 LOGON HOME: SamLogon: Transitive Network logon of WORKGROUP\A...
+
+            Description
+            -----------
+            This example shows using the command with the DebugLog switch to parse
+            the debug version of the netlogon.log file.
         .NOTES
             FunctionName : Get-NetlogonLog
             Created by   : jspatton
@@ -2392,7 +2408,8 @@ Function Get-NetlogonLog
     [CmdletBinding()]
     Param
         (
-        [string]$LogPath = "C:\Windows\Debug\netlogon.log"
+        [string]$LogPath = "C:\Windows\Debug\netlogon.log",
+        [switch]$DebugLog
         )
     Begin
     {
@@ -2413,9 +2430,15 @@ Function Get-NetlogonLog
             "0xC0000234"="The user account has been automatically locked"
             }
 
-        [regex]$regex = "^(?<Date>\d{1,2}/\d{1,2})\s{1}(?<Time>\d{1,2}:\d{1,2}:\d{1,2})\s{1}(?<Type>\[[A-Z]*\])\s{1}(?<Message>.*)"
-        [regex]$Code = "(?<Code>(\d{1}[x]\d{1})|(\d{1}[x]{1}[C]{1}\d{1,}))"
-        $Object = @()
+        if ($DebugLog)
+        {
+            [regex]$regex = "^(?<Date>\d{1,2}/\d{1,2})\s{1}(?<Time>\d{1,2}:\d{1,2}:\d{1,2})\s{1}(?<Type>\[[A-Z]*\])\s{1}(?<Message>.*)"
+            [regex]$Code = "(?<Code>(\d{1}[x]\d{1})|(\d{1}[x]{1}[C]{1}\d{1,}))"
+            }
+        else
+        {
+            [regex]$regex = "^(?<Date>\d{1,2}/\d{1,2})\s{1}(?<Time>\d{1,2}:\d{1,2}:\d{1,2})\s{1}(?<Message>.*[:])\s{1}(?<Computer>[-a-zA-Z0-9_']{1,15})\s{1}(?<Address>(?:\d{1,3}\.){3}\d{1,3})"
+            }        $Object = @()
         }
     Process
     {
@@ -2423,21 +2446,35 @@ Function Get-NetlogonLog
         {
             Write-Verbose "Parse each line of the file to build object"
             $Line -match $regex |Out-Null
-            $Item = New-Object -TypeName psobject -Property @{
-                Date = $Matches.Date
-                Time = $Matches.Time
-                Type = $Matches.Type.Replace('[','').Replace(']','')
-                Message = $Matches.Message
-                }
-
-            Write-Verbose "Check to see if the Message contains a code"
-            $Item.Message -match $Code |Out-Null
-            if ($Matches.Code)
+            if ($DebugLog)
             {
-                Write-Verbose "Code found, adding definition to message"
-                $Item.Message += " : $($Codes.Item($Matches.Code))"
+                $Item = New-Object -TypeName psobject -Property @{
+                    Date = $Matches.Date
+                    Time = $Matches.Time
+                    Type = $Matches.Type.Replace('[','').Replace(']','')
+                    Message = $Matches.Message
+                    }
+
+                Write-Verbose "Check to see if the Message contains a code"
+                $Item.Message -match $Code |Out-Null
+                if ($Matches.Code)
+                {
+                    Write-Verbose "Code found, adding definition to message"
+                    $Item.Message += " : $($Codes.Item($Matches.Code))"
+                    }
+                $Object += $Item |Select-Object -Property Date, Time, Type, Message
                 }
-            $Object += $Item |Select-Object -Property Date, Time, Type, Message
+            else
+            {
+                $Item = New-Object -TypeName psobject -Property @{
+                    Date = $Matches.Date
+                    Time = $Matches.Time
+                    Message = $Matches.Message.Replace(':','')
+                    Computer = $Matches.Computer
+                    Address = $Matches.Address
+                    }
+                $Object += $Item |Select-Object -Property Date, Time, Message, Computer, Address
+                }
             }
         }
     End
