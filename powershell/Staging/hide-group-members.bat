@@ -1,0 +1,1 @@
+C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe -command ". 'c:\_scripts\Hide-Group-Members.ps1'"

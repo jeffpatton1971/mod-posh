@@ -1,0 +1,2 @@
+C:\scripts\7z.exe a C:\temp\adhome-idm-01-20121107.zip C:\Windows\System32\winevt\Logs\Archive-Security-2012-11-07-20-38-22-825.evtx
+C:\scripts\7z.exe a C:\temp\adhome-idm-01-20121107.zip C:\Windows\System32\winevt\Logs\Archive-Security-2012-11-06-19-39-24-142.evtx
