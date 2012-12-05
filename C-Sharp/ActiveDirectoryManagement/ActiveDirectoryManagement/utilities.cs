@@ -9,38 +9,6 @@ namespace Utilities
     {
         public static SearchResultCollection QueryAD(string ldapPath, string ldapFilter, string searchScope, string[] ldapProperties)
         {
-            if (ldapPath == null)
-            {
-                // No Path set on cmdline, setting Path to current domain
-                DirectoryEntry myDir = new DirectoryEntry();
-                ldapPath = myDir.Path;
-
-                // Close directory entry object
-                myDir.Dispose();
-            }
-            else if (!(ldapPath.ToUpper().Contains("LDAP://")))
-            {
-                ldapPath = "LDAP://" + ldapPath;
-            }
-
-            if (ldapFilter == null)
-            {
-                // Using generic LDAP search for computer
-                ldapFilter = "(objectCategory=computer)";
-            }
-
-            if (searchScope == null)
-            {
-                // No Scope set on cmdline, setting Scope to Subtree
-                searchScope = "Subtree";
-            }
-
-            if (ldapPath.ToUpper().Contains("CN="))
-            {
-                ldapFilter = "";
-                searchScope = "Base";
-            }
-
             try
             {
                 // Creating new DirectoryEntry object
@@ -91,9 +59,12 @@ namespace Utilities
                 queryResult = dirSearcher.FindAll();
                 return queryResult;
             }
-            catch
+            catch (Exception e)
             {
-                return null;
+                throw e;
+            }
+            finally
+            {
             }
         }
     }
