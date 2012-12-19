@@ -81,10 +81,18 @@
         two files to a directory called c:\scripts. 
             7z.exe
             7z.dll
+
+        Exit codes were added to the script from a site on sourceforge. I don't know
+        how accurate these are moving forward, but they are accurate for what I've 
+        encountered currently.
+
+        See related links for more details.
     .LINK
         https://code.google.com/p/mod-posh/wiki/Production/Push-SecurityLogs.ps1
     .LINK
         http://www.7-zip.org/download.html
+    .LINK
+        http://sevenzip.sourceforge.jp/chm/cmdline/exit_codes.htm
 #>
 [CmdletBinding()]
 Param
@@ -95,7 +103,7 @@ Param
     [string]$LogPath = 'C:\Windows\System32\winevt\Logs',
     [string]$LogPrefix = 'Archive-Security',
     [string]$ArchivePath = 'C:\Temp',
-    [int]$RetentionDays = 90
+    [int]$RetentionDays = 180
     )
 Begin
     {
@@ -114,9 +122,8 @@ Process
     {
         if ($Copy)
         {
-            [string]$FilePart = (Get-Date -f 'yyyMMdd')
+            [string]$FilePart = (Get-Date -f 'yyyMMdd-HHmmss')
             [string]$HostPart = (& hostname).ToLower()
-            [string]$ArchiveFile = "$($HostPart)-$($FilePart).zip"
 
             try
             {
@@ -124,20 +131,57 @@ Process
 
                 if ($ArchivedLogFiles)
                 {
-                    $ZipFilename = "$($ArchivePath)\$($ArchiveFile)"
-
-                    if (!(Test-Path $ArchivePath))
-                    {
-                        New-Item $ArchivePath -ItemType Directory -Force |Out-Null
-                        }
-
                     foreach ($ArchivedLogFile in $ArchivedLogFiles)
                     {
-                        (& C:\scripts\7z.exe a "$($ZipFilename)" $ArchivedLogFile.FullName)
-                        if ($LASTEXITCODE -ne 0)
+                        $ZipFilename = "$($ArchivePath)\$($HostPart)-$($ArchivedLogFile.BaseName).zip"
+
+                        if (!(Test-Path $ArchivePath))
                         {
-                            $Message = "An error occured, the software returned exit code: $($LASTEXITCODE)"
-                            Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+                            New-Item $ArchivePath -ItemType Directory -Force |Out-Null
+                            }
+
+                        Invoke-Expression -Command "C:\scripts\7z.exe a $($ZipFilename) $($ArchivedLogFile.FullName)"
+                        switch ($LASTEXITCODE)
+                        {
+                            0
+                            {
+                                # No Error Ocurred
+                                }
+                            1
+                            {
+                                $Message = "7-zip returned exit code: $($LASTEXITCODE)`n"
+                                $Message += "Warning (Non fatal error(s)). For example, one or more files were locked by some other application, so they were not compressed."
+                                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "102" -EntryType "Warning" -Message $Message
+                                }
+                            2
+                            {
+                                $Message = "7-zip returned exit code: $($LASTEXITCODE)`n"
+                                $Message += "Fatal error"
+                                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+                                }
+                            7
+                            {
+                                $Message = "7-zip returned exit code: $($LASTEXITCODE)`n"
+                                $Message += "Command line error"
+                                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+                                }
+                            8
+                            {
+                                $Message = "7-zip returned exit code: $($LASTEXITCODE)`n"
+                                $Message += "Not enough memory for operation"
+                                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+                                }
+                            255
+                            {
+                                $Message = "7-zip returned exit code: $($LASTEXITCODE)`n"
+                                $Message += "User stopped the process"
+                                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+                                }
+                            default
+                            {
+                                $Message = "7-zip returned exit code: $($LASTEXITCODE)`n"
+                                Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+                                }
                             }
                         if ($Purge)
                         {
@@ -148,7 +192,7 @@ Process
                 else
                 {
                     $Message = "No archived logs found"
-                    Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Warning" -Message $Message
+                    Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "102" -EntryType "Warning" -Message $Message
                     }
                 }
             catch
@@ -166,10 +210,20 @@ Process
 
                 foreach ($ZipFile in $ZipFiles)
                 {
-                    [int]$ZipFileAge = ((Get-Date) - $ZipFile.CreationTime).Days
+                    [int]$ZipFileAge = ((Get-Date) - ([datetime]($ZipFile.Replace("$($HostPart)-$($LogPrefix)-",'')).Substring(0,10))).Days
                     if ($ZipFileAge -gt $RetentionDays)
                     {
-                        Remove-Item $ZipFile.FullName
+                        try
+                        {
+                            Remove-Item $ZipFile.FullName -ErrorAction Stop
+                            $Message = "$($ZipFile.FullName) was removed from $($ArchivePath)"
+                            Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
+                            }
+                        catch
+                        {
+                            $Message = $Error[0].Exception
+                            Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+                            }
                         }
                     }
                 }
