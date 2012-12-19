@@ -210,7 +210,7 @@ Process
 
                 foreach ($ZipFile in $ZipFiles)
                 {
-                    [int]$ZipFileAge = ((Get-Date) - ([datetime]($ZipFile.Replace("$($HostPart)-$($LogPrefix)-",'')).Substring(0,10))).Days
+                    [int]$ZipFileAge = ((Get-Date) - ([datetime]($ZipFile.BaseName.Replace("$($HostPart)-$($LogPrefix)-","")).Substring(0,10))).Days
                     if ($ZipFileAge -gt $RetentionDays)
                     {
                         try
