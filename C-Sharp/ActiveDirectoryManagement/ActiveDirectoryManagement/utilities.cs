@@ -9,12 +9,29 @@ namespace Utilities
     {
         public static SearchResultCollection QueryAD(string ldapPath, string ldapFilter, string searchScope, string[] ldapProperties)
         {
+            if (ldapPath == null)
+            {
+                DirectoryEntry myDir = new DirectoryEntry("LDAP://RootDSE");
+                object propertyValue = myDir.Properties["defaultNamingContext"].Value;
+                ldapPath = propertyValue.ToString();
+                Console.WriteLine(myDir.Properties["defaultNamingContext"].Value);
+                myDir.Dispose();
+            }
+
+            if (!(ldapPath.ToUpper().Contains("LDAP://")))
+            {
+                ldapPath = "LDAP://" + ldapPath;
+            }
+
             try
             {
                 // Creating new DirectoryEntry object
                 DirectoryEntry dirEntry = new DirectoryEntry(ldapPath.ToUpper());
                 // Creating new DirectorySearcher
                 DirectorySearcher dirSearcher = new DirectorySearcher(ldapFilter);
+                
+                // Sort in ascending order
+                SortOption sortOption = new SortOption("Name", System.DirectoryServices.SortDirection.Ascending);
 
                 // Setting SearchRoot
                 dirSearcher.SearchRoot = dirEntry;
@@ -22,6 +39,9 @@ namespace Utilities
                 dirSearcher.PageSize = 1000;
                 // Setting dirSearcher filter
                 dirSearcher.Filter = ldapFilter;
+                
+                // Setting dirSearch sort
+                dirSearcher.Sort = sortOption;
 
                 switch (searchScope)
                 {
@@ -59,9 +79,9 @@ namespace Utilities
                 queryResult = dirSearcher.FindAll();
                 return queryResult;
             }
-            catch (Exception e)
+            catch
             {
-                throw e;
+                throw;
             }
             finally
             {

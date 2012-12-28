@@ -29,23 +29,6 @@ namespace ActiveDirectoryManagement
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
-            if (Path == null)
-            {
-                WriteVerbose("No Path set on cmdline, setting Path to current domain");
-                DirectoryEntry myDir = new DirectoryEntry("LDAP://RootDSE");
-                object propertyValue = myDir.Properties["defaultNamingContext"].Value;
-                Path = propertyValue.ToString();
-
-                WriteDebug("Close directory entry object");
-                myDir.Dispose();
-            }
-
-            if (!(Path.ToUpper().Contains("LDAP://")))
-            {
-                WriteVerbose("LDAP:// not found, appending LDAP:// to Path : " + Path);
-                Path = "LDAP://" + Path;
-            }
-
             if (Type == null)
             {
                 WriteVerbose("No Type set on cmdline, setting Type to computer");
@@ -94,11 +77,14 @@ namespace ActiveDirectoryManagement
                 Scope = "Subtree";
             }
 
-            if (Path.ToUpper().Contains("CN="))
+            if (Path != null)
             {
-                WriteVerbose("CN Found, searching for a specific item in the directory");
-                Filter = "";
-                Scope = "Base";
+                if (Path.ToUpper().Contains("CN="))
+                {
+                    WriteVerbose("CN Found, searching for a specific item in the directory");
+                    Filter = "";
+                    Scope = "Base";
+                }
             }
 
         }
@@ -137,23 +123,6 @@ namespace ActiveDirectoryManagement
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
-            if (Path == null)
-            {
-                WriteVerbose("No Path set on cmdline, setting Path to current domain");
-                DirectoryEntry myDir = new DirectoryEntry("LDAP://RootDSE");
-                object propertyValue = myDir.Properties["defaultNamingContext"].Value;
-                Path = propertyValue.ToString();
-
-                WriteDebug("Close directory entry object");
-                myDir.Dispose();
-            }
-
-            if (!(Path.ToUpper().Contains("LDAP://")))
-            {
-                WriteVerbose("LDAP:// not found, appending LDAP:// to Path : " + Path);
-                Path = "LDAP://" + Path;
-            }
-
         }
         protected override void ProcessRecord()
         {
@@ -163,20 +132,22 @@ namespace ActiveDirectoryManagement
             string[] Properties = null;
 
             SearchResultCollection AdGroupObject = Utilities.Functions.QueryAD(Path, Filter, Scope, Properties);
-            DirectoryEntry Group = AdGroupObject[0].GetDirectoryEntry();
-            foreach (string Member in Group.Properties["member"])
+            foreach (SearchResult Group in AdGroupObject)
             {
-                foreach (SearchResult AdObject in (Utilities.Functions.QueryAD("LDAP://" + Member, "", "Base", null)))
+                foreach (string Member in Group.Properties["member"])
                 {
-                    WriteVerbose("Create PowerShell object to hold return values");
-                    PSObject objReturn = new PSObject();
-                    WriteVerbose("Add AdObject.Properties to PowerShell object");
-                    foreach (string AdProperty in AdObject.Properties.PropertyNames)
+                    foreach (SearchResult AdObject in (Utilities.Functions.QueryAD("LDAP://" + Member, "", "Base", null)))
                     {
-                        WriteDebug("Add property : " + AdProperty);
-                        objReturn.Properties.Add(new PSNoteProperty(AdProperty, (AdObject.Properties[AdProperty])[0]));
+                        WriteVerbose("Create PowerShell object to hold return values");
+                        PSObject objReturn = new PSObject();
+                        WriteVerbose("Add AdObject.Properties to PowerShell object");
+                        foreach (string AdProperty in AdObject.Properties.PropertyNames)
+                        {
+                            WriteDebug("Add property : " + AdProperty);
+                            objReturn.Properties.Add(new PSNoteProperty(AdProperty, (AdObject.Properties[AdProperty])[0]));
+                        }
+                        WriteObject(objReturn);
                     }
-                    WriteObject(objReturn);
                 }
             }
         }
