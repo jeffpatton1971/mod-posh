@@ -18,6 +18,10 @@
             104 = Information
     .LINK
         https://code.google.com/p/mod-posh/wiki/Production/Get-ExchangeCalendar.ps1
+    .LINK
+        http://msdn.microsoft.com/en-us/library/exchange/dd633626(v=exchg.80).aspx
+    .LINK
+        http://www.microsoft.com/en-us/download/details.aspx?id=35371
 #>
 [CmdletBinding()]
 Param
@@ -38,7 +42,7 @@ Begin
         Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
  
         #	Dotsource in the functions you need.
-        $DllPath = 'C:\Program Files\Microsoft\Exchange\Web Services\1.2\Microsoft.Exchange.WebServices.dll'
+        $DllPath = "C:\Program Files\Microsoft\Exchange\Web Services\2.0\Microsoft.Exchange.WebServices.Auth.dll"
         [void][Reflection.Assembly]::LoadFile($DllPath)
         $Service = New-Object Microsoft.Exchange.WebServices.Data.ExchangeService([Microsoft.Exchange.WebServices.Data.ExchangeVersion]::Exchange2010)
         $Service.AutodiscoverUrl($MailboxName)
