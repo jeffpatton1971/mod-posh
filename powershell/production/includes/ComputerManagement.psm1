@@ -2034,5 +2034,91 @@ Function Enum-NameSpaces
         Return $WbemObjectSet |Select-Object -Property Path_ -ExpandProperty Path_
         }
     }
-    
+Function New-Password
+{
+    <#
+        .SYNOPSIS
+            Create a new password
+        .DESCRIPTION
+            This function creates a password using the cryptographic Random Number Generator see the 
+            MSDN link for more details.
+        .PARAMETER Length
+            An integer that defines how long the password should be
+        .PARAMETER Count
+            An integer that defines how many passwords to create
+        .PARAMETER Strong
+            A switch that if present will include special characters
+        .EXAMPLE
+            New-Password -Length 64 -Count 5 -Strong
+
+            Password
+            --------
+            UkQfV)RHwcQ3a)s8Z#QwSCLxlI*y28kEPmcQUVM2HrACf@PxRJDLk4ffge#1m_8j
+            XfAwZOh_lrzLE8NwkSTPs5#LNkW4uZ0Wm_ST5UzERqhY45)HBpN$_@@MxDeLiosW
+            h(BN(y^Gip&pU$KJpAAajgopQyoSbCn41m53mc__wV@q$DY5a$iN&O0fnf9hvO1&
+            tXkFwY_pe(VIFf$R2^bKyKy)D_H6q^Nz7MgSDylXrV2GIkyiFVnvfbd9KENFuHQz
+            &6LPlWRB$#yqD@!IEuJ9JcMTKrsA_t(AbWRGTLx@2Fw__j08n(TGi6wgPE6XlLWg
+
+            Description
+            ===========
+            This example creates 5 strong passwords that are 64 characters long
+        .NOTES
+            FunctionName : New-Password
+            Created by   : jspatton
+            Date Coded   : 05/01/2013 12:20:00
+
+            The main portion of this code was lifted from Peter Provost's site, I modified it
+            to handle varying length, and count.
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/Untitled3#New-Password
+        .LINK
+            http://www.peterprovost.org/blog/2007/06/22/Quick-n-Dirty-PowerShell-Password-Generator/
+        .LINK
+            http://msdn.microsoft.com/en-us/library/system.security.cryptography.rngcryptoserviceprovider.aspx
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [int]$Length = 32,
+        [int]$Count = 10,
+        [switch]$Strong
+        )
+    Begin
+    {
+        switch ($Strong)
+        {
+            $true
+            {
+                [string]$Characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 !@#$%^&*()_+{}|[]\:;'<>?,./`~"
+                }
+            $false
+            {
+                [string]$Characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+                }
+            }
+        $Passwords = @()
+        }
+    Process
+    {
+        for ($Counter = 1;$Counter -le $Count; $Counter++)
+        {
+            $bytes = new-object "System.Byte[]" $Length
+            $rnd = new-object System.Security.Cryptography.RNGCryptoServiceProvider
+            $rnd.GetBytes($bytes)
+            $result = ""
+            for( $i=0; $i -lt $Length; $i++ )
+            {
+                $result += $Characters[ $bytes[$i] % $Characters.Length ]	
+                }
+            $Password = New-Object -TypeName PSobject -Property @{
+                Password = $result
+                }
+            $Passwords += $Password
+            }
+        }
+    End
+    {
+        Return $Passwords
+        }
+}
 Export-ModuleMember *

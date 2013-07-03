@@ -641,7 +641,6 @@ Function Print-IseFile
     {
         }
     }
-
 Function Print-SelectedText
 {
     <#
