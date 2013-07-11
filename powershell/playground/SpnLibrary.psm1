@@ -80,6 +80,8 @@ Function Reset-Spn
             Date Coded   : 07/10/2013 15:07:12
         .LINK
             https://code.google.com/p/mod-posh/wiki/SpnLibrary#Reset-Spn
+        .LINK
+            http://technet.microsoft.com/en-us/library/cc731241(WS.10).aspx
     #>
     [CmdletBinding()]
     Param
@@ -134,6 +136,8 @@ Function Add-Spn
             Date Coded   : 07/10/2013 15:07:12
         .LINK
             https://code.google.com/p/mod-posh/wiki/SpnLibrary#Add-Spn
+        .LINK
+            http://technet.microsoft.com/en-us/library/cc731241(WS.10).aspx
     #>
     [CmdletBinding()]
     Param
@@ -198,6 +202,8 @@ Function Remove-Spn
             Date Coded   : 07/10/2013 15:07:12
         .LINK
             https://code.google.com/p/mod-posh/wiki/SpnLibrary#Remove-Spn
+        .LINK
+            http://technet.microsoft.com/en-us/library/cc731241(WS.10).aspx
     #>
     [CmdletBinding()]
     Param
@@ -254,6 +260,8 @@ Function Get-Spn
             Date Coded   : 07/10/2013 15:07:12
         .LINK
             https://code.google.com/p/mod-posh/wiki/SpnLibrary#Get-Spn
+        .LINK
+            http://technet.microsoft.com/en-us/library/cc731241(WS.10).aspx
     #>
     [CmdletBinding()]
     Param
@@ -308,6 +316,8 @@ Function Find-Spn
             Date Coded   : 07/10/2013 15:07:12
         .LINK
             https://code.google.com/p/mod-posh/wiki/SpnLibrary#Find-Spn
+        .LINK
+            http://technet.microsoft.com/en-us/library/cc731241(WS.10).aspx
     #>
     [CmdletBinding()]
     Param
@@ -361,6 +371,8 @@ Function Find-DuplicateSpn
             Date Coded   : 07/10/2013 15:53:46
         .LINK
             https://code.google.com/p/mod-posh/wiki/SpnLibrary#Find-DuplicateSpn
+        .LINK
+            http://technet.microsoft.com/en-us/library/cc731241(WS.10).aspx
     #>
     [CmdletBinding()]
     Param
