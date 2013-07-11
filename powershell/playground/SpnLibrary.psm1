@@ -110,7 +110,7 @@ Function Reset-Spn
     {
         try
         {
-            "$($SpnPath) -R $($AccountName)"
+            Invoke-Expression "$($SpnPath) -R $($AccountName)"
             }
         catch
         {
@@ -169,11 +169,11 @@ Function Add-Spn
         {
             if ($NoDupes)
             {
-                "$($SpnPath) -S $($Service)/$($Spn) $($AccountName)"
+                Invoke-Expression "$($SpnPath) -S $($Service)/$($Spn) $($AccountName)"
                 }
             else
             {
-                "$($SpnPath) -A $($Service)/$($Spn) $($AccountName)"
+                Invoke-Expression "$($SpnPath) -A $($Service)/$($Spn) $($AccountName)"
                 }
             }
         catch
@@ -230,7 +230,7 @@ Function Remove-Spn
     {
         try
         {
-            "$($SpnPath) -D $($Service)/$($Spn) $($AccountName)"
+            Invoke-Expression "$($SpnPath) -D $($Service)/$($Spn) $($AccountName)"
             }
         catch
         {
@@ -284,7 +284,7 @@ Function Get-Spn
     {
         try
         {
-            "$($SpnPath) -L $($AccountName)"
+            Invoke-Expression "$($SpnPath) -L $($AccountName)"
             }
         catch
         {
@@ -338,7 +338,7 @@ Function Find-Spn
     {
         try
         {
-            "$($SpnPath) -Q $($AccountName)"
+            Invoke-Expression "$($SpnPath) -Q $($AccountName)"
             }
         catch
         {
@@ -392,7 +392,7 @@ Function Find-DuplicateSpn
         {
             if ($AccountName)
             {
-                "$($SpnPath) -X -P *"
+                Invoke-Expression "$($SpnPath) -X -P *"
                 }
             else
             {
