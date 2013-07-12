@@ -80,8 +80,13 @@ Function Reset-Spn
             To reset the default SPN values, use the setspn -r hostname 
             command at a command prompt, where hostname is the actual host name 
             of the computer object that you want to update.
+
+            For example, to reset the SPNs of a computer named server2, type 
+            setspn -r server2, and then press ENTER. You receive confirmation 
+            if the reset is successful. To verify that the SPNs are displayed 
+            correctly, type setspn -l server2, and then press ENTER.
         .PARAMETER AccountName
-            the actual host name of the computer object that you want to update
+            The actual host name of the computer object that you want to update
         .EXAMPLE
             Reset-Spn -AccountName server-03
             Registering ServicePrincipalNames for CN=server-03,OU=Servers,DC=company,DC=com
@@ -150,12 +155,51 @@ Function Add-Spn
 {
     <#
         .SYNOPSIS
+            Adds a Service Principal Name to an account
         .DESCRIPTION
+            To add an SPN, use the setspn -s service/name hostname command at a 
+            command prompt, where service/name is the SPN that you want to add 
+            and hostname is the actual host name of the computer object that 
+            you want to update. 
+            
+            For example, if there is an Active Directory domain controller with
+            the host name server1.contoso.com that requires an SPN for the 
+            Lightweight Directory Access Protocol (LDAP), type 
+            setspn -s ldap/server1.contoso.com server1, and then press ENTER 
+            to add the SPN.
         .PARAMETER Service
+            The name of the service to add
         .PARAMETER Spn
+            The SPN that will be associated with this service on this account
         .PARAMETER AccountName
+            The actual host name of the computer object that you want to update
         .PARAMETER NoDupes
+            Checks the domain for duplicate SPN's
         .EXAMPLE
+            Add-Spn -Service foo -Spn server-01 -AccountName server-01
+            Checking domain DC=company,DC=com
+
+            Registering ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com
+                    foo/server-01
+            Updated object
+
+            Description
+            -----------
+
+            This example shows how to add an spn to an account
+        .EXAMPLE
+            Add-Spn -Service foo -Spn server-01 -AccountName server-01 -NoDupes
+            Checking domain DC=company,DC=com
+
+            Registering ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com
+                    foo/server-01
+            Updated object
+
+            Description
+            -----------
+
+            This example shows how to add an spn to an account while making sure it's
+            unique within the domain.
         .NOTES
             FunctionName : Add-Spn
             Created by   : jspatton
@@ -220,11 +264,32 @@ Function Remove-Spn
 {
     <#
         .SYNOPSIS
+            Removes a Service Principal Name from an account
         .DESCRIPTION
+            To remove an SPN, use the setspn -d service/namehostname command at 
+            a command prompt, where service/name is the SPN that is to be 
+            removed and hostname is the actual host name of the computer object 
+            that you want to update. 
+            
+            For example, if the SPN for the Web service on a computer named 
+            Server3.contoso.com is incorrect, you can remove it by typing 
+            setspn -d http/server3.contoso.com server3, and then pressing ENTER.
         .PARAMETER Service
+            The name of the service to add
         .PARAMETER Spn
+            The SPN that will be associated with this service on this account
         .PARAMETER AccountName
+            The actual host name of the computer object that you want to update
         .EXAMPLE
+            Remove-Spn -Service foo -Spn server-01 -AccountName server-01
+            Unregistering ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com
+                    foo/server-01
+            Updated object
+
+            Description
+            -----------
+
+            This example shows how to remove an SPN from an account.
         .NOTES
             FunctionName : Remove-Spn
             Created by   : jspatton
