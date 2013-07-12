@@ -71,9 +71,29 @@ Function Reset-Spn
 {
     <#
         .SYNOPSIS
+            Reset the SPN for a given account
         .DESCRIPTION
-        .PARAMETER
+            If the SPNs that you see for your server display what seems to be 
+            incorrect names; consider resetting the computer to use the default 
+            SPNs. 
+            
+            To reset the default SPN values, use the setspn -r hostname 
+            command at a command prompt, where hostname is the actual host name 
+            of the computer object that you want to update.
+        .PARAMETER AccountName
+            the actual host name of the computer object that you want to update
         .EXAMPLE
+            Reset-Spn -AccountName server-03
+            Registering ServicePrincipalNames for CN=server-03,OU=Servers,DC=company,DC=com
+	            HOST/server-03.company.com
+	            HOST/server-03
+
+            Description
+            -----------
+
+            This example shows how to reset the spn of a given account. This would
+            be used if you were experiencing issues with service account logins.
+            See the Link section for relevant URL's.
         .NOTES
             FunctionName : Reset-Spn
             Created by   : jspatton
@@ -82,6 +102,8 @@ Function Reset-Spn
             https://code.google.com/p/mod-posh/wiki/SpnLibrary#Reset-Spn
         .LINK
             http://technet.microsoft.com/en-us/library/cc731241(WS.10).aspx
+        .LINK
+            http://technet.microsoft.com/en-us/library/579246c8-2e32-4282-bce7-3209d1ea8bf1
     #>
     [CmdletBinding()]
     Param
@@ -112,11 +134,12 @@ Function Reset-Spn
     {
         try
         {
+            $ErrorActionPreference = 'Stop'
             Invoke-Expression "$($SpnPath) -R $($AccountName)"
             }
         catch
         {
-            $Error[0]
+            Write-Error $Error[0]
             }
         }
     End
@@ -128,7 +151,10 @@ Function Add-Spn
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER Service
+        .PARAMETER Spn
+        .PARAMETER AccountName
+        .PARAMETER NoDupes
         .EXAMPLE
         .NOTES
             FunctionName : Add-Spn
@@ -171,6 +197,7 @@ Function Add-Spn
     {
         try
         {
+            $ErrorActionPreference = 'Stop'
             if ($NoDupes)
             {
                 Invoke-Expression "$($SpnPath) -S $($Service)/$($Spn) $($AccountName)"
@@ -182,7 +209,7 @@ Function Add-Spn
             }
         catch
         {
-            $Error[0]
+            Write-Error $Error[0]
             }
         }
     End
@@ -194,7 +221,9 @@ Function Remove-Spn
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER Service
+        .PARAMETER Spn
+        .PARAMETER AccountName
         .EXAMPLE
         .NOTES
             FunctionName : Remove-Spn
@@ -236,11 +265,12 @@ Function Remove-Spn
     {
         try
         {
+            $ErrorActionPreference = 'Stop'
             Invoke-Expression "$($SpnPath) -D $($Service)/$($Spn) $($AccountName)"
             }
         catch
         {
-            $Error[0]
+            Write-Error $Error[0]
             }
         }
     End
@@ -252,7 +282,7 @@ Function Get-Spn
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER AccountName
         .EXAMPLE
         .NOTES
             FunctionName : Get-Spn
@@ -292,11 +322,12 @@ Function Get-Spn
     {
         try
         {
+            $ErrorActionPreference = 'Stop'
             Invoke-Expression "$($SpnPath) -L $($AccountName)"
             }
         catch
         {
-            $Error[0]
+            Write-Error $Error[0]
             }
         }
     End
@@ -308,7 +339,7 @@ Function Find-Spn
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER AccountName
         .EXAMPLE
         .NOTES
             FunctionName : Find-Spn
@@ -348,10 +379,12 @@ Function Find-Spn
     {
         try
         {
+            $ErrorActionPreference = 'Stop'
             Invoke-Expression "$($SpnPath) -Q $($AccountName)"
             }
         catch
         {
+            Write-Error $Error[0]
             }
         }
     End
@@ -402,6 +435,7 @@ Function Find-DuplicateSpn
     {
         try
         {
+            $ErrorActionPreference = 'Stop'
             if ($AccountName)
             {
                 Invoke-Expression "$($SpnPath) -X -P *"
@@ -412,7 +446,7 @@ Function Find-DuplicateSpn
             }
         catch
         {
-            $Error[0]
+            Write-Error $Error[0]
             }
         }
     End
