@@ -1,73 +1,4 @@
-﻿<#
-Usage: C:\Windows\system32\setspn.exe [modifiers switch] [accountname]
-  Where "accountname" can be the name or domain\name
-  of the target computer or user account
-
-  Edit Mode Switches:
-   -R = reset HOST ServicePrincipalName
-    Usage:   setspn -R accountname
-   -A = add arbitrary SPN
-    Usage:   setspn -A SPN accountname
-   -S = add arbitrary SPN after verifying no duplicates exist
-    Usage:   setspn -S SPN accountname
-   -D = delete arbitrary SPN
-    Usage:   setspn -D SPN accountname
-   -L = list SPNs registered to target account
-    Usage:   setspn [-L] accountname
-
-  Edit Mode Modifiers:
-   -C = specify that accountname is a computer account
-   -U = specify that accountname is a user account
-
-    Note: -C and -U are exclusive.  If neither is specified, the tool
-     will interpret accountname as a computer name if such a computer
-     exists, and a user name if it does not.
-
-  Query Mode Switches:
-   -Q = query for existence of SPN
-    Usage:   setspn -Q SPN
-   -X = search for duplicate SPNs
-    Usage:   setspn -X
-
-    Note: searching for duplicates, especially forestwide, can take
-     a long period of time and a large amount of memory.  -Q will execute
-     on each target domain/forest.  -X will return duplicates that exist
-     across all targets. SPNs are not required to be unique across forests,
-     but duplicates can cause authentication issues when authenticating
-     cross-forest.
-
-  Query Mode Modifiers:
-   -P = suppresses progress to the console and can be used when redirecting
-    output to a file or when used in an unattended script.  There will be no
-    output until the command is complete.
-   -F = perform queries at the forest, rather than domain level
-   -T = perform query on the speicified domain or forest (when -F is also used)
-    Usage:   setspn -T domain (switches and other parameters)
-     "" or * can be used to indicate the current domain or forest.
-
-    Note: these modifiers can be used with the -S switch in order to specify
-     where the check for duplicates should be performed before adding the SPN.
-    Note: -T can be specified multiple times.
-
-Examples:
-setspn -R daserver1
-   It will register SPN "HOST/daserver1" and "HOST/{DNS of daserver1}"
-setspn -A http/daserver daserver1
-   It will register SPN "http/daserver" for computer "daserver1"
-setspn -D http/daserver daserver1
-   It will delete SPN "http/daserver" for computer "daserver1"
-setspn -F -S http/daserver daserver1
-   It will register SPN "http/daserver" for computer "daserver1"
-    if no such SPN exists in the forest
-setspn -U -A http/daserver dauser
-   It will register SPN "http/daserver" for user account "dauser"
-setspn -T * -T foo -X
-   It will report all duplicate registration of SPNs in this domain and foo
-setspn -T foo -F -Q */daserver
-   It will find all SPNs of the form */daserver registered in the forest to
-    which foo belongs
-#>
-Function Reset-Spn
+﻿Function Reset-Spn
 {
     <#
         .SYNOPSIS
@@ -85,10 +16,10 @@ Function Reset-Spn
             setspn -r server2, and then press ENTER. You receive confirmation 
             if the reset is successful. To verify that the SPNs are displayed 
             correctly, type setspn -l server2, and then press ENTER.
-        .PARAMETER AccountName
+        .PARAMETER HostName
             The actual host name of the computer object that you want to update
         .EXAMPLE
-            Reset-Spn -AccountName server-03
+            Reset-Spn -HostName server-03
             Registering ServicePrincipalNames for CN=server-03,OU=Servers,DC=company,DC=com
 	            HOST/server-03.company.com
 	            HOST/server-03
@@ -113,7 +44,7 @@ Function Reset-Spn
     [CmdletBinding()]
     Param
         (
-        [string]$AccountName
+        [string]$HostName
         )
     Begin
     {
@@ -140,7 +71,7 @@ Function Reset-Spn
         try
         {
             $ErrorActionPreference = 'Stop'
-            Invoke-Expression "$($SpnPath) -R $($AccountName)"
+            Invoke-Expression "$($SpnPath) -R $($HostName)"
             }
         catch
         {
@@ -169,14 +100,14 @@ Function Add-Spn
             to add the SPN.
         .PARAMETER Service
             The name of the service to add
-        .PARAMETER Spn
+        .PARAMETER Name
             The SPN that will be associated with this service on this account
-        .PARAMETER AccountName
+        .PARAMETER HostName
             The actual host name of the computer object that you want to update
         .PARAMETER NoDupes
             Checks the domain for duplicate SPN's
         .EXAMPLE
-            Add-Spn -Service foo -Spn server-01 -AccountName server-01
+            Add-Spn -Service foo -Name server-01 -HostName server-01
             Checking domain DC=company,DC=com
 
             Registering ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com
@@ -188,7 +119,7 @@ Function Add-Spn
 
             This example shows how to add an spn to an account
         .EXAMPLE
-            Add-Spn -Service foo -Spn server-01 -AccountName server-01 -NoDupes
+            Add-Spn -Service foo -Name server-01 -HostName server-01 -NoDupes
             Checking domain DC=company,DC=com
 
             Registering ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com
@@ -213,8 +144,8 @@ Function Add-Spn
     Param
         (
         [string]$Service,
-        [string]$Spn,
-        [string]$AccountName,
+        [string]$Name,
+        [string]$HostName,
         [switch]$NoDupes
         )
     Begin
@@ -244,11 +175,11 @@ Function Add-Spn
             $ErrorActionPreference = 'Stop'
             if ($NoDupes)
             {
-                Invoke-Expression "$($SpnPath) -S $($Service)/$($Spn) $($AccountName)"
+                Invoke-Expression "$($SpnPath) -S $($Service)/$($Name) $($HostName)"
                 }
             else
             {
-                Invoke-Expression "$($SpnPath) -A $($Service)/$($Spn) $($AccountName)"
+                Invoke-Expression "$($SpnPath) -A $($Service)/$($Name) $($HostName)"
                 }
             }
         catch
@@ -276,12 +207,12 @@ Function Remove-Spn
             setspn -d http/server3.contoso.com server3, and then pressing ENTER.
         .PARAMETER Service
             The name of the service to add
-        .PARAMETER Spn
+        .PARAMETER Name
             The SPN that will be associated with this service on this account
-        .PARAMETER AccountName
+        .PARAMETER HostName
             The actual host name of the computer object that you want to update
         .EXAMPLE
-            Remove-Spn -Service foo -Spn server-01 -AccountName server-01
+            Remove-Spn -Service foo -Name server-01 -HostName server-01
             Unregistering ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com
                     foo/server-01
             Updated object
@@ -303,8 +234,8 @@ Function Remove-Spn
     Param
         (
         [string]$Service,
-        [string]$Spn,
-        [string]$AccountName
+        [string]$Name,
+        [string]$HostName
         )
     Begin
     {
@@ -331,7 +262,7 @@ Function Remove-Spn
         try
         {
             $ErrorActionPreference = 'Stop'
-            Invoke-Expression "$($SpnPath) -D $($Service)/$($Spn) $($AccountName)"
+            Invoke-Expression "$($SpnPath) -D $($Service)/$($Name) $($HostName)"
             }
         catch
         {
@@ -355,10 +286,10 @@ Function Get-Spn
             
             For example, to list the SPNs of a computer named WS2003A, at the 
             command prompt, type setspn -l S2003A, and then press ENTER.
-        .PARAMETER AccountName
+        .PARAMETER HostName
             The actual host name of the computer object that you want to update
         .EXAMPLE
-            Get-Spn -AccountName server-01
+            Get-Spn -HostName server-01
             Registered ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com:
                     foo/server-01
                     CmRcService/server-01.company.com
@@ -388,7 +319,7 @@ Function Get-Spn
     [CmdletBinding()]
     Param
         (
-        [string]$AccountName
+        [string]$HostName
         )
     Begin
     {
@@ -415,7 +346,7 @@ Function Get-Spn
         try
         {
             $ErrorActionPreference = 'Stop'
-            Invoke-Expression "$($SpnPath) -L $($AccountName)"
+            Invoke-Expression "$($SpnPath) -L $($HostName)"
             }
         catch
         {
@@ -431,7 +362,14 @@ Function Find-Spn
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER AccountName
+            To view a list of the SPNs that a computer has registered with 
+            Active Directory from a command prompt, use the setspn –l hostname 
+            command, where hostname is the actual host name of the computer 
+            object that you want to query.
+            
+            For example, to list the SPNs of a computer named WS2003A, at the 
+            command prompt, type setspn -l S2003A, and then press ENTER.
+        .PARAMETER HostName
         .EXAMPLE
         .NOTES
             FunctionName : Find-Spn
@@ -445,7 +383,8 @@ Function Find-Spn
     [CmdletBinding()]
     Param
         (
-        [string]$AccountName
+        [string]$Service,
+        [string]$Name
         )
     Begin
     {
@@ -472,7 +411,7 @@ Function Find-Spn
         try
         {
             $ErrorActionPreference = 'Stop'
-            Invoke-Expression "$($SpnPath) -Q $($AccountName)"
+            Invoke-Expression "$($SpnPath) -Q */$($HostName)"
             }
         catch
         {
@@ -528,7 +467,7 @@ Function Find-DuplicateSpn
         try
         {
             $ErrorActionPreference = 'Stop'
-            if ($AccountName)
+            if ($HostName)
             {
                 Invoke-Expression "$($SpnPath) -X -P *"
                 }
