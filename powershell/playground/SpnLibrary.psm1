@@ -346,9 +346,36 @@ Function Get-Spn
 {
     <#
         .SYNOPSIS
+            List(s) Service Principal Name(s) for an account
         .DESCRIPTION
+            To view a list of the SPNs that a computer has registered with 
+            Active Directory from a command prompt, use the setspn –l hostname 
+            command, where hostname is the actual host name of the computer 
+            object that you want to query.
+            
+            For example, to list the SPNs of a computer named WS2003A, at the 
+            command prompt, type setspn -l S2003A, and then press ENTER.
         .PARAMETER AccountName
+            The actual host name of the computer object that you want to update
         .EXAMPLE
+            Get-Spn -AccountName server-01
+            Registered ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com:
+                    foo/server-01
+                    CmRcService/server-01.company.com
+                    CmRcService/server-01
+                    TERMSRV/server-01
+                    TERMSRV/server-01.company.com
+                    WSMAN/server-01
+                    WSMAN/server-01.company.com
+                    RestrictedKrbHost/server-01
+                    HOST/server-01
+                    RestrictedKrbHost/server-01.company.com
+                    HOST/server-01.company.com
+
+            Description
+            -----------
+
+            This example lists the SPN(s) of the given account
         .NOTES
             FunctionName : Get-Spn
             Created by   : jspatton
