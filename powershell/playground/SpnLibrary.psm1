@@ -17,7 +17,7 @@
             if the reset is successful. To verify that the SPNs are displayed 
             correctly, type setspn -l server2, and then press ENTER.
         .PARAMETER HostName
-            The actual host name of the computer object that you want to update
+            The actual hostname of the computer object that you want to reset
         .EXAMPLE
             Reset-Spn -HostName server-03
             Registering ServicePrincipalNames for CN=server-03,OU=Servers,DC=company,DC=com
@@ -101,9 +101,9 @@ Function Add-Spn
         .PARAMETER Service
             The name of the service to add
         .PARAMETER Name
-            The SPN that will be associated with this service on this account
+            The name that will be associated with this service on this account
         .PARAMETER HostName
-            The actual host name of the computer object that you want to update
+            The actual hostname of the computer object that you want to update
         .PARAMETER NoDupes
             Checks the domain for duplicate SPN's
         .EXAMPLE
@@ -208,9 +208,9 @@ Function Remove-Spn
         .PARAMETER Service
             The name of the service to add
         .PARAMETER Name
-            The SPN that will be associated with this service on this account
+            The name that will be associated with this service on this account
         .PARAMETER HostName
-            The actual host name of the computer object that you want to update
+            The actual hostname of the computer object that you want to change
         .EXAMPLE
             Remove-Spn -Service foo -Name server-01 -HostName server-01
             Unregistering ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com
@@ -277,7 +277,7 @@ Function Get-Spn
 {
     <#
         .SYNOPSIS
-            List(s) Service Principal Name(s) for an account
+            List Service Principal Name for an account
         .DESCRIPTION
             To view a list of the SPNs that a computer has registered with 
             Active Directory from a command prompt, use the setspn –l hostname 
@@ -287,7 +287,7 @@ Function Get-Spn
             For example, to list the SPNs of a computer named WS2003A, at the 
             command prompt, type setspn -l S2003A, and then press ENTER.
         .PARAMETER HostName
-            The actual host name of the computer object that you want to update
+            The actual hostname of the computer object that you want to get
         .EXAMPLE
             Get-Spn -HostName server-01
             Registered ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com:
@@ -361,16 +361,63 @@ Function Find-Spn
 {
     <#
         .SYNOPSIS
+            Find all occurrences of a given service and or name
         .DESCRIPTION
-            To view a list of the SPNs that a computer has registered with 
-            Active Directory from a command prompt, use the setspn –l hostname 
+            To find a list of the SPNs that a computer has registered with 
+            Active Directory from a command prompt, use the setspn –Q hostname 
             command, where hostname is the actual host name of the computer 
             object that you want to query.
             
             For example, to list the SPNs of a computer named WS2003A, at the 
-            command prompt, type setspn -l S2003A, and then press ENTER.
-        .PARAMETER HostName
+            command prompt, type setspn -Q WS2003A, and then press ENTER.
+        .PARAMETER Service
+            The name of the service to find
+        .PARAMETER Name
+            The name that will be associated with this service on this account
         .EXAMPLE
+            Find-Spn -Service foo
+            Checking domain DC=company,DC=com
+            CN=server-01,OU=Servers,DC=company,DC=com
+	            foo/server-01
+	            CmRcService/server-01.company.com
+	            CmRcService/server-01
+	            WSMAN/server-01.company.com
+	            WSMAN/server-01
+	            TERMSRV/server-01.company.com
+	            TERMSRV/server-01
+	            RestrictedKrbHost/server-01
+	            HOST/server-01
+	            RestrictedKrbHost/server-01.company.com
+	            HOST/server-01.company.com
+
+            Existing SPN found!
+
+            Description
+            -----------
+
+            Find all occurrences of the given service
+        .EXAMPLE
+            Find-Spn -Name server-01
+            Checking domain DC=company,DC=com
+            CN=server-01,OU=Servers,DC=company,DC=com
+	            foo/server-01
+	            CmRcService/server-01.company.com
+	            CmRcService/server-01
+	            WSMAN/server-01.company.com
+	            WSMAN/server-01
+	            TERMSRV/server-01.company.com
+	            TERMSRV/server-01
+	            RestrictedKrbHost/server-01
+	            HOST/server-01
+	            RestrictedKrbHost/server-01.company.com
+	            HOST/server-01.company.com
+
+            Existing SPN found!
+
+            Description
+            -----------
+
+            Find all occurrences of the given name
         .NOTES
             FunctionName : Find-Spn
             Created by   : jspatton
@@ -405,13 +452,30 @@ Function Find-Spn
         {
             $Error[0]
             }
+        if ($Service -and $Name)
+        {
+            $Spn = "$($Service)/$($Name)"
+            }
+        if ($Service -and (!($Name)))
+        {
+            $Spn = "$($Service)/*"
+            }
+        if ($Name -and (!($Service)))
+        {
+            $Spn = "*/$($Name)"
+            }
+        if (!($Name) -and !($Service))
+        {
+            Write-Error "Must have at least one value for Service or Name"
+            break
+            }
         }
     Process
     {
         try
         {
             $ErrorActionPreference = 'Stop'
-            Invoke-Expression "$($SpnPath) -Q */$($HostName)"
+            Invoke-Expression "$($SpnPath) -Q $($Spn)"
             }
         catch
         {
