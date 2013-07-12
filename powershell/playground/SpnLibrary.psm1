@@ -490,13 +490,46 @@ Function Find-DuplicateSpn
 {
     <#
         .SYNOPSIS
+            Find duplicate Service Principal Names across the Domain or Forest
         .DESCRIPTION
-        .PARAMETER
+            To find a list of duplicate SPNs that have been registered with 
+            Active Directory from a command prompt, use the 
+            setspn –X -P command, where hostname is the actual host name of the 
+            computer object that you want to query.
+        .PARAMETER ForestWide
+            A switch that if present searches the entire forest for duplicates
         .EXAMPLE
+            Find-DuplicateSpn
+            Checking domain DC=company,DC=com
+
+            found 0 group of duplicate SPNs.
+
+            Description
+            -----------
+
+            This example searches for duplicate SPNs in the current domain
+                    .EXAMPLE
+            Find-DuplicateSpn -ForestWide
+            Checking forest DC=company,DC=com
+            Operation will be performed forestwide, it might take a while.
+
+            found 0 group of duplicate SPNs.
+
+            Description
+            -----------
+
+            This example searches for duplicate SPNs across the entire forest
         .NOTES
             FunctionName : Find-DuplicateSpn
             Created by   : jspatton
             Date Coded   : 07/10/2013 15:53:46
+
+            Searching for duplicates, especially forest-wide, can take a long 
+            period of time and a large amount of memory.
+
+            Service Principal Names (SPNs) are not required to be unique across 
+            forests, but duplicate SPNs can cause authentication issues during 
+            cross-forest authentication.
         .LINK
             https://code.google.com/p/mod-posh/wiki/SpnLibrary#Find-DuplicateSpn
         .LINK
@@ -505,6 +538,7 @@ Function Find-DuplicateSpn
     [CmdletBinding()]
     Param
         (
+        [switch]$ForestWide
         )
     Begin
     {
@@ -531,12 +565,13 @@ Function Find-DuplicateSpn
         try
         {
             $ErrorActionPreference = 'Stop'
-            if ($HostName)
+            if ($ForestWide)
             {
-                Invoke-Expression "$($SpnPath) -X -P *"
+                Invoke-Expression "$($SpnPath) -X -P -F"
                 }
             else
             {
+                Invoke-Expression "$($SpnPath) -X -P"
                 }
             }
         catch
