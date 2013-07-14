@@ -289,32 +289,47 @@ Function Get-Spn
         .PARAMETER AccountName
             The actual hostname of the object that you want to get
         .PARAMETER UserAccount
-            A switch to test for SPN's against user objects
+            A switch to test for SPN's against user objects. If not specified
+            we default to computer objects.
         .EXAMPLE
-            Get-Spn -HostName server-01
-            Registered ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com:
-                    foo/server-01
-                    CmRcService/server-01.company.com
-                    CmRcService/server-01
-                    TERMSRV/server-01
-                    TERMSRV/server-01.company.com
-                    WSMAN/server-01
-                    WSMAN/server-01.company.com
-                    RestrictedKrbHost/server-01
-                    HOST/server-01
-                    RestrictedKrbHost/server-01.company.com
-                    HOST/server-01.company.com
+            Get-Spn -AccountName cm12-test
+
+            Service           Name                  Hostname   SPN                                    
+            -------           ----                  --------   ---                                    
+            CmRcService       SERVER-01.company.com SERVER-01$ CmRcService/SERVER-01.company.com      
+            CmRcService       SERVER-01             SERVER-01$ CmRcService/SERVER-01                  
+            TERMSRV           SERVER-01             SERVER-01$ TERMSRV/SERVER-01                      
+            TERMSRV           SERVER-01.company.com SERVER-01$ TERMSRV/SERVER-01.company.com          
+            WSMAN             SERVER-01             SERVER-01$ WSMAN/SERVER-01                        
+            WSMAN             SERVER-01.company.com SERVER-01$ WSMAN/SERVER-01.company.com            
+            RestrictedKrbHost SERVER-01             SERVER-01$ RestrictedKrbHost/SERVER-01            
+            HOST              SERVER-01             SERVER-01$ HOST/SERVER-01                         
+            RestrictedKrbHost SERVER-01.company.com SERVER-01$ RestrictedKrbHost/SERVER-01.company.com
+            HOST              SERVER-01.company.com SERVER-01$ HOST/SERVER-01.company.com             
 
             Description
             -----------
 
             This example lists the SPN(s) of the given account
+        .EXAMPLE
+            Get-Spn -AccountName Administrator -UserAccount
+
+            Service  Name                       Hostname      SPN                                
+            -------  ----                       --------      ---                                
+            MSSQLSvc SERVER-01.company.com:1433 Administrator MSSQLSvc/SERVER-01.company.com:1433
+
+            Description
+            -----------
+
+            This example shows using the -UserAccount switch
         .NOTES
             FunctionName : Get-Spn
             Created by   : jspatton
             Date Coded   : 07/10/2013 15:07:12
         .LINK
             https://code.google.com/p/mod-posh/wiki/SpnLibrary#Get-Spn
+        .LINK
+            http://msdn.microsoft.com/en-us/library/vstudio/system.servicemodel.configuration.identityelement.serviceprincipalname(v=vs.100).aspx
         .LINK
             http://technet.microsoft.com/en-us/library/cc731241(WS.10).aspx
     #>
