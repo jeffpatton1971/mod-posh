@@ -286,8 +286,10 @@ Function Get-Spn
             
             For example, to list the SPNs of a computer named WS2003A, at the 
             command prompt, type setspn -l S2003A, and then press ENTER.
-        .PARAMETER HostName
-            The actual hostname of the computer object that you want to get
+        .PARAMETER AccountName
+            The actual hostname of the object that you want to get
+        .PARAMETER UserAccount
+            A switch to test for SPN's against user objects
         .EXAMPLE
             Get-Spn -HostName server-01
             Registered ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com:
@@ -319,42 +321,77 @@ Function Get-Spn
     [CmdletBinding()]
     Param
         (
-        [string]$HostName
+        [string]$AccountName,
+        [switch]$UserAccount
         )
     Begin
     {
+        if ($UserAccount)
+        {
+            Write-Verbose "Setting the SearchFilter to objectCategory user"
+            [string]$SearchFilter = "(&(objectCategory=user)(cn=$($AccountName)))"
+            }
+        else
+        {
+            Write-Verbose "Setting the SearchFilter to objectCategory computer"
+            [string]$SearchFilter = "(&(objectCategory=computer)(cn=$($AccountName)))"
+            }
+
         try
         {
-            $ErrorActionPreference = 'Stop'
-            $Binary = 'setspn.exe'
-            $Type = 'Leaf'
-            [string[]]$paths = @($pwd);
-            $paths += "$pwd;$env:path".split(";")
-            $paths = Join-Path $paths $(Split-Path $Binary -leaf) | ? { Test-Path $_ -Type $type }
-            if($paths.Length -gt 0)
-            {
-                $SpnPath = $paths[0]
-                }
-            }
-        catch
-        {
-            $Error[0]
-            }
-        }
-    Process
-    {
-        try
-        {
-            $ErrorActionPreference = 'Stop'
-            Invoke-Expression "$($SpnPath) -L $($HostName)"
+            Write-Verbose "Bind to AD"
+            $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry
+            $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+            $DirectorySearcher.SearchRoot = $DirectoryEntry
+            $DirectorySearcher.PageSize = 1000
+            $DirectorySearcher.Filter = $SearchFilter
+            $DirectorySearcher.SearchScope = "Subtree"
+
+            Write-Verbose "Find $($AccountName)"
+            $Account = $DirectorySearcher.FindOne()
             }
         catch
         {
             Write-Error $Error[0]
             }
+
+        $SpnReport = @()
+        [bool]$NotFound = $false
+        }
+    Process
+    {
+        if ($Account.Properties.Contains("servicePrincipalName"))
+        {
+            Write-Verbose "Found servicePrincipalName property"
+            $Spns = $Account.Properties.serviceprincipalname
+            foreach ($Entry in $Spns)
+            {
+                $Spn = $Entry.Split("/")
+                $SpnItem = New-Object -TypeName PSobject -Property @{
+                    Service = $Spn[0]
+                    Name = $Spn[1]
+                    Hostname = [string]$Account.Properties.samaccountname
+                    SPN = $Entry
+                    }
+                $SpnReport += $SpnItem
+                }
+            }
+        else
+        {
+            Write-Verbose "Missing servicePrincipalName property"
+            $NotFound = $true
+            }
         }
     End
     {
+        if ($NotFound)
+        {
+            Write-Host "No registered ServicePrincipalNames for $($Account.Path)"
+            }
+        else
+        {
+            Return $SpnReport |Select-Object -Property Service, Name, Hostname, SPN
+            }
         }
     }
 Function Find-Spn
