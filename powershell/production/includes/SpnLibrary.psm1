@@ -368,6 +368,7 @@ Function Get-Spn
         catch
         {
             Write-Error $Error[0]
+            Return
             }
 
         $SpnReport = @()
