@@ -16,13 +16,24 @@
             setspn -r server2, and then press ENTER. You receive confirmation 
             if the reset is successful. To verify that the SPNs are displayed 
             correctly, type setspn -l server2, and then press ENTER.
-        .PARAMETER HostName
-            The actual hostname of the computer object that you want to reset
+        .PARAMETER AccountName
+            The actual hostname of the computer object that you want to update,
+            if blank we default to the value of parameter Namem.
         .EXAMPLE
-            Reset-Spn -HostName server-03
-            Registering ServicePrincipalNames for CN=server-03,OU=Servers,DC=company,DC=com
-	            HOST/server-03.company.com
-	            HOST/server-03
+            Reset-Spn -AccountName server-01
+
+            Service           Name                  Hostname  SPN
+            -------           ----                  --------  ---
+            HOST              server-01.company.com server-01 HOST/server-01.company.com
+            HOST              server-01             server-01 HOST/server-01
+            RestrictedKrbHost server-01.company.com server-01 RestrictedKrbHost/server-01.company.com
+            RestrictedKrbHost server-01             server-01 RestrictedKrbHost/server-01
+            WSMAN             server-01.company.com server-01 WSMAN/server-01.company.com
+            WSMAN             server-01             server-01 WSMAN/server-01
+            TERMSRV           server-01.company.com server-01 TERMSRV/server-01.company.com
+            TERMSRV           server-01             server-01 TERMSRV/server-01
+            CmRcService       server-01             server-01 CmRcService/server-01
+            CmRcService       server-01.company.com server-01 CmRcService/server-01.company.com
 
             Description
             -----------
@@ -44,42 +55,76 @@
     [CmdletBinding()]
     Param
         (
-        [string]$HostName
+        [string]$AccountName
         )
     Begin
     {
         try
         {
-            $ErrorActionPreference = 'Stop'
-            $Binary = 'setspn.exe'
-            $Type = 'Leaf'
-            [string[]]$paths = @($pwd);
-            $paths += "$pwd;$env:path".split(";")
-            $paths = Join-Path $paths $(Split-Path $Binary -leaf) | ? { Test-Path $_ -Type $type }
-            if($paths.Length -gt 0)
-            {
-                $SpnPath = $paths[0]
-                }
+            Write-Verbose "Bind to AD"
+            [string]$SearchFilter = "(&(objectCategory=computer)(cn=$($AccountName)))"
+            $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry
+            $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+            $DirectorySearcher.SearchRoot = $DirectoryEntry
+            $DirectorySearcher.PageSize = 1000
+            $DirectorySearcher.Filter = $SearchFilter
+            $DirectorySearcher.SearchScope = "Subtree"
+
+            Write-Verbose "Find $($AccountName)"
+            $Account = $DirectorySearcher.FindOne()
             }
         catch
         {
-            $Error[0]
+            Write-Error $Error[0]
+            Return
             }
         }
     Process
     {
         try
         {
-            $ErrorActionPreference = 'Stop'
-            Invoke-Expression "$($SpnPath) -R $($HostName)"
+            $Account = $Account.GetDirectoryEntry()
+            $HostSpns = $Account.servicePrincipalName |Where-Object {$_ -like "host/$($AccountName)*"}
+            if ($HostSpns.Count -ne 2)
+            {
+                Write-Verbose "Host SPN count is $($HostSpns.Count)"
+                foreach ($HostSpn in $HostSpns)
+                {
+                    Write-Verbose "Removing $($HostSpn)"
+                    $Account.servicePrincipalName.Remove($HostSpn)
+                    }
+                Write-Verbose "Adding HOST/$($AccountName)"
+                $Account.servicePrincipalName += "HOST/$($AccountName)"
+                Write-Verbose "Adding HOST/$($Account.dNSHostName)"
+                $Account.servicePrincipalName += "HOST/$($Account.dNSHostName)"
+                $Account.CommitChanges()
+                }
+            else
+            {
+                Return "Nothing to do"
+                }
             }
         catch
         {
             Write-Error $Error[0]
+            Return
             }
         }
     End
     {
+        $SpnReport = @()
+        foreach ($Item in $Account.servicePrincipalName)
+        {
+            $spn = $Item.Split("/")
+            $SpnItem = New-Object -TypeName PSobject -Property @{
+                Service = $Spn[0]
+                Name = $Spn[1]
+                Hostname = $AccountName
+                SPN = $Item
+                }
+            $SpnReport += $SpnItem
+            }
+        Return $SpnReport |Select-Object -Property Service, Name, Hostname, SPN
         }
     }
 Function Add-Spn
