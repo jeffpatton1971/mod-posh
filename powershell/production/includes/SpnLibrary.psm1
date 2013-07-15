@@ -59,6 +59,11 @@
         )
     Begin
     {
+        if ($AccountName.IndexOfAny(".") -gt 0)
+        {
+            Write-Verbose "Found FQDN name, stripping down to hostname"
+            $AccountName = $AccountName.Substring(0,$AccountName.IndexOfAny("."))
+            }
         try
         {
             Write-Verbose "Bind to AD"
@@ -222,6 +227,11 @@ Function Add-Spn
         )
     Begin
     {
+        if ($AccountName.IndexOfAny(".") -gt 0)
+        {
+            Write-Verbose "Found FQDN name, stripping down to hostname"
+            $AccountName = $AccountName.Substring(0,$AccountName.IndexOfAny("."))
+            }
         $DupeFound = $false
         if ($NoDupes)
         {
@@ -536,6 +546,11 @@ Function Get-Spn
         )
     Begin
     {
+        if ($AccountName.IndexOfAny(".") -gt 0)
+        {
+            Write-Verbose "Found FQDN name, stripping down to hostname"
+            $AccountName = $AccountName.Substring(0,$AccountName.IndexOfAny("."))
+            }
         if ($UserAccount)
         {
             Write-Verbose "Setting the SearchFilter to objectCategory user"
