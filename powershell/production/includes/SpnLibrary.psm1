@@ -304,13 +304,26 @@ Function Remove-Spn
             The name of the service to add
         .PARAMETER Name
             The name that will be associated with this service on this account
-        .PARAMETER HostName
-            The actual hostname of the computer object that you want to change
+        .PARAMETER AccountName
+            The actual hostname of the computer object that you want to update,
+            if blank we default to the value of parameter Namem.
+        .PARAMETER UserAccount
+            A switch to add SPN's to a user object
         .EXAMPLE
-            Remove-Spn -Service foo -Name server-01 -HostName server-01
-            Unregistering ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com
-                    foo/server-01
-            Updated object
+            Remove-Spn -Service foo -Name server-01
+
+            Service           Name                  Hostname  SPN
+            -------           ----                  --------  ---
+            HOST              server-01.company.com server-01 HOST/server-01.company.com
+            RestrictedKrbHost server-01.company.com server-01 RestrictedKrbHost/server-01.company.com
+            RestrictedKrbHost server-01             server-01 RestrictedKrbHost/server-01
+            WSMAN             server-01.company.com server-01 WSMAN/server-01.company.com
+            WSMAN             server-01             server-01 WSMAN/server-01
+            TERMSRV           server-01.company.com server-01 TERMSRV/server-01.company.com
+            TERMSRV           server-01             server-01 TERMSRV/server-01
+            CmRcService       server-01             server-01 CmRcService/server-01
+            CmRcService       server-01.company.com server-01 CmRcService/server-01.company.com
+            HOST              server-01             server-01 HOST/server-01
 
             Description
             -----------
@@ -330,42 +343,84 @@ Function Remove-Spn
         (
         [string]$Service,
         [string]$Name,
-        [string]$HostName
+        [string]$AccountName = $Name,
+        [switch]$UserAccount
         )
     Begin
     {
+        if ($UserAccount)
+        {
+            Write-Verbose "Setting the SearchFilter to objectCategory user"
+            [string]$SearchFilter = "(&(objectCategory=user)(cn=$($AccountName)))"
+            }
+        else
+        {
+            Write-Verbose "Setting the SearchFilter to objectCategory computer"
+            [string]$SearchFilter = "(&(objectCategory=computer)(cn=$($AccountName)))"
+            }
         try
         {
-            $ErrorActionPreference = 'Stop'
-            $Binary = 'setspn.exe'
-            $Type = 'Leaf'
-            [string[]]$paths = @($pwd);
-            $paths += "$pwd;$env:path".split(";")
-            $paths = Join-Path $paths $(Split-Path $Binary -leaf) | ? { Test-Path $_ -Type $type }
-            if($paths.Length -gt 0)
-            {
-                $SpnPath = $paths[0]
-                }
-            }
-        catch
-        {
-            $Error[0]
-            }
-        }
-    Process
-    {
-        try
-        {
-            $ErrorActionPreference = 'Stop'
-            Invoke-Expression "$($SpnPath) -D $($Service)/$($Name) $($HostName)"
+            Write-Verbose "Bind to AD"
+            $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry
+            $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+            $DirectorySearcher.SearchRoot = $DirectoryEntry
+            $DirectorySearcher.PageSize = 1000
+            $DirectorySearcher.Filter = $SearchFilter
+            $DirectorySearcher.SearchScope = "Subtree"
+
+            Write-Verbose "Find $($AccountName)"
+            $Account = $DirectorySearcher.FindOne()
             }
         catch
         {
             Write-Error $Error[0]
+            Return
+            }
+        [bool]$NotFound = $false
+        }
+    Process
+    {
+        if ($Account.Properties.Contains("servicePrincipalName"))
+        {
+            try
+            {
+                $Account = $Account.GetDirectoryEntry()
+                $Account.servicePrincipalName.Remove("$($Service)/$($Name)")
+                $Account.CommitChanges()
+                }
+            catch
+            {
+                Write-Error $Error[0]
+                Return
+                }
+            }
+        else
+        {
+            $NotFound = $true
             }
         }
     End
     {
+        if ($NotFound)
+        {
+            Write-Host "No SPN found for $($AccountName)"
+            }
+        else
+        {
+            $SpnReport = @()
+            foreach ($Item in $Account.servicePrincipalName)
+            {
+                $spn = $Item.Split("/")
+                $SpnItem = New-Object -TypeName PSobject -Property @{
+                    Service = $Spn[0]
+                    Name = $Spn[1]
+                    Hostname = $AccountName
+                    SPN = $Item
+                    }
+                $SpnReport += $SpnItem
+                }
+            Return $SpnReport |Select-Object -Property Service, Name, Hostname, SPN
+            }
         }
     }
 Function Get-Spn
