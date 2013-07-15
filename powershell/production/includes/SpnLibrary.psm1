@@ -403,6 +403,11 @@ Function Remove-Spn
         )
     Begin
     {
+        if ($AccountName.IndexOfAny(".") -gt 0)
+        {
+            Write-Verbose "Found FQDN name, stripping down to hostname"
+            $AccountName = $AccountName.Substring(0,$AccountName.IndexOfAny("."))
+            }
         if ($UserAccount)
         {
             Write-Verbose "Setting the SearchFilter to objectCategory user"
@@ -637,23 +642,24 @@ Function Find-Spn
             The name of the service to find
         .PARAMETER Name
             The name that will be associated with this service on this account
+        .PARAMETER ForestWide
+            A switch to check for duplicate SPN's across the entire forest
         .EXAMPLE
-            Find-Spn -Service foo
-            Checking domain DC=company,DC=com
-            CN=server-01,OU=Servers,DC=company,DC=com
-	            foo/server-01
-	            CmRcService/server-01.company.com
-	            CmRcService/server-01
-	            WSMAN/server-01.company.com
-	            WSMAN/server-01
-	            TERMSRV/server-01.company.com
-	            TERMSRV/server-01
-	            RestrictedKrbHost/server-01
-	            HOST/server-01
-	            RestrictedKrbHost/server-01.company.com
-	            HOST/server-01.company.com
+            Find-Spn -Service goo
 
-            Existing SPN found!
+            Service           Name                  Hostname   SPN
+            -------           ----                  --------   ---
+            goo               server-01             server-01$ goo/server-01
+            HOST              server-01             server-01$ HOST/server-01
+            HOST              server-01.company.com server-01$ HOST/server-01.company.com
+            RestrictedKrbHost server-01.company.com server-01$ RestrictedKrbHost/server-01.company.com
+            RestrictedKrbHost server-01             server-01$ RestrictedKrbHost/server-01
+            WSMAN             server-01.company.com server-01$ WSMAN/server-01.company.com
+            WSMAN             server-01             server-01$ WSMAN/server-01
+            TERMSRV           server-01.company.com server-01$ TERMSRV/server-01.company.com
+            TERMSRV           server-01             server-01$ TERMSRV/server-01
+            CmRcService       server-01             server-01$ CmRcService/server-01
+            CmRcService       server-01.company.com server-01$ CmRcService/server-01.company.com
 
             Description
             -----------
@@ -661,21 +667,20 @@ Function Find-Spn
             Find all occurrences of the given service
         .EXAMPLE
             Find-Spn -Name server-01
-            Checking domain DC=company,DC=com
-            CN=server-01,OU=Servers,DC=company,DC=com
-	            foo/server-01
-	            CmRcService/server-01.company.com
-	            CmRcService/server-01
-	            WSMAN/server-01.company.com
-	            WSMAN/server-01
-	            TERMSRV/server-01.company.com
-	            TERMSRV/server-01
-	            RestrictedKrbHost/server-01
-	            HOST/server-01
-	            RestrictedKrbHost/server-01.company.com
-	            HOST/server-01.company.com
 
-            Existing SPN found!
+            Service           Name                  Hostname   SPN
+            -------           ----                  --------   ---
+            goo               server-01             server-01$ goo/server-01
+            HOST              server-01             server-01$ HOST/server-01
+            HOST              server-01.company.com server-01$ HOST/server-01.company.com
+            RestrictedKrbHost server-01.company.com server-01$ RestrictedKrbHost/server-01.company.com
+            RestrictedKrbHost server-01             server-01$ RestrictedKrbHost/server-01
+            WSMAN             server-01.company.com server-01$ WSMAN/server-01.company.com
+            WSMAN             server-01             server-01$ WSMAN/server-01
+            TERMSRV           server-01.company.com server-01$ TERMSRV/server-01.company.com
+            TERMSRV           server-01             server-01$ TERMSRV/server-01
+            CmRcService       server-01             server-01$ CmRcService/server-01
+            CmRcService       server-01.company.com server-01$ CmRcService/server-01.company.com
 
             Description
             -----------
@@ -694,59 +699,82 @@ Function Find-Spn
     Param
         (
         [string]$Service,
-        [string]$Name
+        [string]$Name,
+        [switch]$ForestWide
         )
     Begin
     {
-        try
+        if (!($Service))
         {
-            $ErrorActionPreference = 'Stop'
-            $Binary = 'setspn.exe'
-            $Type = 'Leaf'
-            [string[]]$paths = @($pwd);
-            $paths += "$pwd;$env:path".split(";")
-            $paths = Join-Path $paths $(Split-Path $Binary -leaf) | ? { Test-Path $_ -Type $type }
-            if($paths.Length -gt 0)
-            {
-                $SpnPath = $paths[0]
-                }
+            $Service = "*"
             }
-        catch
+        if (!($Name))
         {
-            $Error[0]
+            $Name = "*"
             }
-        if ($Service -and $Name)
+        if ("$($Service)/$($Name))" -eq "*/*")
         {
-            $Spn = "$($Service)/$($Name)"
-            }
-        if ($Service -and (!($Name)))
-        {
-            $Spn = "$($Service)/*"
-            }
-        if ($Name -and (!($Service)))
-        {
-            $Spn = "*/$($Name)"
-            }
-        if (!($Name) -and !($Service))
-        {
-            Write-Error "Must have at least one value for Service or Name"
-            break
+            Write-Error "You will need to enter a value for either Service or Name"
+            Return
             }
         }
     Process
     {
+        $SearchFilter = "(servicePrincipalName=$($Service)/$($Name))"
+        Write-Verbose $SearchFilter
         try
         {
-            $ErrorActionPreference = 'Stop'
-            Invoke-Expression "$($SpnPath) -Q $($Spn)"
+            if ($ForestWide)
+            {
+                $Forest = [System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest()
+                $Domains = $Forest.Domains
+                }
+            else
+            {
+                $Domains = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
+                Write-Verbose $Domains.Name
+                }
+            foreach ($Domain in $Domains)
+            {
+                Write-Verbose "Bind to $($Domain.Name)"
+                $DirectoryEntry = $Domain.GetDirectoryEntry()
+                $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+                $DirectorySearcher.SearchRoot = $DirectoryEntry
+                $DirectorySearcher.PageSize = 1000
+                $DirectorySearcher.Filter = $SearchFilter
+                $DirectorySearcher.SearchScope = "Subtree"
+
+                Write-Verbose "Find $($AccountName)"
+                $Account = $DirectorySearcher.FindAll()
+                Write-Verbose $Account.Count
+                }
             }
         catch
         {
             Write-Error $Error[0]
+            Return
+            }
+        if ($Account.Count -gt 0)
+        {
+            $Account = $Account.GetDirectoryEntry()
+            Write-Verbose "Existing SPN ($($Service)/$($Name)) found for $($Account.Properties.samaccountname)"
             }
         }
     End
     {
+        $SpnReport = @()
+        foreach ($Item in $Account.servicePrincipalName)
+        {
+            $spn = $Item.Split("/")
+            $SpnItem = New-Object -TypeName PSobject -Property @{
+                Service = $Spn[0]
+                Name = $Spn[1]
+                Hostname = ($Account.samAccountName).ToString()
+                SPN = $Item
+                }
+            $SpnReport += $SpnItem
+            }
+        Return $SpnReport |Select-Object -Property Service, Name, Hostname, SPN
         }
     }
 Function Find-DuplicateSpn
