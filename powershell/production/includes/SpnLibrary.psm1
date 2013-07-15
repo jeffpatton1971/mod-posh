@@ -102,35 +102,60 @@ Function Add-Spn
             The name of the service to add
         .PARAMETER Name
             The name that will be associated with this service on this account
-        .PARAMETER HostName
-            The actual hostname of the computer object that you want to update
+        .PARAMETER AccountName
+            The actual hostname of the computer object that you want to update,
+            if blank we default to the value of parameter Namem.
+        .PARAMETER UserAccount
+            A switch to add SPN's to a user object
         .PARAMETER NoDupes
             Checks the domain for duplicate SPN's
+        .PARAMETER ForestWide
+            A switch to check for duplicate SPN's across the entire forest
         .EXAMPLE
-            Add-Spn -Service foo -Name server-01 -HostName server-01
-            Checking domain DC=company,DC=com
+            Add-Spn -Service foo -Name server-01
 
-            Registering ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com
-                    foo/server-01
-            Updated object
+            Service           Name                  Hostname  SPN
+            -------           ----                  --------  ---
+            foo               server-01             server-01 foo/server-01
+            HOST              server-01             server-01 HOST/server-01
+            CmRcService       server-01.company.com server-01 CmRcService/server-01.company.com
+            CmRcService       server-01             server-01 CmRcService/server-01
+            TERMSRV           server-01             server-01 TERMSRV/server-01
+            TERMSRV           server-01.company.com server-01 TERMSRV/server-01.company.com
+            WSMAN             server-01             server-01 WSMAN/server-01
+            WSMAN             server-01.company.com server-01 WSMAN/server-01.company.com
+            RestrictedKrbHost server-01             server-01 RestrictedKrbHost/server-01
+            RestrictedKrbHost server-01.company.com server-01 RestrictedKrbHost/server-01.company.com
+            HOST              server-01.company.com server-01 HOST/server-01.company.com
 
             Description
             -----------
 
             This example shows how to add an spn to an account
         .EXAMPLE
-            Add-Spn -Service foo -Name server-01 -HostName server-01 -NoDupes
-            Checking domain DC=company,DC=com
+            Add-Spn -Service bar -Name server-01 -NoDupes 
 
-            Registering ServicePrincipalNames for CN=server-01,OU=Servers,DC=company,DC=com
-                    foo/server-01
-            Updated object
+            Service           Name                  Hostname  SPN
+            -------           ----                  --------  ---
+            bar               server-01             server-01 bar/server-01
+            HOST              server-01.company.com server-01 HOST/server-01.company.com
+            RestrictedKrbHost server-01.company.com server-01 RestrictedKrbHost/server-01.company.com
+            RestrictedKrbHost server-01             server-01 RestrictedKrbHost/server-01
+            WSMAN             server-01.company.com server-01 WSMAN/server-01.company.com
+            WSMAN             server-01             server-01 WSMAN/server-01
+            TERMSRV           server-01.company.com server-01 TERMSRV/server-01.company.com
+            TERMSRV           server-01             server-01 TERMSRV/server-01
+            CmRcService       server-01             server-01 CmRcService/server-01
+            CmRcService       server-01.company.com server-01 CmRcService/server-01.company.com
+            HOST              server-01             server-01 HOST/server-01
+            foo               server-01             server-01 foo/server-01
 
             Description
             -----------
 
             This example shows how to add an spn to an account while making sure it's
-            unique within the domain.
+            unique within the domain. Add the -ForestWide switch to check across all
+            domains in the forest.
         .NOTES
             FunctionName : Add-Spn
             Created by   : jspatton
@@ -145,50 +170,120 @@ Function Add-Spn
         (
         [string]$Service,
         [string]$Name,
-        [string]$HostName,
-        [switch]$NoDupes
+        [string]$AccountName = $Name,
+        [switch]$UserAccount,
+        [switch]$NoDupes ,
+        [switch]$ForestWide
         )
     Begin
     {
-        try
+        $DupeFound = $false
+        if ($NoDupes)
         {
-            $ErrorActionPreference = 'Stop'
-            $Binary = 'setspn.exe'
-            $Type = 'Leaf'
-            [string[]]$paths = @($pwd);
-            $paths += "$pwd;$env:path".split(";")
-            $paths = Join-Path $paths $(Split-Path $Binary -leaf) | ? { Test-Path $_ -Type $type }
-            if($paths.Length -gt 0)
+            $SearchFilter = "(servicePrincipalName=$($Service)/$($Name))"
+            try
             {
-                $SpnPath = $paths[0]
+                if ($ForestWide)
+                {
+                    $Forest = [System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest()
+                    $Domains = $Forest.Domains
+                    }
+                else
+                {
+                    $Domains = [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
+                    }
+                foreach ($Domain in $Domains)
+                {
+                    Write-Verbose "Bind to $($Domain.Name)"
+                    $DirectoryEntry = $Domain.GetDirectoryEntry()
+                    $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+                    $DirectorySearcher.SearchRoot = $DirectoryEntry
+                    $DirectorySearcher.PageSize = 1000
+                    $DirectorySearcher.Filter = $SearchFilter
+                    $DirectorySearcher.SearchScope = "Subtree"
+
+                    Write-Verbose "Find $($AccountName)"
+                    $Account = $DirectorySearcher.FindAll()
+
+                    if ($Account.Count -gt 0)
+                    {
+                        Write-Host "Duplicate SPN ($($Service)/$($Name)) found for $($AccountName)"
+                        $DupeFound = $true
+                        }
+                    }
+                }
+            catch
+            {
+                Write-Error $Error[0]
+                Return
                 }
             }
-        catch
+        if (!($DupeFound))
         {
-            $Error[0]
+            if ($UserAccount)
+            {
+                Write-Verbose "Setting the SearchFilter to objectCategory user"
+                [string]$SearchFilter = "(&(objectCategory=user)(cn=$($AccountName)))"
+                }
+            else
+            {
+                Write-Verbose "Setting the SearchFilter to objectCategory computer"
+                [string]$SearchFilter = "(&(objectCategory=computer)(cn=$($AccountName)))"
+                }
+
+            try
+            {
+                Write-Verbose "Bind to AD"
+                $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry
+                $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+                $DirectorySearcher.SearchRoot = $DirectoryEntry
+                $DirectorySearcher.PageSize = 1000
+                $DirectorySearcher.Filter = $SearchFilter
+                $DirectorySearcher.SearchScope = "Subtree"
+
+                Write-Verbose "Find $($AccountName)"
+                $Account = $DirectorySearcher.FindOne()
+                }
+            catch
+            {
+                Write-Error $Error[0]
+                Return
+                }
+            }
+        else
+        {
+            break
             }
         }
     Process
     {
         try
         {
-            $ErrorActionPreference = 'Stop'
-            if ($NoDupes)
-            {
-                Invoke-Expression "$($SpnPath) -S $($Service)/$($Name) $($HostName)"
-                }
-            else
-            {
-                Invoke-Expression "$($SpnPath) -A $($Service)/$($Name) $($HostName)"
-                }
+            Write-Verbose "Connect to $($AccountName)"
+            $Account = $Account.GetDirectoryEntry()
+            $Spn = "$($Service)/$($Name)"
+            Write-Verbose "Add SPN ($($Service)/$($Name)) to the list of existing SPNs"
+            $Account.servicePrincipalName += $Spn
+            $Account.CommitChanges()
             }
         catch
         {
             Write-Error $Error[0]
+            Return
             }
         }
     End
     {
+        foreach ($Item in $Account.servicePrincipalName)
+        {
+            $spn = $Item.Split("/")
+            New-Object -TypeName PSobject -Property @{
+                Service = $Spn[0]
+                Name = $Spn[1]
+                Hostname = $AccountName
+                SPN = $Item
+                } |Select-Object -Property Service, Name, Hostname, SPN
+            }
         }
     }
 Function Remove-Spn
