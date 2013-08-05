@@ -41,6 +41,11 @@
         -----------
         This example shows redirecting the output through the Export-CSV command to get
         a csv file.
+    .EXAMPLE
+        .\Get-InvalidLogonAttempts.ps1 |Where-Object {(Get-Date($_.TimeCreated)) -eq (Get-Date)}
+        Description
+        -----------
+        This example shows how to filter the output to get a list of events that happened today.
     .NOTES
         ScriptName : Get-InvalidLogonAttempts.ps1
         Created By : jspatton
@@ -109,8 +114,6 @@ Begin
     $Report = @()
     Write-Verbose "Get all $($EventID) events from the $($LogName) Log on $($ComputerName)"
     $Events = Get-WinEvent -ComputerName $ComputerName -LogName $LogName -Credential $Credentials |Where-Object {$_.Id -eq $EventID}
-    Write-Verbose "Filter the list of events to only events that happened today"
-    $Events = $Events |Where-Object {(Get-Date($_.TimeCreated) -Format "yyy-MM-dd") -eq (Get-Date -Format "yyy-MM-dd")}
     }
 Process
 {
