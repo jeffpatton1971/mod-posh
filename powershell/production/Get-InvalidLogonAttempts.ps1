@@ -18,6 +18,8 @@
         You will notice that I have set the EventID to 4625, since
         this particular script was designed to find those particular
         entries. This can be modified to suit your needs.
+    .PARAMETER Credentials
+        A credential object to be passed to Get-Winevent
     .EXAMPLE
         .\Get-InvalidLogonAttempts.ps1 -ComputerName Desktop-pc1 -LogName 'Security' -EventID 4625
         
@@ -84,9 +86,10 @@
 [cmdletBinding()]
 Param
     (
-    $ComputerName,
+    $ComputerName = (& hostname),
     $LogName = "Security",
-    $EventID = 4625
+    $EventID = 4625,
+    $Credentials = (Get-Credential)
     )
 Begin
 {
@@ -112,7 +115,7 @@ Begin
 Process
 {
     Write-Verbose "Loop through each event that is returned from Get-WinEvent"
-    foreach ($Event in $EventID4625)
+    foreach ($Event in $Events)
     {
         Write-Verbose "Create an object to hold the data I'm collecting"
         $ThisEvent = New-Object -TypeName PSObject -Property @{
