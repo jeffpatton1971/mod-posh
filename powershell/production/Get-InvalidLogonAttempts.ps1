@@ -100,14 +100,13 @@ Begin
 {
     
     $ScriptName = $MyInvocation.MyCommand.ToString()
-    $LogName = "Application"
     $ScriptPath = $MyInvocation.MyCommand.Path
     $Username = $env:USERDOMAIN + "\" + $env:USERNAME
  
-    New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
+    New-EventLog -Source $ScriptName -LogName "Windows PowerShell" -ErrorAction SilentlyContinue
  
     $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
-    Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
+    Write-EventLog -LogName "Windows PowerShell" -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
  
     #	Dotsource in the functions you need.
 
@@ -136,6 +135,6 @@ Process
 End
 {
     $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
-    Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
+    Write-EventLog -LogName "Windows PowerShell" -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
     Return $Report
     }
