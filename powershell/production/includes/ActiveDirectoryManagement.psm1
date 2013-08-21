@@ -2565,9 +2565,6 @@ Function Enable-OUProtectedMode
 
             The end result is that you should see once this function runs, that the checkbox on the object
             property page for the OU is checked for, protect this object from accidental deletion.
-
-            This function will only set security for the ou passed in and any of its child ou's. It will 
-            not recurse through tree.
         .PARAMETER OU
             This is one or more paths in the form of LDAP://OU=Servers,DC=company,DC=com, if LDAP:// is not
             specified in the path it is added, if it is sent in lowercase it is upper cased so the 
@@ -2578,6 +2575,15 @@ Function Enable-OUProtectedMode
             Description
             -----------
             This example shows how to pass in multiple OU's on the pipeline.
+        .EXAMPLE
+            Get-ADOrganizationalUnit -SearchBase "ou=workstations,dc=copmany,dc=com" -Filter "*" 
+                |Select-Object -ExpandProperty DistinguishedName |Enable-OUProtectedMode
+
+            Description
+            -----------
+            This example shows using a builtin AD Cmdlet to return all OU's from a specified SearchBase and
+            pass the result to Enable-OUProtectedMode. The end result is that all of the provided OU's will
+            have their security set to prevent accidental deletion.
         .NOTES
             FunctionName : Enable-OUProtectedMode
             Created by   : jspatton
@@ -2619,17 +2625,6 @@ Function Enable-OUProtectedMode
             $DeleteTreeRule = New-Object -TypeName System.DirectoryServices.ActiveDirectoryAccessRule -ArgumentList $Everyone, $DeleteTree, $Deny
             $Security.AddAccessRule($DeleteTreeRule)
             $ldapPath.CommitChanges()
-
-            foreach ($ChildOU in $ldapPath.Children)
-            {
-                $ChildSecurity = $ChildOU.psbase.ObjectSecurity
-
-                $ChildSecurity.AddAccessRule($DeleteRule)
-                $ChildOU.CommitChanges()
-
-                $ChildSecurity.AddAccessRule($DeleteTreeRule)
-                $ChildOU.CommitChanges()
-                }
             }
         catch
         {
