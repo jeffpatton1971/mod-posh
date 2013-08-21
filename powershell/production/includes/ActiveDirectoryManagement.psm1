@@ -2553,5 +2553,97 @@ Function Set-NetlogonDebugging
     {
         }
     }
+Function Enable-OUProtectedMode
+{
+    <#
+        .SYNOPSIS
+            Turn on the protect object from accidental deletion bit
+        .DESCRIPTION
+            This function will accept one or more ldap OU path's from the pipline and set its and its
+            childrens accidental deletetion bit to on. It does this by setting the Delete and Deletetree
+            right to Deny for the group Everyone.
+
+            The end result is that you should see once this function runs, that the checkbox on the object
+            property page for the OU is checked for, protect this object from accidental deletion.
+
+            This function will only set security for the ou passed in and any of its child ou's. It will 
+            not recurse through tree.
+        .PARAMETER OU
+            This is one or more paths in the form of LDAP://OU=Servers,DC=company,DC=com, if LDAP:// is not
+            specified in the path it is added, if it is sent in lowercase it is upper cased so the 
+            function will work properly.
+        .EXAMPLE
+            "LDAP://OU=Servers,DC=company,DC=com","OU=Workstations,DC=company,DC=com" |Enable-OUProtectedMode
+
+            Description
+            -----------
+            This example shows how to pass in multiple OU's on the pipeline.
+        .NOTES
+            FunctionName : Enable-OUProtectedMode
+            Created by   : jspatton
+            Date Coded   : 08/21/2013 14:17:46
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ActiveDirectoryManagement#Enable-OUProtectedMode
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
+        [string]$OU
+        )
+    Begin
+    {
+        $Deny = [System.Security.AccessControl.AccessControlType]::Deny
+        $Delete = [System.DirectoryServices.ActiveDirectoryRights]::Delete
+        $DeleteTree = [System.DirectoryServices.ActiveDirectoryRights]::DeleteTree
+
+        $Everyone = New-Object -TypeName System.Security.Principal.NTAccount -ArgumentList "", "Everyone"
+        }
+    Process
+    {
+        try
+        {
+            if ($OU -notmatch "LDAP://*")
+            {
+                $OU = "LDAP://$($OU)"
+                }
+            $ldapUrl = $OU.ToString().ToUpper()
+        
+            $ldapPath = [ADSI]$ldapUrl
+            $Security = $ldapPath.psbase.ObjectSecurity
+
+            $DeleteRule = New-Object -TypeName System.DirectoryServices.ActiveDirectoryAccessRule -ArgumentList $Everyone, $Delete, $Deny
+            $Security.AddAccessRule($DeleteRule)
+            $ldapPath.CommitChanges()
+
+            $DeleteTreeRule = New-Object -TypeName System.DirectoryServices.ActiveDirectoryAccessRule -ArgumentList $Everyone, $DeleteTree, $Deny
+            $Security.AddAccessRule($DeleteTreeRule)
+            $ldapPath.CommitChanges()
+
+            foreach ($ChildOU in $ldapPath.Children)
+            {
+                $ChildSecurity = $ChildOU.psbase.ObjectSecurity
+
+                $ChildSecurity.AddAccessRule($DeleteRule)
+                $ChildOU.CommitChanges()
+
+                $ChildSecurity.AddAccessRule($DeleteTreeRule)
+                $ChildOU.CommitChanges()
+                }
+            }
+        catch
+        {
+            $MyError = $Error[0]
+            }
+        }
+    End
+    {
+        if ($MyError)
+        {
+            Write-Error $MyError
+            return
+            }
+        }
+    }
 
 Export-ModuleMember *
