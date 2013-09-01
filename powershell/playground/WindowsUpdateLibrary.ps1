@@ -3,7 +3,7 @@
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER Criteria
         .EXAMPLE
         .NOTES
             FunctionName : .\Get-WindowsUpdateLog.ps1
@@ -15,7 +15,8 @@
     [CmdletBinding()]
     Param
         (
-        $Criteria="IsInstalled=0 and Type='Software'"
+        $Criteria="IsInstalled=0 and Type='Software'",
+        [switch]$FromMicrosoft
         )
     Begin
     {
@@ -24,6 +25,10 @@
     {
         $UpdateSession = New-Object -ComObject 'Microsoft.Update.Session'
         $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
+        if ($FromMicrosoft)
+        {
+            $UpdateSearcher.ServerSelection = 2
+            }
         $SearchResult = $UpdateSearcher.Search($Criteria)
         }
     End
@@ -36,7 +41,7 @@ Function Start-WindowsUpdateDownload
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER Update
         .EXAMPLE
         .NOTES
             FunctionName : Start-WindowsUpdateDownload
@@ -76,7 +81,8 @@ Function Accept-WindowsUpdateEULA
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER Update
+        .PARAMETER AcceptEULA
         .EXAMPLE
         .NOTES
             FunctionName : Accept-WindowsUpdateEULA
@@ -114,7 +120,7 @@ Function Install-WindowsUpdate
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER Update
         .EXAMPLE
         .NOTES
             FunctionName : Install-WindowsUpdate
@@ -155,5 +161,94 @@ Function Install-WindowsUpdate
         {
             return $RebootRequired
             }
+        }
+    }
+Function Connect-WindowsUpdateServer
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : Connect-WindowsUpdateServer
+            Created by   : jspatton
+            Date Coded   : 08/28/2013 17:13:56
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/WindowsUpdateLibrary#Connect-WindowsUpdateServer
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [string]$Server,
+        [switch]$UseSecureConnection
+        )
+    Begin
+    {
+        $isLocal = $false
+        $Global:WSUSUpdateServer
+        try
+        {
+            $Assembly = [reflection.assembly]::LoadWithPartialName("Microsoft.UpdateServices.Administration")
+
+            if ($Server)
+            {
+                if ($Server.ToUpper() -eq (& hostname).ToUpper())
+                {
+                    $isLocal = $true
+                    }
+                else
+                {
+                    if ($Server.Contains(":"))
+                    {
+                        # found a port
+                        $PortNumber = $Server.Substring($Server.IndexOf(":"),$Server.Length-$Server.IndexOf(":")).Replace(":","")
+                        $ServerName = $Server.Substring(0,$Server.IndexOf(":"))
+                        }
+                    else
+                    {
+                        $PortNumber = 8530
+                        $ServerName = $Server
+                        }
+                    }
+                }
+            else
+            {
+                $isLocal = $true
+                }    
+            }
+        catch
+        {
+            }
+        }
+    Process
+    {
+        try
+        {
+            $AdminProxy = New-Object Microsoft.UpdateServices.Administration.AdminProxy
+            if ($isLocal)
+            {
+                $UpdateServer = $AdminProxy.GetUpdateServerInstance()
+                }
+            else
+            {
+                if ($UseSecureConnection)
+                {
+                    $UpdateServer = $AdminProxy.GetRemoteUpdateServerInstance($ServerName,$UseSecureConnection,$PortNumber)
+                    }
+                else
+                {
+                    $UpdateServer = $AdminProxy.GetRemoteUpdateServerInstance($ServerName,$false,$PortNumber)
+                    }
+                }
+            }
+        catch
+        {
+            }
+        $Global:WSUSUpdateServer = $UpdateServer
+        }
+    End
+    {
+        return $UpdateServer
         }
     }
