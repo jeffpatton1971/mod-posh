@@ -31,6 +31,21 @@
             This shows the syntax for using the FromMicrosoft switch, the collection returned
             from this example will be direct from Microsoft. You can verify by checking the
             log file, C:\Windows\WindowsUpdate.log
+        .EXAMPLE
+            Get-WindowsUpdate -FromMicrosoft -Criteria "(IsInstalled=0 AND 
+                                                         CategoryIDs contains 'E6CF1350-C01B-414D-A61F-263D14D133B4') 
+                                                     OR (IsInstalled=0 AND 
+                                                         CategoryIDs contains '0FA1201D-4330-4FA8-8AE9-B877473B6441')"
+
+            Description
+            -----------
+            This example shows how to query Microsoft for a list of Critical and Security updates
+            that are not already installed on the local computer. I have grouped not installed 
+            critical updates together and not installled security updates together. Then tied
+            both of those with an OR, so it will find not installed criticals OR not installed
+            security updates.
+
+            See the help in LINKS for more details.
         .NOTES
             FunctionName : Get-WindowsUpdate
             Created by   : jspatton
