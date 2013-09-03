@@ -37,6 +37,10 @@
             Date Coded   : 08/22/2013 16:40:27
         .LINK
             https://code.google.com/p/mod-posh/wiki/WindowsUpdateLibrary#Get-WindowsUpdate
+        .LINK
+            http://msdn.microsoft.com/en-us/library/windows/desktop/aa386526(v=vs.85).aspx
+        .LINK
+            http://msdn.microsoft.com/en-us/library/ff357803(VS.85).aspx
     #>
     [CmdletBinding()]
     Param
