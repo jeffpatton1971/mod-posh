@@ -292,12 +292,11 @@ Function Connect-WindowsUpdateServer
     Begin
     {
         $isLocal = $false
-        $Global:WSUSUpdateServer
+        $Global:WSUSUpdateServer = ""
         try
         {
-            $ErrorActionPreference = Stop
+            $ErrorActionPreference = "Stop"
             $Assembly = [reflection.assembly]::LoadWithPartialName("Microsoft.UpdateServices.Administration")
-
             if ($Server)
             {
                 if ($Server.ToUpper() -eq (& hostname).ToUpper())
@@ -328,6 +327,7 @@ Function Connect-WindowsUpdateServer
             }
         catch
         {
+            Write-Error $Error[0]
             }
         }
     Process
@@ -353,6 +353,7 @@ Function Connect-WindowsUpdateServer
             }
         catch
         {
+            Write-Error $Error[0]
             }
         $Global:WSUSUpdateServer = $UpdateServer
         }
