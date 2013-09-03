@@ -342,3 +342,5 @@ Function Connect-WindowsUpdateServer
         return $UpdateServer
         }
     }
+
+Export-ModuleMember *
