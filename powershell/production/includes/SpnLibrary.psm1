@@ -769,7 +769,7 @@ Function Find-Spn
             $SpnItem = New-Object -TypeName PSobject -Property @{
                 Service = $Spn[0]
                 Name = $Spn[1]
-                Hostname = ($Account.samAccountName).ToString()
+                Hostname = [string]($Account.samAccountName)
                 SPN = $Item
                 }
             $SpnReport += $SpnItem
