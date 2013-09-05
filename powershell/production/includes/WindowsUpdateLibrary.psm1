@@ -1,4 +1,4 @@
-﻿Function Get-WindowsUpdate
+Function Get-WindowsUpdate
 {
     <#
         .SYNOPSIS
