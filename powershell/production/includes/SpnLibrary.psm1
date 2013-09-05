@@ -1,4 +1,4 @@
-ï»¿Function Reset-Spn
+Function Reset-Spn
 {
     <#
         .SYNOPSIS
@@ -490,7 +490,7 @@ Function Get-Spn
             List Service Principal Name for an account
         .DESCRIPTION
             To view a list of the SPNs that a computer has registered with 
-            Active Directory from a command prompt, use the setspn â€“l hostname 
+            Active Directory from a command prompt, use the setspn –l hostname 
             command, where hostname is the actual host name of the computer 
             object that you want to query.
             
@@ -632,7 +632,7 @@ Function Find-Spn
             Find all occurrences of a given service and or name
         .DESCRIPTION
             To find a list of the SPNs that a computer has registered with 
-            Active Directory from a command prompt, use the setspn â€“Q hostname 
+            Active Directory from a command prompt, use the setspn –Q hostname 
             command, where hostname is the actual host name of the computer 
             object that you want to query.
             
@@ -785,7 +785,7 @@ Function Find-DuplicateSpn
         .DESCRIPTION
             To find a list of duplicate SPNs that have been registered with 
             Active Directory from a command prompt, use the 
-            setspn â€“X -P command, where hostname is the actual host name of the 
+            setspn –X -P command, where hostname is the actual host name of the 
             computer object that you want to query.
         .PARAMETER ForestWide
             A switch that if present searches the entire forest for duplicates
