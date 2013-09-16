@@ -88,6 +88,43 @@ namespace PapercutManagement
         }
     }
 
+    [Cmdlet(VerbsCommon.Add, "PcutAdminAccessUser")]
+    public class Add_PcutAdminAccessUser : Cmdlet
+    {
+        [Parameter(Mandatory = true,
+            HelpMessage = "Please provide the current username")]
+        [ValidateNotNullOrEmpty]
+        public string UserName;
+
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    _serverProxy.AddAdminAccessUser(UserName);
+                    PSObject returnAddPcutAdminAccessUser = new PSObject();
+                    returnAddPcutAdminAccessUser.Properties.Add(new PSNoteProperty("Username", UserName));
+                    returnAddPcutAdminAccessUser.Properties.Add(new PSNoteProperty("AdminAccess", true));
+                    WriteObject(returnAddPcutAdminAccessUser);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
     [Cmdlet(VerbsCommon.Get,"PcutTotalUsers")]
     public class Get_PcutTotalUsers : Cmdlet
     {
