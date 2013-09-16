@@ -283,6 +283,45 @@ namespace PapercutManagement
         }
     }
 
+    [Cmdlet(VerbsCommon.Remove, "PcutUserFromGroup")]
+    public class Remove_PcutUserFromGroup : Cmdlet
+    {
+        [Parameter(Mandatory = true,
+            HelpMessage = "Please provide the current username")]
+        [ValidateNotNullOrEmpty]
+        public string UserName;
+
+        [Parameter(Mandatory = true,
+            HelpMessage = "Please provide the group name")]
+        [ValidateNotNullOrEmpty]
+        public string GroupName;
+
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    _serverProxy.RemoveUserFromGroup(UserName, GroupName);
+                    WriteObject(UserName + " removed from " + GroupName);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
     [Cmdlet(VerbsCommon.Get, "PcutSharedAccount")]
     public class Get_PcutSharedAccount : Cmdlet
     {
