@@ -244,6 +244,50 @@ namespace PapercutManagement
         }
     }
 
+    [Cmdlet(VerbsCommon.Get, "PcutSharedAccount")]
+    public class Get_PcutSharedAccount : Cmdlet
+    {
+        [Parameter(Mandatory = false,
+            HelpMessage = "Please enter a number to start at (default 0)")]
+        public int Offset = 0;
+
+        [Parameter(Mandatory = false,
+            HelpMessage = "Please enter the total number of users to return (default 1000)")]
+        public int Limit = 1000;
+
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    string[] pcutSharedAccounts = _serverProxy.ListSharedAccounts(Offset, Limit);
+                    Collection<PSObject> returnPcutSharedAccounts = new Collection<PSObject>();
+                    foreach (string pcutSharedAccount in pcutSharedAccounts)
+                    {
+                        PSObject thisSharedAccount = new PSObject();
+                        thisSharedAccount.Properties.Add(new PSNoteProperty("Name", pcutSharedAccount));
+                        returnPcutSharedAccounts.Add(thisSharedAccount);
+                    }
+                    WriteObject(returnPcutSharedAccounts);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
     [Cmdlet(VerbsCommon.Get, "PcutUserAccountBalance")]
     public class Get_PcutUserAccountBalance : Cmdlet
     {
