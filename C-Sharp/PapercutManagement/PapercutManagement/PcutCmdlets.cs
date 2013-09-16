@@ -288,6 +288,55 @@ namespace PapercutManagement
         }
     }
 
+    [Cmdlet(VerbsCommon.Get, "PcutUserSharedAccount")]
+    public class Get_PcutUserSharedAccount : Cmdlet
+    {
+        [Parameter(Mandatory = true,
+            HelpMessage = "Please provide the current username")]
+        [ValidateNotNullOrEmpty]
+        public string UserName;
+
+        [Parameter(Mandatory = false,
+            HelpMessage = "Please enter a number to start at (default 0)")]
+        public int Offset = 0;
+
+        [Parameter(Mandatory = false,
+            HelpMessage = "Please enter the total number of users to return (default 1000)")]
+        public int Limit = 1000;
+
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    string[] pcutUserSharedAccounts = _serverProxy.ListUserSharedAccounts(UserName, Offset, Limit);
+                    Collection<PSObject> returnPcutUserSharedAccounts = new Collection<PSObject>();
+                    foreach (string pcutUserSharedAccount in pcutUserSharedAccounts)
+                    {
+                        PSObject thisSharedAccount = new PSObject();
+                        thisSharedAccount.Properties.Add(new PSNoteProperty("Name", pcutUserSharedAccount));
+                        returnPcutUserSharedAccounts.Add(thisSharedAccount);
+                    }
+                    WriteObject(returnPcutUserSharedAccounts);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
     [Cmdlet(VerbsCommon.Get, "PcutUserAccountBalance")]
     public class Get_PcutUserAccountBalance : Cmdlet
     {
