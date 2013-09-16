@@ -386,8 +386,8 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Get, "PcutUserGroup")]
-    public class Get_PcutUserGroup : Cmdlet
+    [Cmdlet(VerbsCommon.Get, "PcutGroup")]
+    public class Get_PcutGroup : Cmdlet
     {
         [Parameter(Mandatory = false,
             HelpMessage = "Please enter a number to start at (default 0)")]
@@ -407,12 +407,53 @@ namespace PapercutManagement
                 _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
                 try
                 {
-                    string[] pcutUserGroups = _serverProxy.ListUserGroups(Offset, Limit);
+                    string[] pcutGroups = _serverProxy.ListUserGroups(Offset, Limit);
+                    Collection<PSObject> returnPcutGroups = new Collection<PSObject>();
+                    foreach (string pcutGroup in pcutGroups)
+                    {
+                        PSObject thisGroup = new PSObject();
+                        thisGroup.Properties.Add(new PSNoteProperty("Name",pcutGroup));
+                        returnPcutGroups.Add(thisGroup);
+                    }
+                    WriteObject(returnPcutGroups);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
+    [Cmdlet(VerbsCommon.Get, "PcutUserGroup")]
+    public class Get_PcutUserGroup : Cmdlet
+    {
+        [Parameter(Mandatory = true,
+            HelpMessage = "Please provide the current username")]
+        [ValidateNotNullOrEmpty]
+        public string UserName;
+
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    string[] pcutUserGroups = _serverProxy.GetUserGroups(UserName);
                     Collection<PSObject> returnPcutUserGroups = new Collection<PSObject>();
                     foreach (string pcutUserGroup in pcutUserGroups)
                     {
                         PSObject thisGroup = new PSObject();
-                        thisGroup.Properties.Add(new PSNoteProperty("Name",pcutUserGroup));
+                        thisGroup.Properties.Add(new PSNoteProperty("Name", pcutUserGroup));
                         returnPcutUserGroups.Add(thisGroup);
                     }
                     WriteObject(returnPcutUserGroups);
@@ -466,6 +507,53 @@ namespace PapercutManagement
                     returnUpdatePcutUserAccountBalance.Properties.Add(new PSNoteProperty("Adjustment", Adjustment));
                     returnUpdatePcutUserAccountBalance.Properties.Add(new PSNoteProperty("Balance", pcutUserNewBalance));
                     WriteObject(returnUpdatePcutUserAccountBalance);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
+    [Cmdlet(VerbsData.Update, "PcutGroupAccountBalance")]
+    public class Update_PcutGroupAccountBalance : Cmdlet
+    {
+        [Parameter(Mandatory = true,
+            HelpMessage = "Please provide the name of the group")]
+        [ValidateNotNullOrEmpty]
+        public string GroupName;
+
+        [Parameter(Mandatory = true,
+            HelpMessage = "Enter a positive or negative number to adjust balance by")]
+        [ValidateNotNullOrEmpty]
+        public double Adjustment;
+
+        [Parameter(Mandatory = false,
+            HelpMessage = "Enter an optional comment")]
+        public string Comment;
+
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    _serverProxy.AdjustUserAccountBalanceByGroup(GroupName, Adjustment, Comment, null);
+                    PSObject returnUpdatePcutGroupAccountBalance = new PSObject();
+                    returnUpdatePcutGroupAccountBalance.Properties.Add(new PSNoteProperty("Name", GroupName));
+                    returnUpdatePcutGroupAccountBalance.Properties.Add(new PSNoteProperty("Adjustment", Adjustment));
+                    returnUpdatePcutGroupAccountBalance.Properties.Add(new PSNoteProperty("Comment", Comment));
+                    WriteObject(returnUpdatePcutGroupAccountBalance);
                 }
                 catch (XmlRpcFaultException fex)
                 {
