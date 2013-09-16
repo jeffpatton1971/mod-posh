@@ -815,6 +815,45 @@ namespace PapercutManagement
         }
     }
 
+    [Cmdlet(VerbsCommon.Reset, "PcutUserCounts")]
+    public class Reset_PcutUserCounts : Cmdlet
+    {
+        [Parameter(Mandatory = true,
+            HelpMessage = "Please provide the current username")]
+        [ValidateNotNullOrEmpty]
+        public string UserName;
+
+        [Parameter(Mandatory = true,
+            HelpMessage = "Please provide the username who reset the counts")]
+        [ValidateNotNullOrEmpty]
+        public string ResetBy;
+
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    _serverProxy.ResetUserCounts(UserName, ResetBy);
+                    WriteObject("Counts for user " + UserName + " reset by " + ResetBy);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
     [Cmdlet(VerbsCommon.Rename, "PcutUser")]
     public class Rename_PcutUser : Cmdlet
     {
@@ -859,4 +898,5 @@ namespace PapercutManagement
             }
         }
     }
+
 }
