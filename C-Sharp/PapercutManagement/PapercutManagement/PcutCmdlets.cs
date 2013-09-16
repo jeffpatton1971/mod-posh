@@ -386,6 +386,50 @@ namespace PapercutManagement
         }
     }
 
+    [Cmdlet(VerbsCommon.Get, "PcutUserGroup")]
+    public class Get_PcutUserGroup : Cmdlet
+    {
+        [Parameter(Mandatory = false,
+            HelpMessage = "Please enter a number to start at (default 0)")]
+        public int Offset = 0;
+
+        [Parameter(Mandatory = false,
+            HelpMessage = "Please enter the total number of users to return (default 1000)")]
+        public int Limit = 1000;
+
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    string[] pcutUserGroups = _serverProxy.ListUserGroups(Offset, Limit);
+                    Collection<PSObject> returnPcutUserGroups = new Collection<PSObject>();
+                    foreach (string pcutUserGroup in pcutUserGroups)
+                    {
+                        PSObject thisGroup = new PSObject();
+                        thisGroup.Properties.Add(new PSNoteProperty("Name",pcutUserGroup));
+                        returnPcutUserGroups.Add(thisGroup);
+                    }
+                    WriteObject(returnPcutUserGroups);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
     [Cmdlet(VerbsData.Update, "PcutUserAccountBalance")]
     public class Update_PcutUserAccountBalance : Cmdlet
     {

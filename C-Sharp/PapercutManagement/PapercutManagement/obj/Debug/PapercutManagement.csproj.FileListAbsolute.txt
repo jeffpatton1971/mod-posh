@@ -5,6 +5,5 @@ C:\Users\jspatton\documents\visual studio 2012\Projects\PapercutManagement\Paper
 C:\Users\jspatton\documents\visual studio 2012\Projects\PapercutManagement\PapercutManagement\obj\Debug\PapercutManagement.pdb
 C:\scripts\C-Sharp\PapercutManagement\PapercutManagement\bin\Debug\PapercutManagement.dll
 C:\scripts\C-Sharp\PapercutManagement\PapercutManagement\bin\Debug\PapercutManagement.pdb
-C:\scripts\C-Sharp\PapercutManagement\PapercutManagement\obj\Debug\PapercutManagement.csprojResolveAssemblyReference.cache
 C:\scripts\C-Sharp\PapercutManagement\PapercutManagement\obj\Debug\PapercutManagement.dll
 C:\scripts\C-Sharp\PapercutManagement\PapercutManagement\obj\Debug\PapercutManagement.pdb
