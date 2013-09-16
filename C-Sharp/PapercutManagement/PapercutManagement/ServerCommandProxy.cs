@@ -892,6 +892,21 @@ public class ServerCommandProxy {
 		_proxy.RemoveAdminAccessGroup(_authToken, groupName);
 	}
 
+    /// <summary>
+    /// Adds a user to a group
+    /// </summary>
+    ///
+    /// <param name="username">
+    /// the name of the user
+    /// </param>
+    ///
+    /// <param name="groupName">
+    /// the name of the group
+    /// </param>
+    public void AddUserToGroup(string username, string groupName)
+    {
+        _proxy.AddUserToGroup(_authToken, username, groupName);
+    }
 	/// <summary>
 	/// List all user accounts (sorted by username) starting at 'offset' and ending at 'limit'.
 	/// This can be used to enumerate all user accounts in 'pages'.  When retrieving a list of all user accounts, the
