@@ -125,6 +125,45 @@ namespace PapercutManagement
         }
     }
 
+    [Cmdlet(VerbsData.Update, "PcutInternalAdminPassword")]
+    public class Update_PcutInternalAdminPassword : Cmdlet
+    {
+        [Parameter(Mandatory = true,
+            HelpMessage = "Please provide a password")]
+        [ValidateNotNullOrEmpty]
+        public string Password;
+
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    bool passwordChanged = _serverProxy.ChangeInternalAdminPassword(Password);
+                    PSObject returnPasswordChanged = new PSObject();
+                    returnPasswordChanged.Properties.Add(new PSNoteProperty("PasswordChanged", passwordChanged));
+                    Globals.authToken = null;
+                    Globals.ComputerName = null;
+                    Globals.Port = 0;
+                    WriteObject(returnPasswordChanged);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
     [Cmdlet(VerbsCommon.Get,"PcutTotalUsers")]
     public class Get_PcutTotalUsers : Cmdlet
     {
