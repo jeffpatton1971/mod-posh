@@ -57,6 +57,37 @@ namespace PapercutManagement
         }
     }
 
+    [Cmdlet(VerbsCommunications.Disconnect, "PcutServer")]
+    public class Disconnect_PcutServer : Cmdlet
+    {
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    Globals.ComputerName = null;
+                    Globals.authToken = null;
+                    Globals.Port = 0;
+                    WriteObject("You are disconnected from the server");
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
     [Cmdlet(VerbsCommon.Get,"PcutTotalUsers")]
     public class Get_PcutTotalUsers : Cmdlet
     {
