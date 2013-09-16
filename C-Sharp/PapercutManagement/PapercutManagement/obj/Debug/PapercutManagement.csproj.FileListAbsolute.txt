@@ -1,0 +1,5 @@
+C:\Users\jspatton\documents\visual studio 2012\Projects\PapercutManagement\PapercutManagement\bin\Debug\PapercutManagement.dll
+C:\Users\jspatton\documents\visual studio 2012\Projects\PapercutManagement\PapercutManagement\bin\Debug\PapercutManagement.pdb
+C:\Users\jspatton\documents\visual studio 2012\Projects\PapercutManagement\PapercutManagement\bin\Debug\CookComputing.XmlRpcV2.dll
+C:\Users\jspatton\documents\visual studio 2012\Projects\PapercutManagement\PapercutManagement\obj\Debug\PapercutManagement.dll
+C:\Users\jspatton\documents\visual studio 2012\Projects\PapercutManagement\PapercutManagement\obj\Debug\PapercutManagement.pdb
