@@ -88,6 +88,50 @@ namespace PapercutManagement
         }
     }
 
+    [Cmdlet(VerbsCommon.Get, "PcutPrinters")]
+    public class Get_PcutPrinters : Cmdlet
+    {
+        [Parameter(Mandatory = false,
+            HelpMessage = "Please enter a number to start at (default 0)")]
+        public int Offset = 0;
+
+        [Parameter(Mandatory = false,
+            HelpMessage = "Please enter the total number of users to return (default 1000)")]
+        public int Limit = 1000;
+
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    string[] pcutPrinters = _serverProxy.ListPrinters(Offset, Limit);
+                    Collection<PSObject> returnPcutPrinters = new Collection<PSObject>();
+                    foreach (string pcutPrinter in pcutPrinters)
+                    {
+                        PSObject thisPrinter = new PSObject();
+                        thisPrinter.Properties.Add(new PSNoteProperty("printerName", pcutPrinter));
+                        returnPcutPrinters.Add(thisPrinter);
+                    }
+                    WriteObject(returnPcutPrinters);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
     [Cmdlet(VerbsCommon.Add, "PcutAdminAccessUser")]
     public class Add_PcutAdminAccessUser : Cmdlet
     {
@@ -111,6 +155,43 @@ namespace PapercutManagement
                     returnAddPcutAdminAccessUser.Properties.Add(new PSNoteProperty("Username", UserName));
                     returnAddPcutAdminAccessUser.Properties.Add(new PSNoteProperty("AdminAccess", true));
                     WriteObject(returnAddPcutAdminAccessUser);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
+    [Cmdlet(VerbsCommon.Remove, "PcutAdminAccessUser")]
+    public class Remove_PcutAdminAccessUser : Cmdlet
+    {
+        [Parameter(Mandatory = true,
+            HelpMessage = "Please provide the current username")]
+        [ValidateNotNullOrEmpty]
+        public string UserName;
+
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    _serverProxy.RemoveAdminAccessUser(UserName);
+                    PSObject returnRemovePcutAdminAccessUser = new PSObject();
+                    returnRemovePcutAdminAccessUser.Properties.Add(new PSNoteProperty("Username", UserName));
+                    returnRemovePcutAdminAccessUser.Properties.Add(new PSNoteProperty("AdminAccess", true));
+                    WriteObject(returnRemovePcutAdminAccessUser);
                 }
                 catch (XmlRpcFaultException fex)
                 {
@@ -840,6 +921,40 @@ namespace PapercutManagement
                 {
                     _serverProxy.ResetUserCounts(UserName, ResetBy);
                     WriteObject("Counts for user " + UserName + " reset by " + ResetBy);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    WriteError(errRecord);
+                }
+            }
+            else
+            {
+                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+            }
+        }
+    }
+
+    [Cmdlet(VerbsCommon.Reset, "PcutInitialUserSettings")]
+    public class Reset_PcutInitialUserSettings : Cmdlet
+    {
+        [Parameter(Mandatory = true,
+            HelpMessage = "Please provide the current username")]
+        [ValidateNotNullOrEmpty]
+        public string UserName;
+
+        static ServerCommandProxy _serverProxy;
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Globals.authToken != null)
+            {
+                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+                try
+                {
+                    _serverProxy.ReapplyInitialUserSettings(UserName);
+                    WriteObject(UserName + " account reset");
                 }
                 catch (XmlRpcFaultException fex)
                 {
