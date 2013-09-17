@@ -88,8 +88,8 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Get, "PcutPrinters")]
-    public class Get_PcutPrinters : Cmdlet
+    [Cmdlet(VerbsCommon.Get, "PcutPrinter")]
+    public class Get_PcutPrinter : Cmdlet
     {
         [Parameter(Mandatory = false,
             HelpMessage = "Please enter a number to start at (default 0)")]
@@ -113,8 +113,31 @@ namespace PapercutManagement
                     Collection<PSObject> returnPcutPrinters = new Collection<PSObject>();
                     foreach (string pcutPrinter in pcutPrinters)
                     {
+                        string printServer = null;
+                        string printerName = pcutPrinter;
+                        string printerDisabled = null;
+                        string printerJobCount = null;
+                        string printerPageCount = null;
+                        string printerCostModel = null;
+
+                        if (!(pcutPrinter.Substring(0, 2) == "!!"))
+                        {
+                            string[] pcutResult = pcutPrinter.Split('\\');
+                            printServer = pcutResult[0];
+                            printerName = pcutResult[1];
+                            printerDisabled = _serverProxy.GetPrinterProperty(printServer,printerName,"disabled");
+                            printerJobCount = _serverProxy.GetPrinterProperty(printServer,printerName,"print-stats.job-count");
+                            printerPageCount = _serverProxy.GetPrinterProperty(printServer,printerName,"print-stats.page-count");
+                            printerCostModel = _serverProxy.GetPrinterProperty(printServer,printerName,"cost-model");
+                        }
+                        
                         PSObject thisPrinter = new PSObject();
-                        thisPrinter.Properties.Add(new PSNoteProperty("printerName", pcutPrinter));
+                        thisPrinter.Properties.Add(new PSNoteProperty("printerName", printerName));
+                        thisPrinter.Properties.Add(new PSNoteProperty("printServer", printServer));
+                        thisPrinter.Properties.Add(new PSNoteProperty("disabled", printerDisabled));
+                        thisPrinter.Properties.Add(new PSNoteProperty("jobCount", printerJobCount));
+                        thisPrinter.Properties.Add(new PSNoteProperty("pageCount", printerPageCount));
+                        thisPrinter.Properties.Add(new PSNoteProperty("costModel", printerCostModel));
                         returnPcutPrinters.Add(thisPrinter);
                     }
                     WriteObject(returnPcutPrinters);
