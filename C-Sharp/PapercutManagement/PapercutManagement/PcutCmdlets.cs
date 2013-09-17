@@ -132,12 +132,12 @@ namespace PapercutManagement
                         }
                         
                         PSObject thisPrinter = new PSObject();
-                        thisPrinter.Properties.Add(new PSNoteProperty("printerName", printerName));
-                        thisPrinter.Properties.Add(new PSNoteProperty("printServer", printServer));
-                        thisPrinter.Properties.Add(new PSNoteProperty("disabled", printerDisabled));
-                        thisPrinter.Properties.Add(new PSNoteProperty("jobCount", printerJobCount));
-                        thisPrinter.Properties.Add(new PSNoteProperty("pageCount", printerPageCount));
-                        thisPrinter.Properties.Add(new PSNoteProperty("costModel", printerCostModel));
+                        thisPrinter.Properties.Add(new PSNoteProperty("Name", printerName));
+                        thisPrinter.Properties.Add(new PSNoteProperty("Server", printServer));
+                        thisPrinter.Properties.Add(new PSNoteProperty("Disabled", printerDisabled));
+                        thisPrinter.Properties.Add(new PSNoteProperty("JobCount", printerJobCount));
+                        thisPrinter.Properties.Add(new PSNoteProperty("PageCount", printerPageCount));
+                        thisPrinter.Properties.Add(new PSNoteProperty("CostModel", printerCostModel));
                         returnPcutPrinters.Add(thisPrinter);
                     }
                     WriteObject(returnPcutPrinters);
