@@ -13,7 +13,7 @@ namespace PapercutManagement
         public static int Port;
     }
 
-    [Cmdlet(VerbsCommunications.Connect, "PcutServer")]
+    [Cmdlet(VerbsCommunications.Connect, "pcutServer")]
     public class Connect_PcutServer : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -57,7 +57,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommunications.Disconnect, "PcutServer")]
+    [Cmdlet(VerbsCommunications.Disconnect, "pcutServer")]
     public class Disconnect_PcutServer : Cmdlet
     {
         static ServerCommandProxy _serverProxy;
@@ -88,7 +88,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Get, "PcutPrinter")]
+    [Cmdlet(VerbsCommon.Get, "pcutPrinter")]
     public class Get_PcutPrinter : Cmdlet
     {
         [Parameter(Mandatory = false,
@@ -155,7 +155,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Add, "PcutAdminAccessUser")]
+    [Cmdlet(VerbsCommon.Add, "pcutAdminAccessUser")]
     public class Add_PcutAdminAccessUser : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -192,7 +192,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Remove, "PcutAdminAccessUser")]
+    [Cmdlet(VerbsCommon.Remove, "pcutAdminAccessUser")]
     public class Remove_PcutAdminAccessUser : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -229,7 +229,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsData.Update, "PcutInternalAdminPassword")]
+    [Cmdlet(VerbsData.Update, "pcutInternalAdminPassword")]
     public class Update_PcutInternalAdminPassword : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -268,7 +268,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Get,"PcutTotalUsers")]
+    [Cmdlet(VerbsCommon.Get,"pcutTotalUsers")]
     public class Get_PcutTotalUsers : Cmdlet
     {
         static ServerCommandProxy _serverProxy;
@@ -303,7 +303,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Get, "PcutUser")]
+    [Cmdlet(VerbsCommon.Get, "pcutUser")]
     public class Get_PcutUser : Cmdlet
     {
         [Parameter(Mandatory = false,
@@ -325,13 +325,21 @@ namespace PapercutManagement
                 string[] pcutUsers;
                 try
                 {
+                    string[] propertyNames = new string[] { "full-name", "email", "disabled-print", "balance", "restricted", "account-selection.mode", "department", "office", "card-number", "card-pin", "notes" };
                     pcutUsers = _serverProxy.ListUserAccounts(Offset, Limit);
                     Collection<PSObject> returnPcutUsers = new Collection<PSObject>();
                     foreach (string pcutUser in pcutUsers)
                     {
-                        PSObject thisUser = new PSObject();
-                        thisUser.Properties.Add(new PSNoteProperty("Username", pcutUser));
-                        returnPcutUsers.Add(thisUser);
+                        string[] pcutUserProperties = _serverProxy.GetUserProperties(pcutUser, propertyNames);
+                        int propertyCount = 0;
+                        PSObject pcutProperties = new PSObject();
+                        pcutProperties.Properties.Add(new PSNoteProperty("Username", pcutUser));
+                        foreach (string propertyName in propertyNames)
+                        {
+                            pcutProperties.Properties.Add(new PSNoteProperty(propertyName, pcutUserProperties[propertyCount]));
+                            propertyCount += 1;
+                        }
+                        returnPcutUsers.Add(pcutProperties);
                     }
                     WriteObject(returnPcutUsers);
                 }
@@ -348,7 +356,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Add, "PcutUserToGroup")]
+    [Cmdlet(VerbsCommon.Add, "pcutUserToGroup")]
     public class Add_PcutUserToGroup : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -387,7 +395,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Remove, "PcutUserFromGroup")]
+    [Cmdlet(VerbsCommon.Remove, "pcutUserFromGroup")]
     public class Remove_PcutUserFromGroup : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -426,7 +434,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Get, "PcutSharedAccount")]
+    [Cmdlet(VerbsCommon.Get, "pcutSharedAccount")]
     public class Get_PcutSharedAccount : Cmdlet
     {
         [Parameter(Mandatory = false,
@@ -470,7 +478,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Get, "PcutUserSharedAccount")]
+    [Cmdlet(VerbsCommon.Get, "pcutUserSharedAccount")]
     public class Get_PcutUserSharedAccount : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -519,7 +527,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Get, "PcutUserAccountBalance")]
+    [Cmdlet(VerbsCommon.Get, "pcutUserAccountBalance")]
     public class Get_PcutUserAccountBalance : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -556,7 +564,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Get, "PcutUserProperties")]
+    [Cmdlet(VerbsCommon.Get, "pcutUserProperties")]
     public class Get_PcutUserProperties : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -599,7 +607,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Set, "PcutUserProperty")]
+    [Cmdlet(VerbsCommon.Set, "pcutUserProperty")]
     public class Set_PcutUserProperty : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -647,7 +655,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Get, "PcutUserProperty")]
+    [Cmdlet(VerbsCommon.Get, "pcutUserProperty")]
     public class Get_PcutUserProperty : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -690,7 +698,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Set, "PcutUserAccountBalance")]
+    [Cmdlet(VerbsCommon.Set, "pcutUserAccountBalance")]
     public class Set_PcutUserAccountBalance : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -737,7 +745,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Get, "PcutGroup")]
+    [Cmdlet(VerbsCommon.Get, "pcutGroup")]
     public class Get_PcutGroup : Cmdlet
     {
         [Parameter(Mandatory = false,
@@ -781,7 +789,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Get, "PcutUserGroup")]
+    [Cmdlet(VerbsCommon.Get, "pcutUserGroup")]
     public class Get_PcutUserGroup : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -822,7 +830,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsData.Update, "PcutUserAccountBalance")]
+    [Cmdlet(VerbsData.Update, "pcutUserAccountBalance")]
     public class Update_PcutUserAccountBalance : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -872,7 +880,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsData.Update, "PcutGroupAccountBalance")]
+    [Cmdlet(VerbsData.Update, "pcutGroupAccountBalance")]
     public class Update_PcutGroupAccountBalance : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -919,7 +927,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Reset, "PcutUserCounts")]
+    [Cmdlet(VerbsCommon.Reset, "pcutUserCounts")]
     public class Reset_PcutUserCounts : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -958,7 +966,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Reset, "PcutInitialUserSettings")]
+    [Cmdlet(VerbsCommon.Reset, "pcutInitialUserSettings")]
     public class Reset_PcutInitialUserSettings : Cmdlet
     {
         [Parameter(Mandatory = true,
@@ -992,7 +1000,7 @@ namespace PapercutManagement
         }
     }
 
-    [Cmdlet(VerbsCommon.Rename, "PcutUser")]
+    [Cmdlet(VerbsCommon.Rename, "pcutUser")]
     public class Rename_PcutUser : Cmdlet
     {
         [Parameter(Mandatory = true,
