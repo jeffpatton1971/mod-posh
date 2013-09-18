@@ -92,6 +92,11 @@ namespace PapercutManagement
     public class Get_PcutPrinter : Cmdlet
     {
         [Parameter(Mandatory = false,
+            HelpMessage = "Please provide the current username")]
+        [ValidateNotNullOrEmpty]
+        public string PrinterName;
+
+        [Parameter(Mandatory = false,
             HelpMessage = "Please enter a number to start at (default 0)")]
         public int Offset = 0;
 
@@ -109,38 +114,68 @@ namespace PapercutManagement
                 _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
                 try
                 {
+                    string printServer = null;
+                    string printerName = null;
+                    string printerDisabled = null;
+                    string printerJobCount = null;
+                    string printerPageCount = null;
+                    string printerCostModel = null;
                     string[] pcutPrinters = _serverProxy.ListPrinters(Offset, Limit);
-                    Collection<PSObject> returnPcutPrinters = new Collection<PSObject>();
-                    foreach (string pcutPrinter in pcutPrinters)
+                    if (PrinterName == null)
                     {
-                        string printServer = null;
-                        string printerName = pcutPrinter;
-                        string printerDisabled = null;
-                        string printerJobCount = null;
-                        string printerPageCount = null;
-                        string printerCostModel = null;
-
-                        if (!(pcutPrinter.Substring(0, 2) == "!!"))
+                        Collection<PSObject> returnPcutPrinters = new Collection<PSObject>();
+                        foreach (string pcutPrinter in pcutPrinters)
                         {
-                            string[] pcutResult = pcutPrinter.Split('\\');
-                            printServer = pcutResult[0];
-                            printerName = pcutResult[1];
-                            printerDisabled = _serverProxy.GetPrinterProperty(printServer,printerName,"disabled");
-                            printerJobCount = _serverProxy.GetPrinterProperty(printServer,printerName,"print-stats.job-count");
-                            printerPageCount = _serverProxy.GetPrinterProperty(printServer,printerName,"print-stats.page-count");
-                            printerCostModel = _serverProxy.GetPrinterProperty(printServer,printerName,"cost-model");
+                            if (!(pcutPrinter.Substring(0, 2) == "!!"))
+                            {
+                                string[] pcutResult = pcutPrinter.Split('\\');
+                                printServer = pcutResult[0];
+                                printerName = pcutResult[1];
+                                printerDisabled = _serverProxy.GetPrinterProperty(printServer, printerName, "disabled");
+                                printerJobCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.job-count");
+                                printerPageCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.page-count");
+                                printerCostModel = _serverProxy.GetPrinterProperty(printServer, printerName, "cost-model");
+                            }
+
+                            PSObject thisPrinter = new PSObject();
+                            thisPrinter.Properties.Add(new PSNoteProperty("Name", printerName));
+                            thisPrinter.Properties.Add(new PSNoteProperty("Server", printServer));
+                            thisPrinter.Properties.Add(new PSNoteProperty("Disabled", Convert.ToBoolean(printerDisabled)));
+                            thisPrinter.Properties.Add(new PSNoteProperty("JobCount", Convert.ToInt32(printerJobCount)));
+                            thisPrinter.Properties.Add(new PSNoteProperty("PageCount", Convert.ToInt32(printerPageCount)));
+                            thisPrinter.Properties.Add(new PSNoteProperty("CostModel", printerCostModel));
+                            returnPcutPrinters.Add(thisPrinter);
                         }
-                        
-                        PSObject thisPrinter = new PSObject();
-                        thisPrinter.Properties.Add(new PSNoteProperty("Name", printerName));
-                        thisPrinter.Properties.Add(new PSNoteProperty("Server", printServer));
-                        thisPrinter.Properties.Add(new PSNoteProperty("Disabled",Convert.ToBoolean(printerDisabled)));
-                        thisPrinter.Properties.Add(new PSNoteProperty("JobCount",Convert.ToInt32(printerJobCount)));
-                        thisPrinter.Properties.Add(new PSNoteProperty("PageCount",Convert.ToInt32(printerPageCount)));
-                        thisPrinter.Properties.Add(new PSNoteProperty("CostModel", printerCostModel));
-                        returnPcutPrinters.Add(thisPrinter);
+                        WriteObject(returnPcutPrinters);
                     }
-                    WriteObject(returnPcutPrinters);
+                    else
+                    {
+                        string[] foundPrinters = Array.FindAll(pcutPrinters, element => element.ToUpper().Contains(PrinterName.ToUpper()));
+                        Collection<PSObject> returnPcutPrinters = new Collection<PSObject>();
+                        foreach (string pcutPrinter in foundPrinters)
+                        {
+                            if (!(pcutPrinter.Substring(0, 2) == "!!"))
+                            {
+                                string[] pcutResult = pcutPrinter.Split('\\');
+                                printServer = pcutResult[0];
+                                printerName = pcutResult[1];
+                                printerDisabled = _serverProxy.GetPrinterProperty(printServer, printerName, "disabled");
+                                printerJobCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.job-count");
+                                printerPageCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.page-count");
+                                printerCostModel = _serverProxy.GetPrinterProperty(printServer, printerName, "cost-model");
+                            }
+
+                            PSObject thisPrinter = new PSObject();
+                            thisPrinter.Properties.Add(new PSNoteProperty("Name", printerName));
+                            thisPrinter.Properties.Add(new PSNoteProperty("Server", printServer));
+                            thisPrinter.Properties.Add(new PSNoteProperty("Disabled", Convert.ToBoolean(printerDisabled)));
+                            thisPrinter.Properties.Add(new PSNoteProperty("JobCount", Convert.ToInt32(printerJobCount)));
+                            thisPrinter.Properties.Add(new PSNoteProperty("PageCount", Convert.ToInt32(printerPageCount)));
+                            thisPrinter.Properties.Add(new PSNoteProperty("CostModel", printerCostModel));
+                            returnPcutPrinters.Add(thisPrinter);
+                        }
+                        WriteObject(returnPcutPrinters);
+                    }
                 }
                 catch (XmlRpcFaultException fex)
                 {
