@@ -307,6 +307,11 @@ namespace PapercutManagement
     public class Get_PcutUser : Cmdlet
     {
         [Parameter(Mandatory = false,
+            HelpMessage = "Please provide the current username")]
+        [ValidateNotNullOrEmpty]
+        public string UserName;
+
+        [Parameter(Mandatory = false,
             HelpMessage = "Please enter a number to start at (default 0)")]
         public int Offset = 0;
 
@@ -325,42 +330,83 @@ namespace PapercutManagement
                 string[] pcutUsers;
                 try
                 {
-                    pcutUsers = _serverProxy.ListUserAccounts(Offset, Limit);
-                    Collection<PSObject> returnPcutUsers = new Collection<PSObject>();
-                    foreach (string pcutUser in pcutUsers)
+                    if (UserName == null)
                     {
-                        string fullName = _serverProxy.GetUserProperty(pcutUser, "full-name");
-                        string email = _serverProxy.GetUserProperty(pcutUser, "email");
-                        string disabledPrint = _serverProxy.GetUserProperty(pcutUser, "disabled-print");
-                        string disabledNet = _serverProxy.GetUserProperty(pcutUser, "disabled-net");
-                        string balance = _serverProxy.GetUserProperty(pcutUser, "balance");
-                        string restricted = _serverProxy.GetUserProperty(pcutUser, "restricted");
-                        string accountMode = _serverProxy.GetUserProperty(pcutUser, "account-selection.mode");
-                        string department = _serverProxy.GetUserProperty(pcutUser, "department");
-                        string office = _serverProxy.GetUserProperty(pcutUser, "office");
-                        string cardNumber1 = _serverProxy.GetUserProperty(pcutUser, "card-number");
-                        string cardNumber2 = _serverProxy.GetUserProperty(pcutUser, "secondary-card-number");
-                        string cardPin = _serverProxy.GetUserProperty(pcutUser, "card-pin");
-                        string notes = _serverProxy.GetUserProperty(pcutUser, "notes");
+                        pcutUsers = _serverProxy.ListUserAccounts(Offset, Limit);
+                        Collection<PSObject> returnPcutUsers = new Collection<PSObject>();
+                        foreach (string pcutUser in pcutUsers)
+                        {
+                            string[] userGroups = _serverProxy.GetUserGroups(pcutUser);
+                            string fullName = _serverProxy.GetUserProperty(pcutUser, "full-name");
+                            string email = _serverProxy.GetUserProperty(pcutUser, "email");
+                            string disabledPrint = _serverProxy.GetUserProperty(pcutUser, "disabled-print");
+                            string disabledNet = _serverProxy.GetUserProperty(pcutUser, "disabled-net");
+                            string balance = _serverProxy.GetUserProperty(pcutUser, "balance");
+                            string restricted = _serverProxy.GetUserProperty(pcutUser, "restricted");
+                            string accountMode = _serverProxy.GetUserProperty(pcutUser, "account-selection.mode");
+                            string department = _serverProxy.GetUserProperty(pcutUser, "department");
+                            string office = _serverProxy.GetUserProperty(pcutUser, "office");
+                            string cardNumber1 = _serverProxy.GetUserProperty(pcutUser, "card-number");
+                            string cardNumber2 = _serverProxy.GetUserProperty(pcutUser, "secondary-card-number");
+                            string cardPin = _serverProxy.GetUserProperty(pcutUser, "card-pin");
+                            string notes = _serverProxy.GetUserProperty(pcutUser, "notes");
 
-                        PSObject pcutProperties = new PSObject();
-                        pcutProperties.Properties.Add(new PSNoteProperty("Username", pcutUser));
-                        pcutProperties.Properties.Add(new PSNoteProperty("Fullname" , fullName));
-                        pcutProperties.Properties.Add(new PSNoteProperty("Email" , email));
-                        pcutProperties.Properties.Add(new PSNoteProperty("PrintDisabled" ,Convert.ToBoolean(disabledPrint)));
-                        pcutProperties.Properties.Add(new PSNoteProperty("NetDisabled" ,Convert.ToBoolean(disabledNet)));
-                        pcutProperties.Properties.Add(new PSNoteProperty("Balance" ,Convert.ToDouble(balance)));
-                        pcutProperties.Properties.Add(new PSNoteProperty("Restricted" ,Convert.ToBoolean(restricted)));
-                        pcutProperties.Properties.Add(new PSNoteProperty("AccountMode" , accountMode));
-                        pcutProperties.Properties.Add(new PSNoteProperty("Department" , department));
-                        pcutProperties.Properties.Add(new PSNoteProperty("Office" , office));
-                        pcutProperties.Properties.Add(new PSNoteProperty("Card1" ,(cardNumber1)));
-                        pcutProperties.Properties.Add(new PSNoteProperty("Card2" ,(cardNumber2)));
-                        pcutProperties.Properties.Add(new PSNoteProperty("PIN" ,(cardPin)));
-                        pcutProperties.Properties.Add(new PSNoteProperty("Notes" , notes));
-                        returnPcutUsers.Add(pcutProperties);
+                            PSObject pcutProperties = new PSObject();
+                            pcutProperties.Properties.Add(new PSNoteProperty("Username", pcutUser));
+                            pcutProperties.Properties.Add(new PSNoteProperty("Fullname", fullName));
+                            pcutProperties.Properties.Add(new PSNoteProperty("Group", userGroups));
+                            pcutProperties.Properties.Add(new PSNoteProperty("Email", email));
+                            pcutProperties.Properties.Add(new PSNoteProperty("PrintDisabled", Convert.ToBoolean(disabledPrint)));
+                            pcutProperties.Properties.Add(new PSNoteProperty("NetDisabled", Convert.ToBoolean(disabledNet)));
+                            pcutProperties.Properties.Add(new PSNoteProperty("Balance", Convert.ToDouble(balance)));
+                            pcutProperties.Properties.Add(new PSNoteProperty("Restricted", Convert.ToBoolean(restricted)));
+                            pcutProperties.Properties.Add(new PSNoteProperty("AccountMode", accountMode));
+                            pcutProperties.Properties.Add(new PSNoteProperty("Department", department));
+                            pcutProperties.Properties.Add(new PSNoteProperty("Office", office));
+                            pcutProperties.Properties.Add(new PSNoteProperty("Card1", (cardNumber1)));
+                            pcutProperties.Properties.Add(new PSNoteProperty("Card2", (cardNumber2)));
+                            pcutProperties.Properties.Add(new PSNoteProperty("PIN", (cardPin)));
+                            pcutProperties.Properties.Add(new PSNoteProperty("Notes", notes));
+                            returnPcutUsers.Add(pcutProperties);
+                        }
+                        WriteObject(returnPcutUsers);
                     }
-                    WriteObject(returnPcutUsers);
+                    else
+                    {
+                        string[] userGroups = _serverProxy.GetUserGroups(UserName);
+                        string fullName = _serverProxy.GetUserProperty(UserName, "full-name");
+                        string email = _serverProxy.GetUserProperty(UserName, "email");
+                        string disabledPrint = _serverProxy.GetUserProperty(UserName, "disabled-print");
+                        string disabledNet = _serverProxy.GetUserProperty(UserName, "disabled-net");
+                        string balance = _serverProxy.GetUserProperty(UserName, "balance");
+                        string restricted = _serverProxy.GetUserProperty(UserName, "restricted");
+                        string accountMode = _serverProxy.GetUserProperty(UserName, "account-selection.mode");
+                        string department = _serverProxy.GetUserProperty(UserName, "department");
+                        string office = _serverProxy.GetUserProperty(UserName, "office");
+                        string cardNumber1 = _serverProxy.GetUserProperty(UserName, "card-number");
+                        string cardNumber2 = _serverProxy.GetUserProperty(UserName, "secondary-card-number");
+                        string cardPin = _serverProxy.GetUserProperty(UserName, "card-pin");
+                        string notes = _serverProxy.GetUserProperty(UserName, "notes");
+
+                        PSObject pcutUser = new PSObject();
+                        pcutUser.Properties.Add(new PSNoteProperty("Username", UserName));
+                        pcutUser.Properties.Add(new PSNoteProperty("Fullname", fullName));
+                        pcutUser.Properties.Add(new PSNoteProperty("Group", userGroups));
+                        pcutUser.Properties.Add(new PSNoteProperty("Email", email));
+                        pcutUser.Properties.Add(new PSNoteProperty("PrintDisabled", Convert.ToBoolean(disabledPrint)));
+                        pcutUser.Properties.Add(new PSNoteProperty("NetDisabled", Convert.ToBoolean(disabledNet)));
+                        pcutUser.Properties.Add(new PSNoteProperty("Balance", Convert.ToDouble(balance)));
+                        pcutUser.Properties.Add(new PSNoteProperty("Restricted", Convert.ToBoolean(restricted)));
+                        pcutUser.Properties.Add(new PSNoteProperty("AccountMode", accountMode));
+                        pcutUser.Properties.Add(new PSNoteProperty("Department", department));
+                        pcutUser.Properties.Add(new PSNoteProperty("Office", office));
+                        pcutUser.Properties.Add(new PSNoteProperty("Card1", (cardNumber1)));
+                        pcutUser.Properties.Add(new PSNoteProperty("Card2", (cardNumber2)));
+                        pcutUser.Properties.Add(new PSNoteProperty("PIN", (cardPin)));
+                        pcutUser.Properties.Add(new PSNoteProperty("Notes", notes));
+
+                        WriteObject(pcutUser);
+                    }
                 }
                 catch (XmlRpcFaultException fex)
                 {
