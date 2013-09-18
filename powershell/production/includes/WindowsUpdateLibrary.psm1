@@ -334,6 +334,7 @@ Function Connect-WindowsUpdateServer
     {
         try
         {
+            $ErrorActionPreference = "Stop"
             $AdminProxy = New-Object Microsoft.UpdateServices.Administration.AdminProxy
             if ($isLocal)
             {
