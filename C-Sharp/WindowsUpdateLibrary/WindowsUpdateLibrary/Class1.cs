@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Management;
 using System.Management.Automation;
 using System.Net;
+using System.Runtime.InteropServices;
 using Microsoft.UpdateServices.Administration;
 using WUApiLib;
 
 namespace WindowsUpdateLibrary
 {
+    public class Globals
+    {
+        public static WUApiLib.UpdateCollection updateCollection = new WUApiLib.UpdateCollection();
+    }
     public class wuCmdlets
     {
         //
@@ -122,6 +127,7 @@ namespace WindowsUpdateLibrary
             protected override void EndProcessing()
             {
                 base.EndProcessing();
+                Globals.updateCollection = searchResult.Updates;
                 WriteObject(searchResult.Updates);
             }
         }
@@ -131,26 +137,29 @@ namespace WindowsUpdateLibrary
         {
             [Parameter(Mandatory = true, ValueFromPipeline = true,
                 HelpMessage = "The update to download")]
-            public WUApiLib.IUpdate Update;
+            public WUApiLib.UpdateCollection UpdateCollection;
 
-            WUApiLib.UpdateCollection updatesToDownload;
+            WUApiLib.UpdateCollection updatesToDownload = new WUApiLib.UpdateCollection();
             UpdateSession updateSession = new UpdateSession();
             UpdateDownloader updateDownloader;
 
             protected override void BeginProcessing()
             {
                 base.BeginProcessing();
-                updateDownloader = updateSession.CreateUpdateDownloader();
+                updateDownloader = updateSession.CreateUpdateDownloader();                
             }
 
             protected override void ProcessRecord()
             {
                 base.ProcessRecord();
-                if ((Update.EulaAccepted) && !(Update.InstallationBehavior.CanRequestUserInput))
+                foreach (WUApiLib.IUpdate Update in UpdateCollection)
                 {
-                    updatesToDownload.Add(Update);
-                    updateDownloader.Updates = updatesToDownload;
-                    updateDownloader.Download();
+                    if ((Update.EulaAccepted) && !(Update.InstallationBehavior.CanRequestUserInput))
+                    {
+                        updatesToDownload.Add(Update);
+                        updateDownloader.Updates = updatesToDownload;
+                        updateDownloader.Download();
+                    }
                 }
             }
 
