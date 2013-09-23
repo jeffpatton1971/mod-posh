@@ -1,7 +1,7 @@
-C:\scripts\C-Sharp\WindowsUpdateLibrary\WindowsUpdateLibrary\bin\Debug\WindowsUpdateLibrary.dll
-C:\scripts\C-Sharp\WindowsUpdateLibrary\WindowsUpdateLibrary\bin\Debug\WindowsUpdateLibrary.pdb
-C:\scripts\C-Sharp\WindowsUpdateLibrary\WindowsUpdateLibrary\obj\Debug\WindowsUpdateLibrary.dll
-C:\scripts\C-Sharp\WindowsUpdateLibrary\WindowsUpdateLibrary\obj\Debug\WindowsUpdateLibrary.pdb
 C:\scripts\C-Sharp\WindowsUpdateLibrary\WindowsUpdateLibrary\obj\Debug\Interop.WUApiLib.dll
 C:\scripts\C-Sharp\WindowsUpdateLibrary\WindowsUpdateLibrary\obj\Debug\WindowsUpdateLibrary.csproj.ResolveComReference.cache
+C:\scripts\C-Sharp\WindowsUpdateLibrary\WindowsUpdateLibrary\bin\Debug\WindowsUpdateLibrary.dll
+C:\scripts\C-Sharp\WindowsUpdateLibrary\WindowsUpdateLibrary\bin\Debug\WindowsUpdateLibrary.pdb
 C:\scripts\C-Sharp\WindowsUpdateLibrary\WindowsUpdateLibrary\bin\Debug\Interop.WUApiLib.dll
+C:\scripts\C-Sharp\WindowsUpdateLibrary\WindowsUpdateLibrary\obj\Debug\WindowsUpdateLibrary.dll
+C:\scripts\C-Sharp\WindowsUpdateLibrary\WindowsUpdateLibrary\obj\Debug\WindowsUpdateLibrary.pdb
