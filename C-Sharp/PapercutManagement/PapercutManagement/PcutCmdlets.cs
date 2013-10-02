@@ -16,9 +16,8 @@ namespace PapercutManagement
     [Cmdlet(VerbsCommunications.Connect, "pcutServer")]
     public class Connect_PcutServer : Cmdlet
     {
-        [Parameter(Mandatory = true,
+        [Parameter(Mandatory = false,
             HelpMessage = "Please provide authToken")]
-        [ValidateNotNullOrEmpty]
         public string authToken;
 
         [Parameter(Mandatory = true,
@@ -31,6 +30,17 @@ namespace PapercutManagement
         public int Port = 9191;
 
         static ServerCommandProxy _serverProxy;
+
+        protected override void BeginProcessing()
+        {
+            base.BeginProcessing();
+            if (authToken == null)
+            {
+                Console.Write("Please enter the authToken : ");
+                authToken = Console.ReadLine();
+                Globals.authToken = authToken;
+            }
+        }
 
         protected override void ProcessRecord()
         {
@@ -120,9 +130,11 @@ namespace PapercutManagement
                     string printerJobCount = null;
                     string printerPageCount = null;
                     string printerCostModel = null;
-                    string[] pcutPrinters = _serverProxy.ListPrinters(Offset, Limit);
+                    string[] pcutPrinters;
+
                     if (PrinterName == null)
                     {
+                        pcutPrinters = _serverProxy.ListPrinters(Offset, Limit);
                         Collection<PSObject> returnPcutPrinters = new Collection<PSObject>();
                         foreach (string pcutPrinter in pcutPrinters)
                         {
@@ -150,6 +162,26 @@ namespace PapercutManagement
                     }
                     else
                     {
+
+                        int Counter = Limit;
+                        do
+                        {
+                            Limit = Counter;
+                            WriteDebug("Counter == " + Counter);
+                            pcutPrinters = _serverProxy.ListPrinters(Offset, Counter);
+                            WriteDebug("pcutPrinters.Length == " + pcutPrinters.Length);
+                            if (pcutPrinters.Length == Counter)
+                            {
+                                Counter += 1000;
+                                WriteDebug("Counter == " + Counter);
+                            }
+                            else
+                            {
+                                //break;
+                            }
+                        } while ((pcutPrinters.Length == Limit));
+                        WriteDebug("pcutPrinters.Length == " + pcutPrinters.Length);
+
                         string[] foundPrinters = Array.FindAll(pcutPrinters, element => element.ToUpper().Contains(PrinterName.ToUpper()));
                         Collection<PSObject> returnPcutPrinters = new Collection<PSObject>();
                         foreach (string pcutPrinter in foundPrinters)
