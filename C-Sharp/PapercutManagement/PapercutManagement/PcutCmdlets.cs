@@ -123,39 +123,22 @@ namespace PapercutManagement
         string printerCostModel = null;
         string[] pcutPrinters;
 
-        protected override void ProcessRecord()
+        protected override void BeginProcessing()
         {
-            base.ProcessRecord();
-            if (Globals.authToken != null)
+            if (Globals.authToken == null)
+            {
+                Exception myException = new Exception("Not Connected to server");
+                ErrorCategory myCategory = new ErrorCategory();
+                ErrorRecord myError = new ErrorRecord(myException, "101", myCategory, this);
+                this.ThrowTerminatingError(myError);
+            }
+            else
             {
                 try
                 {
                     if (PrinterName == null)
                     {
                         pcutPrinters = _serverProxy.ListPrinters(Offset, Limit);
-                        foreach (string pcutPrinter in pcutPrinters)
-                        {
-                            if (!(pcutPrinter.Substring(0, 2) == "!!"))
-                            {
-                                string[] pcutResult = pcutPrinter.Split('\\');
-                                printServer = pcutResult[0];
-                                printerName = pcutResult[1];
-                                printerDisabled = _serverProxy.GetPrinterProperty(printServer, printerName, "disabled");
-                                printerJobCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.job-count");
-                                printerPageCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.page-count");
-                                printerCostModel = _serverProxy.GetPrinterProperty(printServer, printerName, "cost-model");
-
-                                PSObject thisPrinter = new PSObject();
-                                thisPrinter.Properties.Add(new PSNoteProperty("Name", printerName));
-                                thisPrinter.Properties.Add(new PSNoteProperty("Server", printServer));
-                                thisPrinter.Properties.Add(new PSNoteProperty("Disabled", Convert.ToBoolean(printerDisabled)));
-                                thisPrinter.Properties.Add(new PSNoteProperty("JobCount", Convert.ToInt32(printerJobCount)));
-                                thisPrinter.Properties.Add(new PSNoteProperty("PageCount", Convert.ToInt32(printerPageCount)));
-                                thisPrinter.Properties.Add(new PSNoteProperty("CostModel", printerCostModel));
-                                WriteObject(thisPrinter);
-                            }
-
-                        }
                     }
                     else
                     {
@@ -173,29 +156,6 @@ namespace PapercutManagement
                             }
                         } while ((pcutPrinters.Length == Limit));
                         WriteDebug("pcutPrinters.Length == " + pcutPrinters.Length);
-                        string[] foundPrinters = Array.FindAll(pcutPrinters, element => element.ToUpper().Contains(PrinterName.ToUpper()));
-                        foreach (string pcutPrinter in foundPrinters)
-                        {
-                            if (!(pcutPrinter.Substring(0, 2) == "!!"))
-                            {
-                                string[] pcutResult = pcutPrinter.Split('\\');
-                                printServer = pcutResult[0];
-                                printerName = pcutResult[1];
-                                printerDisabled = _serverProxy.GetPrinterProperty(printServer, printerName, "disabled");
-                                printerJobCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.job-count");
-                                printerPageCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.page-count");
-                                printerCostModel = _serverProxy.GetPrinterProperty(printServer, printerName, "cost-model");
-
-                                PSObject thisPrinter = new PSObject();
-                                thisPrinter.Properties.Add(new PSNoteProperty("Name", printerName));
-                                thisPrinter.Properties.Add(new PSNoteProperty("Server", printServer));
-                                thisPrinter.Properties.Add(new PSNoteProperty("Disabled", Convert.ToBoolean(printerDisabled)));
-                                thisPrinter.Properties.Add(new PSNoteProperty("JobCount", Convert.ToInt32(printerJobCount)));
-                                thisPrinter.Properties.Add(new PSNoteProperty("PageCount", Convert.ToInt32(printerPageCount)));
-                                thisPrinter.Properties.Add(new PSNoteProperty("CostModel", printerCostModel));
-                                WriteObject(thisPrinter);
-                            }
-                        }
                     }
                 }
                 catch (XmlRpcFaultException fex)
@@ -203,11 +163,48 @@ namespace PapercutManagement
                     ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
                     WriteError(errRecord);
                 }
+                catch
+                {
+
+                }
+
+                if (PrinterName != null)
+                {
+                    pcutPrinters = Array.FindAll(pcutPrinters, element => element.ToUpper().Contains(PrinterName.ToUpper()));
+                }
             }
-            else
+        }
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            foreach (string pcutPrinter in pcutPrinters)
             {
-                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+                if (!(pcutPrinter.Substring(0, 2) == "!!"))
+                {
+                    string[] pcutResult = pcutPrinter.Split('\\');
+                    printServer = pcutResult[0];
+                    printerName = pcutResult[1];
+                    printerDisabled = _serverProxy.GetPrinterProperty(printServer, printerName, "disabled");
+                    printerJobCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.job-count");
+                    printerPageCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.page-count");
+                    printerCostModel = _serverProxy.GetPrinterProperty(printServer, printerName, "cost-model");
+
+                    PSObject thisPrinter = new PSObject();
+                    thisPrinter.Properties.Add(new PSNoteProperty("Name", printerName));
+                    thisPrinter.Properties.Add(new PSNoteProperty("Server", printServer));
+                    thisPrinter.Properties.Add(new PSNoteProperty("Disabled", Convert.ToBoolean(printerDisabled)));
+                    thisPrinter.Properties.Add(new PSNoteProperty("JobCount", Convert.ToInt32(printerJobCount)));
+                    thisPrinter.Properties.Add(new PSNoteProperty("PageCount", Convert.ToInt32(printerPageCount)));
+                    thisPrinter.Properties.Add(new PSNoteProperty("CostModel", printerCostModel));
+                    WriteObject(thisPrinter);
+                }
             }
+        }
+
+        protected override void EndProcessing()
+        {
+            base.EndProcessing();
         }
     }
 
