@@ -389,7 +389,6 @@ namespace PapercutManagement
                     if (UserName == null)
                     {
                         pcutUsers = _serverProxy.ListUserAccounts(Offset, Limit);
-                        Collection<PSObject> returnPcutUsers = new Collection<PSObject>();
                         foreach (string pcutUser in pcutUsers)
                         {
                             string[] userGroups = _serverProxy.GetUserGroups(pcutUser);
@@ -407,25 +406,24 @@ namespace PapercutManagement
                             string cardPin = _serverProxy.GetUserProperty(pcutUser, "card-pin");
                             string notes = _serverProxy.GetUserProperty(pcutUser, "notes");
 
-                            PSObject pcutProperties = new PSObject();
-                            pcutProperties.Properties.Add(new PSNoteProperty("Username", pcutUser));
-                            pcutProperties.Properties.Add(new PSNoteProperty("Fullname", fullName));
-                            pcutProperties.Properties.Add(new PSNoteProperty("Group", userGroups));
-                            pcutProperties.Properties.Add(new PSNoteProperty("Email", email));
-                            pcutProperties.Properties.Add(new PSNoteProperty("PrintDisabled", Convert.ToBoolean(disabledPrint)));
-                            pcutProperties.Properties.Add(new PSNoteProperty("NetDisabled", Convert.ToBoolean(disabledNet)));
-                            pcutProperties.Properties.Add(new PSNoteProperty("Balance", Convert.ToDouble(balance)));
-                            pcutProperties.Properties.Add(new PSNoteProperty("Restricted", Convert.ToBoolean(restricted)));
-                            pcutProperties.Properties.Add(new PSNoteProperty("AccountMode", accountMode));
-                            pcutProperties.Properties.Add(new PSNoteProperty("Department", department));
-                            pcutProperties.Properties.Add(new PSNoteProperty("Office", office));
-                            pcutProperties.Properties.Add(new PSNoteProperty("Card1", (cardNumber1)));
-                            pcutProperties.Properties.Add(new PSNoteProperty("Card2", (cardNumber2)));
-                            pcutProperties.Properties.Add(new PSNoteProperty("PIN", (cardPin)));
-                            pcutProperties.Properties.Add(new PSNoteProperty("Notes", notes));
-                            returnPcutUsers.Add(pcutProperties);
+                            PSObject thisUser = new PSObject();
+                            thisUser.Properties.Add(new PSNoteProperty("Username", pcutUser));
+                            thisUser.Properties.Add(new PSNoteProperty("Fullname", fullName));
+                            thisUser.Properties.Add(new PSNoteProperty("Group", userGroups));
+                            thisUser.Properties.Add(new PSNoteProperty("Email", email));
+                            thisUser.Properties.Add(new PSNoteProperty("PrintDisabled", Convert.ToBoolean(disabledPrint)));
+                            thisUser.Properties.Add(new PSNoteProperty("NetDisabled", Convert.ToBoolean(disabledNet)));
+                            thisUser.Properties.Add(new PSNoteProperty("Balance", Convert.ToDouble(balance)));
+                            thisUser.Properties.Add(new PSNoteProperty("Restricted", Convert.ToBoolean(restricted)));
+                            thisUser.Properties.Add(new PSNoteProperty("AccountMode", accountMode));
+                            thisUser.Properties.Add(new PSNoteProperty("Department", department));
+                            thisUser.Properties.Add(new PSNoteProperty("Office", office));
+                            thisUser.Properties.Add(new PSNoteProperty("Card1", (cardNumber1)));
+                            thisUser.Properties.Add(new PSNoteProperty("Card2", (cardNumber2)));
+                            thisUser.Properties.Add(new PSNoteProperty("PIN", (cardPin)));
+                            thisUser.Properties.Add(new PSNoteProperty("Notes", notes));
+                            WriteObject(thisUser);
                         }
-                        WriteObject(returnPcutUsers);
                     }
                     else
                     {
