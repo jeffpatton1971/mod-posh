@@ -101,37 +101,35 @@ namespace PapercutManagement
     [Cmdlet(VerbsCommon.Get, "pcutPrinter")]
     public class Get_PcutPrinter : Cmdlet
     {
-        [Parameter(Mandatory = false,
+        [Parameter(Mandatory = false, Position = 0,
             HelpMessage = "Please provide the current username")]
         [ValidateNotNullOrEmpty]
         public string PrinterName;
 
-        [Parameter(Mandatory = false,
+        [Parameter(Mandatory = false, 
             HelpMessage = "Please enter a number to start at (default 0)")]
         public int Offset = 0;
 
-        [Parameter(Mandatory = false,
+        [Parameter(Mandatory = false, 
             HelpMessage = "Please enter the total number of users to return (default 1000)")]
         public int Limit = 1000;
 
-        static ServerCommandProxy _serverProxy;
+        static ServerCommandProxy _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+        string printServer = null;
+        string printerName = null;
+        string printerDisabled = null;
+        string printerJobCount = null;
+        string printerPageCount = null;
+        string printerCostModel = null;
+        string[] pcutPrinters;
 
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
             if (Globals.authToken != null)
             {
-                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
                 try
                 {
-                    string printServer = null;
-                    string printerName = null;
-                    string printerDisabled = null;
-                    string printerJobCount = null;
-                    string printerPageCount = null;
-                    string printerCostModel = null;
-                    string[] pcutPrinters;
-
                     if (PrinterName == null)
                     {
                         pcutPrinters = _serverProxy.ListPrinters(Offset, Limit);
@@ -364,7 +362,7 @@ namespace PapercutManagement
     [Cmdlet(VerbsCommon.Get, "pcutUser")]
     public class Get_PcutUser : Cmdlet
     {
-        [Parameter(Mandatory = false,
+        [Parameter(Mandatory = false, Position = 0,
             HelpMessage = "Please provide the current username")]
         [ValidateNotNullOrEmpty]
         public string UserName;
