@@ -115,19 +115,13 @@ namespace PapercutManagement
         public int Limit = 1000;
 
         static ServerCommandProxy _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
-        string printServer = null;
-        string printerName = null;
-        string printerDisabled = null;
-        string printerJobCount = null;
-        string printerPageCount = null;
-        string printerCostModel = null;
-        string[] pcutPrinters;
+        string[] pcutPrinters = null;
 
         protected override void BeginProcessing()
         {
             if (Globals.authToken == null)
             {
-                Exception myException = new Exception("Not Connected to server");
+                Exception myException = new Exception("Please run Connect-PcutServer in order to establish connection", new Exception("No connection established"));
                 ErrorCategory myCategory = new ErrorCategory();
                 ErrorRecord myError = new ErrorRecord(myException, "101", myCategory, this);
                 this.ThrowTerminatingError(myError);
@@ -160,12 +154,12 @@ namespace PapercutManagement
                 }
                 catch (XmlRpcFaultException fex)
                 {
-                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, new ErrorCategory(), fex);
                     WriteError(errRecord);
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(ex.Message, ex.InnerException), ex.HResult.ToString(), new ErrorCategory(), ex);
                 }
 
                 if (PrinterName != null)
@@ -178,26 +172,46 @@ namespace PapercutManagement
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
+
+            string printServer = null;
+            string printerName = null;
+            string printerDisabled = null;
+            string printerJobCount = null;
+            string printerPageCount = null;
+            string printerCostModel = null;
+
             foreach (string pcutPrinter in pcutPrinters)
             {
-                if (!(pcutPrinter.Substring(0, 2) == "!!"))
+                try
                 {
-                    string[] pcutResult = pcutPrinter.Split('\\');
-                    printServer = pcutResult[0];
-                    printerName = pcutResult[1];
-                    printerDisabled = _serverProxy.GetPrinterProperty(printServer, printerName, "disabled");
-                    printerJobCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.job-count");
-                    printerPageCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.page-count");
-                    printerCostModel = _serverProxy.GetPrinterProperty(printServer, printerName, "cost-model");
+                    if (!(pcutPrinter.Substring(0, 2) == "!!"))
+                    {
+                        string[] pcutResult = pcutPrinter.Split('\\');
+                        printServer = pcutResult[0];
+                        printerName = pcutResult[1];
+                        printerDisabled = _serverProxy.GetPrinterProperty(printServer, printerName, "disabled");
+                        printerJobCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.job-count");
+                        printerPageCount = _serverProxy.GetPrinterProperty(printServer, printerName, "print-stats.page-count");
+                        printerCostModel = _serverProxy.GetPrinterProperty(printServer, printerName, "cost-model");
 
-                    PSObject thisPrinter = new PSObject();
-                    thisPrinter.Properties.Add(new PSNoteProperty("Name", printerName));
-                    thisPrinter.Properties.Add(new PSNoteProperty("Server", printServer));
-                    thisPrinter.Properties.Add(new PSNoteProperty("Disabled", Convert.ToBoolean(printerDisabled)));
-                    thisPrinter.Properties.Add(new PSNoteProperty("JobCount", Convert.ToInt32(printerJobCount)));
-                    thisPrinter.Properties.Add(new PSNoteProperty("PageCount", Convert.ToInt32(printerPageCount)));
-                    thisPrinter.Properties.Add(new PSNoteProperty("CostModel", printerCostModel));
-                    WriteObject(thisPrinter);
+                        PSObject thisPrinter = new PSObject();
+                        thisPrinter.Properties.Add(new PSNoteProperty("Name", printerName));
+                        thisPrinter.Properties.Add(new PSNoteProperty("Server", printServer));
+                        thisPrinter.Properties.Add(new PSNoteProperty("Disabled", Convert.ToBoolean(printerDisabled)));
+                        thisPrinter.Properties.Add(new PSNoteProperty("JobCount", Convert.ToInt32(printerJobCount)));
+                        thisPrinter.Properties.Add(new PSNoteProperty("PageCount", Convert.ToInt32(printerPageCount)));
+                        thisPrinter.Properties.Add(new PSNoteProperty("CostModel", printerCostModel));
+                        WriteObject(thisPrinter);
+                    }
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, new ErrorCategory(), fex);
+                    WriteError(errRecord);
+                }
+                catch (Exception ex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(ex.Message, ex.InnerException), ex.HResult.ToString(), new ErrorCategory(), ex);
                 }
             }
         }
@@ -372,102 +386,96 @@ namespace PapercutManagement
             HelpMessage = "Please enter the total number of users to return (default 1000)")]
         public int Limit = 1000;
 
-        static ServerCommandProxy _serverProxy;
+        static ServerCommandProxy _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
+        string[] pcutUsers = null;
 
-        protected override void ProcessRecord()
+        protected override void BeginProcessing()
         {
-            base.ProcessRecord();
-            if (Globals.authToken != null)
+            if (Globals.authToken == null)
             {
-                _serverProxy = new ServerCommandProxy(Globals.ComputerName, Globals.Port, Globals.authToken);
-                string[] pcutUsers;
+                Exception myException = new Exception("Please run Connect-PcutServer in order to establish connection", new Exception("No connection established"));
+                ErrorCategory myCategory = new ErrorCategory();
+                ErrorRecord myError = new ErrorRecord(myException, "101", myCategory, this);
+                this.ThrowTerminatingError(myError);
+            }
+            else
+            {
                 try
                 {
                     if (UserName == null)
                     {
                         pcutUsers = _serverProxy.ListUserAccounts(Offset, Limit);
-                        foreach (string pcutUser in pcutUsers)
-                        {
-                            string[] userGroups = _serverProxy.GetUserGroups(pcutUser);
-                            string fullName = _serverProxy.GetUserProperty(pcutUser, "full-name");
-                            string email = _serverProxy.GetUserProperty(pcutUser, "email");
-                            string disabledPrint = _serverProxy.GetUserProperty(pcutUser, "disabled-print");
-                            string disabledNet = _serverProxy.GetUserProperty(pcutUser, "disabled-net");
-                            string balance = _serverProxy.GetUserProperty(pcutUser, "balance");
-                            string restricted = _serverProxy.GetUserProperty(pcutUser, "restricted");
-                            string accountMode = _serverProxy.GetUserProperty(pcutUser, "account-selection.mode");
-                            string department = _serverProxy.GetUserProperty(pcutUser, "department");
-                            string office = _serverProxy.GetUserProperty(pcutUser, "office");
-                            string cardNumber1 = _serverProxy.GetUserProperty(pcutUser, "card-number");
-                            string cardNumber2 = _serverProxy.GetUserProperty(pcutUser, "secondary-card-number");
-                            string cardPin = _serverProxy.GetUserProperty(pcutUser, "card-pin");
-                            string notes = _serverProxy.GetUserProperty(pcutUser, "notes");
-
-                            PSObject thisUser = new PSObject();
-                            thisUser.Properties.Add(new PSNoteProperty("Username", pcutUser));
-                            thisUser.Properties.Add(new PSNoteProperty("Fullname", fullName));
-                            thisUser.Properties.Add(new PSNoteProperty("Group", userGroups));
-                            thisUser.Properties.Add(new PSNoteProperty("Email", email));
-                            thisUser.Properties.Add(new PSNoteProperty("PrintDisabled", Convert.ToBoolean(disabledPrint)));
-                            thisUser.Properties.Add(new PSNoteProperty("NetDisabled", Convert.ToBoolean(disabledNet)));
-                            thisUser.Properties.Add(new PSNoteProperty("Balance", Convert.ToDouble(balance)));
-                            thisUser.Properties.Add(new PSNoteProperty("Restricted", Convert.ToBoolean(restricted)));
-                            thisUser.Properties.Add(new PSNoteProperty("AccountMode", accountMode));
-                            thisUser.Properties.Add(new PSNoteProperty("Department", department));
-                            thisUser.Properties.Add(new PSNoteProperty("Office", office));
-                            thisUser.Properties.Add(new PSNoteProperty("Card1", (cardNumber1)));
-                            thisUser.Properties.Add(new PSNoteProperty("Card2", (cardNumber2)));
-                            thisUser.Properties.Add(new PSNoteProperty("PIN", (cardPin)));
-                            thisUser.Properties.Add(new PSNoteProperty("Notes", notes));
-                            WriteObject(thisUser);
-                        }
                     }
                     else
                     {
-                        string[] userGroups = _serverProxy.GetUserGroups(UserName);
-                        string fullName = _serverProxy.GetUserProperty(UserName, "full-name");
-                        string email = _serverProxy.GetUserProperty(UserName, "email");
-                        string disabledPrint = _serverProxy.GetUserProperty(UserName, "disabled-print");
-                        string disabledNet = _serverProxy.GetUserProperty(UserName, "disabled-net");
-                        string balance = _serverProxy.GetUserProperty(UserName, "balance");
-                        string restricted = _serverProxy.GetUserProperty(UserName, "restricted");
-                        string accountMode = _serverProxy.GetUserProperty(UserName, "account-selection.mode");
-                        string department = _serverProxy.GetUserProperty(UserName, "department");
-                        string office = _serverProxy.GetUserProperty(UserName, "office");
-                        string cardNumber1 = _serverProxy.GetUserProperty(UserName, "card-number");
-                        string cardNumber2 = _serverProxy.GetUserProperty(UserName, "secondary-card-number");
-                        string cardPin = _serverProxy.GetUserProperty(UserName, "card-pin");
-                        string notes = _serverProxy.GetUserProperty(UserName, "notes");
-
-                        PSObject pcutUser = new PSObject();
-                        pcutUser.Properties.Add(new PSNoteProperty("Username", UserName));
-                        pcutUser.Properties.Add(new PSNoteProperty("Fullname", fullName));
-                        pcutUser.Properties.Add(new PSNoteProperty("Group", userGroups));
-                        pcutUser.Properties.Add(new PSNoteProperty("Email", email));
-                        pcutUser.Properties.Add(new PSNoteProperty("PrintDisabled", Convert.ToBoolean(disabledPrint)));
-                        pcutUser.Properties.Add(new PSNoteProperty("NetDisabled", Convert.ToBoolean(disabledNet)));
-                        pcutUser.Properties.Add(new PSNoteProperty("Balance", Convert.ToDouble(balance)));
-                        pcutUser.Properties.Add(new PSNoteProperty("Restricted", Convert.ToBoolean(restricted)));
-                        pcutUser.Properties.Add(new PSNoteProperty("AccountMode", accountMode));
-                        pcutUser.Properties.Add(new PSNoteProperty("Department", department));
-                        pcutUser.Properties.Add(new PSNoteProperty("Office", office));
-                        pcutUser.Properties.Add(new PSNoteProperty("Card1", (cardNumber1)));
-                        pcutUser.Properties.Add(new PSNoteProperty("Card2", (cardNumber2)));
-                        pcutUser.Properties.Add(new PSNoteProperty("PIN", (cardPin)));
-                        pcutUser.Properties.Add(new PSNoteProperty("Notes", notes));
-
-                        WriteObject(pcutUser);
+                        pcutUsers = new string[] { UserName };
                     }
                 }
                 catch (XmlRpcFaultException fex)
                 {
-                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, ErrorCategory.NotSpecified, fex);
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, new ErrorCategory(), fex);
                     WriteError(errRecord);
                 }
+                catch (Exception ex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(ex.Message, ex.InnerException), ex.HResult.ToString(), new ErrorCategory(), ex);
+                }
             }
-            else
+        }
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            foreach (string pcutUser in pcutUsers)
             {
-                WriteObject("Please run Connect-PcutServer in order to establish connection.");
+                try
+                {
+                    string[] userGroups = _serverProxy.GetUserGroups(pcutUser);
+                    string fullName = _serverProxy.GetUserProperty(pcutUser, "full-name");
+                    string email = _serverProxy.GetUserProperty(pcutUser, "email");
+                    string disabledPrint = _serverProxy.GetUserProperty(pcutUser, "disabled-print");
+                    string disabledNet = _serverProxy.GetUserProperty(pcutUser, "disabled-net");
+                    string balance = _serverProxy.GetUserProperty(pcutUser, "balance");
+                    string pageCount = _serverProxy.GetUserProperty(pcutUser, "print-stats.page-count");
+                    string jobCount = _serverProxy.GetUserProperty(pcutUser, "print-stats.job-count");
+                    string restricted = _serverProxy.GetUserProperty(pcutUser, "restricted");
+                    string accountMode = _serverProxy.GetUserProperty(pcutUser, "account-selection.mode");
+                    string department = _serverProxy.GetUserProperty(pcutUser, "department");
+                    string office = _serverProxy.GetUserProperty(pcutUser, "office");
+                    string cardNumber1 = _serverProxy.GetUserProperty(pcutUser, "card-number");
+                    string cardNumber2 = _serverProxy.GetUserProperty(pcutUser, "secondary-card-number");
+                    string cardPin = _serverProxy.GetUserProperty(pcutUser, "card-pin");
+                    string notes = _serverProxy.GetUserProperty(pcutUser, "notes");
+
+                    PSObject thisUser = new PSObject();
+                    thisUser.Properties.Add(new PSNoteProperty("Username", pcutUser));
+                    thisUser.Properties.Add(new PSNoteProperty("Fullname", fullName));
+                    thisUser.Properties.Add(new PSNoteProperty("Group", userGroups));
+                    thisUser.Properties.Add(new PSNoteProperty("Email", email));
+                    thisUser.Properties.Add(new PSNoteProperty("PrintDisabled", Convert.ToBoolean(disabledPrint)));
+                    thisUser.Properties.Add(new PSNoteProperty("NetDisabled", Convert.ToBoolean(disabledNet)));
+                    thisUser.Properties.Add(new PSNoteProperty("Balance", Convert.ToDouble(balance)));
+                    thisUser.Properties.Add(new PSNoteProperty("PageCount", Convert.ToInt32(pageCount)));
+                    thisUser.Properties.Add(new PSNoteProperty("JobCount", Convert.ToInt32(jobCount)));
+                    thisUser.Properties.Add(new PSNoteProperty("Restricted", Convert.ToBoolean(restricted)));
+                    thisUser.Properties.Add(new PSNoteProperty("AccountMode", accountMode));
+                    thisUser.Properties.Add(new PSNoteProperty("Department", department));
+                    thisUser.Properties.Add(new PSNoteProperty("Office", office));
+                    thisUser.Properties.Add(new PSNoteProperty("Card1", (cardNumber1)));
+                    thisUser.Properties.Add(new PSNoteProperty("Card2", (cardNumber2)));
+                    thisUser.Properties.Add(new PSNoteProperty("PIN", (cardPin)));
+                    thisUser.Properties.Add(new PSNoteProperty("Notes", notes));
+                    WriteObject(thisUser);
+                }
+                catch (XmlRpcFaultException fex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(fex.Message, fex.InnerException), fex.FaultString, new ErrorCategory(), fex);
+                    WriteError(errRecord);
+                }
+                catch (Exception ex)
+                {
+                    ErrorRecord errRecord = new ErrorRecord(new Exception(ex.Message, ex.InnerException), ex.HResult.ToString(), new ErrorCategory(), ex);
+                }
             }
         }
     }
