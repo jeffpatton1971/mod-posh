@@ -1,0 +1,5 @@
+C:\scripts\C-Sharp\mlbPowerShellModule\mlbPowerShellModule\bin\Debug\mlbPowerShellModule.dll
+C:\scripts\C-Sharp\mlbPowerShellModule\mlbPowerShellModule\bin\Debug\mlbPowerShellModule.pdb
+C:\scripts\C-Sharp\mlbPowerShellModule\mlbPowerShellModule\obj\Debug\mlbPowerShellModule.dll
+C:\scripts\C-Sharp\mlbPowerShellModule\mlbPowerShellModule\obj\Debug\mlbPowerShellModule.pdb
+C:\scripts\C-Sharp\mlbPowerShellModule\mlbPowerShellModule\obj\Debug\mlbPowerShellModule.csprojResolveAssemblyReference.cache
