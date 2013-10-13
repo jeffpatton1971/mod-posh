@@ -124,7 +124,7 @@ namespace mlbPowerShellModule
             XmlDocument Items = new XmlDocument();
             Items.LoadXml(webClient.DownloadString(ItemUrl));
 
-            WriteObject(Items.SelectNodes(Get_mlbGameDayItem.xPath));
+            WriteObject(Items.SelectNodes(Get_mlbGameDayItem.xPath)[0]);
         }
 
         protected override void EndProcessing()
@@ -195,7 +195,7 @@ namespace mlbPowerShellModule
                                     WebClient webClient = new WebClient();
                                     XmlDocument Player = new XmlDocument();
                                     Player.LoadXml(webClient.DownloadString(playerUrl));
-                                    WriteObject(Player.SelectNodes("Player"));
+                                    WriteObject(Player.SelectNodes("Player")[0]);
                                 }
                             }
                             else
@@ -203,7 +203,7 @@ namespace mlbPowerShellModule
                                 WebClient webClient = new WebClient();
                                 XmlDocument Players = new XmlDocument();
                                 Players.LoadXml(webClient.DownloadString(playerUrl));
-                                WriteObject(Players.SelectNodes("Player"));
+                                WriteObject(Players.SelectNodes("Player")[0]);
                             }
                         }
                     }
