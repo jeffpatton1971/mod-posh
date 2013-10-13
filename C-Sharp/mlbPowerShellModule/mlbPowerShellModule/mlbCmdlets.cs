@@ -183,16 +183,19 @@ namespace mlbPowerShellModule
                     {
                         if (strLine.ToLower().Contains(".xml"))
                         {
-                            Uri playerUrl = new Uri(thisUrl + (strLine.Substring(strLine.IndexOf("=") + 2, strLine.IndexOf(".") - strLine.IndexOf("xml") + 2)));
-                            WriteVerbose(playerUrl.OriginalString);
-                            if (!(PlayerID == null))
+                            WriteDebug(strLine);
+                            int selectionStart = (strLine.IndexOf("=") + 2);
+                            int selectionEnd = (strLine.IndexOf(".") - strLine.IndexOf("=") + 2);
+                            Uri playerUrl = new Uri(thisUrl + (strLine.Substring(selectionStart,selectionEnd)));
+                            if (PlayerID != null)
                             {
                                 if (playerUrl.OriginalString.Contains(PlayerID))
                                 {
+                                    WriteVerbose(PlayerID);
                                     WebClient webClient = new WebClient();
-                                    XmlDocument Players = new XmlDocument();
-                                    Players.LoadXml(webClient.DownloadString(playerUrl));
-                                    WriteObject(Players.SelectNodes("players"));
+                                    XmlDocument Player = new XmlDocument();
+                                    Player.LoadXml(webClient.DownloadString(playerUrl));
+                                    WriteObject(Player.SelectNodes("Player"));
                                 }
                             }
                             else
@@ -200,7 +203,7 @@ namespace mlbPowerShellModule
                                 WebClient webClient = new WebClient();
                                 XmlDocument Players = new XmlDocument();
                                 Players.LoadXml(webClient.DownloadString(playerUrl));
-                                WriteObject(Players.SelectNodes("players"));
+                                WriteObject(Players.SelectNodes("Player"));
                             }
                         }
                     }
