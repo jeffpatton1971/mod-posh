@@ -281,17 +281,17 @@ namespace mlbPowerShellModule
             string gamedayURL = "http://mlb.mlb.com/lookup/json/named.search_autocomp.bam";
             WebRequest webRequest = WebRequest.Create(gamedayURL);
             WebResponse webResponse = webRequest.GetResponse();
-            JavaScriptSerializer jserial = new JavaScriptSerializer();
-            jserial.MaxJsonLength = int.MaxValue;
+            JavaScriptSerializer jSerial = new JavaScriptSerializer();
+            jSerial.MaxJsonLength = int.MaxValue;
             StreamReader streamReader = new StreamReader(webRequest.GetResponse().GetResponseStream());
-            mlbSearch_Autocomp.RootObject jsonObject = (mlbSearch_Autocomp.RootObject)(jserial.Deserialize(streamReader.ReadToEnd().ToString(), typeof(mlbSearch_Autocomp.RootObject)));
+            mlbSearch_Autocomp.RootObject allTeams = (mlbSearch_Autocomp.RootObject)(jSerial.Deserialize(streamReader.ReadToEnd().ToString(), typeof(mlbSearch_Autocomp.RootObject)));
             if (Code == null)
             {
-                WriteObject(jsonObject.search_autocomp.team_all.queryResults.row);
+                WriteObject(allTeams.search_autocomp.team_all.queryResults.row);
             }
             else
             {
-                foreach (mlbSearch_Autocomp.Row2 team in jsonObject.search_autocomp.team_all.queryResults.row)
+                foreach (mlbSearch_Autocomp.Row2 team in allTeams.search_autocomp.team_all.queryResults.row)
                 {
                     if (team.sport_code.ToLower() == Code.ToLower())
                     {
@@ -299,6 +299,55 @@ namespace mlbPowerShellModule
                     }
                 }
             }
+        }
+
+        protected override void EndProcessing()
+        {
+            base.EndProcessing();
+        }
+    }
+
+    [Cmdlet(VerbsCommon.Find, "mlbPlayerData")]
+    public class Find_mlbPlayerData : Cmdlet
+    {
+        [Parameter(Mandatory = true,
+            HelpMessage = "Enter the last name of the player to find")]
+        public string Name;
+
+        [Parameter(Mandatory = false,
+            HelpMessage = "Player is active")]
+        [ValidateSet("yes","no")]
+        public string Active = "yes";
+
+        [Parameter(Mandatory = false,
+            HelpMessage = "Enter a valid sport_code")]
+        [ValidateSet("mlb", "aaa", "aax", "afa", "afx", "asx", "rok", "win", "min", "ind", "nlb", "kor", "jml", "hpl", "int", "nat", "nae", "nav", "nas", "nan", "naf", "nal", "naw", "oly", "bbc", "fps", "hsb")]
+        public string Code = "mlb";
+
+        protected override void BeginProcessing()
+        {
+            base.BeginProcessing();
+        }
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            if (Active == "yes")
+            {
+                Active = "Y";
+            }
+            else
+            {
+                Active = "N";
+            }
+            string playerUrl = "http://mlb.mlb.com/lookup/json/named.search_player_all.bam?sport_code='" + Code + "'&name_part='" + Name.ToUpper() + "%25%25'&active_sw='" + Active + "'";
+            WebRequest webRequest = WebRequest.Create(playerUrl);
+            WebResponse webResponse = webRequest.GetResponse();
+            JavaScriptSerializer jSerial = new JavaScriptSerializer();
+            jSerial.MaxJsonLength = int.MaxValue;
+            StreamReader streamReader = new StreamReader(webRequest.GetResponse().GetResponseStream());
+            mlbNamedSearch_Player.RootObject allPlayers = (mlbNamedSearch_Player.RootObject)(jSerial.Deserialize(streamReader.ReadToEnd().ToString(), typeof(mlbNamedSearch_Player.RootObject)));
+            WriteObject(allPlayers.search_player_all.queryResults.row);
         }
 
         protected override void EndProcessing()
