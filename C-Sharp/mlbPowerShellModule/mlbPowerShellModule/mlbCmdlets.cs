@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Text;
 using System.Net;
 using System.IO;
 using System.Xml;
-using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.Management.Automation;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
 using System.Web.Script.Serialization;
 
 namespace mlbPowerShellModule
