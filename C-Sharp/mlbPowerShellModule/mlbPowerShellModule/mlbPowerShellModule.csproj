@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="mlbCmdlets.cs" />
     <Compile Include="mlbGamedaySchedule.cs" />
+    <Compile Include="mlbBio_Pitching_Summary.cs" />
     <Compile Include="mlbNamedSearch_Player.cs" />
     <Compile Include="mlbSearch_Autocomp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

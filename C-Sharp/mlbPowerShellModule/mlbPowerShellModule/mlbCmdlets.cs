@@ -353,4 +353,44 @@ namespace mlbPowerShellModule
             base.EndProcessing();
         }
     }
+
+    [Cmdlet(VerbsCommon.Get, "mlbPitcherData")]
+    public class Get_mlbPitcherData : Cmdlet
+    {
+        [Parameter(Mandatory = true, Position = 0,
+            HelpMessage = "Enter the year for the pitcher")]
+        public string Season;
+
+        [Parameter(Mandatory = false, Position = 1,
+            HelpMessage = "Enter the PlayerID for the pitcher")]
+        public string PlayerID;
+
+        [Parameter(Mandatory = false, Position = 2,
+            HelpMessage = "Enter the game type")]
+        [ValidateSet("a","d","l","r","s","w")]
+        public string GameType;
+
+        protected override void BeginProcessing()
+        {
+            base.BeginProcessing();
+        }
+
+        protected override void ProcessRecord()
+        {
+            base.ProcessRecord();
+            string pitcherURL = "http://mlb.mlb.com/lookup/json/named.mlb_bio_pitching_summary.bam?mlb_individual_pitching_season_sportcode.season=" + Season + "&player_id=" + PlayerID + "&game_type=%27" + GameType.ToUpper() + "%27&sort_by=%27season_asc%27";
+            WebRequest webRequest = WebRequest.Create(pitcherURL);
+            WebResponse webResponse = webRequest.GetResponse();
+            JavaScriptSerializer jSerial = new JavaScriptSerializer();
+            jSerial.MaxJsonLength = int.MaxValue;
+            StreamReader streamReader = new StreamReader(webRequest.GetResponse().GetResponseStream());
+            mlbBio_Pitching_Summary.RootObject allPitchers = (mlbBio_Pitching_Summary.RootObject)(jSerial.Deserialize(streamReader.ReadToEnd().ToString(), typeof(mlbBio_Pitching_Summary.RootObject)));
+            WriteObject(allPitchers.mlb_bio_pitching_summary.mlb_individual_pitching_season.queryResults.row);
+        }
+
+        protected override void EndProcessing()
+        {
+            base.EndProcessing();
+        }
+    }
 }
