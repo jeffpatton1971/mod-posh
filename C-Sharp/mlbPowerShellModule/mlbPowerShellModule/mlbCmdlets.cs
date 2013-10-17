@@ -310,16 +310,17 @@ namespace mlbPowerShellModule
     [Cmdlet(VerbsCommon.Find, "mlbPlayerData")]
     public class Find_mlbPlayerData : Cmdlet
     {
-        [Parameter(Mandatory = true,
+        [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true,
             HelpMessage = "Enter the last name of the player to find")]
+        [ValidateNotNullOrEmpty]
         public string Name;
 
-        [Parameter(Mandatory = false,
+        [Parameter(Mandatory = false, Position = 1,
             HelpMessage = "Player is active")]
         [ValidateSet("yes","no")]
         public string Active = "yes";
 
-        [Parameter(Mandatory = false,
+        [Parameter(Mandatory = false, Position = 2,
             HelpMessage = "Enter a valid sport_code")]
         [ValidateSet("mlb", "aaa", "aax", "afa", "afx", "asx", "rok", "win", "min", "ind", "nlb", "kor", "jml", "hpl", "int", "nat", "nae", "nav", "nas", "nan", "naf", "nal", "naw", "oly", "bbc", "fps", "hsb")]
         public string Code = "mlb";
