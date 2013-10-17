@@ -1,0 +1,4 @@
+C:\scripts\C-Sharp\ActiveDirectoryManagement\ActiveDirectoryManagement\bin\Release\ActiveDirectoryManagement.dll
+C:\scripts\C-Sharp\ActiveDirectoryManagement\ActiveDirectoryManagement\bin\Release\ActiveDirectoryManagement.pdb
+C:\scripts\C-Sharp\ActiveDirectoryManagement\ActiveDirectoryManagement\obj\Release\ActiveDirectoryManagement.dll
+C:\scripts\C-Sharp\ActiveDirectoryManagement\ActiveDirectoryManagement\obj\Release\ActiveDirectoryManagement.pdb
