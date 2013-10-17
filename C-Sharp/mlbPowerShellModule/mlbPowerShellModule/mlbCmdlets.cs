@@ -385,7 +385,7 @@ namespace mlbPowerShellModule
             jSerial.MaxJsonLength = int.MaxValue;
             StreamReader streamReader = new StreamReader(webRequest.GetResponse().GetResponseStream());
             mlbBio_Pitching_Summary.RootObject allPitchers = (mlbBio_Pitching_Summary.RootObject)(jSerial.Deserialize(streamReader.ReadToEnd().ToString(), typeof(mlbBio_Pitching_Summary.RootObject)));
-            WriteObject(allPitchers.mlb_bio_pitching_summary.mlb_individual_pitching_season.queryResults.row);
+            WriteObject(allPitchers.mlb_bio_pitching_summary);
         }
 
         protected override void EndProcessing()
