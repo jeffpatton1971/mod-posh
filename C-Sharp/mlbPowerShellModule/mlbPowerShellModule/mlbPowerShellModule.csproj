@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="mlbCmdlets.cs" />
+    <Compile Include="mlbGamedaySchedule.cs" />
+    <Compile Include="mlbSearch_Autocomp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
