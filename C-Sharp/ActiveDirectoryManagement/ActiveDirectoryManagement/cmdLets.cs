@@ -6,8 +6,8 @@ using Utilities;
 
 namespace ActiveDirectoryManagement
 {
-    [System.Management.Automation.Cmdlet(System.Management.Automation.VerbsCommon.Get, "AdObject")]
-    public class Get_AdObject : System.Management.Automation.PSCmdlet
+    [System.Management.Automation.Cmdlet(System.Management.Automation.VerbsCommon.Get, "dsObject")]
+    public class Get_dsObject : System.Management.Automation.PSCmdlet
     {
         [System.Management.Automation.Parameter(Position = 0, Mandatory = false)]
         public string Path;
@@ -111,8 +111,8 @@ namespace ActiveDirectoryManagement
         }
     }
 
-    [System.Management.Automation.Cmdlet(System.Management.Automation.VerbsCommon.Get, "AdGroupMember")]
-    public class Get_AdGroupMember : System.Management.Automation.PSCmdlet
+    [System.Management.Automation.Cmdlet(System.Management.Automation.VerbsCommon.Get, "dsGroupMember")]
+    public class Get_dsGroupMember : System.Management.Automation.PSCmdlet
     {
         [System.Management.Automation.Parameter(Position = 0, Mandatory = false)]
         public string Path;
