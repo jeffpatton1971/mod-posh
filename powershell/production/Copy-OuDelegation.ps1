@@ -14,6 +14,17 @@
         If a different domain these are seperate credentials, if left blank they
         default to the same as Credential.
     .EXAMPLE
+        .\Copy-OuDelegation.ps1 -SourceDN "LDAP://OU=1,DC=company,DC=com" -DestDn "LDAP://OU=2,DC=company,DC=com" -Credential (Get-Credential) -Verbose
+
+        Description
+        -----------
+        This shows the basic syntax of the script
+    .EXAMPLE
+        .\Copy-OuDelegation.ps1 -SourceDN "LDAP://OU=1,DC=company,DC=com" -DestDn "LDAP://OU=2,DC=company,DC=net" -Credential (Get-Credential) -dCredential (Get-Credential) -Verbose
+
+        Description
+        -----------
+        This shows the basic syntax of the script when you are in multiple domains.
     .NOTES
         ScriptName : Copy-Delegations.ps1
         Created By : jspatton
@@ -25,8 +36,14 @@
             101 = Error
             102 = Warning
             104 = Information
+
+        I used the vbscript from the Technet Gallery as a starting point and then refined it with what I found on Powershell.org
     .LINK
-        https://code.google.com/p/mod-posh/wiki/Production/Copy-Delegations.ps1
+        https://github.com/jeffpatton1971/mod-posh/blob/74cbb68d7427c6d549fdbe64248ee799864ef923/powershell/production/Copy-OuDelegation.ps1
+    .LINK
+        http://powershell.org/wp/forums/topic/copy-ou-permissions-and-groups/
+    .LINK
+        http://gallery.technet.microsoft.com/scriptcenter/Copying-permissions-for-d3c3b839
 #>
 [CmdletBinding()]
 Param
