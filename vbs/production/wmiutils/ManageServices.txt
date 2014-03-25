@@ -1,0 +1,23 @@
+Sub ManageServices(strComputer, strServiceName, strAction)
+'
+' This procedure uses WMI to connect to a computer and then based
+' on strAction, either stop or start the provided service name.
+'
+' December 6, 2010 Jeff Patton
+'
+Dim objWMIService
+Dim colListOfServices
+Dim objService
+
+	Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\CIMV2")
+	Set colListOfServices = objWMIService.ExecQuery("SELECT * FROM Win32_Service WHERE Name = '" & strServiceName & "'")
+	
+	For Each objService In colListOfServices
+		Select Case LCase(strServiceName)
+			Case "start"
+				objService.StartService()
+			Case "stop"
+				objService.StopService()
+			Case Else
+		End Select
+End Sub

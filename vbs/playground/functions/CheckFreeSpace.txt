@@ -1,0 +1,18 @@
+Function CheckFreeSpace(strComputer, strDrive)
+'
+' Returns the amount of free space on the given drive in GB
+'
+	Dim objWMIService
+	Dim colItems
+	Dim objItem
+	Dim intFreeSpace
+
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
+	Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_LogicalDisk WHERE Name = '" & strDrive &"'",,48) 
+
+	For Each objItem in colItems 
+		intFreeSpace = (((objItem.FreeSpace \1024)\1024)\1024)
+	Next
+
+	CheckFreeSPace = intFreeSpace
+End Function

@@ -1,0 +1,18 @@
+Function RetrieveOU()
+	' Retrieve computer OU
+	' 
+	' http://www.microsoft.com/technet/scriptcenter/resources/qanda/jul07/hey0727.mspx
+	'
+	Dim objSysInfo
+	Dim strName
+	Dim strOU
+
+	On Error Resume Next
+	set objSysInfo = CreateObject("ADSystemInfo")
+
+	strName = objSysInfo.ComputerName
+
+	strOU = Right(strName, Len(strName) - InStr(strName, ","))
+	RetrieveOU = strOU
+
+End Function

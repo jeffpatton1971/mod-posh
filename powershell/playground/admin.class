@@ -1,0 +1,421 @@
+class "Engineering Admin" {
+	match hardware;
+}
+
+#Department: ECS
+#Owner: Jeff Patton
+#PromiseArray of Awesomeness!
+subclass "Engineering Admin" 01:00:01:55:32:0d:0c;
+
+#Name: l1132c-vm03
+#Department: ECS
+#Owner: Jeff Patton
+#Differencing Ubuntu Image
+subclass "Engineering Admin" 01:00:03:ff:35:4d:26;
+
+#Name: UNIVERSI-F78370
+#Department: ECS
+#Owner: Jeff Patton
+#Leave me alone Nick, I don't boot that often!
+subclass "Engineering Admin" 01:00:03:ff:3f:4d:26;
+
+#Name: WINDOWS-KG7NGWA
+subclass "Engineering Admin" 01:00:03:ff:41:d5:59;
+
+#Name: l1132c-vm02.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+#Virtual Machine
+#Windows 7
+subclass "Engineering Admin" 01:00:03:ff:48:d5:59;
+
+#Name: L1132C-VM01.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+#PEoplesoft VM CIFS only (l1132c-vm01)
+subclass "Engineering Admin" 01:00:03:ff:4b:d5:59;
+
+#Name: MININT-JRO9VB6.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+#testing out imaging and office 2010
+subclass "Engineering Admin" 01:00:03:ff:4d:d5:59;
+
+subclass "Engineering Admin" 01:00:0a:5e:4c:6d:4f;
+
+#Name: l1132a-VM01.soecs.ku.edu
+subclass "Engineering Admin" 01:00:0c:29:21:56:c4;
+
+#Name: jolicloud
+#Department: ECS
+#Owner: Jeff Patton
+#Papercut Print Server
+subclass "Engineering Admin" 01:00:0c:29:29:50:b7;
+
+#Name: l1132c-vm01.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+#Administration workstation.
+subclass "Engineering Admin" 01:00:0c:29:58:c1:82;
+
+#Name: engr-client-7.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+#ENGR-Client-7
+subclass "Engineering Admin" 01:00:0c:29:9e:1c:0d;
+
+#Name: engr-client-xp.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+#ENGR-Client-XP
+subclass "Engineering Admin" 01:00:0c:29:e8:d9:62;
+
+#Name: l1032-lt1
+#Lance's Laptop
+subclass "Engineering Admin" 01:00:0d:56:af:69:f3;
+
+#Name: universi-46afcd
+#Department: AE
+#Owner: Wes Ellison
+subclass "Engineering Admin" 01:00:11:43:12:93:69;
+
+#Name: L2119A-PC02.soecs.ku.edu
+#Department: Aerospace
+#Owner: Wes Ellison
+#Serial Number: CK2HD61
+#GRA machine in Learned 2119a
+subclass "Engineering Admin" 01:00:11:43:9e:74:ef;
+
+#Name: L1132-pc01.soecs.ku.edu
+#Department: SOECS
+#Owner: Lance Rombough
+#Serial Number: 76DJ971
+#Walk-in computer
+subclass "Engineering Admin" 01:00:11:43:bf:b4:39 {
+	option root-path "/opt/ltsp/i386";
+	option bootfile-name "/ltsp/i386/pxelinux.0";
+	filename "/ltsp/i386/pxelinux.0";
+	next-server 129.237.112.20;
+}
+
+#Name: E1012-PC01.soecs.ku.edu
+#Department: ECS
+#Owner: Lance Rombough
+subclass "Engineering Admin" 01:00:13:72:14:e5:a7;
+
+#Name: l1132-pc02.soecs.ku.edu
+subclass "Engineering Admin" 01:00:13:72:37:4d:26;
+
+#Name: hv1.soecs.ku.edu
+#129.237.112.39 - 129.237.112.43
+subclass "Engineering Admin" 01:00:15:17:02:a4:f5;
+
+#Name: hv2.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+subclass "Engineering Admin" 01:00:15:17:1d:d6:db;
+
+#Name: apache
+#Department: ECS
+#Owner: Jeff Patton
+#DELETE ME
+subclass "Engineering Admin" 01:00:15:5d:03:49:01;
+
+#Name: iis
+#Department: ECS
+#Owner: Jeff Patton
+#DELETE ME
+subclass "Engineering Admin" 01:00:15:5d:03:49:02;
+
+#Name: L1132B-PC02.soecs.ku.edu
+#Department: ECS
+#Owner: Steve Schrick
+#Workstation for Steve
+subclass "Engineering Admin" 01:00:19:b9:16:f0:85;
+
+#Name: ae-b75hfc1.soecs.ku.edu
+#Department: AE
+#Owner: Wes Ellison
+#Serial Number: B75HFC1
+subclass "Engineering Admin" 01:00:19:b9:16:f0:a2;
+
+#Name: vc.soecs.ku.edu
+subclass "Engineering Admin" 01:00:19:b9:de:d0:5a {
+	ddns-hostname "backup-san";
+}
+
+#Name: vcenter.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+#Virtual center server
+subclass "Engineering Admin" 01:00:1d:09:f0:7b:2c;
+
+#Name: nas.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+subclass "Engineering Admin" 01:00:1d:09:f0:7c:0d;
+
+#Name: l5109-pc03.soecs.ku.edu
+#Department: BERC
+#Owner: Charles Ye
+#JOIN THIS COMPUTER TO THE DOMAIN BEFORE YOU UPDATE IT'S HOSTGROUP
+subclass "Engineering Admin" 01:00:23:ae:88:c8:b5;
+
+#Name: L1132A-PC01.soecs.ku.edu
+#Department: ECS
+#Owner: Carson Gee
+subclass "Engineering Admin" 01:00:24:e8:46:b5:69;
+
+#Name: l1132d-pc10.soecs.ku.edu
+#Department: SOECS
+#Owner: Lance Rombough
+#Serial Number: 2s9pfk1
+subclass "Engineering Admin" 01:00:24:e8:46:b5:e2;
+
+#Name: L1132E-LT99.soecs.ku.edu
+#Department: SOECS
+#Owner: Steven Schrick
+#Serial Number: 2S8TFK1
+subclass "Engineering Admin" 01:00:24:e8:49:d3:73;
+
+#Name: l1132c-pc01.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+#Serial Number: 2s8vfk1
+subclass "Engineering Admin" 01:00:24:e8:49:d5:59;
+
+#Department: Jeff Patton
+#Owner: ECS
+#Serial Number: 93815K1
+#iSCSI Controller 0
+#e2005a-san01
+subclass "Engineering Admin" 01:00:24:e8:5b:d1:2d {
+	ddns-hostname "md3k01-0m";
+	ddns-domainname "soecs.ku.edu";
+}
+
+#Department: Jeff Patton
+#Owner: ECS
+#Serial Number: 93815K1
+#iSCSI Controller 1
+#e2005a-san01
+subclass "Engineering Admin" 01:00:24:e8:5c:93:25 {
+	ddns-hostname "md3k01-1m";
+	ddns-domainname "soecs.ku.edu";
+}
+
+#Name: l1132b-switch.soecs.ku.edu
+subclass "Engineering Admin" 01:00:30:f1:8a:7e:aa {
+	ddns-domainname "soecs.ku.edu";
+	ddns-hostname "l1132b-switch";
+}
+
+#Name: packager
+#Department: ECS
+#Owner: Carson Gee
+#Virtual Machine for packaging
+#On virtual2.engr.ku.edu
+subclass "Engineering Admin" 01:00:50:56:11:af:bb;
+
+#Name: studio.soecs.ku.edu
+subclass "Engineering Admin" 01:00:50:56:30:72:ac;
+
+#Name: dev-fs1.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+#Dev-FS1
+#Used for testing junction as a solution
+#Delete me
+subclass "Engineering Admin" 01:00:50:56:9b:00:01;
+
+#Name: dev-fs2.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+#Dev-FS2
+#Used for testing junction
+#
+#Delete me
+subclass "Engineering Admin" 01:00:50:56:9b:00:02;
+
+#Name: dev-dpm.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+#Dev-DPM
+#Used for testing dev-fs clsuter and disk sharding
+#
+#delete me
+subclass "Engineering Admin" 01:00:50:56:9b:00:03;
+
+#Name: net
+subclass "Engineering Admin" 01:00:50:56:9b:00:11;
+
+#Department: ECS
+#Owner: Carson Gee
+#Zenoss
+#virtual1
+subclass "Engineering Admin" 01:00:50:56:9b:19:d9 {
+	option host-name zenoss;
+	ddns-hostname "zenoss";
+	ddns-domainname "soecs.ku.edu";
+}
+
+#Department: ECS
+#Owner: Jeff Patton
+#ltsp-cluster 
+subclass "Engineering Admin" 01:00:50:56:9b:1d:66;
+
+#Name: dfs.soecs.ku.edu
+#Department: ECS
+#Owner: Jeff Patton
+#dfs server
+subclass "Engineering Admin" 01:00:50:56:9b:62:5d;
+
+#Department: ECS
+#Owner: Lance Rombough
+#UPS Management Card
+#PDU C
+subclass "Engineering Admin" 01:00:c0:b7:55:46:06;
+
+#Department: ECS
+#Owner: Lance Rombough
+#UPS Management Card
+#PDU D
+subclass "Engineering Admin" 01:00:c0:b7:55:46:0c;
+
+#Department: ECS
+#Owner: Lance Rombough
+#UPS Management Card
+#PDU B
+subclass "Engineering Admin" 01:00:c0:b7:55:46:0d;
+
+#Department: ECS
+#Owner: Lance Rombough
+#UPS Management Card
+#PDU E
+subclass "Engineering Admin" 01:00:c0:b7:55:46:17;
+
+#Department: ECS
+#Owner: Lance Rombough
+#UPS Management Card
+#PDU A
+subclass "Engineering Admin" 01:00:c0:b7:55:b4:05;
+
+#Department: ECS
+#Owner: Jeff Patton
+#Serial Number: 9blnrg1
+#PowerVault 124T Tape Drive
+subclass "Engineering Admin" 01:00:e0:9e:0e:7c:86;
+
+#Name: l1132a-vm01.soecs.ku.edu
+#Department: ECS
+#Owner: Carson Gee
+#l1132a-vm01
+subclass "Engineering Admin" 01:08:00:27:12:b8:92;
+
+#Name: e1012-pc02a
+subclass "Engineering Admin" 01:08:00:27:5d:66:05;
+
+#Name: ecs-linux
+#Department: ECS
+#Owner: Carson Gee
+#bsd-web
+#l1132a
+#
+subclass "Engineering Admin" 01:08:00:27:62:1a:e0;
+
+#Name: ubu-srv1
+#Department: ECS
+#Owner: Carson Gee
+#openvz testing
+subclass "Engineering Admin" 01:08:00:27:9c:3c:28;
+
+#Name: l11321-vm01.soecs.ku.edu
+#Department: ECS
+#Owner: Carson Gee
+#Learned 1132E
+#Windows 7 VM
+subclass "Engineering Admin" 01:08:00:27:a4:25:e2;
+
+#Department: ECS
+#Owner: Jeff Patton
+#Serial Number: c5zp4m1
+#MD3000i 
+#e2005a-san02-c0
+subclass "Engineering Admin" 01:a4:ba:db:2d:f7:af;
+
+#Department: ECS
+#Owner: Jeff Patton
+#Serial Number: c5zp4m1
+#MD3000i
+#e2005a-san02-c1
+subclass "Engineering Admin" 01:a4:ba:db:2d:f7:b4;
+
+#Name: e2005a-switch
+#Department: ECS
+#Owner: Jeff Patton
+#Serial Number: 423RFH1
+#New 48 port iSCSI SAN switch
+#Layer 2 only
+#Dell Power Connect 5448
+subclass "Engineering Admin" 01:a4:ba:db:5d:a5:08;
+
+
+#Name: Engineering Admin
+group {
+	host fc2.soecs.ku.edu {
+		hardware ethernet 00:05:1e:04:90:80;
+		fixed-address 10.133.3.241;
+	}
+
+	host fc1.soecs.ku.edu {
+		hardware ethernet 00:05:1e:04:91:2d;
+		fixed-address 10.133.3.240;
+	}
+
+	host l1132b-switch.soecs.ku.edu {
+		hardware ethernet 00:09:43:02:ef:c0;
+		fixed-address 10.133.3.197;
+	}
+
+	host l1132c-switch.soecs.ku.edu {
+		hardware ethernet 00:09:43:08:15:40;
+		fixed-address 10.133.3.198;
+	}
+
+	host virtual1.engr.ku.edu {
+		hardware ethernet 00:1e:c9:56:54:ce;
+		fixed-address 10.133.3.8;
+	}
+
+	host virtual2.engr.ku.edu {
+		hardware ethernet 00:1e:c9:57:76:47;
+		fixed-address 10.133.3.9;
+	}
+
+	#Department: ECS
+	#Owner: Jeff Patton
+	#Serial Number: 8t1s4m1
+	#Virtual3
+	#10.133.3.7
+	host virtual3.engr.ku.edu {
+		hardware ethernet 00:21:9b:9e:fd:65;
+		fixed-address 10.133.3.63;
+	}
+
+	host cx3b.soecs.ku.edu {
+		hardware ethernet 00:60:16:0f:5c:d5;
+		fixed-address 10.133.3.239;
+	}
+
+	host cx3a.soecs.ku.edu {
+		hardware ethernet 00:60:16:0f:5d:1b;
+		fixed-address 10.133.3.238;
+	}
+
+	host kvm.soecs.ku.edu {
+		hardware ethernet 00:e0:86:06:c4:f9;
+		fixed-address 10.133.3.10;
+	}
+
+}
+

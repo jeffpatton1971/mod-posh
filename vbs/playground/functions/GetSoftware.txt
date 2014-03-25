@@ -1,0 +1,52 @@
+Function GetSoftware(blnSMS)
+	'
+	' Based on blnSMS this function will make one of
+	' two WMI calls to return a list of software.
+	'
+	' WMI Variables
+	'
+	Dim objWMIService
+	Dim colItems
+	Dim objItem
+	'
+	' Variables we will build later
+	'
+	Dim strSoftware
+	Dim strInstallDate
+	Dim strVendor
+	Dim strVersion
+	Dim strSoftwareName
+	Dim strIdentNum
+	
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
+	strSoftware = ""
+	
+	Select Case blnSMS
+		Case vbYes
+			Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32Reg_AddRemovePrograms",,48) 
+
+				For Each objItem in colItems 
+					strSoftwareName = objItem.DisplayName
+					strIdentNum = objItem.ProdID
+					strInstallDate = objItem.InstallDate
+					strInstallDate = left(strInstallDate, 4) & "-" & mid(strInstallDate, 5, 2) & "-" & right(strInstallDate, 2)
+					strVendor = objItem.Publisher
+					strVersion = objItem.Version
+					strSoftware = "'" & strSoftwareName & "','" & strIdentNum & "','" & strInstallDate & "','" & strVendor & "','" & strVersion &"'"
+				Next
+		Case vbNo
+			Set colItems = objWMIService.ExecQuery("SELECT Name, IdentifyingNumber, InstallDate, Vendor, Version FROM Win32_Product",,48) 
+
+				For Each objItem in colItems 
+					strSoftwareName = objItem.Name
+					strIdentNum = objItem.IdentifyingNumber
+					strInstallDate = objItem.InstallDate
+					strInstallDate = left(strInstallDate, 4) & "-" & mid(strInstallDate, 5, 2) & "-" & right(strInstallDate, 2)
+					strVendor = objItem.Vendor
+					strVersion = objItem.Version
+					strSoftware = "'" & strSoftwareName & "','" & strIdentNum & "','" & strInstallDate & "','" & strVendor & "','" & strVersion & "'"
+				Next
+		Case Else
+	End Select
+	GetSoftware = strSoftware
+End Function

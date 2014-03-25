@@ -1,0 +1,24 @@
+Function NT4toDN(strUsername)
+	'
+	' This function accepts a username in the form of
+	'	DOMAIN\User
+	' It then converts that name to a DN
+	'	CN=User,OU=users,DC=company,DC=com
+	'
+	' Source: Technet
+	' http://blogs.technet.microsoft.com/b/heyscriptingguy/archive/2007/08/22/how-can-i-get-the-guid-for-a-user-account-if-all-i-have-is-the-user-s-logon-name-and-domain.aspx
+	'
+
+	Const ADS_NAME_INITTYPE_GC = 3
+	Const ADS_NAME_TYPE_NT4 = 3
+	Const ADS_NAME_TYPE_1779 = 1
+
+		Set objTranslator = CreateObject("NameTranslate")
+
+		objTranslator.Init ADS_NAME_INITTYPE_GC, "" ' You can set a gc or domainname here
+		objTranslator.Set ADS_NAME_TYPE_NT4, strUsername
+
+		strUserDN = objTranslator.Get(ADS_NAME_TYPE_1779)
+
+		NT4toDN = strUserDN
+End Function

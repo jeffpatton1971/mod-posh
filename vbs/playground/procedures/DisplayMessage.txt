@@ -1,0 +1,15 @@
+Sub DisplayMessage
+	'
+	' Displays a custom HTA
+	'
+	Dim objFSO
+	Dim objShell
+
+	Set objFSO = CreateObject("Scripting.FileSystemObject")
+
+	If objFSO.FileExists("message.hta") Then
+		Set objShell = CreateObject("Wscript.Shell")
+		objShell.Run "message.hta"
+	Else
+	End If
+End Sub

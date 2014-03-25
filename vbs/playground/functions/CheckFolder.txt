@@ -1,0 +1,17 @@
+Function CheckFolder(strPath)
+	'
+	' This function returns vbTrue or vbFalse based on whether or not it finds the folder
+	'
+	Dim blnFound
+	Dim objFSO
+	Dim objFolder
+
+	blnFound = vbFalse
+	Set objFSO = CreateObject("Scripting.FileSystemObject")
+
+	If objFSO.FolderExists(strPath) Then
+		blnFound = vbTrue
+	End If
+
+	CheckFolder = blnFound
+End Function

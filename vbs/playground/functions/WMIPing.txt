@@ -1,0 +1,18 @@
+Function WMIPing(strComputer)
+	'
+	' Is computer online?
+	' 
+	' Attempt WMI Connection if it fails ComputerOnline = False
+	'
+	Dim blnOnline
+	Dim objWMIService
+	
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
+		If Err <> 0 Then
+			blnOnline = vbFalse
+		Else
+			blnOnline = vbTrue
+		End If
+	
+	ComputerOnline = blnOnline
+End Function

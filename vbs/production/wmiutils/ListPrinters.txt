@@ -1,0 +1,20 @@
+Sub ListPrinters(strComputerName)
+	' List mapped printers
+	'
+	' http://www.microsoft.com/technet/scriptcenter/resources/qanda/nov07/hey1102.mspx
+	'
+	Dim objWMIService
+	Dim colInstalledPrinters
+	Dim objPrinter
+
+	On Error Resume Next
+	Set objWMIService = GetObject("winmgmts:\\" & strComputerName & "\root\CIMV2")
+	If Err <> 0 Then Call LogData(1, Err.Number & vbCrLf & Err.Description & vbCrLf & "Unable to connect to WMI service on remote computer")
+	Set colInstalledPrinters = objWMIService.ExecQuery("SELECT * FROM Win32_Printer WHERE Local = False",,48)
+	If Err <> 0 Then Call LogData(1, Err.Number & vbCrLf & Err.Description)
+	
+		For Each objPrinter In colInstalledPrinters
+			Wscript.Echo objPrinter.Name
+		Next
+
+End Sub

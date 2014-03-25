@@ -1,0 +1,48 @@
+Sub CreateADObject(strObjectValue, strLDAPURL, strObject)
+	'
+	' This procedure will create one of four objects in AD
+	' 	Computer Objects
+	' 	User Objects
+	' 	Group Objects
+	' 	OU Objects
+	'
+	' strOBjectValue is the CanonicalName of the object
+	' to create. It is defined as either CN=THINGTOMAKE
+	' or OU=THINGTOMAKE depending on the thing.
+	'
+	' strLDAPURL is the LDAP URL where you want the thing
+	' to live. LDAP://CN=Computers,DC=company,DC=com
+	'
+	' strObject is the actual objet to create and needs
+	' to be defined as follows.
+	'	organizationalUnit for an OU
+	'	computer for a computer
+	'	user for a user
+	'	group for a group
+	'
+	Dim objContainer
+	Dim objADO
+	
+	Set objContainer = GetObject(strLDAPURL)
+	Set objADO = objContainer.Create(strObject, strObjectValue)
+	strObjectValue = Right(strObjectValue, Len(strObjectValue)-3)
+
+	Select Case LCase(strObject)
+		Case "computer"		
+			Const ADS_UF_PASSWD_NOTREQD = &h0020
+			Const ADS_UF_WORKSTATION_TRUST_ACCOUNT = &h1000
+
+			objADO.Put "sAMAccountName", strObjectValue & "$"
+			objADO.Put "userAccountControl", ADS_UF_PASSWD_NOTREQD Or ADS_UF_WORKSTATION_TRUST_ACCOUNT
+			objADO.SetInfo
+		Case "user"			
+			objADO.Put "sAMAccountName", strObjectValue
+			objADO.SetInfo
+		Case "group"			
+			objADO.Put "sAMAccountName", strObjectValue
+			objADO.SetInfo
+		Case "organizationalunit"		
+			objADO.SetInfo
+		Case Else
+	End Select
+End Sub

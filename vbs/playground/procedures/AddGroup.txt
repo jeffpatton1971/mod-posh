@@ -1,0 +1,16 @@
+Sub AddGroup(strComputer, strLocalGroup, strDomainGroup, strDomain)
+	'
+	' http://www.microsoft.com/technet/scriptcenter/resources/qanda/jan08/hey0104.mspx
+	'
+	' Modified to make the procedure more generic so it will work in more than
+	' one scenario.
+	'
+	Dim objLocalGroup
+	Dim objADGroup
+
+	Set objLocalGroup = GetObject("WinNT://" & strComputer & "/" & strLocalGroup)
+	Set objADGroup = GetObject("WinNT://" & strDomain & "/" & strDomainGroup)
+
+	objLocalGroup.Add(objADGroup.ADsPath)
+	If Err <> 0 Then Call LogData(1, Err.Number & vbCrLf & Err.Description & vbCrLf & "Unable to add " & strDomainGroup & " to " & strLocalGroup)
+End Sub

@@ -1,0 +1,32 @@
+Function ValidateHost(strSearchField, strSearchFieldValue, dbServer, dbUser, dbPass, dbTable)
+	'
+	' This function returns the host_id if it finds a mac address
+	'
+	Dim rs
+	Dim strConnectString
+	Dim strSQL
+	Dim strField
+	Dim strFoundField
+	
+	Set rs = CreateObject("ADODB.Recordset") 
+
+	strConnectString = "DRIVER={MySQL ODBC 5.1 Driver};Server=" & dbServer & ";UID=" & dbUser & ";Password=" & dbPass & ";Database=" & dbName & ";Option=3" 
+	rs.ActiveConnection = strConnectString 
+	strSQL = "Select id from " & dbTable & " WHERE " & strSearchField & " = '" & strSearchFieldValue & "';"
+	rs.Open strSQL
+	
+	Do While Not rs.EOF
+		for each strField in rs.Fields
+			strFoundField = strField.Value
+		Next
+		rs.MoveNext
+	Loop
+	'
+	' If we don't get a match, I believe this returns null
+	' so set it to 0.
+	If isNull(strFoundField) Then
+		strFoundField = 0
+	End If
+	
+	ValidateHost = strFoundField
+End Function

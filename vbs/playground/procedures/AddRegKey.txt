@@ -1,0 +1,11 @@
+Sub AddRegKey(strRegistry)
+	'
+	' Add Registry key
+	'
+	Const HKEY_LOCAL_MACHINE = &H80000002
+	Dim objRegistry
+
+	Set objRegistry = GetObject("winmgmts:\\.\root\default:StdRegProv")
+
+	objRegistry.CreateKey HKEY_LOCAL_MACHINE, strRegistry
+End Sub

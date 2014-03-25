@@ -1,0 +1,42 @@
+Sub VariableWork(strComputer, strUserName, strVarName, strVarValue, strAction)
+	On Error Resume Next
+	'
+	' Based on strAction this subroutine will either update the variable or create it
+	'
+	Dim objWMIService
+	Dim colItems
+	Dim objItem
+	Dim objvariable
+	Dim intErrCounter
+	Dim dtmNewHour
+	Dim dtmNewMinute
+	Dim dtmNewSecond
+	Dim dtmWaitTime
+	
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+	
+		Select Case strAction
+			Case "UPDATE"
+				Set colItems = objWMIService.ExecQuery("Select * from Win32_Environment Where Name = '" & strVarName & "'")
+	
+				For Each objItem in colItems
+					objItem.VariableValue = strVarValue
+					objItem.Put_
+				Next
+				Call LogData(0, "Updated: " & strVarName & vbCrLf & "Added: " & strVarValue)
+			Case "CREATE"
+				Set objVariable = objWMIService.Get("Win32_Environment").SpawnInstance_
+	
+				objVariable.Name = strVarName
+				objVariable.UserName = strUserName
+				objVariable.VariableValue = strVarValue
+				objVariable.Put_
+				If Err <> 0 Then
+					Call Logdata(1, Err.Number & vbCrLf & Err.Description & vbCrLf & "CREATE FAILED: " & strVarName & "=" & strVarValue)
+				Else
+					Call LogData(0, "Created: " & strVarName & vbCrLf & "Added: " & strVarValue)
+				End If
+			Case Else
+				Call LogData(1, "Something horribly wrong has happened.")
+		End Select
+End Sub

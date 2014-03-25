@@ -1,0 +1,18 @@
+Function GetSerial(strComputer)
+	'
+	' Get serial number from the BIOS
+	'
+	Dim strSerial
+	Dim objWMIService
+	Dim colItems
+	Dim objItem
+
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
+	Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_BIOS",,48) 
+
+		For Each objItem in colItems 
+			strSerial = objItem.SerialNumber
+		Next
+
+	GetSerial = strSerial
+End Function

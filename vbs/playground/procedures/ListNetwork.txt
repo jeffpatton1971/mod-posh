@@ -1,0 +1,41 @@
+Sub ListNetwork(strComputer)
+	On Error Resume Next
+	'
+	' List the MAC and IP's of IP enabled Network Adapters
+	'
+	Dim objWMIService
+	Dim colItems
+	Dim objItem
+	Dim strIP
+	Dim strIPAddress
+	Dim strIPv4
+	Dim strIPv6
+
+	Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
+	If Err <> 0 Then 
+		Call HandleError(Err.Number, Err.Description)
+	End If
+	Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration Where IPEnabled = True",,48) 
+	If Err <> 0 Then 
+		Call HandleError(Err.Number, Err.Description)
+	End If
+
+		For Each objItem in colItems
+			strMac = objItem.MACAddress
+			strIPAddress = objItem.IPAddress
+			For Each strIP in strIPAddress
+			    If inStr(strIP, ".") Then
+			       strIPv4 = strIP
+			    End If
+			    If inStr(strIP, ":") Then
+			       strIPv6 = strIP
+			    End If
+			Next
+			Wscript.Echo "MAC: " & strMac
+			Wscript.Echo "IP4: " & strIPv4
+			Wscript.Echo "IP6: " & strIPv6
+
+			Wscript.echo
+		Next
+
+End Sub

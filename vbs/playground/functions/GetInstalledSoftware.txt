@@ -1,0 +1,57 @@
+Sub GetInstalledSoftware(strComputer, blnSMSClient)
+	'
+	' Get installed software from computer
+	'
+	' There are two WMI classes that handle this:
+	'    Win32Reg_AddRemovePrograms: only if the sms client installed
+	'    Win32_Product: enabled by default on client computers not severs
+	'
+	' Taking the guess work out, I'll pass in whether or not 
+	' the client is installed. Nothing fancy, just yes or no
+	' from the calling routine.
+	'
+	Dim strSoftwareName
+	Dim strIdentNum
+	Dim strInstallDate
+	Dim strVendor
+	Dim strVersion
+	Dim InstalledSoftware
+	
+	Dim objWMIService
+	Dim colItems
+	Dim objItem
+
+	Select Case blnSMSClient
+		Case vbYes
+			InstalledSoftware = ""
+			Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2") 
+			Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32Reg_AddRemovePrograms",,48) 
+
+				For Each objItem in colItems 
+					strSoftwareName = objItem.DisplayName
+					strIdentNum = objItem.ProdID
+					strInstallDate = objItem.InstallDate
+					strVendor = objItem.Publisher
+					strVersion = objItem.Version
+					InstalledSoftware = InstalledSoftware & strSoftwareName & ", " & strIdentNum & ", " & strInstallDate & ", " & strVendor & ", " & strVersion & vbCrLf
+				Next
+		Case vbNo
+			InstalledSoftware = ""
+			Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
+			'
+			' There is a thing about InstallDate, may need to use InstallDate2
+			'
+			Set colItems = objWMIService.ExecQuery("SELECT Name, IdentifyingNumber, InstallDate, Vendor, Version FROM Win32_Product",,48) 
+
+				For Each objItem in colItems 
+					strSoftwareName = objItem.Name
+					strIdentNum = objItem.IdentifyingNumber
+					strInstallDate = objItem.InstallDate
+					strVendor = objItem.Vendor
+					strVersion = objItem.Version
+					InstalledSoftware = InstalledSoftware & strSoftwareName & ", " & strIdentNum & ", " & strInstallDate & ", " & strVendor & ", " & strVersion & vbCrLf
+				Next
+		Case Else
+	End Select
+	
+End Sub

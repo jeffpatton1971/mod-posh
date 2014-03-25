@@ -1,0 +1,14 @@
+Function RetrieveComputer()
+	'
+	' Pulls the ComputerName from the system info AD object
+	' Strips off everything after the computername
+	' Strips off everything in front of computername
+	'
+	Dim objSysInfo
+	Dim strComputerName
+	set objSysInfo = CreateObject("ADSystemInfo")
+
+	strComputerName = Left(objSysInfo.ComputerName, InStr(objSysInfo.ComputerName, ",")- 1)
+	RetrieveComputer = Right(strComputerName, Len(strComputerName) - 3)
+
+End Function

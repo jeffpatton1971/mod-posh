@@ -1,0 +1,51 @@
+Sub BuildArray(strLDAP, strObject)
+	'
+	' Build an array of Active Directory Objects
+	' using the supplied LDAP URL and object for the query.
+	'
+	Const ADS_SCOPE_SUBTREE = 2
+	Dim objConnection
+	Dim objCommand
+	Dim objRecordset
+	
+	Set objConnection = CreateObject("ADODB.Connection")
+	Set objCommand =   CreateObject("ADODB.Command")
+	objConnection.Provider = "ADsDSOObject"
+	objConnection.Open "Active Directory Provider"
+	
+	Set objCOmmand.ActiveConnection = objConnection
+	objCommand.CommandText = "SELECT DistinguishedName, Name FROM '" & strLDAP & "' WHERE objectClass='" & strObject & "'"  
+	objCommand.Properties("Page Size") = 1000
+	objCommand.Properties("Searchscope") = ADS_SCOPE_SUBTREE 
+	Set objRecordSet = objCommand.Execute
+	
+		objRecordSet.MoveFirst
+	
+		Do Until objRecordSet.EOF
+			If InStr(objRecordSet.Fields("DistinguishedName").Value, "1005") Then 
+				Call UpdateArray(objRecordSet.Fields("DistinguishedName").Value, 0, "Eaton 1005")
+			End If
+			If InStr(objRecordSet.Fields("DistinguishedName").Value, "1014") Then 
+				Call UpdateArray(objRecordSet.Fields("DistinguishedName").Value, 1, "Eaton 1014")
+			End If
+			If InStr(objRecordSet.Fields("DistinguishedName").Value, "1018") Then 
+				Call UpdateArray(objRecordSet.Fields("DistinguishedName").Value, 2, "Eaton 1018")
+			End If
+			If InStr(objRecordSet.Fields("DistinguishedName").Value, "1137") Then 
+				Call UpdateArray(objRecordSet.Fields("DistinguishedName").Value, 3, "Learned 1137")
+			End If
+			If InStr(objRecordSet.Fields("DistinguishedName").Value, "1170") Then 
+				Call UpdateArray(objRecordSet.Fields("DistinguishedName").Value, 4, "Learned 1170")
+			End If
+			If InStr(objRecordSet.Fields("DistinguishedName").Value, "1171") Then 
+				Call UpdateArray(objRecordSet.Fields("DistinguishedName").Value, 5, "Learned 1171")
+			End If
+			If InStr(objRecordSet.Fields("DistinguishedName").Value, "3101") Then 
+				Call UpdateArray(objRecordSet.Fields("DistinguishedName").Value, 6, "Learned 3101")
+			End If
+			If InStr(objRecordSet.Fields("DistinguishedName").Value, "3117") Then 
+				Call UpdateArray(objRecordSet.Fields("DistinguishedName").Value, 7, "Learned 3117")
+			End If
+			objRecordSet.MoveNext
+		Loop
+End Sub

@@ -1,0 +1,11 @@
+Sub UpdateArray(strADSPath, intArrIndex, strLab)
+	arrLabs(intArrIndex,0) = strLab
+	arrLabs(intArrIndex,1) = arrLabs(intArrIndex,1) + 1
+	strValue = GetProp(strADSPath, "Description")
+	Select Case strValue
+		Case "FREE"
+			arrLabs(intArrIndex,2) = arrLabs(intArrIndex,2) + 1
+		Case "OFFLINE"
+			arrLabs(intArrIndex,3) = arrLabs(intArrIndex,3) + 1
+	End Select
+End Sub

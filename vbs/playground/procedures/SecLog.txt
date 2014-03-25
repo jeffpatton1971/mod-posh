@@ -1,0 +1,45 @@
+Sub SecLog(strComputerName)
+	On Error Resume Next
+	'
+	' This procedure can be used to pull information from the security log
+	'
+	
+	Dim objWMIService
+	Dim colLoggedEvents
+	Dim strEventMessage
+	Dim arrFirst
+	Dim arrFinal
+	Dim dtmDate
+	Dim objEvent
+	Dim strLogFile
+	Dim strEventType
+	Dim strEventeCode
+	
+	strLogFile = "Security"
+	strEventType = 4
+	strEventCode = 528
+	
+	Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate,(Security)}!\\" & strComputerName & ".soecs.ku.edu\root\cimv2")
+	If Err <> 0 Then Call LogData(1, "Unable to connect to " & strComputerName)
+	Set colLoggedEvents = objWMIService.ExecQuery("Select * FROM Win32_NTLogEvent WHERE Logfile = '" & strLogFile & "' AND EventType = " & strEventType & " AND EventCode = " & strEventCode & ")
+	
+		For Each objEvent In colLoggedEvents
+			strEventMessage = Trim(objEvent.Message)
+			arrFirst = split(strEventMessage, vbCrLf)
+			strEventMessage = join(arrFirst, ":")
+			arrFinal = split(strEventMessage, ":")
+			dtmDate = Left(objEvent.TimeWritten,8)
+			
+			Wscript.Echo "Category: " & objEvent.Category
+			Wscript.Echo "Computer Name: " & objEvent.ComputerName
+			Wscript.Echo "Event Code: " & objEvent.EventCode
+			Wscript.Echo "Message: " & objEvent.Message
+			Wscript.Echo "Record Number: " & objEvent.RecordNumber
+			Wscript.Echo "Source Name: " & objEvent.SourceName
+			Wscript.Echo "Time Written: " & objEvent.TimeWritten
+			Wscript.Echo "Event Type: " & objEvent.Type
+			Wscript.Echo "User: " & objEvent.User
+			
+		Next
+
+End Sub
