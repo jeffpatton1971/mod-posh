@@ -327,7 +327,7 @@ function Get-SqlDatabase
     (
         [parameter(Mandatory = $true)][string] $sqlServer,
         [parameter(Mandatory = $false)][string] $Database,
-        [parameter(Mandatory = $true)][string] $sqlInstance,
+        [parameter(Mandatory = $false)][string] $sqlInstance,
         [parameter(Mandatory = $false)][PSCredential] $Credential
     )
 
