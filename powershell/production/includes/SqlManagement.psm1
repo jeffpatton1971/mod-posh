@@ -326,8 +326,8 @@ function Get-SqlDatabase
     param 
     (
         [parameter(Mandatory = $true)][string] $sqlServer,
-        [parameter(Mandatory = $true)][string] $Database,
-        [parameter(Mandatory = $false)][string] $sqlInstance,
+        [parameter(Mandatory = $false)][string] $Database,
+        [parameter(Mandatory = $true)][string] $sqlInstance,
         [parameter(Mandatory = $false)][PSCredential] $Credential
     )
 
@@ -338,11 +338,15 @@ function Get-SqlDatabase
         $Error.Clear()
         if ($sqlInstance -eq $null)
         {
-            $sqlConnString = "Server=tcp:$($sqlServer);Database=$($Database)";
+            $sqlConnString = "Server=tcp:$($sqlServer)";
             }
         else
         {
-            $sqlConnString = "Server=tcp:$($sqlServer)\$($sqlInstance);Database=$($Database)";
+            $sqlConnString = "Server=tcp:$($sqlServer)\$($sqlInstance)";
+            }
+        if ($Database -eq $null)
+        {
+            $sqlConnString += ";Database=$($Database)";
             }
         if ($Credential)
         {
