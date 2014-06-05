@@ -101,7 +101,8 @@ Function Get-scoJob
     [CmdletBinding()]
     Param
         (
-        [string]$ManagementServer = "orms-csf-01.home.ku.edu",
+        [string]$ManagementServer = $null,
+        [string]$Job = $null,
         [pscredential]$Credential = $null
         )
     Begin
@@ -110,10 +111,18 @@ Function Get-scoJob
     Process
     {
         [string]$WebServiceUrl = "http://$($ManagementServer):81/Orchestrator2012/Orchestrator.svc/Jobs";
-        Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential
+        $Jobs = Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential
         }
     End
     {
+        if ($Job)
+        {
+            Return $Jobs.entry |Where-Object {$_.id -like $Job}
+            }
+        else
+        {
+            Return $Jobs.entry
+            }
         }
     }
 Function Get-scoFolder
@@ -133,7 +142,7 @@ Function Get-scoFolder
     [CmdletBinding()]
     Param
         (
-        [string]$ManagementServer = "orms-csf-01.home.ku.edu",
+        [string]$ManagementServer = $null,
         [pscredential]$Credential = $null
         )
     Begin
@@ -165,7 +174,7 @@ Function Get-scoActivity
     [CmdletBinding()]
     Param
         (
-        [string]$ManagementServer = "orms-csf-01.home.ku.edu",
+        [string]$ManagementServer = $null,
         [pscredential]$Credential = $null
         )
     Begin
@@ -197,7 +206,7 @@ Function Get-scoStatistics
     [CmdletBinding()]
     Param
         (
-        [string]$ManagementServer = "orms-csf-01.home.ku.edu",
+        [string]$ManagementServer = $null,
         [pscredential]$Credential = $null
         )
     Begin
