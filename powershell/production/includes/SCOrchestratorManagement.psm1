@@ -340,18 +340,16 @@ Function Start-scoRunbook
             $rbParamString += "</Data>]]></d:Parameters>"
             }
 
-# Build the request body
-$requestBody = @"
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<entry xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://www.w3.org/2005/Atom">
-    <content type="application/xml">
-        <m:properties>
-            <d:RunbookId m:type="Edm.Guid">$rbid</d:RunbookId>
-            $rbparamstring
-        </m:properties>
-    </content>
-</entry>
-"@
+        # Build the request body
+        $requestBody = "<?xml version=`"1.0`" encoding=`"utf-8`" standalone=`"yes`"?>"
+        $requestBody += "<entry xmlns:d=`"http://schemas.microsoft.com/ado/2007/08/dataservices`" xmlns:m=`"http://schemas.microsoft.com/ado/2007/08/dataservices/metadata`" xmlns=`"http://www.w3.org/2005/Atom`">"
+        $requestBody += "<content type=`"application/xml`">"
+        $requestBody += "<m:properties>"
+        $requestBody += "<d:RunbookId m:type=`"Edm.Guid`">$($rbid)</d:RunbookId>"
+        $requestBody += $rbparamstring
+        $requestBody += "</m:properties>"
+        $requestBody += "</content>"
+        $requestBody += "</entry>"
 
         $requestStream = new-object System.IO.StreamWriter $Request.GetRequestStream()
         $requestStream.Write($RequestBody)
