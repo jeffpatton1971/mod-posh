@@ -60,7 +60,8 @@ Function Get-scoRunbook
     [CmdletBinding()]
     Param
         (
-        [string]$ManagementServer = "orms-csf-01.home.ku.edu",
+        [string]$ManagementServer = $null,
+        [string]$Filter = $null,
         [pscredential]$Credential = $null
         )
     Begin
@@ -69,10 +70,18 @@ Function Get-scoRunbook
     Process
     {
         [string]$WebServiceUrl = "http://$($ManagementServer):81/Orchestrator2012/Orchestrator.svc/Runbooks";
-        Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential
+        $Runbooks = Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential
         }
     End
     {
+        if ($Filter)
+        {
+            Return $Runbooks.entry |Where-Object {$_.title.InnerText -like $Filter}
+            }
+        else
+        {
+            Return $Runbooks.entry
+            }
         }
     }
 Function Get-scoJob
