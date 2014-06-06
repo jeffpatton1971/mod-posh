@@ -27,6 +27,7 @@
     [CmdletBinding()]
     Param
         (
+        [parameter(Mandatory = $true)]
         [string]$scoUri = $null,
         [pscredential]$Credential = $null
         )
@@ -63,9 +64,32 @@ Function Get-scoRunbook
 {
     <#
         .SYNOPSIS
+            Get one or more Runbooks from Orchestrator
         .DESCRIPTION
-        .PARAMETER
+            This function will return one or more Runbooks from the Orchestrator server. To
+            return a specific Runbook from the server use the Title parameter to pass in the
+            complete title, or a portion of the title.
+        .PARAMETER ManagementServer
+            This is the name of the Orchestrator Management server. This server has the 
+            web service installed and is where the processing takes place.
+        .PARAMETER Title
+            If you know the title or portion of the title of a Runbook, you can
+            enter it here to filter the list of Runbooks returned.
+        .PARAMETER Credential
+            A credential object if we need to authenticate against the Orchestrator server
         .EXAMPLE
+            Get-scoRunbook -ManagementServer orch.company.com
+
+            Description
+            -----------
+            This example would return all the Runbooks available from the Orchestrator server
+        .EXAMPLE
+            Get-scoRunbook -ManagementServer orch.company.com -Title "New Computer"
+
+            Description
+            -----------
+            This example would return one or more Runbooks that have the phrase, 'New Computer'
+            in the title.
         .NOTES
             FunctionName : Get-scoRunbook
             Created by   : jspatton
@@ -76,8 +100,9 @@ Function Get-scoRunbook
     [CmdletBinding()]
     Param
         (
+        [parameter(Mandatory = $true)]
         [string]$ManagementServer = $null,
-        [string]$Filter = $null,
+        [string]$Title = $null,
         [pscredential]$Credential = $null
         )
     Begin
@@ -85,17 +110,21 @@ Function Get-scoRunbook
         }
     Process
     {
+        Write-Verbose "Build the url string to pass to Get-scoWebfeed";
         [string]$WebServiceUrl = "http://$($ManagementServer):81/Orchestrator2012/Orchestrator.svc/Runbooks";
+        Write-Debug "Store the response for processing";
         $Runbooks = Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential
         }
     End
     {
-        if ($Filter)
+        if ($Title)
         {
-            Return $Runbooks.entry |Where-Object {$_.title.InnerText -like $Filter}
+            Write-Verbose "Filter out result based on the Title, and return the entry element";
+            Return $Runbooks.entry |Where-Object {$_.title.InnerText -like "*$($Title)"}
             }
         else
         {
+            Write-Verbose "Return the entry element";
             Return $Runbooks.entry
             }
         }
