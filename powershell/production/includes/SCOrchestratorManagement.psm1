@@ -211,11 +211,11 @@ Function Get-scoFolder
         .PARAMETER Credential
             A credential object if we need to authenticate against the Orchestrator server
         .EXAMPLE
-            Get-scoJob -ManagementServer orch.company.com
+            Get-scoFolder -ManagementServer orch.company.com
 
             Description
             -----------
-            This example would return all the Jobs available from the Orchestrator server
+            This example would return all the Folders available from the Orchestrator server
         .NOTES
             FunctionName : Get-scoFolder
             Created by   : jspatton
@@ -250,19 +250,31 @@ Function Get-scoActivity
 {
     <#
         .SYNOPSIS
+            Get Activites from Orchestrator
         .DESCRIPTION
-        .PARAMETER
+            This function will return the Activities from the Orchestrator server.
+        .PARAMETER ManagementServer
+            This is the name of the Orchestrator Management server. This server has the 
+            web service installed and is where the processing takes place.
+        .PARAMETER Credential
+            A credential object if we need to authenticate against the Orchestrator server
         .EXAMPLE
+            Get-scoActivity -ManagementServer orch.company.com
+
+            Description
+            -----------
+            This example would return all the Activities available from the Orchestrator server
         .NOTES
-            FunctionName : Get-scoRunbook
+            FunctionName : Get-scoActivity
             Created by   : jspatton
             Date Coded   : 06/05/2014 08:52:03
         .LINK
-            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoRunbook
+            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoActivity
     #>
     [CmdletBinding()]
     Param
         (
+        [parameter(Mandatory = $true)]
         [string]$ManagementServer = $null,
         [pscredential]$Credential = $null
         )
@@ -271,11 +283,15 @@ Function Get-scoActivity
         }
     Process
     {
+        Write-Verbose "Build the url string to pass to Get-scoWebfeed";
         [string]$WebServiceUrl = "http://$($ManagementServer):81/Orchestrator2012/Orchestrator.svc/Activities";
-        Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential
+        Write-Debug "Store the response for processing";
+        $Activities = Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential;
         }
     End
     {
+        Write-Verbose "Return the entry element";
+        Return $Activities.entry;
         }
     }
 Function Get-scoStatistics
