@@ -346,19 +346,34 @@ Function Get-scoParameter
 {
     <#
         .SYNOPSIS
+            Get all the Parameters for a given Runbook
         .DESCRIPTION
-        .PARAMETER
+            This function will return all the Parameters that are required
+            for a given Runbook to work properly. This would typically be
+            used with the Get-scoRunbook function.
+        .PARAMETER RunbookId
+            This is the Id, as a URL from the Runbook
+        .PARAMETER Credential
+            A credential object if we need to authenticate against the Orchestrator server
         .EXAMPLE
+            $Parameters = Get-scoParameter -RunbookId ((Get-scoRunbook -ManagementServer orch.company.com -Title 'Provision New User') `
+                          |Select-Object -Property Id)
+            
+            Description
+            -----------
+            This example shows the most common use of this function, use Get-scoRunbook to return a specific Runbook
+            and Select-Object to pull just the Id and pass that into the function.
         .NOTES
-            FunctionName : Get-scoRunbook
+            FunctionName : Get-scoParameter
             Created by   : jspatton
             Date Coded   : 06/05/2014 08:52:03
         .LINK
-            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoRunbook
+            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoParameter
     #>
     [CmdletBinding()]
     Param
         (
+        [parameter(Mandatory = $true)]
         [string]$RunbookId = $null,
         [pscredential]$Credential = $null
         )
@@ -367,10 +382,13 @@ Function Get-scoParameter
         }
     Process
     {
-        Get-scoWebFeed -scoUri "$($RunbookId)/Parameters" -Credential $Credential
+        Write-Debug "Store the response for processing";
+        $Parameters = Get-scoWebFeed -scoUri "$($RunbookId)/Parameters" -Credential $Credential;
         }
     End
     {
+        Write-Verbose "Return the entry element";
+        Return $Parameters.entry;
         }
     }
 Function Start-scoRunbook
