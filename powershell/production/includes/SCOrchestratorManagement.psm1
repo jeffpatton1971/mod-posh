@@ -298,19 +298,31 @@ Function Get-scoStatistics
 {
     <#
         .SYNOPSIS
+            Get Statistics from Orchestrator
         .DESCRIPTION
-        .PARAMETER
+            This function will return the Statistics from the Orchestrator server.
+        .PARAMETER ManagementServer
+            This is the name of the Orchestrator Management server. This server has the 
+            web service installed and is where the processing takes place.
+        .PARAMETER Credential
+            A credential object if we need to authenticate against the Orchestrator server
         .EXAMPLE
+            Get-scoStatistics -ManagementServer orch.company.com
+
+            Description
+            -----------
+            This example would return all the Statistics from the Orchestrator server
         .NOTES
-            FunctionName : Get-scoRunbook
+            FunctionName : Get-scoStatistics
             Created by   : jspatton
             Date Coded   : 06/05/2014 08:52:03
         .LINK
-            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoRunbook
+            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoStatistics
     #>
     [CmdletBinding()]
     Param
         (
+        [parameter(Mandatory = $true)]
         [string]$ManagementServer = $null,
         [pscredential]$Credential = $null
         )
@@ -319,11 +331,15 @@ Function Get-scoStatistics
         }
     Process
     {
+        Write-Verbose "Build the url string to pass to Get-scoWebfeed";
         [string]$WebServiceUrl = "http://$($ManagementServer):81/Orchestrator2012/Orchestrator.svc/Statistics";
-        Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential
+        Write-Debug "Store the response for processing";
+        $Statistics = Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential;
         }
     End
     {
+        Write-Verbose "Return the entry element";
+        Return $Statistics.entry;
         }
     }
 Function Get-scoParameter
