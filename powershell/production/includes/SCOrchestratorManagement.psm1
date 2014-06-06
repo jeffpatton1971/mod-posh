@@ -2,9 +2,21 @@
 {
     <#
         .SYNOPSIS
+            Get Orchestrator web feed
         .DESCRIPTION
-        .PARAMETER
+            This function does the work of getting the requested URL from Orchestrator
+        .PARAMETER scoUri
+            This is a properly formatted Orchestrator URI, the main functions build
+            these and pass them here for processing
+        .PARAMETER Credential
+            A credential object if we need to authenticate against the Orchestrator server
         .EXAMPLE
+            Get-scoWebFeed -scoUri http://orch.company.com:81/Orchestrator2012/Orchestrator.svc/Runbooks
+
+            Description
+            -----------
+            This isn't really intended to be used directly, but this would return an xml document 
+            of all the runbooks on the server
         .NOTES
             FunctionName : Get-scoWebFeed
             Created by   : jspatton
@@ -23,20 +35,24 @@
         }
     Process
     {
+        Write-Debug "Create System.Net.WebClient object";
         [System.Net.WebClient]$WebClient = New-Object System.Net.WebClient;
 
         if ($Credential -eq $null)
         {
+            Write-Verbose "Using default logged in credentials";
             $WebClient.UseDefaultCredentials = $true;
             }
         else
         {
+            Write-Verbose "Sending credentials to server";
             $WebClient.Credentials = $Credential;
             }
-
+        Write-Debug "Downloading the byte data from the server";
         [byte[]]$WebResponse = $WebClient.DownloadData($scoUri);
+        Write-Debug "Using System.Text.Encoding to get the string and storing it in a System.Xml.XmlDocument";
         [System.Xml.XmlDocument]$WebFeeds = [System.Text.Encoding]::ASCII.GetString($WebResponse);
-        
+        Write-Verbose "Return just the feed element from the server";
         Return $WebFeeds.feed;
         }
     End
