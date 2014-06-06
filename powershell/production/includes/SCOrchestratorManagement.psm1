@@ -22,7 +22,7 @@
             Created by   : jspatton
             Date Coded   : 06/05/2014 09:00:48
         .LINK
-            https://code.google.com/p/mod-posh/wiki/Untitled7#Get-scoWebFeed
+            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoWebFeed
     #>
     [CmdletBinding()]
     Param
@@ -95,7 +95,7 @@ Function Get-scoRunbook
             Created by   : jspatton
             Date Coded   : 06/05/2014 08:52:03
         .LINK
-            https://code.google.com/p/mod-posh/wiki/Untitled7#Get-scoRunbook
+            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoRunbook
     #>
     [CmdletBinding()]
     Param
@@ -160,11 +160,11 @@ Function Get-scoJob
             This example would return the Job that had '4112bd1f-1700-4a44-b487-bcf3fc85f1a7' as
             the Id.
         .NOTES
-            FunctionName : Get-scoRunbook
+            FunctionName : Get-scoJob
             Created by   : jspatton
             Date Coded   : 06/05/2014 08:52:03
         .LINK
-            https://code.google.com/p/mod-posh/wiki/Untitled7#Get-scoRunbook
+            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoJob
     #>
     [CmdletBinding()]
     Param
@@ -202,19 +202,31 @@ Function Get-scoFolder
 {
     <#
         .SYNOPSIS
+            Get one or more Folders from Orchestrator
         .DESCRIPTION
-        .PARAMETER
+            This function will return one or more Folders from the Orchestrator server.
+        .PARAMETER ManagementServer
+            This is the name of the Orchestrator Management server. This server has the 
+            web service installed and is where the processing takes place.
+        .PARAMETER Credential
+            A credential object if we need to authenticate against the Orchestrator server
         .EXAMPLE
+            Get-scoJob -ManagementServer orch.company.com
+
+            Description
+            -----------
+            This example would return all the Jobs available from the Orchestrator server
         .NOTES
-            FunctionName : Get-scoRunbook
+            FunctionName : Get-scoFolder
             Created by   : jspatton
             Date Coded   : 06/05/2014 08:52:03
         .LINK
-            https://code.google.com/p/mod-posh/wiki/Untitled7#Get-scoRunbook
+            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoFolder
     #>
     [CmdletBinding()]
     Param
         (
+        [parameter(Mandatory = $true)]
         [string]$ManagementServer = $null,
         [pscredential]$Credential = $null
         )
@@ -223,11 +235,15 @@ Function Get-scoFolder
         }
     Process
     {
+        Write-Verbose "Build the url string to pass to Get-scoWebfeed";
         [string]$WebServiceUrl = "http://$($ManagementServer):81/Orchestrator2012/Orchestrator.svc/Folders";
-        Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential
+        Write-Debug "Store the response for processing";
+        $Folders = Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential;
         }
     End
     {
+        Write-Verbose "Return the entry element";
+        Return $Folders.entry;
         }
     }
 Function Get-scoActivity
@@ -242,7 +258,7 @@ Function Get-scoActivity
             Created by   : jspatton
             Date Coded   : 06/05/2014 08:52:03
         .LINK
-            https://code.google.com/p/mod-posh/wiki/Untitled7#Get-scoRunbook
+            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoRunbook
     #>
     [CmdletBinding()]
     Param
@@ -274,7 +290,7 @@ Function Get-scoStatistics
             Created by   : jspatton
             Date Coded   : 06/05/2014 08:52:03
         .LINK
-            https://code.google.com/p/mod-posh/wiki/Untitled7#Get-scoRunbook
+            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoRunbook
     #>
     [CmdletBinding()]
     Param
@@ -306,7 +322,7 @@ Function Get-scoParameter
             Created by   : jspatton
             Date Coded   : 06/05/2014 08:52:03
         .LINK
-            https://code.google.com/p/mod-posh/wiki/Untitled7#Get-scoRunbook
+            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Get-scoRunbook
     #>
     [CmdletBinding()]
     Param
@@ -337,7 +353,7 @@ Function Start-scoRunbook
             Created by   : jspatton
             Date Coded   : 06/05/2014 10:27:15
         .LINK
-            https://code.google.com/p/mod-posh/wiki/Untitled7#Start-scoRunbook
+            https://code.google.com/p/mod-posh/wiki/SCOrchestratorManagement#Start-scoRunbook
     #>
     [CmdletBinding()]
     param
