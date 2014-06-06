@@ -22,7 +22,7 @@
         This is a listing of ports to check on the remote machine to see if a
         connection can be established.
     .EXAMPLE
-        .\New-SubnetSweep.ps1 -Range 1..10 -Subnet 192.168.1 -Ports 135,139, 80
+        .\New-SubnetSweep.ps1 -Range (1..10) -Subnet 192.168.1 -Ports 135,139, 80
         
         Name                 PortList       MAC          IP
         ----                 --------       ---          --
@@ -125,10 +125,11 @@ Process
                     $Socket.Close()
                     }
                 Write-Verbose "Resolve hostname for $($IP.Address)"
-                $Name = [System.Net.Dns]::GetHostEntry($IP.Address).Hostname
+                $Name = [System.Net.Dns]::GetHostEntry($IP.Address)
                 Write-Verbose "Creating return object for output"
+                $IPAddress = [System.Net.IPAddress]([System.Net.IPAddress]::Parse($IP.Address).GetType())
                 $ThisHost = New-Object -TypeName PSObject -Property @{
-                    IP = $IP.Address
+                    IP = $IPAddress
                     Name = $Name
                     MAC = $Mac
                     PortList = $PortList
@@ -137,7 +138,7 @@ Process
                 }
             catch
             {
-                $Message = $Error[0].Exception
+                $Message = $Error[0].InvocationInfo.Line
                 Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
                 $IP = $null
                 $Mac = $null
