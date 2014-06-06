@@ -395,9 +395,23 @@ Function Start-scoRunbook
 {
     <#
         .SYNOPSIS
+            This function will start a Runbook
         .DESCRIPTION
-        .PARAMETER
+            This function starts a runbook on the management server. It requires a runbook object
+            to work with. In the context of this module that is an xmlelemnt.
+        .PARAMETER Runbook
+            An XmlElement that is returned from Get-scoRunbook
+        .PARAMETER Value
+            An array of values that are needed if the runbook requires parameters
+        .PARAMETER Credential
+            A credential object if we need to authenticate against the Orchestrator server
         .EXAMPLE
+            Start-Runbook -Runbook (Get-scoRunbook -ManagementServer orch.company.com -Title 'Provision new user') -Value "John","Smith"
+
+            Description
+            -----------
+            This would be the most common use of this function. Get-scoRunbook returns a single runbook from the server
+            titled 'Provision new user' and we pass in values that the Runbook needs to work properly.
         .NOTES
             FunctionName : Start-scoRunbook
             Created by   : jspatton
@@ -408,6 +422,7 @@ Function Start-scoRunbook
     [CmdletBinding()]
     param
         (
+        [parameter(Mandatory = $true)]
         [System.Xml.XmlElement]$Runbook,
         [string[]]$Value = $null,
         [pscredential]$Credential = $null
@@ -416,6 +431,9 @@ Function Start-scoRunbook
     {
         if ($Runbook.id.Contains('guid'))
         {
+            Write-Debug "The GUID is embedded inside the Id url property of the runbook";
+            Write-Debug "Split the id property on a single tick mark, and return the second element";
+            Write-Verbose "Get the GUID inside the id property";
             $rbid = $Runbook.id.Split("'")[1]
             }
         else
@@ -423,19 +441,29 @@ Function Start-scoRunbook
             Write-Error "Invalid or missing GUID in Runbook";
             break;
             }
-        $Parameters = Get-scoParameter -RunbookId $Runbook.id
-        $TypeName = $Parameters.GetType().name
+        Write-Debug "Get a list of parameters for the Runbook";
+        $Parameters = Get-scoParameter -RunbookId $Runbook.id;
+        Write-Debug "Did we get an array object back, or a single item back";
+        #
+        # This should be skipped for runbooks without parameters
+        #
+        $TypeName = $Parameters.GetType().name;
         switch ($TypeName)
         {
             "Object[]"
             {
+                Write-Verbose "There is more than one Parameter for this Runbook";
                 if ($Parameters.entry.Count -eq $Value.Count)
                 {
                     foreach ($Parameter in $Parameters.entry)
                     {
+                        Write-Debug "The GUID is embedded inside the Id url property of the parameter";
+                        Write-Debug "Split the id property on a single tick mark, and return the second element";
+                        Write-Verbose "Get the GUID inside the id property";
                         $ParamId = $Parameter.entry.id.Split("'")[1];
                         foreach ($v in $Value)
                         {
+                            Write-Debug "Build a hash table with Parameter Id and Value";
                             $rbParameters += @{$ParamId = $v};
                             }
                         }
@@ -448,9 +476,13 @@ Function Start-scoRunbook
                 }
             "XmlElement"
             {
+                Write-Debug "We only have one Parameter, make sure we only have one Value";
                 if ($Value.Count -eq 1)
                 {
-                    $ParamId = $Parameters.entry.id.Split("'")[1]
+                    Write-Debug "The GUID is embedded inside the Id url property of the parameter";
+                    Write-Debug "Split the id property on a single tick mark, and return the second element";
+                    Write-Verbose "Get the GUID inside the id property";
+                    $ParamId = $Parameters.entry.id.Split("'")[1];
                     $rbParameters = @{$ParamId = $Value[0]}
                     }
                 else
@@ -463,78 +495,112 @@ Function Start-scoRunbook
         }
     Process
     {
+        Write-Debug "Build a System.Uri object from the Runnbook Id";
         [System.Uri]$webUri = New-Object System.Uri($Runbook.id);
-        $request = [System.Net.HttpWebRequest]::Create($webUri.Scheme + "://" + $webUri.Host + ":" + $webUri.Port + "/Orchestrator2012/Orchestrator.svc/Jobs")
-
+        Write-Debug "Use the System.Uri object to build the Orchestrator url";
+        Write-Debug "Store the response in a System.Net.HttpWebRequest object";
+        $request = [System.Net.HttpWebRequest]::Create($webUri.Scheme + "://" + $webUri.Host + ":" + $webUri.Port + "/Orchestrator2012/Orchestrator.svc/Jobs");
         if ($Credential -eq $null)
         {
+            Write-Verbose "Using default credentials";
             $request.UseDefaultCredentials = $true
             }
         else
         {
+            Write-Verbose "Use specific credentials to authenticate";
             $request.Credentials = $Credential
             }
-
-        $request.Method = "POST"
-        $request.UserAgent = "Microsoft ADO.NET Data Services"
-        $request.Accept = "application/atom+xml,application/xml"
-        $request.ContentType = "application/atom+xml"
-        $request.KeepAlive = $true
-        $request.Headers.Add("Accept-Encoding","identity")
-        $request.Headers.Add("Accept-Language","en-US")
-        $request.Headers.Add("DataServiceVersion","1.0;NetFx")
-        $request.Headers.Add("MaxDataServiceVersion","2.0;NetFx")
-        $request.Headers.Add("Pragma","no-cache")
-
-        $rbParamString = ""
+        Write-Verbose "Build all the headers";
+        Write-Debug "Method = POST";
+        $request.Method = "POST";
+        Write-Debug "UserAgent = Powershell Host Name";
+        $request.UserAgent = $Host.Name;
+        Write-Debug "Accept = application/atom+xml,application/xml";
+        $request.Accept = "application/atom+xml,application/xml";
+        Write-Debug "Contenttype = application/atom+xml";
+        $request.ContentType = "application/atom+xml";
+        Write-Debug "KeepAlive = true";
+        $request.KeepAlive = $true;
+        Write-Debug "Accept-Encoding = identity";
+        $request.Headers.Add("Accept-Encoding","identity");
+        Write-Debug "Accept-Language = en-us";
+        $request.Headers.Add("Accept-Language","en-US");
+        Write-Debug "DataServiceVersion = 1.0;Netfx";
+        $request.Headers.Add("DataServiceVersion","1.0;NetFx");
+        Write-Debug "MaxDataServiceVersion = 2.0;NetFx";
+        $request.Headers.Add("MaxDataServiceVersion","2.0;NetFx");
+        Write-Debug "Pragma = no-cache";
+        $request.Headers.Add("Pragma","no-cache");
+        Write-Debug "Build the parameter string";
+        #
+        # This should be skipped for runbooks without parameters
+        #
+        $rbParamString = "";
         if ($rbParameters -ne $null)
         {
-            $rbParamString = "<d:Parameters><![CDATA[<Data>"
+            Write-Verbose "Create the parameters";
+            Write-Debug "Begin the opening xml for the parameters";
+            $rbParamString = "<d:Parameters><![CDATA[<Data>";
             foreach ($p in $rbParameters.GetEnumerator())
             {
-                $rbParamString = -join ($rbParamString,"<Parameter><ID>{",$p.key,"}</ID><Value>",$p.value,"</Value></Parameter>")
+                Write-Debug "For each entry in the hashtable, add the key (ID) and value (DATA)";
+                $rbParamString = -join ($rbParamString,"<Parameter><ID>{",$p.key,"}</ID><Value>",$p.value,"</Value></Parameter>");
                 }
-            $rbParamString += "</Data>]]></d:Parameters>"
+            Write-Debug "Close the parameter xml";
+            $rbParamString += "</Data>]]></d:Parameters>";
             }
-
-        # Build the request body
-        $requestBody = "<?xml version=`"1.0`" encoding=`"utf-8`" standalone=`"yes`"?>"
-        $requestBody += "<entry xmlns:d=`"http://schemas.microsoft.com/ado/2007/08/dataservices`" xmlns:m=`"http://schemas.microsoft.com/ado/2007/08/dataservices/metadata`" xmlns=`"http://www.w3.org/2005/Atom`">"
-        $requestBody += "<content type=`"application/xml`">"
-        $requestBody += "<m:properties>"
-        $requestBody += "<d:RunbookId m:type=`"Edm.Guid`">$($rbid)</d:RunbookId>"
-        $requestBody += $rbparamstring
-        $requestBody += "</m:properties>"
-        $requestBody += "</content>"
-        $requestBody += "</entry>"
-
-        $requestStream = new-object System.IO.StreamWriter $Request.GetRequestStream()
-        $requestStream.Write($RequestBody)
-        $requestStream.Flush()
-        $requestStream.Close()
-
-        $response = $Request.GetResponse()
-
-        $responseStream = $Response.GetResponseStream()
-        $readStream = new-object System.IO.StreamReader $responseStream
-        $responseString = $readStream.ReadToEnd()
-
-        $readStream.Close()
+        Write-Verbose "Build the request body";
+        Write-Debug "The request body has to have certain items inside, as well as be ordered in a specific way";
+        $requestBody = "<?xml version=`"1.0`" encoding=`"utf-8`" standalone=`"yes`"?>";
+        $requestBody += "<entry xmlns:d=`"http://schemas.microsoft.com/ado/2007/08/dataservices`" xmlns:m=`"http://schemas.microsoft.com/ado/2007/08/dataservices/metadata`" xmlns=`"http://www.w3.org/2005/Atom`">";
+        $requestBody += "<content type=`"application/xml`">";
+        $requestBody += "<m:properties>";
+        $requestBody += "<d:RunbookId m:type=`"Edm.Guid`">$($rbid)</d:RunbookId>";
+        #
+        # This should be skipped for runbooks without parameters
+        #
+        $requestBody += $rbparamstring;
+        $requestBody += "</m:properties>";
+        $requestBody += "</content>";
+        $requestBody += "</entry>";
+        Write-Debug "Create a System.IO.StreamWriter object to receive the stream from the server";
+        $requestStream = new-object System.IO.StreamWriter $Request.GetRequestStream();
+        Write-Debug "Upload the xml to the server";
+        Write-Verbose "Sending data to server";
+        $requestStream.Write($RequestBody);
+        Write-Debug "Flush the stream";
+        $requestStream.Flush();
+        Write-Debug "Close the stream";
+        $requestStream.Close();
+        Write-Debug "Get the response code from the server";
+        $response = $Request.GetResponse();
+        Write-Debug "Get the response stream";
+        $responseStream = $Response.GetResponseStream();
+        Write-Debug "Build a System.IO.StreamReader object to read in the stream";
+        $readStream = new-object System.IO.StreamReader $responseStream;
+        Write-Debug "Read the stream returned from the server";
+        Write-Verbose "Get data from the server";
+        $responseString = $readStream.ReadToEnd();
+        Write-Debug "Close the StreamReader";
+        $readStream.Close();
+        Write-Debug "Close the response stream";
         $responseStream.Close()
         }
     End
     {
         if ($response.StatusCode -eq 'Created')
         {
-            $xmlDoc = [xml]$responseString
-            $jobId = $xmlDoc.entry.content.properties.Id.InnerText
-            Write-Host "Successfully started runbook. Job ID: " $jobId
+            Write-Debug "Convert the xml string to an XML object";
+            $xmlDoc = [xml]$responseString;
+            Write-Debug "Get the Job ID from the running job";
+            $jobId = $xmlDoc.entry.content.properties.Id.InnerText;
+            Write-Host "Successfully started runbook. Job ID: " $jobId;
+            Write-Verbose "Return the entry element";
             return $xmlDoc.entry;
             }
         else
         {
-            Write-Host "Could not start runbook. Status: " $response.StatusCode
+            Write-Host "Could not start runbook. Status: " $response.StatusCode;
             }
         }
     }
-
