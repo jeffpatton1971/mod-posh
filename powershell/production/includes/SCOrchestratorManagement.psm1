@@ -113,19 +113,19 @@ Function Get-scoRunbook
         Write-Verbose "Build the url string to pass to Get-scoWebfeed";
         [string]$WebServiceUrl = "http://$($ManagementServer):81/Orchestrator2012/Orchestrator.svc/Runbooks";
         Write-Debug "Store the response for processing";
-        $Runbooks = Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential
+        $Runbooks = Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential;
         }
     End
     {
         if ($Title)
         {
             Write-Verbose "Filter out result based on the Title, and return the entry element";
-            Return $Runbooks.entry |Where-Object {$_.title.InnerText -like "*$($Title)"}
+            Return $Runbooks.entry |Where-Object {$_.title.InnerText -like "*$($Title)"};
             }
         else
         {
             Write-Verbose "Return the entry element";
-            Return $Runbooks.entry
+            Return $Runbooks.entry;
             }
         }
     }
@@ -133,9 +133,32 @@ Function Get-scoJob
 {
     <#
         .SYNOPSIS
+            Get one or more Jobs from Orchestrator
         .DESCRIPTION
-        .PARAMETER
+            This function will return one or more Jobs from the Orchestrator server. To
+            return a specific Job from the server use the Id parameter to pass in the
+            Id of the job.
+        .PARAMETER ManagementServer
+            This is the name of the Orchestrator Management server. This server has the 
+            web service installed and is where the processing takes place.
+        .PARAMETER Title
+            If you know the title or portion of the title of a Runbook, you can
+            enter it here to filter the list of Runbooks returned.
+        .PARAMETER Credential
+            A credential object if we need to authenticate against the Orchestrator server
         .EXAMPLE
+            Get-scoJob -ManagementServer orch.company.com
+
+            Description
+            -----------
+            This example would return all the Jobs available from the Orchestrator server
+        .EXAMPLE
+            Get-scoJob -ManagementServer orch.company.com -Id "4112bd1f-1700-4a44-b487-bcf3fc85f1a7"
+
+            Description
+            -----------
+            This example would return the Job that had '4112bd1f-1700-4a44-b487-bcf3fc85f1a7' as
+            the Id.
         .NOTES
             FunctionName : Get-scoRunbook
             Created by   : jspatton
@@ -146,8 +169,9 @@ Function Get-scoJob
     [CmdletBinding()]
     Param
         (
+        [parameter(Mandatory = $true)]
         [string]$ManagementServer = $null,
-        [string]$Job = $null,
+        [string]$Id = $null,
         [pscredential]$Credential = $null
         )
     Begin
@@ -155,18 +179,22 @@ Function Get-scoJob
         }
     Process
     {
+        Write-Verbose "Build the url string to pass to Get-scoWebfeed";
         [string]$WebServiceUrl = "http://$($ManagementServer):81/Orchestrator2012/Orchestrator.svc/Jobs";
-        $Jobs = Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential
+        Write-Debug "Store the response for processing";
+        $Jobs = Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential;
         }
     End
     {
-        if ($Job)
+        if ($Id)
         {
-            Return $Jobs.entry |Where-Object {$_.id -like $Job}
+            Write-Verbose "Filter out result based on the Id, and return the entry element";
+            Return $Jobs.entry |Where-Object {$_.id -like $Id};
             }
         else
         {
-            Return $Jobs.entry
+            Write-Verbose "Return the entry element";
+            Return $Jobs.entry;
             }
         }
     }
