@@ -1674,30 +1674,9 @@ Function ConvertTo-Sid
         .EXAMPLE
             ConvertTo-Sid -StringSid S-1-5-21-57989841-1078081533-682003330
             
-            1
-            4
-            0
-            0
-            0
-            0
-            0
-            5
-            21
-            0
-            0
-            0
-            209
-            218
-            116
-            3
-            253
-            55
-            66
-            64
-            130
-            139
-            166
-            40
+            BinaryLength AccountDomainSid                       Value
+            ------------ ----------------                       -----
+                      28 S-1-5-21-57989841-1078081533-682003330 S-1-5-21-57989841-1078081533-682003330-233119
 
             Description
             -----------
@@ -1723,9 +1702,7 @@ Function ConvertTo-Sid
         try
         {
             $Sid = New-Object System.Security.Principal.SecurityIdentifier($StringSid)
-            [byte[]]$ObjectSid = ,0 * $Sid.BinaryLength
-            $Sid.GetBinaryForm($ObjectSid,0)
-            Return $ObjectSid
+            Return $Sid
             }
         catch
         {
