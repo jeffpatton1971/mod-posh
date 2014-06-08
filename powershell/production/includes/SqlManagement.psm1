@@ -6,20 +6,25 @@
         .PARAMETER
         .EXAMPLE
         .NOTES
-            FunctionName : blah
+            FunctionName : New-SqlLogin
             Created by   : Jeffrey
             Date Coded   : 06/08/2014 17:32:12
         .LINK
-            https://code.google.com/p/mod-posh/wiki/SqlManagement#blah
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#New-SqlLogin
     #>
     [CmdletBinding()]
     param 
     (
-        [parameter(Mandatory = $true)][string] $loginName,
-        [parameter(Mandatory = $true)][string] $sqlServer,
-        [parameter(Mandatory = $true)][string] $Database,
-        [parameter(Mandatory = $false)][string] $sqlInstance,
-        [parameter(Mandatory = $false)][PSCredential] $Credential
+        [parameter(Mandatory = $true)]
+        [string] $loginName,
+        [parameter(Mandatory = $true)]
+        [string] $sqlServer,
+        [parameter(Mandatory = $true)]
+        [string] $Database,
+        [parameter(Mandatory = $false)]
+        [string] $sqlInstance,
+        [parameter(Mandatory = $false)]
+        [PSCredential] $Credential
     )
 
     $sqlConnection = $null
@@ -82,20 +87,25 @@ function Add-SqlUser
         .PARAMETER
         .EXAMPLE
         .NOTES
-            FunctionName : blah
+            FunctionName : Add-SqlUser
             Created by   : Jeffrey
             Date Coded   : 06/08/2014 17:32:12
         .LINK
-            https://code.google.com/p/mod-posh/wiki/SqlManagement#blah
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#Add-SqlUser
     #>
     [CmdletBinding()]
     param 
     (
-        [parameter(Mandatory = $true)][string] $loginName,
-        [parameter(Mandatory = $true)][string] $sqlServer,
-        [parameter(Mandatory = $true)][string] $Database,
-        [parameter(Mandatory = $false)][string] $sqlInstance,
-        [parameter(Mandatory = $false)][PSCredential] $Credential
+        [parameter(Mandatory = $true)]
+        [string] $loginName,
+        [parameter(Mandatory = $true)]
+        [string] $sqlServer,
+        [parameter(Mandatory = $true)]
+        [string] $Database,
+        [parameter(Mandatory = $false)]
+        [string] $sqlInstance,
+        [parameter(Mandatory = $false)]
+        [PSCredential] $Credential
     )
 
     $sqlConnection = $null
@@ -158,21 +168,27 @@ function Add-SqlRole
         .PARAMETER
         .EXAMPLE
         .NOTES
-            FunctionName : blah
+            FunctionName : Add-SqlRole
             Created by   : Jeffrey
             Date Coded   : 06/08/2014 17:32:12
         .LINK
-            https://code.google.com/p/mod-posh/wiki/SqlManagement#blah
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#Add-SqlRole
     #>
     [CmdletBinding()]
     param 
     (
-        [parameter(Mandatory = $true)][string] $loginName,
-        [parameter(Mandatory = $true)][string] $sqlServer,
-        [parameter(Mandatory = $true)][string] $Database,
-        [parameter(Mandatory = $true)][string] $Role,
-        [parameter(Mandatory = $false)][string] $sqlInstance,
-        [parameter(Mandatory = $false)][PSCredential] $Credential
+        [parameter(Mandatory = $true)]
+        [string] $loginName,
+        [parameter(Mandatory = $true)]
+        [string] $sqlServer,
+        [parameter(Mandatory = $true)]
+        [string] $Database,
+        [parameter(Mandatory = $true)]
+        [string] $Role,
+        [parameter(Mandatory = $false)]
+        [string] $sqlInstance,
+        [parameter(Mandatory = $false)]
+        [PSCredential] $Credential
     )
 
     $sqlConnection = $null
@@ -235,22 +251,28 @@ function Set-SqlServerPermission
         .PARAMETER
         .EXAMPLE
         .NOTES
-            FunctionName : blah
+            FunctionName : Set-SqlServerPermission
             Created by   : Jeffrey
             Date Coded   : 06/08/2014 17:32:12
         .LINK
-            https://code.google.com/p/mod-posh/wiki/SqlManagement#blah
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#Set-SqlServerPermission
     #>
     [CmdletBinding()]
     param 
     (
-        [parameter(Mandatory = $true)][string] $loginName,
-        [parameter(Mandatory = $true)][string] $sqlServer,
-        [parameter(Mandatory = $true)][string] $Database,
+        [parameter(Mandatory = $true)]
+        [string] $loginName,
+        [parameter(Mandatory = $true)]
+        [string] $sqlServer,
+        [parameter(Mandatory = $true)]
+        [string] $Database,
         [switch] $Grant,
-        [parameter(Mandatory = $true)][string] $Permission,
-        [parameter(Mandatory = $false)][string] $sqlInstance,
-        [parameter(Mandatory = $false)][PSCredential] $Credential
+        [parameter(Mandatory = $true)]
+        [string] $Permission,
+        [parameter(Mandatory = $false)]
+        [string] $sqlInstance,
+        [parameter(Mandatory = $false)]
+        [PSCredential] $Credential
     )
 
     $sqlConnection = $null
@@ -320,19 +342,23 @@ function Get-SqlUser
         .PARAMETER
         .EXAMPLE
         .NOTES
-            FunctionName : blah
+            FunctionName : Get-SqlUser
             Created by   : Jeffrey
             Date Coded   : 06/08/2014 17:32:12
         .LINK
-            https://code.google.com/p/mod-posh/wiki/SqlManagement#blah
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#Get-SqlUser
     #>
     [CmdletBinding()]
     param 
     (
-        [parameter(Mandatory = $true)][string] $sqlServer,
-        [parameter(Mandatory = $true)][string] $Database,
-        [parameter(Mandatory = $false)][string] $sqlInstance,
-        [parameter(Mandatory = $false)][PSCredential] $Credential
+        [parameter(Mandatory = $true)]
+        [string] $sqlServer,
+        [parameter(Mandatory = $true)]
+        [string] $Database,
+        [parameter(Mandatory = $false)]
+        [string] $sqlInstance,
+        [parameter(Mandatory = $false)]
+        [PSCredential] $Credential
     )
 
     $sqlConnection = $null
@@ -394,19 +420,23 @@ function Get-SqlDatabase
         .PARAMETER
         .EXAMPLE
         .NOTES
-            FunctionName : blah
+            FunctionName : Get-SqlDatabase
             Created by   : Jeffrey
             Date Coded   : 06/08/2014 17:32:12
         .LINK
-            https://code.google.com/p/mod-posh/wiki/SqlManagement#blah
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#Get-SqlDatabase
     #>
     [CmdletBinding()]
     param 
     (
-        [parameter(Mandatory = $true)][string] $sqlServer,
-        [parameter(Mandatory = $false)][string] $Database,
-        [parameter(Mandatory = $false)][string] $sqlInstance,
-        [parameter(Mandatory = $false)][PSCredential] $Credential
+        [parameter(Mandatory = $true)]
+        [string] $sqlServer,
+        [parameter(Mandatory = $false)]
+        [string] $Database,
+        [parameter(Mandatory = $false)]
+        [string] $sqlInstance,
+        [parameter(Mandatory = $false)]
+        [PSCredential] $Credential
     )
 
     $sqlConnection = $null
