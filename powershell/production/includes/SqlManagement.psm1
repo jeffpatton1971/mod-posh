@@ -1,5 +1,18 @@
 ﻿function New-SqlLogin
 {
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : blah
+            Created by   : Jeffrey
+            Date Coded   : 06/08/2014 17:32:12
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#blah
+    #>
+    [CmdletBinding()]
     param 
     (
         [parameter(Mandatory = $true)][string] $loginName,
@@ -63,6 +76,19 @@
     }
 function Add-SqlUser
 {
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : blah
+            Created by   : Jeffrey
+            Date Coded   : 06/08/2014 17:32:12
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#blah
+    #>
+    [CmdletBinding()]
     param 
     (
         [parameter(Mandatory = $true)][string] $loginName,
@@ -126,6 +152,19 @@ function Add-SqlUser
     }
 function Add-SqlRole
 {
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : blah
+            Created by   : Jeffrey
+            Date Coded   : 06/08/2014 17:32:12
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#blah
+    #>
+    [CmdletBinding()]
     param 
     (
         [parameter(Mandatory = $true)][string] $loginName,
@@ -190,6 +229,19 @@ function Add-SqlRole
     }
 function Set-SqlServerPermission
 {
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : blah
+            Created by   : Jeffrey
+            Date Coded   : 06/08/2014 17:32:12
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#blah
+    #>
+    [CmdletBinding()]
     param 
     (
         [parameter(Mandatory = $true)][string] $loginName,
@@ -262,6 +314,19 @@ function Set-SqlServerPermission
     }
 function Get-SqlUser
 {
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : blah
+            Created by   : Jeffrey
+            Date Coded   : 06/08/2014 17:32:12
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#blah
+    #>
+    [CmdletBinding()]
     param 
     (
         [parameter(Mandatory = $true)][string] $sqlServer,
@@ -323,6 +388,19 @@ function Get-SqlUser
     }
 function Get-SqlDatabase
 {
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : blah
+            Created by   : Jeffrey
+            Date Coded   : 06/08/2014 17:32:12
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#blah
+    #>
+    [CmdletBinding()]
     param 
     (
         [parameter(Mandatory = $true)][string] $sqlServer,
