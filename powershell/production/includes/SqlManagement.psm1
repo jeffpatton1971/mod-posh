@@ -437,6 +437,7 @@ function Get-SqlUser
 {
     <#
         .SYNOPSIS
+            Get a list of SQL users from the server
         .DESCRIPTION
         .PARAMETER ComputerName
             The name of the SQL server to connect to
@@ -448,12 +449,19 @@ function Get-SqlUser
         .PARAMETER Credential
             A credential object that represents a SQL Login that has permissions
         .EXAMPLE
+            Get-SqlUser
+
+            Description
+            -----------
+            This example shows how to get a list of users from the local Sql server
         .NOTES
             FunctionName : Get-SqlUser
             Created by   : Jeffrey
             Date Coded   : 06/08/2014 17:32:12
         .LINK
             https://code.google.com/p/mod-posh/wiki/SqlManagement#Get-SqlUser
+        .LINK
+            http://msdn.microsoft.com/en-us/library/ms179871.aspx
     #>
     [CmdletBinding()]
     param 
