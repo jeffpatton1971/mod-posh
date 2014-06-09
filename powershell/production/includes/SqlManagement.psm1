@@ -110,6 +110,8 @@ function New-SqlLogin
         .SYNOPSIS
             Creates a Database Engine login for SQL Server and Windows Azure SQL Database
         .DESCRIPTION
+            The login can connect to the Database Engine or SQL Database but only has the 
+            permissions granted to the public role
         .PARAMETER Login
             Specifies the name of the login that is created. There are four types of
             logins: SQL Server logins, Windows logins, certificate-mapped logins, and 
@@ -184,8 +186,11 @@ function Add-SqlUser
 {
     <#
         .SYNOPSIS
+            Adds a user to the current database
         .DESCRIPTION
-        .PARAMETER LoginName
+            This function grants access to a database but does not automatically grant any 
+            access to the objects in a database
+        .PARAMETER Login
             Specifies the name of the login that is created. There are four types of
             logins: SQL Server logins, Windows logins, certificate-mapped logins, and 
             asymmetric key-mapped logins. 
@@ -199,18 +204,25 @@ function Add-SqlUser
         .PARAMETER Credential
             A credential object that represents a SQL Login that has permissions
         .EXAMPLE
+            Add-SqlUser -Login "DOMAIN\JSmith" -ComputerName (& hostname) -Database 'master' -sqlInstance 'MSSQLSERVER'
+
+            Description
+            -----------
+            Adds the Windows domain user JSmithto the master database.
         .NOTES
             FunctionName : Add-SqlUser
             Created by   : Jeffrey
             Date Coded   : 06/08/2014 17:32:12
         .LINK
             https://code.google.com/p/mod-posh/wiki/SqlManagement#Add-SqlUser
+        .LINK
+            http://msdn.microsoft.com/en-us/library/ms173463.aspx
     #>
     [CmdletBinding()]
     param 
         (
         [parameter(Mandatory = $true)]
-        [string] $LoginName,
+        [string] $Login,
         [parameter(Mandatory = $true)]
         [string] $ComputerName,
         [parameter(Mandatory = $true)]
@@ -234,7 +246,7 @@ function Add-SqlUser
         {
             $sqlConnString += ";trusted_connection=true";
             }
-        $sqlCommandText = "create user [$($LoginName)] For Login [$($LoginName)]"
+        $sqlCommandText = "create user [$($Login)] For Login [$($Login)]"
         }
     Process
     {
