@@ -19,6 +19,7 @@
         [pscredential]$Credential = $null,
         [parameter(Mandatory = $true)]
         [string]$ConnectionString = $null,
+        [switch]$Command,
         [parameter(Mandatory = $true)]
         [string]$Query = $null
         )
@@ -54,99 +55,32 @@
                 }
             Write-Debug "Open connection";
             $SqlConnection.Open();
-            Write-Debug "Create System.Data.Dataset object to hold result";
-            $SqlDataSet = New-Object System.Data.DataSet;
-            Write-Debug "Create System.Data.SqlClient.SqlDataAdpater to fill the Dataset object";
-            $SqlAdapter = New-Object System.Data.SqlClient.SqlDataAdapter($Query, $SqlConnection);
-            Write-Debug "Fill the dataset object";
-            $Result = $SqlAdapter.Fill($SqlDataSet);
-            Write-Verbose "Return SQL Data";
-            Return $SqlDataSet.Tables;
-            }
-        catch
-        {
-            $str = (([string] $Error).Split(':'))[1]
-            Write-Error ($str.Replace('"', ''))
-            }
-        finally
-        {
-            if ($SqlConnection)
+            if ($Command)
             {
-                $SqlConnection.Close()
+                Write-Debug "Create a System.Data.SqlClient.SqlCommand object";
+                $SqlCommand = New-Object System.Data.SqlClient.SqlCommand;
+                Write-Debug "Set CommandType to 1";
+                $SqlCommand.CommandType = 1;
+                Write-Debug "Assign Connection object";
+                $SqlCommand.Connection = $SqlConnection;
+                Write-Debug "Set CommandText";
+                Write-Verbose $Command;
+                $SqlCommand.CommandText = $Command;
+                Write-Verbose "Return SQL Data";
+                $Result = $SqlCommand.ExecuteNonQuery();
                 }
-            }
-        }
-    End
-    {
-        }
-    }
-Function Invoke-SqlCommand
-{
-    <#
-        .SYNOPSIS
-        .DESCRIPTION
-        .PARAMETER
-        .EXAMPLE
-        .NOTES
-            FunctionName : Invoke-SqlCommand
-            Created by   : jspatton
-            Date Coded   : 06/09/2014 12:55:48
-        .LINK
-            https://code.google.com/p/mod-posh/wiki/Untitled9#Invoke-SqlCommand
-    #>
-    [CmdletBinding()]
-    Param
-        (
-        [parameter(Mandatory = $false)]
-        [pscredential]$Credential = $null,
-        [parameter(Mandatory = $true)]
-        [string]$ConnectionString = $null,
-        [parameter(Mandatory = $true)]
-        [string]$Command = $null
-        )
-    Begin
-    {
-        }
-    Process
-    {
-        try
-        {
-            Write-Debug "Make sure we stop on errors";
-            $ErrorActionPreference = "Stop";
-            Write-Debug "Clear out any previous errors";
-            $Error.Clear();
-            Write-Debug "Create System.Data.SqlClient.SqlConnectionStringBuilder";
-            Write-Debug "To build a proper connection string based on whats passed in";
-            Write-Verbose $ConnectionString;
-            $SqlConnectionStringBuilder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder($ConnectionString);
-            Write-Debug "Validated ConnectionString";
-            Write-Debug $SqlConnectionStringBuilder.ConnectionString;
-            Write-Debug "Create System.Data.SqlClient.SqlConnection to connect to sql";
-            $SqlConnection = New-Object System.Data.SqlClient.SqlConnection($SqlConnectionStringBuilder.ConnectionString);
-            Write-Debug "Create a System.Data.SqlClient.SqlCommand object";
-            $SqlCommand = New-Object System.Data.SqlClient.SqlCommand;
-            Write-Debug "Set CommandType to 1";
-            $SqlCommand.CommandType = 1;
-            Write-Debug "Assign Connection object";
-            $SqlCommand.Connection = $SqlConnection;
-            Write-Debug "Set CommandText";
-            Write-Verbose $Command;
-            $SqlCommand.CommandText = $Command;
-            Write-Debug "Check if credentials are passed in";
-            if ($Credential)
+            else
             {
-                Write-Debug "SqlCredentials can only accept read-only passwords";
-                Write-Debug "Make credential password readonly";
-                $Credential.Password.MakeReadOnly();
-                Write-Debug "Create a System.Data.SqlClient.SqlCredential to hold credentials";
-                $sqlCredential = New-Object System.Data.SqlClient.SqlCredential($Credential.UserName, $Credential.Password);
-                Write-Verbose "Assign credentials to connection object";
-                $SqlConnection.Credential = $sqlCredential;
+                Write-Debug "Create System.Data.Dataset object to hold result";
+                $SqlDataSet = New-Object System.Data.DataSet;
+                Write-Debug "Create System.Data.SqlClient.SqlDataAdpater to fill the Dataset object";
+                $SqlAdapter = New-Object System.Data.SqlClient.SqlDataAdapter($Query, $SqlConnection);
+                Write-Debug "Fill the dataset object";
+                $Output = $SqlAdapter.Fill($SqlDataSet);
+                Write-Verbose "Return SQL Data";
+                $Result = $SqlDataSet.Tables;
                 }
-            Write-Debug "Open connection";
-            $SqlConnection.Open();
-            Write-Verbose "Return SQL Data";
-            Return $SqlCommand.ExecuteNonQuery();
+            Return $Result;
             }
         catch
         {
@@ -227,7 +161,7 @@ function New-SqlLogin
         }
     Process
     {
-        $Result = Invoke-SqlCommand -Credential $Credential -ConnectionString $sqlConnString -Command $sqlCommandText;
+        $Result = Invoke-SqlQuery -Credential $Credential -ConnectionString $sqlConnString -Command -Query $sqlCommandText;
         }
     End
     {
@@ -291,7 +225,7 @@ function Add-SqlUser
         }
     Process
     {
-        $Result = Invoke-SqlCommand -Credential $Credential -ConnectionString $sqlConnString -Command $sqlCommandText;
+        $Result = Invoke-SqlQuery -Credential $Credential -ConnectionString $sqlConnString -Command -Query $sqlCommandText;
         }
     End
     {
@@ -358,7 +292,7 @@ function Add-SqlRole
         }
     Process
     {
-        $Result = Invoke-SqlCommand -Credential $Credential -ConnectionString $sqlConnString -Command $sqlCommandText
+        $Result = Invoke-SqlQuery -Credential $Credential -ConnectionString $sqlConnString -Command -Query $sqlCommandText;
         }
     End
     {
@@ -434,7 +368,7 @@ function Set-ComputerNamePermission
         }
     Process
     {
-        $Result = Invoke-SqlCommand -Credential $Credential -ConnectionString $sqlConnString -Command $sqlCommandText;
+        $Result = Invoke-SqlQuery -Credential $Credential -ConnectionString $sqlConnString -Command -Query $sqlCommandText;
         }
     End
     {
