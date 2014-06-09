@@ -4,9 +4,9 @@
         .SYNOPSIS
         .DESCRIPTION
         .PARAMETER LoginName
-        .PARAMETER SqlServer
+        .PARAMETER ComputerName
         .PARAMETER Database
-        .PARAMETER SqlInstance
+        .PARAMETER Instance
         .PARAMETER Credential
         .EXAMPLE
         .NOTES
@@ -20,13 +20,13 @@
     param 
     (
         [parameter(Mandatory = $true)]
-        [string] $loginName,
+        [string] $LoginName,
         [parameter(Mandatory = $true)]
-        [string] $sqlServer,
+        [string] $ComputerName,
         [parameter(Mandatory = $true)]
         [string] $Database,
         [parameter(Mandatory = $false)]
-        [string] $sqlInstance,
+        [string] $Instance,
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
     )
@@ -36,13 +36,13 @@
     try
     {
         $Error.Clear()
-        if ($sqlInstance -eq $null)
+        if ($Instance -eq $null)
         {
-            $sqlConnString = "Server=tcp:$($sqlServer);Database=$($Database)";
+            $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
             }
         else
         {
-            $sqlConnString = "Server=tcp:$($sqlServer)\$($sqlInstance);Database=$($Database)";
+            $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
             }
         if ($Credential)
         {
@@ -60,7 +60,7 @@
         $sqlCommand = New-Object System.Data.SqlClient.SqlCommand
         $sqlCommand.CommandType = 1
         $sqlCommand.Connection = $sqlConnection
-        $sqlCommandText = "create login [$($loginName)] from windows with default_database=[$($Database)], default_language=[us_english]"
+        $sqlCommandText = "create login [$($LoginName)] from windows with default_database=[$($Database)], default_language=[us_english]"
         Write-Verbose $sqlCommandText
         $sqlCommand.CommandText = $sqlCommandText;
         if ($sqlCredential)
@@ -89,9 +89,9 @@ function Add-SqlUser
         .SYNOPSIS
         .DESCRIPTION
         .PARAMETER LoginName
-        .PARAMETER SqlServer
+        .PARAMETER ComputerName
         .PARAMETER Database
-        .PARAMETER SqlInstance
+        .PARAMETER Instance
         .PARAMETER Credential
         .EXAMPLE
         .NOTES
@@ -105,13 +105,13 @@ function Add-SqlUser
     param 
     (
         [parameter(Mandatory = $true)]
-        [string] $loginName,
+        [string] $LoginName,
         [parameter(Mandatory = $true)]
-        [string] $sqlServer,
+        [string] $ComputerName,
         [parameter(Mandatory = $true)]
         [string] $Database,
         [parameter(Mandatory = $false)]
-        [string] $sqlInstance,
+        [string] $Instance,
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
     )
@@ -121,13 +121,13 @@ function Add-SqlUser
     try
     {
         $Error.Clear()
-        if ($sqlInstance -eq $null)
+        if ($Instance -eq $null)
         {
-            $sqlConnString = "Server=tcp:$($sqlServer);Database=$($Database)";
+            $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
             }
         else
         {
-            $sqlConnString = "Server=tcp:$($sqlServer)\$($sqlInstance);Database=$($Database)";
+            $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
             }
         if ($Credential)
         {
@@ -145,7 +145,7 @@ function Add-SqlUser
         $sqlCommand = New-Object System.Data.SqlClient.SqlCommand
         $sqlCommand.CommandType = 1
         $sqlCommand.Connection = $sqlConnection
-        $sqlCommandText = "create user [$($loginName)] For Login [$($loginName)]"
+        $sqlCommandText = "create user [$($LoginName)] For Login [$($LoginName)]"
         Write-Verbose $sqlCommandText
         $sqlCommand.CommandText = $sqlCommandText;
         if ($sqlCredential)
@@ -174,10 +174,10 @@ function Add-SqlRole
         .SYNOPSIS
         .DESCRIPTION
         .PARAMETER LoginName
-        .PARAMETER SqlServer
+        .PARAMETER ComputerName
         .PARAMETER Database
         .PARAMETER Role
-        .PARAMETER SqlInstance
+        .PARAMETER Instance
         .PARAMETER Credential
         .EXAMPLE
         .NOTES
@@ -191,15 +191,15 @@ function Add-SqlRole
     param 
     (
         [parameter(Mandatory = $true)]
-        [string] $loginName,
+        [string] $LoginName,
         [parameter(Mandatory = $true)]
-        [string] $sqlServer,
+        [string] $ComputerName,
         [parameter(Mandatory = $true)]
         [string] $Database,
         [parameter(Mandatory = $true)]
         [string] $Role,
         [parameter(Mandatory = $false)]
-        [string] $sqlInstance,
+        [string] $Instance,
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
     )
@@ -209,13 +209,13 @@ function Add-SqlRole
     try
     {
         $Error.Clear()
-        if ($sqlInstance -eq $null)
+        if ($Instance -eq $null)
         {
-            $sqlConnString = "Server=tcp:$($sqlServer);Database=$($Database)";
+            $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
             }
         else
         {
-            $sqlConnString = "Server=tcp:$($sqlServer)\$($sqlInstance);Database=$($Database)";
+            $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
             }
         if ($Credential)
         {
@@ -233,7 +233,7 @@ function Add-SqlRole
         $sqlCommand = New-Object System.Data.SqlClient.SqlCommand
         $sqlCommand.CommandType = 1
         $sqlCommand.Connection = $sqlConnection
-        $sqlCommandText = "exec [$($Database)]..sp_addrolemember $($Role), [$($loginName)]"
+        $sqlCommandText = "exec [$($Database)]..sp_addrolemember $($Role), [$($LoginName)]"
         Write-Verbose $sqlCommandText
         $sqlCommand.CommandText = $sqlCommandText;
         if ($sqlCredential)
@@ -256,40 +256,40 @@ function Add-SqlRole
             }
         }
     }
-function Set-SqlServerPermission
+function Set-ComputerNamePermission
 {
     <#
         .SYNOPSIS
         .DESCRIPTION
         .PARAMETER LoginName
-        .PARAMETER SqlServer
+        .PARAMETER ComputerName
         .PARAMETER Database
         .PARAMETER Grant
         .PARAMETER Permission
-        .PARAMETER SqlInstance
+        .PARAMETER Instance
         .PARAMETER Credential
         .EXAMPLE
         .NOTES
-            FunctionName : Set-SqlServerPermission
+            FunctionName : Set-ComputerNamePermission
             Created by   : Jeffrey
             Date Coded   : 06/08/2014 17:32:12
         .LINK
-            https://code.google.com/p/mod-posh/wiki/SqlManagement#Set-SqlServerPermission
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#Set-ComputerNamePermission
     #>
     [CmdletBinding()]
     param 
     (
         [parameter(Mandatory = $true)]
-        [string] $loginName,
+        [string] $LoginName,
         [parameter(Mandatory = $true)]
-        [string] $sqlServer,
+        [string] $ComputerName,
         [parameter(Mandatory = $true)]
         [string] $Database,
         [switch] $Grant,
         [parameter(Mandatory = $true)]
         [string] $Permission,
         [parameter(Mandatory = $false)]
-        [string] $sqlInstance,
+        [string] $Instance,
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
     )
@@ -299,13 +299,13 @@ function Set-SqlServerPermission
     try
     {
         $Error.Clear()
-        if ($sqlInstance -eq $null)
+        if ($Instance -eq $null)
         {
-            $sqlConnString = "Server=tcp:$($sqlServer);Database=$($Database)";
+            $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
             }
         else
         {
-            $sqlConnString = "Server=tcp:$($sqlServer)\$($sqlInstance);Database=$($Database)";
+            $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
             }
         if ($Credential)
         {
@@ -325,11 +325,11 @@ function Set-SqlServerPermission
         $sqlCommand.Connection = $sqlConnection
         if ($Grant)
         {
-            $sqlCommandText = "GRANT $($Permission) TO [$($loginName)]"
+            $sqlCommandText = "GRANT $($Permission) TO [$($LoginName)]"
             }
         else
         {
-            $sqlCommandText = "DENY $($Permission) TO [$($loginName)]"
+            $sqlCommandText = "DENY $($Permission) TO [$($LoginName)]"
             }
         Write-Verbose $sqlCommandText
         $sqlCommand.CommandText = $sqlCommandText;
@@ -358,9 +358,9 @@ function Get-SqlUser
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER SqlServer
+        .PARAMETER ComputerName
         .PARAMETER Database
-        .PARAMETER SqlInstance
+        .PARAMETER Instance
         .PARAMETER Credential
         .EXAMPLE
         .NOTES
@@ -374,11 +374,11 @@ function Get-SqlUser
     param 
     (
         [parameter(Mandatory = $true)]
-        [string] $sqlServer,
+        [string] $ComputerName,
         [parameter(Mandatory = $true)]
         [string] $Database,
         [parameter(Mandatory = $false)]
-        [string] $sqlInstance,
+        [string] $Instance,
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
     )
@@ -388,13 +388,13 @@ function Get-SqlUser
     try
     {
         $Error.Clear()
-        if ($sqlInstance -eq $null)
+        if ($Instance -eq $null)
         {
-            $sqlConnString = "Server=tcp:$($sqlServer);Database=$($Database)";
+            $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
             }
         else
         {
-            $sqlConnString = "Server=tcp:$($sqlServer)\$($sqlInstance);Database=$($Database)";
+            $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
             }
         if ($Credential)
         {
@@ -439,9 +439,9 @@ function Get-SqlDatabase
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER SqlServer
+        .PARAMETER ComputerName
         .PARAMETER Database
-        .PARAMETER SqlInstance
+        .PARAMETER Instance
         .PARAMETER Credential
         .EXAMPLE
         .NOTES
@@ -455,11 +455,11 @@ function Get-SqlDatabase
     param 
     (
         [parameter(Mandatory = $true)]
-        [string] $sqlServer,
+        [string] $ComputerName,
         [parameter(Mandatory = $false)]
         [string] $Database,
         [parameter(Mandatory = $false)]
-        [string] $sqlInstance,
+        [string] $Instance,
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
     )
@@ -469,13 +469,13 @@ function Get-SqlDatabase
     try
     {
         $Error.Clear()
-        if ($sqlInstance -eq $null)
+        if ($Instance -eq $null)
         {
-            $sqlConnString = "Server=tcp:$($sqlServer)";
+            $sqlConnString = "Server=tcp:$($ComputerName)";
             }
         else
         {
-            $sqlConnString = "Server=tcp:$($sqlServer)\$($sqlInstance)";
+            $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance)";
             }
         if ($Database -eq $null)
         {
