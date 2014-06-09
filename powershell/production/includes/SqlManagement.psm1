@@ -3,7 +3,11 @@
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER LoginName
+        .PARAMETER SqlServer
+        .PARAMETER Database
+        .PARAMETER SqlInstance
+        .PARAMETER Credential
         .EXAMPLE
         .NOTES
             FunctionName : New-SqlLogin
@@ -84,7 +88,11 @@ function Add-SqlUser
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER LoginName
+        .PARAMETER SqlServer
+        .PARAMETER Database
+        .PARAMETER SqlInstance
+        .PARAMETER Credential
         .EXAMPLE
         .NOTES
             FunctionName : Add-SqlUser
@@ -165,7 +173,12 @@ function Add-SqlRole
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER LoginName
+        .PARAMETER SqlServer
+        .PARAMETER Database
+        .PARAMETER Role
+        .PARAMETER SqlInstance
+        .PARAMETER Credential
         .EXAMPLE
         .NOTES
             FunctionName : Add-SqlRole
@@ -248,7 +261,13 @@ function Set-SqlServerPermission
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER LoginName
+        .PARAMETER SqlServer
+        .PARAMETER Database
+        .PARAMETER Grant
+        .PARAMETER Permission
+        .PARAMETER SqlInstance
+        .PARAMETER Credential
         .EXAMPLE
         .NOTES
             FunctionName : Set-SqlServerPermission
@@ -339,7 +358,10 @@ function Get-SqlUser
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER SqlServer
+        .PARAMETER Database
+        .PARAMETER SqlInstance
+        .PARAMETER Credential
         .EXAMPLE
         .NOTES
             FunctionName : Get-SqlUser
@@ -417,7 +439,10 @@ function Get-SqlDatabase
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER SqlServer
+        .PARAMETER Database
+        .PARAMETER SqlInstance
+        .PARAMETER Credential
         .EXAMPLE
         .NOTES
             FunctionName : Get-SqlDatabase
