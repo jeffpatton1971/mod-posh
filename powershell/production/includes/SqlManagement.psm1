@@ -439,6 +439,7 @@ function Get-SqlUser
         .SYNOPSIS
             Get a list of SQL users from the server
         .DESCRIPTION
+            This function returns a list of users that are found in the sys.sysusers view
         .PARAMETER ComputerName
             The name of the SQL server to connect to
         .PARAMETER Database
@@ -492,7 +493,7 @@ function Get-SqlUser
         }
     Process
     {
-        $sqlCommandText = "select * from sys.sysusers"
+        $sqlCommandText = "SELECT * FROM [sys].[sysusers]"
         $Result = Invoke-SqlQuery -Credential $Credential -ConnectionString $sqlConnString -Query $sqlCommandText;
         }
     End
@@ -504,7 +505,9 @@ function Get-SqlDatabase
 {
     <#
         .SYNOPSIS
+            Get a list of databases
         .DESCRIPTION
+            Return a list of databases from the sys.databases view
         .PARAMETER ComputerName
             The name of the SQL server to connect to
         .PARAMETER Database
@@ -515,6 +518,11 @@ function Get-SqlDatabase
         .PARAMETER Credential
             A credential object that represents a SQL Login that has permissions
         .EXAMPLE
+            Get-SqlDatabase
+
+            Description
+            -----------
+            This example shows how to get a list of databases from the local Sql server
         .NOTES
             FunctionName : Get-SqlDatabase
             Created by   : Jeffrey
@@ -555,7 +563,7 @@ function Get-SqlDatabase
         }
     Process
     {
-        $sqlCommandText = "SELECT name FROM master..sysdatabases"
+        $sqlCommandText = "SELECT [name] ,[create_date] ,[collation_name] ,[state_desc] FROM [sys].[databases]"
         $Result = Invoke-SqlQuery -Credential $Credential -ConnectionString $sqlConnString -Query $sqlCommandText;
         }
     End
