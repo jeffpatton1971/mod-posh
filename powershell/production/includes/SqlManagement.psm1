@@ -2,11 +2,19 @@
 {
     <#
         .SYNOPSIS
+            Creates a Database Engine login for SQL Server and Windows Azure SQL Database
         .DESCRIPTION
         .PARAMETER LoginName
+            Specifies the name of the login that is created. There are four types of
+            logins: SQL Server logins, Windows logins, certificate-mapped logins, and 
+            asymmetric key-mapped logins. 
         .PARAMETER ComputerName
+            The name of the SQL server to connect to
         .PARAMETER Database
+            Specifies the default database to be assigned to the login
         .PARAMETER Instance
+            The instance name is used to resolve to a particular TCP/IP port number on 
+            which a database instance is hosted
         .PARAMETER Credential
         .EXAMPLE
         .NOTES
@@ -15,10 +23,14 @@
             Date Coded   : 06/08/2014 17:32:12
         .LINK
             https://code.google.com/p/mod-posh/wiki/SqlManagement#New-SqlLogin
+        .LINK
+            http://msdn.microsoft.com/en-us/library/ms189751.aspx
+        .LINK
+            http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlconnection.connectionstring(v=vs.110).aspx
     #>
     [CmdletBinding()]
     param 
-    (
+        (
         [parameter(Mandatory = $true)]
         [string] $LoginName,
         [parameter(Mandatory = $true)]
@@ -29,7 +41,7 @@
         [string] $Instance,
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
-    )
+        )
 
     $sqlConnection = $null
 
@@ -89,9 +101,16 @@ function Add-SqlUser
         .SYNOPSIS
         .DESCRIPTION
         .PARAMETER LoginName
+            Specifies the name of the login that is created. There are four types of
+            logins: SQL Server logins, Windows logins, certificate-mapped logins, and 
+            asymmetric key-mapped logins. 
         .PARAMETER ComputerName
+            The name of the SQL server to connect to
         .PARAMETER Database
+            Specifies the default database to be assigned to the login
         .PARAMETER Instance
+            The instance name is used to resolve to a particular TCP/IP port number on 
+            which a database instance is hosted
         .PARAMETER Credential
         .EXAMPLE
         .NOTES
@@ -103,7 +122,7 @@ function Add-SqlUser
     #>
     [CmdletBinding()]
     param 
-    (
+        (
         [parameter(Mandatory = $true)]
         [string] $LoginName,
         [parameter(Mandatory = $true)]
@@ -114,7 +133,7 @@ function Add-SqlUser
         [string] $Instance,
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
-    )
+        )
 
     $sqlConnection = $null
 
@@ -174,10 +193,17 @@ function Add-SqlRole
         .SYNOPSIS
         .DESCRIPTION
         .PARAMETER LoginName
+            Specifies the name of the login that is created. There are four types of
+            logins: SQL Server logins, Windows logins, certificate-mapped logins, and 
+            asymmetric key-mapped logins. 
         .PARAMETER ComputerName
+            The name of the SQL server to connect to
         .PARAMETER Database
+            Specifies the default database to be assigned to the login
         .PARAMETER Role
         .PARAMETER Instance
+            The instance name is used to resolve to a particular TCP/IP port number on 
+            which a database instance is hosted
         .PARAMETER Credential
         .EXAMPLE
         .NOTES
@@ -189,7 +215,7 @@ function Add-SqlRole
     #>
     [CmdletBinding()]
     param 
-    (
+        (
         [parameter(Mandatory = $true)]
         [string] $LoginName,
         [parameter(Mandatory = $true)]
@@ -202,7 +228,7 @@ function Add-SqlRole
         [string] $Instance,
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
-    )
+        )
 
     $sqlConnection = $null
 
@@ -262,11 +288,18 @@ function Set-ComputerNamePermission
         .SYNOPSIS
         .DESCRIPTION
         .PARAMETER LoginName
+            Specifies the name of the login that is created. There are four types of
+            logins: SQL Server logins, Windows logins, certificate-mapped logins, and 
+            asymmetric key-mapped logins. 
         .PARAMETER ComputerName
+            The name of the SQL server to connect to
         .PARAMETER Database
+            Specifies the default database to be assigned to the login
         .PARAMETER Grant
         .PARAMETER Permission
         .PARAMETER Instance
+            The instance name is used to resolve to a particular TCP/IP port number on 
+            which a database instance is hosted
         .PARAMETER Credential
         .EXAMPLE
         .NOTES
@@ -278,7 +311,7 @@ function Set-ComputerNamePermission
     #>
     [CmdletBinding()]
     param 
-    (
+        (
         [parameter(Mandatory = $true)]
         [string] $LoginName,
         [parameter(Mandatory = $true)]
@@ -292,7 +325,7 @@ function Set-ComputerNamePermission
         [string] $Instance,
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
-    )
+        )
 
     $sqlConnection = $null
 
@@ -359,8 +392,12 @@ function Get-SqlUser
         .SYNOPSIS
         .DESCRIPTION
         .PARAMETER ComputerName
+            The name of the SQL server to connect to
         .PARAMETER Database
+            Specifies the default database to be assigned to the login
         .PARAMETER Instance
+            The instance name is used to resolve to a particular TCP/IP port number on 
+            which a database instance is hosted
         .PARAMETER Credential
         .EXAMPLE
         .NOTES
@@ -372,7 +409,7 @@ function Get-SqlUser
     #>
     [CmdletBinding()]
     param 
-    (
+        (
         [parameter(Mandatory = $true)]
         [string] $ComputerName,
         [parameter(Mandatory = $true)]
@@ -381,7 +418,7 @@ function Get-SqlUser
         [string] $Instance,
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
-    )
+        )
 
     $sqlConnection = $null
 
@@ -440,8 +477,12 @@ function Get-SqlDatabase
         .SYNOPSIS
         .DESCRIPTION
         .PARAMETER ComputerName
+            The name of the SQL server to connect to
         .PARAMETER Database
+            Specifies the default database to be assigned to the login
         .PARAMETER Instance
+            The instance name is used to resolve to a particular TCP/IP port number on 
+            which a database instance is hosted
         .PARAMETER Credential
         .EXAMPLE
         .NOTES
@@ -453,7 +494,7 @@ function Get-SqlDatabase
     #>
     [CmdletBinding()]
     param 
-    (
+        (
         [parameter(Mandatory = $true)]
         [string] $ComputerName,
         [parameter(Mandatory = $false)]
@@ -462,7 +503,7 @@ function Get-SqlDatabase
         [string] $Instance,
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
-    )
+        )
 
     $sqlConnection = $null
 
