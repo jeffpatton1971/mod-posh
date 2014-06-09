@@ -529,6 +529,8 @@ function Get-SqlDatabase
             Date Coded   : 06/08/2014 17:32:12
         .LINK
             https://code.google.com/p/mod-posh/wiki/SqlManagement#Get-SqlDatabase
+        .LINK
+            http://msdn.microsoft.com/en-us/library/ms179900.aspx
     #>
     [CmdletBinding()]
     param 
