@@ -1,4 +1,171 @@
-﻿function New-SqlLogin
+﻿Function Invoke-SqlQuery
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : Invoke-SqlQuery
+            Created by   : jspatton
+            Date Coded   : 06/09/2014 12:31:07
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/Untitled9#Invoke-SqlQuery
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [parameter(Mandatory = $false)]
+        [pscredential]$Credential = $null,
+        [parameter(Mandatory = $true)]
+        [string]$ConnectionString = $null,
+        [parameter(Mandatory = $true)]
+        [string]$Query = $null
+        )
+    Begin
+    {
+        }
+    Process
+    {
+        try
+        {
+            Write-Debug "Make sure we stop on errors";
+            $ErrorActionPreference = "Stop";
+            Write-Debug "Clear out any previous errors";
+            $Error.Clear();
+            Write-Debug "Create System.Data.SqlClient.SqlConnectionStringBuilder";
+            Write-Debug "To build a proper connection string based on whats passed in";
+            Write-Verbose $ConnectionString;
+            $SqlConnectionStringBuilder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder($ConnectionString);
+            Write-Debug "Validated ConnectionString";
+            Write-Debug $SqlConnectionStringBuilder.ConnectionString;
+            Write-Debug "Create System.Data.SqlClient.SqlConnection to connect to sql";
+            $SqlConnection = New-Object System.Data.SqlClient.SqlConnection($SqlConnectionStringBuilder.ConnectionString);
+            Write-Debug "Check if credentials are passed in";
+            if ($Credential)
+            {
+                Write-Debug "SqlCredentials can only accept read-only passwords";
+                Write-Debug "Make credential password readonly";
+                $Credential.Password.MakeReadOnly();
+                Write-Debug "Create a System.Data.SqlClient.SqlCredential to hold credentials";
+                $sqlCredential = New-Object System.Data.SqlClient.SqlCredential($Credential.UserName, $Credential.Password);
+                Write-Verbose "Assign credentials to connection object";
+                $SqlConnection.Credential = $sqlCredential;
+                }
+            Write-Debug "Open connection";
+            $SqlConnection.Open();
+            Write-Debug "Create System.Data.Dataset object to hold result";
+            $SqlDataSet = New-Object System.Data.DataSet;
+            Write-Debug "Create System.Data.SqlClient.SqlDataAdpater to fill the Dataset object";
+            $SqlAdapter = New-Object System.Data.SqlClient.SqlDataAdapter($Query, $SqlConnection);
+            Write-Debug "Fill the dataset object";
+            $Result = $SqlAdapter.Fill($SqlDataSet);
+            Write-Verbose "Return SQL Data";
+            Return $SqlDataSet.Tables;
+            }
+        catch
+        {
+            $str = (([string] $Error).Split(':'))[1]
+            Write-Error ($str.Replace('"', ''))
+            }
+        finally
+        {
+            if ($SqlConnection)
+            {
+                $SqlConnection.Close()
+                }
+            }
+        }
+    End
+    {
+        }
+    }
+Function Invoke-SqlCommand
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : Invoke-SqlCommand
+            Created by   : jspatton
+            Date Coded   : 06/09/2014 12:55:48
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/Untitled9#Invoke-SqlCommand
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [parameter(Mandatory = $false)]
+        [pscredential]$Credential = $null,
+        [parameter(Mandatory = $true)]
+        [string]$ConnectionString = $null,
+        [parameter(Mandatory = $true)]
+        [string]$Command = $null
+        )
+    Begin
+    {
+        }
+    Process
+    {
+        try
+        {
+            Write-Debug "Make sure we stop on errors";
+            $ErrorActionPreference = "Stop";
+            Write-Debug "Clear out any previous errors";
+            $Error.Clear();
+            Write-Debug "Create System.Data.SqlClient.SqlConnectionStringBuilder";
+            Write-Debug "To build a proper connection string based on whats passed in";
+            Write-Verbose $ConnectionString;
+            $SqlConnectionStringBuilder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder($ConnectionString);
+            Write-Debug "Validated ConnectionString";
+            Write-Debug $SqlConnectionStringBuilder.ConnectionString;
+            Write-Debug "Create System.Data.SqlClient.SqlConnection to connect to sql";
+            $SqlConnection = New-Object System.Data.SqlClient.SqlConnection($SqlConnectionStringBuilder.ConnectionString);
+            Write-Debug "Create a System.Data.SqlClient.SqlCommand object";
+            $SqlCommand = New-Object System.Data.SqlClient.SqlCommand;
+            Write-Debug "Set CommandType to 1";
+            $SqlCommand.CommandType = 1;
+            Write-Debug "Assign Connection object";
+            $SqlCommand.Connection = $SqlConnection;
+            Write-Debug "Set CommandText";
+            Write-Verbose $Command;
+            $SqlCommand.CommandText = $Command;
+            Write-Debug "Check if credentials are passed in";
+            if ($Credential)
+            {
+                Write-Debug "SqlCredentials can only accept read-only passwords";
+                Write-Debug "Make credential password readonly";
+                $Credential.Password.MakeReadOnly();
+                Write-Debug "Create a System.Data.SqlClient.SqlCredential to hold credentials";
+                $sqlCredential = New-Object System.Data.SqlClient.SqlCredential($Credential.UserName, $Credential.Password);
+                Write-Verbose "Assign credentials to connection object";
+                $SqlConnection.Credential = $sqlCredential;
+                }
+            Write-Debug "Open connection";
+            $SqlConnection.Open();
+            Write-Verbose "Return SQL Data";
+            Return $SqlCommand.ExecuteNonQuery();
+            }
+        catch
+        {
+            $str = (([string] $Error).Split(':'))[1]
+            Write-Error ($str.Replace('"', ''))
+            }
+        finally
+        {
+            if ($SqlConnection)
+            {
+                $SqlConnection.Close()
+                }
+            }
+        }
+    End
+    {
+        }
+    }
+function New-SqlLogin
 {
     <#
         .SYNOPSIS
@@ -42,12 +209,8 @@
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
         )
-
-    $sqlConnection = $null
-
-    try
+    Begin
     {
-        $Error.Clear()
         if ($Instance -eq $null)
         {
             $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
@@ -56,43 +219,19 @@
         {
             $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
             }
-        if ($Credential)
-        {
-            $Credential.Password.MakeReadOnly();
-            $sqlCredential = New-Object System.Data.SqlClient.SqlCredential($Credential.UserName, $Credential.Password);
-            }
-        else
+        if (!($Credential))
         {
             $sqlConnString += ";trusted_connection=true";
             }
-        Write-Verbose $sqlConnString
-        $sqlConnBuilder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder($sqlConnString);
-        Write-Verbose $sqlConnBuilder.ConnectionString
-        $sqlConnection = New-Object System.Data.SqlClient.SqlConnection($sqlConnBuilder.ConnectionString);
-        $sqlCommand = New-Object System.Data.SqlClient.SqlCommand
-        $sqlCommand.CommandType = 1
-        $sqlCommand.Connection = $sqlConnection
         $sqlCommandText = "create login [$($LoginName)] from windows with default_database=[$($Database)], default_language=[us_english]"
-        Write-Verbose $sqlCommandText
-        $sqlCommand.CommandText = $sqlCommandText;
-        if ($sqlCredential)
-        {
-            $sqlConnection.Credential = $sqlCredential;
-            }
-        $sqlConnection.Open()
-        $sqlCommand.ExecuteNonQuery()
         }
-    catch
+    Process
     {
-        $str = (([string] $Error).Split(':'))[1]
-        Write-Error ($str.Replace('"', ''))
+        $Result = Invoke-SqlCommand -Credential $Credential -ConnectionString $sqlConnString -Command $sqlCommandText;
         }
-    finally
+    End
     {
-        if ($sqlConnection)
-        {
-            $sqlConnection.Close()
-            }
+        Return $Result
         }
     }
 function Add-SqlUser
@@ -134,12 +273,8 @@ function Add-SqlUser
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
         )
-
-    $sqlConnection = $null
-
-    try
+    Begin
     {
-        $Error.Clear()
         if ($Instance -eq $null)
         {
             $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
@@ -148,43 +283,19 @@ function Add-SqlUser
         {
             $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
             }
-        if ($Credential)
-        {
-            $Credential.Password.MakeReadOnly();
-            $sqlCredential = New-Object System.Data.SqlClient.SqlCredential($Credential.UserName, $Credential.Password);
-            }
-        else
+        if (!($Credential))
         {
             $sqlConnString += ";trusted_connection=true";
             }
-        Write-Verbose $sqlConnString
-        $sqlConnBuilder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder($sqlConnString);
-        Write-Verbose $sqlConnBuilder.ConnectionString
-        $sqlConnection = New-Object System.Data.SqlClient.SqlConnection($sqlConnBuilder.ConnectionString);
-        $sqlCommand = New-Object System.Data.SqlClient.SqlCommand
-        $sqlCommand.CommandType = 1
-        $sqlCommand.Connection = $sqlConnection
         $sqlCommandText = "create user [$($LoginName)] For Login [$($LoginName)]"
-        Write-Verbose $sqlCommandText
-        $sqlCommand.CommandText = $sqlCommandText;
-        if ($sqlCredential)
-        {
-            $sqlConnection.Credential = $sqlCredential;
-            }
-        $sqlConnection.Open()
-        $sqlCommand.ExecuteNonQuery()
         }
-    catch
+    Process
     {
-        $str = (([string] $Error).Split(':'))[1]
-        Write-Error ($str.Replace('"', ''))
+        $Result = Invoke-SqlCommand -Credential $Credential -ConnectionString $sqlConnString -Command $sqlCommandText;
         }
-    finally
+    End
     {
-        if ($sqlConnection)
-        {
-            $sqlConnection.Close()
-            }
+        Return $Result
         }
     }
 function Add-SqlRole
@@ -229,12 +340,8 @@ function Add-SqlRole
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
         )
-
-    $sqlConnection = $null
-
-    try
+    Begin
     {
-        $Error.Clear()
         if ($Instance -eq $null)
         {
             $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
@@ -243,43 +350,19 @@ function Add-SqlRole
         {
             $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
             }
-        if ($Credential)
-        {
-            $Credential.Password.MakeReadOnly();
-            $sqlCredential = New-Object System.Data.SqlClient.SqlCredential($Credential.UserName, $Credential.Password);
-            }
-        else
+        if (!($Credential))
         {
             $sqlConnString += ";trusted_connection=true";
             }
-        Write-Verbose $sqlConnString
-        $sqlConnBuilder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder($sqlConnString);
-        Write-Verbose $sqlConnBuilder.ConnectionString
-        $sqlConnection = New-Object System.Data.SqlClient.SqlConnection($sqlConnBuilder.ConnectionString);
-        $sqlCommand = New-Object System.Data.SqlClient.SqlCommand
-        $sqlCommand.CommandType = 1
-        $sqlCommand.Connection = $sqlConnection
         $sqlCommandText = "exec [$($Database)]..sp_addrolemember $($Role), [$($LoginName)]"
-        Write-Verbose $sqlCommandText
-        $sqlCommand.CommandText = $sqlCommandText;
-        if ($sqlCredential)
-        {
-            $sqlConnection.Credential = $sqlCredential;
-            }
-        $sqlConnection.Open()
-        $sqlCommand.ExecuteNonQuery()
         }
-    catch
+    Process
     {
-        $str = (([string] $Error).Split(':'))[1]
-        Write-Error ($str.Replace('"', ''))
+        $Result = Invoke-SqlCommand -Credential $Credential -ConnectionString $sqlConnString -Command $sqlCommandText
         }
-    finally
+    End
     {
-        if ($sqlConnection)
-        {
-            $sqlConnection.Close()
-            }
+        Return $Result
         }
     }
 function Set-ComputerNamePermission
@@ -326,12 +409,8 @@ function Set-ComputerNamePermission
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
         )
-
-    $sqlConnection = $null
-
-    try
+    Begin
     {
-        $Error.Clear()
         if ($Instance -eq $null)
         {
             $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
@@ -340,22 +419,10 @@ function Set-ComputerNamePermission
         {
             $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
             }
-        if ($Credential)
-        {
-            $Credential.Password.MakeReadOnly();
-            $sqlCredential = New-Object System.Data.SqlClient.SqlCredential($Credential.UserName, $Credential.Password);
-            }
-        else
+        if (!($Credential))
         {
             $sqlConnString += ";trusted_connection=true";
             }
-        Write-Verbose $sqlConnString
-        $sqlConnBuilder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder($sqlConnString);
-        Write-Verbose $sqlConnBuilder.ConnectionString
-        $sqlConnection = New-Object System.Data.SqlClient.SqlConnection($sqlConnBuilder.ConnectionString);
-        $sqlCommand = New-Object System.Data.SqlClient.SqlCommand
-        $sqlCommand.CommandType = 1
-        $sqlCommand.Connection = $sqlConnection
         if ($Grant)
         {
             $sqlCommandText = "GRANT $($Permission) TO [$($LoginName)]"
@@ -364,26 +431,14 @@ function Set-ComputerNamePermission
         {
             $sqlCommandText = "DENY $($Permission) TO [$($LoginName)]"
             }
-        Write-Verbose $sqlCommandText
-        $sqlCommand.CommandText = $sqlCommandText;
-        if ($sqlCredential)
-        {
-            $sqlConnection.Credential = $sqlCredential;
-            }
-        $sqlConnection.Open()
-        $sqlCommand.ExecuteNonQuery()
         }
-    catch
+    Process
     {
-        $str = (([string] $Error).Split(':'))[1]
-        Write-Error ($str.Replace('"', ''))
+        $Result = Invoke-SqlCommand -Credential $Credential -ConnectionString $sqlConnString -Command $sqlCommandText;
         }
-    finally
+    End
     {
-        if ($sqlConnection)
-        {
-            $sqlConnection.Close()
-            }
+        Return $Result
         }
     }
 function Get-SqlUser
@@ -410,8 +465,8 @@ function Get-SqlUser
     [CmdletBinding()]
     param 
         (
-        [parameter(Mandatory = $true)]
-        [string] $ComputerName,
+        [parameter(Mandatory = $false)]
+        [string] $ComputerName = (& hostname),
         [parameter(Mandatory = $true)]
         [string] $Database,
         [parameter(Mandatory = $false)]
@@ -419,12 +474,8 @@ function Get-SqlUser
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
         )
-
-    $sqlConnection = $null
-
-    try
+    Begin
     {
-        $Error.Clear()
         if ($Instance -eq $null)
         {
             $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
@@ -433,42 +484,19 @@ function Get-SqlUser
         {
             $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
             }
-        if ($Credential)
-        {
-            $Credential.Password.MakeReadOnly();
-            $sqlCredential = New-Object System.Data.SqlClient.SqlCredential($Credential.UserName, $Credential.Password);
-            }
-        else
+        if (!($Credential))
         {
             $sqlConnString += ";trusted_connection=true";
             }
-        Write-Verbose $sqlConnString
-        $sqlConnBuilder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder($sqlConnString);
-        Write-Verbose $sqlConnBuilder.ConnectionString
-        $sqlConnection = New-Object System.Data.SqlClient.SqlConnection($sqlConnBuilder.ConnectionString);
+        }
+    Process
+    {
         $sqlCommandText = "select * from sys.sysusers"
-        Write-Verbose $sqlCommandText
-        if ($sqlCredential)
-        {
-            $sqlConnection.Credential = $sqlCredential;
-            }
-        $sqlConnection.Open()
-        $sqlDataSet = New-Object System.Data.DataSet
-        $sqlAdapter = New-Object System.Data.SqlClient.SqlDataAdapter ($sqlCommandText, $sqlConnection)
-        $Result = $sqlAdapter.Fill($sqlDataSet)
-        $sqlDataSet.Tables;
+        $Result = Invoke-SqlQuery -Credential $Credential -ConnectionString $sqlConnString -Query $sqlCommandText;
         }
-    catch
+    End
     {
-        $str = (([string] $Error).Split(':'))[1]
-        Write-Error ($str.Replace('"', ''))
-        }
-    finally
-    {
-        if ($sqlConnection)
-        {
-            $sqlConnection.Close()
-            }
+        Return $Result
         }
     }
 function Get-SqlDatabase
@@ -495,8 +523,8 @@ function Get-SqlDatabase
     [CmdletBinding()]
     param 
         (
-        [parameter(Mandatory = $true)]
-        [string] $ComputerName,
+        [parameter(Mandatory = $false)]
+        [string] $ComputerName = (& hostname),
         [parameter(Mandatory = $false)]
         [string] $Database,
         [parameter(Mandatory = $false)]
@@ -504,12 +532,8 @@ function Get-SqlDatabase
         [parameter(Mandatory = $false)]
         [PSCredential] $Credential
         )
-
-    $sqlConnection = $null
-
-    try
+    Begin
     {
-        $Error.Clear()
         if ($Instance -eq $null)
         {
             $sqlConnString = "Server=tcp:$($ComputerName)";
@@ -522,41 +546,18 @@ function Get-SqlDatabase
         {
             $sqlConnString += ";Database=$($Database)";
             }
-        if ($Credential)
-        {
-            $Credential.Password.MakeReadOnly();
-            $sqlCredential = New-Object System.Data.SqlClient.SqlCredential($Credential.UserName, $Credential.Password);
-            }
-        else
+        if (!($Credential))
         {
             $sqlConnString += ";trusted_connection=true";
             }
-        Write-Verbose $sqlConnString
-        $sqlConnBuilder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder($sqlConnString);
-        Write-Verbose $sqlConnBuilder.ConnectionString
-        $sqlConnection = New-Object System.Data.SqlClient.SqlConnection($sqlConnBuilder.ConnectionString);
+        }
+    Process
+    {
         $sqlCommandText = "SELECT name FROM master..sysdatabases"
-        Write-Verbose $sqlCommandText
-        if ($sqlCredential)
-        {
-            $sqlConnection.Credential = $sqlCredential;
-            }
-        $sqlConnection.Open()
-        $sqlDataSet = New-Object System.Data.DataSet
-        $sqlAdapter = New-Object System.Data.SqlClient.SqlDataAdapter ($sqlCommandText, $sqlConnection)
-        $Result = $sqlAdapter.Fill($sqlDataSet)
-        $sqlDataSet.Tables;
+        $Result = Invoke-SqlQuery -Credential $Credential -ConnectionString $sqlConnString -Query $sqlCommandText;
         }
-    catch
+    End
     {
-        $str = (([string] $Error).Split(':'))[1]
-        Write-Error ($str.Replace('"', ''))
-        }
-    finally
-    {
-        if ($sqlConnection)
-        {
-            $sqlConnection.Close()
-            }
+        return $Result
         }
     }
