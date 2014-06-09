@@ -3,7 +3,10 @@
     <#
         .SYNOPSIS
         .DESCRIPTION
-        .PARAMETER
+        .PARAMETER Credential
+        .PARAMETER ConnectionString
+        .PARAMETER COmmand
+        .PARAMETER Query
         .EXAMPLE
         .NOTES
             FunctionName : Invoke-SqlQuery
@@ -11,6 +14,8 @@
             Date Coded   : 06/09/2014 12:31:07
         .LINK
             https://code.google.com/p/mod-posh/wiki/Untitled9#Invoke-SqlQuery
+        .LINK
+            http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlconnection.connectionstring(v=vs.110).aspx
     #>
     [CmdletBinding()]
     Param
@@ -105,7 +110,7 @@ function New-SqlLogin
         .SYNOPSIS
             Creates a Database Engine login for SQL Server and Windows Azure SQL Database
         .DESCRIPTION
-        .PARAMETER LoginName
+        .PARAMETER Login
             Specifies the name of the login that is created. There are four types of
             logins: SQL Server logins, Windows logins, certificate-mapped logins, and 
             asymmetric key-mapped logins. 
@@ -117,7 +122,14 @@ function New-SqlLogin
             The instance name is used to resolve to a particular TCP/IP port number on 
             which a database instance is hosted
         .PARAMETER Credential
+            A credential object that represents a SQL Login that has permissions
         .EXAMPLE
+            New-SqlLogin -Login "Domain\JSmith" -ComputerName (& hostname) -Database master -sqlInstance 'MSSQLSERVER'
+
+            Description
+            -----------
+            This example shows how to add a windows user to a the master database on
+            the default instance of Sql Server
         .NOTES
             FunctionName : New-SqlLogin
             Created by   : Jeffrey
@@ -133,7 +145,7 @@ function New-SqlLogin
     param 
         (
         [parameter(Mandatory = $true)]
-        [string] $LoginName,
+        [string] $Login,
         [parameter(Mandatory = $true)]
         [string] $ComputerName,
         [parameter(Mandatory = $true)]
@@ -157,7 +169,7 @@ function New-SqlLogin
         {
             $sqlConnString += ";trusted_connection=true";
             }
-        $sqlCommandText = "create login [$($LoginName)] from windows with default_database=[$($Database)], default_language=[us_english]"
+        $sqlCommandText = "create login [$($Login)] from windows with default_database=[$($Database)], default_language=[us_english]"
         }
     Process
     {
@@ -185,6 +197,7 @@ function Add-SqlUser
             The instance name is used to resolve to a particular TCP/IP port number on 
             which a database instance is hosted
         .PARAMETER Credential
+            A credential object that represents a SQL Login that has permissions
         .EXAMPLE
         .NOTES
             FunctionName : Add-SqlUser
@@ -250,6 +263,7 @@ function Add-SqlRole
             The instance name is used to resolve to a particular TCP/IP port number on 
             which a database instance is hosted
         .PARAMETER Credential
+            A credential object that represents a SQL Login that has permissions
         .EXAMPLE
         .NOTES
             FunctionName : Add-SqlRole
@@ -318,6 +332,7 @@ function Set-ComputerNamePermission
             The instance name is used to resolve to a particular TCP/IP port number on 
             which a database instance is hosted
         .PARAMETER Credential
+            A credential object that represents a SQL Login that has permissions
         .EXAMPLE
         .NOTES
             FunctionName : Set-ComputerNamePermission
@@ -388,6 +403,7 @@ function Get-SqlUser
             The instance name is used to resolve to a particular TCP/IP port number on 
             which a database instance is hosted
         .PARAMETER Credential
+            A credential object that represents a SQL Login that has permissions
         .EXAMPLE
         .NOTES
             FunctionName : Get-SqlUser
@@ -446,6 +462,7 @@ function Get-SqlDatabase
             The instance name is used to resolve to a particular TCP/IP port number on 
             which a database instance is hosted
         .PARAMETER Credential
+            A credential object that represents a SQL Login that has permissions
         .EXAMPLE
         .NOTES
             FunctionName : Get-SqlDatabase
