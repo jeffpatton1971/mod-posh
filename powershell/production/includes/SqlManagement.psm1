@@ -126,7 +126,7 @@ function New-SqlLogin
         .PARAMETER Credential
             A credential object that represents a SQL Login that has permissions
         .EXAMPLE
-            New-SqlLogin -Login "Domain\JSmith" -ComputerName (& hostname) -Database master -sqlInstance 'MSSQLSERVER'
+            New-SqlLogin -Login "DOMAIN\JSmith" -ComputerName (& hostname) -Database master -sqlInstance 'MSSQLSERVER'
 
             Description
             -----------
@@ -261,8 +261,15 @@ function Add-SqlRole
 {
     <#
         .SYNOPSIS
+            Adds a database user, database role, Windows login, or Windows group 
+            to a database role in the current database
         .DESCRIPTION
-        .PARAMETER LoginName
+            A member added to a role  inherits the permissions of the role. If 
+            the new member is a Windows-level principal without a corresponding 
+            database user, a database user will be created but may not be fully 
+            mapped to the login. Always check that the login exists and has access 
+            to the database
+        .PARAMETER Login
             Specifies the name of the login that is created. There are four types of
             logins: SQL Server logins, Windows logins, certificate-mapped logins, and 
             asymmetric key-mapped logins. 
@@ -271,24 +278,33 @@ function Add-SqlRole
         .PARAMETER Database
             Specifies the default database to be assigned to the login
         .PARAMETER Role
+            Is the name of the database role in the current database. role is a sysname, 
+            with no default
         .PARAMETER Instance
             The instance name is used to resolve to a particular TCP/IP port number on 
             which a database instance is hosted
         .PARAMETER Credential
             A credential object that represents a SQL Login that has permissions
         .EXAMPLE
+            Add-SqlRole -Login "DOMAIN\JSmith" -ComputerName (& hostname) -Database msdb -Role SQLAgentReaderRole -sqlInstance 'MSSQLSERVER'
+
+            Description
+            -----------
+            This example grants the SQLAgentReaderRole to the Windows user JSmith
         .NOTES
             FunctionName : Add-SqlRole
             Created by   : Jeffrey
             Date Coded   : 06/08/2014 17:32:12
         .LINK
             https://code.google.com/p/mod-posh/wiki/SqlManagement#Add-SqlRole
+        .LINK
+            http://msdn.microsoft.com/en-us/library/ms187750.aspx
     #>
     [CmdletBinding()]
     param 
         (
         [parameter(Mandatory = $true)]
-        [string] $LoginName,
+        [string] $Login,
         [parameter(Mandatory = $true)]
         [string] $ComputerName,
         [parameter(Mandatory = $true)]
@@ -325,12 +341,17 @@ function Add-SqlRole
         Return $Result
         }
     }
-function Set-ComputerNamePermission
+function Set-SqlServerPermission
 {
     <#
         .SYNOPSIS
+            Grants permissions on a server
         .DESCRIPTION
-        .PARAMETER LoginName
+            This function grants or denies permissions on an object to or from
+            a user. Permissions at the server scope can be granted only when the 
+            current database is master. A server is the highest level of the 
+            permissions hierarchy.
+        .PARAMETER Login
             Specifies the name of the login that is created. There are four types of
             logins: SQL Server logins, Windows logins, certificate-mapped logins, and 
             asymmetric key-mapped logins. 
@@ -339,25 +360,35 @@ function Set-ComputerNamePermission
         .PARAMETER Database
             Specifies the default database to be assigned to the login
         .PARAMETER Grant
+            A switch that if present grants said permission, otherwise deny
         .PARAMETER Permission
+            One of a long list of available permissions on a server. See the table
+            on the MSDN link for details about specific permissions.
         .PARAMETER Instance
             The instance name is used to resolve to a particular TCP/IP port number on 
             which a database instance is hosted
         .PARAMETER Credential
             A credential object that represents a SQL Login that has permissions
         .EXAMPLE
+            Set-SqlServerPermission -Login "DOMAIN\JSmith" -ComputerName (& hostname) -Database master -Grant -Permission "VIEW ANY DATABASE" -sqlInstance 'MSSQLSERVER'
+
+            Description
+            -----------
+            This example grant's the View Any Database permission to the Windows user JSmith
         .NOTES
-            FunctionName : Set-ComputerNamePermission
+            FunctionName : Set-SqlServerPermission
             Created by   : Jeffrey
             Date Coded   : 06/08/2014 17:32:12
         .LINK
-            https://code.google.com/p/mod-posh/wiki/SqlManagement#Set-ComputerNamePermission
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#Set-SqlServerPermission
+        .LINK
+            http://msdn.microsoft.com/en-us/library/ms186717.aspx
     #>
     [CmdletBinding()]
     param 
         (
         [parameter(Mandatory = $true)]
-        [string] $LoginName,
+        [string] $Login,
         [parameter(Mandatory = $true)]
         [string] $ComputerName,
         [parameter(Mandatory = $true)]
