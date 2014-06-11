@@ -21,7 +21,7 @@
     Param
         (
         [parameter(Mandatory = $false)]
-        [pscredential]$Credential = $null,
+        [System.Management.Automation.PSCredential]$Credential = $null,
         [parameter(Mandatory = $true)]
         [string]$ConnectionString = $null,
         [switch]$Command,
@@ -155,7 +155,7 @@ function New-SqlLogin
         [parameter(Mandatory = $false)]
         [string] $Instance,
         [parameter(Mandatory = $false)]
-        [PSCredential] $Credential
+        [System.Management.Automation.PSCredential] $Credential
         )
     Begin
     {
@@ -230,7 +230,7 @@ function Add-SqlUser
         [parameter(Mandatory = $false)]
         [string] $Instance,
         [parameter(Mandatory = $false)]
-        [PSCredential] $Credential
+        [System.Management.Automation.PSCredential] $Credential
         )
     Begin
     {
@@ -314,7 +314,7 @@ function Add-SqlRole
         [parameter(Mandatory = $false)]
         [string] $Instance,
         [parameter(Mandatory = $false)]
-        [PSCredential] $Credential
+        [System.Management.Automation.PSCredential] $Credential
         )
     Begin
     {
@@ -399,7 +399,7 @@ function Set-SqlServerPermission
         [parameter(Mandatory = $false)]
         [string] $Instance,
         [parameter(Mandatory = $false)]
-        [PSCredential] $Credential
+        [System.Management.Automation.PSCredential] $Credential
         )
     Begin
     {
@@ -474,7 +474,7 @@ function Get-SqlUser
         [parameter(Mandatory = $false)]
         [string] $Instance,
         [parameter(Mandatory = $false)]
-        [PSCredential] $Credential
+        [System.Management.Automation.PSCredential] $Credential
         )
     Begin
     {
@@ -542,7 +542,7 @@ function Get-SqlDatabase
         [parameter(Mandatory = $false)]
         [string] $Instance,
         [parameter(Mandatory = $false)]
-        [PSCredential] $Credential
+        [System.Management.Automation.PSCredential] $Credential
         )
     Begin
     {
