@@ -104,6 +104,55 @@
     {
         }
     }
+Function Get-SqlVersion
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : Get-SqlVersion
+            Created by   : jspatton
+            Date Coded   : 06/11/2014 11:23:41
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#Get-SqlVersion
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [parameter(Mandatory = $false)]
+        [string] $Computername = $env:COMPUTERNAME,
+        [parameter(Mandatory = $false)]
+        [string] $Instance,
+        [parameter(Mandatory = $false)]
+        [System.Management.Automation.PSCredential] $Credential
+        )
+    Begin
+    {
+        if ($Instance -eq $null)
+        {
+            $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
+            }
+        else
+        {
+            $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
+            }
+        if (!($Credential))
+        {
+            $sqlConnString += ";trusted_connection=true";
+            }
+        $sqlCommandText = "SELECT SERVERPROPERTY('productversion'), SERVERPROPERTY ('productlevel'), SERVERPROPERTY ('edition');"
+        }
+    Process
+    {
+        $Result = Invoke-SqlQuery -Credential $Credential -ConnectionString $sqlConnString -Query $sqlCommandText;
+        }
+    End
+    {
+        Return $Result
+        }
+    }
 function New-SqlLogin
 {
     <#
@@ -126,7 +175,7 @@ function New-SqlLogin
         .PARAMETER Credential
             A credential object that represents a SQL Login that has permissions
         .EXAMPLE
-            New-SqlLogin -Login "DOMAIN\JSmith" -ComputerName (& hostname) -Database master -sqlInstance 'MSSQLSERVER'
+            New-SqlLogin -Login "DOMAIN\JSmith" -ComputerName $env:COMPUTERNAME -Database master -sqlInstance 'MSSQLSERVER'
 
             Description
             -----------
@@ -148,8 +197,8 @@ function New-SqlLogin
         (
         [parameter(Mandatory = $true)]
         [string] $Login,
-        [parameter(Mandatory = $true)]
-        [string] $ComputerName,
+        [parameter(Mandatory = $false)]
+        [string] $Computername = $env:COMPUTERNAME,
         [parameter(Mandatory = $true)]
         [string] $Database,
         [parameter(Mandatory = $false)]
@@ -204,7 +253,7 @@ function Add-SqlUser
         .PARAMETER Credential
             A credential object that represents a SQL Login that has permissions
         .EXAMPLE
-            Add-SqlUser -Login "DOMAIN\JSmith" -ComputerName (& hostname) -Database 'master' -sqlInstance 'MSSQLSERVER'
+            Add-SqlUser -Login "DOMAIN\JSmith" -ComputerName $env:COMPUTERNAME -Database 'master' -sqlInstance 'MSSQLSERVER'
 
             Description
             -----------
@@ -223,8 +272,8 @@ function Add-SqlUser
         (
         [parameter(Mandatory = $true)]
         [string] $Login,
-        [parameter(Mandatory = $true)]
-        [string] $ComputerName,
+        [parameter(Mandatory = $false)]
+        [string] $Computername = $env:COMPUTERNAME,
         [parameter(Mandatory = $true)]
         [string] $Database,
         [parameter(Mandatory = $false)]
@@ -286,7 +335,7 @@ function Add-SqlRole
         .PARAMETER Credential
             A credential object that represents a SQL Login that has permissions
         .EXAMPLE
-            Add-SqlRole -Login "DOMAIN\JSmith" -ComputerName (& hostname) -Database msdb -Role SQLAgentReaderRole -sqlInstance 'MSSQLSERVER'
+            Add-SqlRole -Login "DOMAIN\JSmith" -ComputerName $env:COMPUTERNAME -Database msdb -Role SQLAgentReaderRole -sqlInstance 'MSSQLSERVER'
 
             Description
             -----------
@@ -305,8 +354,8 @@ function Add-SqlRole
         (
         [parameter(Mandatory = $true)]
         [string] $Login,
-        [parameter(Mandatory = $true)]
-        [string] $ComputerName,
+        [parameter(Mandatory = $false)]
+        [string] $Computername = $env:COMPUTERNAME,
         [parameter(Mandatory = $true)]
         [string] $Database,
         [parameter(Mandatory = $true)]
@@ -330,7 +379,7 @@ function Add-SqlRole
         {
             $sqlConnString += ";trusted_connection=true";
             }
-        $sqlCommandText = "exec [$($Database)]..sp_addrolemember $($Role), [$($LoginName)]"
+        $sqlCommandText = "exec [$($Database)]..sp_addrolemember N`'$($Role)`', N`'[$($LoginName)]`'"
         }
     Process
     {
@@ -370,7 +419,7 @@ function Set-SqlServerPermission
         .PARAMETER Credential
             A credential object that represents a SQL Login that has permissions
         .EXAMPLE
-            Set-SqlServerPermission -Login "DOMAIN\JSmith" -ComputerName (& hostname) -Database master -Grant -Permission "VIEW ANY DATABASE" -sqlInstance 'MSSQLSERVER'
+            Set-SqlServerPermission -Login "DOMAIN\JSmith" -ComputerName $env:COMPUTERNAME -Database master -Grant -Permission "VIEW ANY DATABASE" -sqlInstance 'MSSQLSERVER'
 
             Description
             -----------
@@ -389,8 +438,8 @@ function Set-SqlServerPermission
         (
         [parameter(Mandatory = $true)]
         [string] $Login,
-        [parameter(Mandatory = $true)]
-        [string] $ComputerName,
+        [parameter(Mandatory = $false)]
+        [string] $Computername = $env:COMPUTERNAME,
         [parameter(Mandatory = $true)]
         [string] $Database,
         [switch] $Grant,
@@ -468,7 +517,7 @@ function Get-SqlUser
     param 
         (
         [parameter(Mandatory = $false)]
-        [string] $ComputerName = (& hostname),
+        [string] $ComputerName = $env:COMPUTERNAME,
         [parameter(Mandatory = $true)]
         [string] $Database,
         [parameter(Mandatory = $false)]
@@ -536,7 +585,7 @@ function Get-SqlDatabase
     param 
         (
         [parameter(Mandatory = $false)]
-        [string] $ComputerName = (& hostname),
+        [string] $ComputerName = $env:COMPUTERNAME,
         [parameter(Mandatory = $false)]
         [string] $Database,
         [parameter(Mandatory = $false)]
@@ -571,5 +620,52 @@ function Get-SqlDatabase
     End
     {
         return $Result
+        }
+    }
+Function Get-SQLInstance 
+{
+    <#
+    #>
+    [CmdletBinding()] 
+    param 
+        (
+        [string]$ComputerName = $env:COMPUTERNAME,
+        [string]$InstanceName
+        )
+    Begin
+    {
+        }
+    Process
+    {
+        try 
+        {
+            $reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', $ComputerName)
+            $regKey= $reg.OpenSubKey("SOFTWARE\\Microsoft\\Microsoft SQL Server\\Instance Names\\SQL" )
+            $instances = $regkey.GetValueNames()
+ 
+            if ($InstanceName) 
+            {
+                if ($instances -contains $InstanceName) 
+                {
+                    return $true
+                    } 
+                else 
+                {
+                    return $false
+                    }
+            } 
+            else 
+            {
+                $instances
+                }
+            }
+        catch 
+        {
+            Write-Error $_.Exception.Message
+            return $false
+            }
+        }
+    End
+    {
         }
     }
