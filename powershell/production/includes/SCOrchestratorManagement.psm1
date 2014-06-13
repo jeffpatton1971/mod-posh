@@ -405,11 +405,11 @@ Function Start-scoRunbook
             A hash that contains the proper key field to be passed to the runbook. So if the Runbook
             has two parameters Fname and Lname you need to pass in a hash like this:
 
-                @{"Fname"="John"},@{"Lname"="Smith"}
+                @{"Fname"="John";"Lname"="Smith"}
         .PARAMETER Credential
             A credential object if we need to authenticate against the Orchestrator server
         .EXAMPLE
-            Start-Runbook -Runbook (Get-scoRunbook -ManagementServer orch.company.com -Title 'Provision new user') -Value @{"Fname"="John"},@{"Lname"="Smith"}
+            Start-Runbook -Runbook (Get-scoRunbook -ManagementServer orch.company.com -Title 'Provision new user') -Value @{"Fname"="John";"Lname"="Smith"}
 
             Description
             -----------
