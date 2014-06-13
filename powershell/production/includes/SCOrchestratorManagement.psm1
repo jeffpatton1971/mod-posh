@@ -402,11 +402,14 @@ Function Start-scoRunbook
         .PARAMETER Runbook
             An XmlElement that is returned from Get-scoRunbook
         .PARAMETER Value
-            An array of values that are needed if the runbook requires parameters
+            A hash that contains the proper key field to be passed to the runbook. So if the Runbook
+            has two parameters Fname and Lname you need to pass in a hash like this:
+
+                @{"Fname"="John"},@{"Lname"="Smith"}
         .PARAMETER Credential
             A credential object if we need to authenticate against the Orchestrator server
         .EXAMPLE
-            Start-Runbook -Runbook (Get-scoRunbook -ManagementServer orch.company.com -Title 'Provision new user') -Value "John","Smith"
+            Start-Runbook -Runbook (Get-scoRunbook -ManagementServer orch.company.com -Title 'Provision new user') -Value @{"Fname"="John"},@{"Lname"="Smith"}
 
             Description
             -----------
@@ -424,7 +427,7 @@ Function Start-scoRunbook
         (
         [parameter(Mandatory = $true)]
         [System.Xml.XmlElement]$Runbook,
-        [string[]]$Value = $null,
+        [hashtable]$Value = @{},
         [pscredential]$Credential = $null
         )
     Begin
@@ -455,16 +458,19 @@ Function Start-scoRunbook
                 Write-Verbose "There is more than one Parameter for this Runbook";
                 if ($Parameters.entry.Count -eq $Value.Count)
                 {
-                    foreach ($Parameter in $Parameters.entry)
+                    foreach ($Parameter in $Parameters)
                     {
                         Write-Debug "The GUID is embedded inside the Id url property of the parameter";
                         Write-Debug "Split the id property on a single tick mark, and return the second element";
                         Write-Verbose "Get the GUID inside the id property";
-                        $ParamId = $Parameter.entry.id.Split("'")[1];
-                        foreach ($v in $Value)
+                        $ParamId = $Parameter.id.Split("'")[1];
+                        foreach ($v in $Value.GetEnumerator())
                         {
                             Write-Debug "Build a hash table with Parameter Id and Value";
-                            $rbParameters += @{$ParamId = $v};
+                            if ($Parameter.title.'#text' -eq $v.Key)
+                            {
+                                $rbParameters += @{$ParamId = $v.Value};
+                                }
                             }
                         }
                     }
@@ -482,8 +488,8 @@ Function Start-scoRunbook
                     Write-Debug "The GUID is embedded inside the Id url property of the parameter";
                     Write-Debug "Split the id property on a single tick mark, and return the second element";
                     Write-Verbose "Get the GUID inside the id property";
-                    $ParamId = $Parameters.entry.id.Split("'")[1];
-                    $rbParameters = @{$ParamId = $Value[0]}
+                    $ParamId = $Parameters.id.Split("'")[1];
+                    $rbParameters = @{$ParamId = $Value.Values}
                     }
                 else
                 {
