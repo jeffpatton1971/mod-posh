@@ -117,6 +117,8 @@ Function Get-SqlVersion
             Date Coded   : 06/11/2014 11:23:41
         .LINK
             https://code.google.com/p/mod-posh/wiki/SqlManagement#Get-SqlVersion
+        .LINK
+            http://support.microsoft.com/kb/321185
     #>
     [CmdletBinding()]
     Param
@@ -126,21 +128,30 @@ Function Get-SqlVersion
         [parameter(Mandatory = $false)]
         [string] $Instance,
         [parameter(Mandatory = $false)]
+        [string] $ConnectionString = $null,
+        [parameter(Mandatory = $false)]
         [System.Management.Automation.PSCredential] $Credential
         )
     Begin
     {
-        if ($Instance -eq $null)
+        if ($ConnectionString)
         {
-            $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
+            $sqlConnString = $ConnectionString
             }
         else
         {
-            $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
-            }
-        if (!($Credential))
-        {
-            $sqlConnString += ";trusted_connection=true";
+            if ($Instance -eq $null)
+            {
+                $sqlConnString = "Server=tcp:$($ComputerName);Database=$($Database)";
+                }
+            else
+            {
+                $sqlConnString = "Server=tcp:$($ComputerName)\$($Instance);Database=$($Database)";
+                }
+            if (!($Credential))
+            {
+                $sqlConnString += ";trusted_connection=true";
+                }
             }
         $sqlCommandText = "SELECT SERVERPROPERTY('productversion'), SERVERPROPERTY ('productlevel'), SERVERPROPERTY ('edition');"
         }
@@ -625,6 +636,7 @@ function Get-SqlDatabase
 Function Get-SQLInstance 
 {
     <#
+    http://www.powershellmagazine.com/2013/08/06/pstip-retrieve-all-sql-instance-names-on-local-and-remote-computers/
     #>
     [CmdletBinding()] 
     param 
