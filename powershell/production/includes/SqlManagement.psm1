@@ -2,12 +2,26 @@
 {
     <#
         .SYNOPSIS
+            Run a SQL Query or execute a Stored Procedure
         .DESCRIPTION
+            This function does the main work against a SQL server
         .PARAMETER Credential
+            A credential object if we need to authenticate with a SQL account
         .PARAMETER ConnectionString
-        .PARAMETER COmmand
+            A connection string used to connect to the SQL server that is build
+            by the other functions
+        .PARAMETER Command
+            A switch that if present indicates the query is really a command
         .PARAMETER Query
+            Either a query or stored procedure
         .EXAMPLE
+            Invoke-SqlQuery -Credential $null -ConnectionString "Server=(local)\MSSQLSERVER;Database=printlog" -Query "select * from dbo.joblog";
+
+            Description
+            -----------
+            This function is intended to be called by other functions inside the module, but
+            you can call it directly. This example connects to the printlog database of the local MSSQLSERVER 
+            instance of SQL and returns all records from the joblog table.
         .NOTES
             FunctionName : Invoke-SqlQuery
             Created by   : jspatton
