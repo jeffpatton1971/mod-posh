@@ -23,11 +23,34 @@ if ($Host.Name -eq 'ConsoleHost')
     #
     Start-Transcript
 
-    #
-    # Load up GitHub Shell Extensions
-    #
-    . (Resolve-Path "$env:LOCALAPPDATA\GitHub\shell.ps1")
-    Import-Module C:\GitHub\posh-git\posh-git.psm1
+    try
+    {
+        #
+        # Load up GitHub Shell Extensions
+        #
+        . (Resolve-Path "$env:LOCALAPPDATA\GitHub\shell.ps1")
+        #
+        # Have we cloned posh-git
+        #
+        if (!(Test-Path C:\GitHub\posh-git))
+        {
+            #
+            # Nope, clone it!
+            #
+            git clone https://github.com/dahlbyk/posh-git.git
+            }
+        else
+        {
+            #
+            # Yup, import it!
+            #
+            Import-Module C:\GitHub\posh-git\posh-git.psm1
+            }
+        }
+    catch
+    {
+        Write-Error "Please download GitHub for Windows at https://windows.github.com/"
+        }
     }
 
 #
