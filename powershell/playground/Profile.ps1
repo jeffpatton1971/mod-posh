@@ -27,6 +27,7 @@ if ($Host.Name -eq 'ConsoleHost')
     # Load up GitHub Shell Extensions
     #
     . (Resolve-Path "$env:LOCALAPPDATA\GitHub\shell.ps1")
+    Import-Module C:\GitHub\posh-git\posh-git.psm1
     }
 
 #
@@ -74,7 +75,3 @@ Function prompt
     Write-VcsStatus
     return "`n"
     }
-
-# Load posh-git example profile
-. 'C:\GitHub\posh-git\profile.example.ps1'
-
