@@ -6,14 +6,11 @@
 	The last character will be either $ for users NOT in administrators group
 	or # for users IN administrators group
 	
-	Download the PowerShell Community Extensions
-	http://pscx.codeplex.com/
-	
 #>
 $Global:Admin="$"
 $Global:SubversionClient="svn"
-$CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-$principal = new-object System.Security.principal.windowsprincipal($CurrentUser)
+$Global:CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+$Global:principal = new-object System.Security.principal.windowsprincipal($Global:CurrentUser)
 if ($Host.Name -eq 'ConsoleHost')
 {
     #
@@ -25,35 +22,17 @@ if ($Host.Name -eq 'ConsoleHost')
     # Start transcription
     #
     Start-Transcript
-    }
 
-#
-# Load the VMware Extensions
-#
-try
-{
-    Add-PSSnapin -Name VMware.VimAutomation.Core -ErrorAction Stop
-    }
-catch
-{
-    Write-Warning 'VMware PowerShell tools not installed'
-    }
-#
-# Load the DPM Extensions
-#
-try
-{
-    Add-PSSnapin -Name Microsoft.DataProtectionManager.PowerShell -ErrorAction Stop
-    }
-catch
-{
-    Write-Warning 'DPM PowerShell tools not installed'
+    #
+    # Load up GitHub Shell Extensions
+    #
+    . (Resolve-Path "$env:LOCALAPPDATA\GitHub\shell.ps1")
     }
 
 #
 # Move me into my code location
 #
-Set-Location "C:\scripts\powershell\production"
+Set-Location "C:\projects\mod-posh\powershell\production"
 
 #
 # Dot source in my functions
@@ -61,20 +40,18 @@ Set-Location "C:\scripts\powershell\production"
 foreach ($file in Get-ChildItem .\includes\*.psm1){Import-Module $file.fullname}
 
 #
-# Update repo
-#
-Update-Repo -WorkingPath 'C:\scripts' |Out-Null
-
-#
 # Create my Credentials Object
 #
-$Password = Get-SecureString -FilePath C:\Users\jspatton\cred.txt
-$Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "HOME\jspatton_a", $Password
-
+$Password = Get-SecureString -FilePath C:\Users\$($env:USERNAME)\cred.txt
+$Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "$($env:USERDOMAIN)\$($env:USERNAME)_a", $Password
+#
+# Don't keep this in memory please!
+#
+Remove-Variable Password
 #
 # Change prompt to # if i have admin rights
 #
-if ($principal.IsInRole("Administrators")) 
+if ($Global:principal.IsInRole("Administrators")) 
 {
     $Admin="#"
     }
@@ -85,53 +62,19 @@ if ($principal.IsInRole("Administrators"))
 Function prompt 
 {
     $Now = $(get-date).Tostring("HH:mm:ss | MM-dd-yyy")
-    "# $env:username@$env:computername | $Now | $(Get-Location) $Admin `n"
+    #
+    # I use GIT now for most everything and this allows my prompt to have nifty colors that represent
+    # the status of various files
+    #
+    $Host.UI.RawUI.ForegroundColor = $GitPromptSettings.DefaultForegroundColor
+    Write-Host "# $($env:username)@$($env:computername) | $($Now) | $(Get-Location) $Global:Admin " -NoNewLine
+    #
+    # This writes the actual status of the repo (if i'm in one) at the tail end of the cmdline
+    #
+    Write-VcsStatus
+    return "`n"
     }
 
-#
-# SCOM console slow tabexpand fix
-#
-$tabExpand = (get-item function:\tabexpansion).Definition
-if($tabExpand -match 'try {Resolve-Path.{49}(?=;)')
-{
-   $tabExpand = $tabExpand.Replace($matches[0], "if((get-location).Provider.Name -ne 'OperationsManagerMonitoring'){ $($matches[0]) }" )
-   invoke-expression "function TabExpansion{$tabExpand}"
-   }
+# Load posh-git example profile
+. 'C:\GitHub\posh-git\profile.example.ps1'
 
-#
-# Display a list of appointments for today
-#
-C:\scripts\powershell\production\Get-ExchangeCalendar.ps1 -MailboxName jspatton@ku.edu -StartDate (Get-Date) -EndDate (Get-Date) -ErrorAction SilentlyContinue |Format-List
-
-#
-# Toggle wireless on or off
-#
-if ($Host.Name -eq 'ConsoleHost')
-{
-    Start-Process "$psHome\powershell.exe" -Verb Runas -ArgumentList '-NoProfile -command "C:\scripts\powershell\production\Toggle-Wireless.ps1"'
-    }
-
-#
-# Load Ops Shell
-#
-Function Load-OpsShell
-{
-    Param
-    (
-    $rms = 'scom-01.home.ku.edu'
-    )
-    try
-    {
-        $ErrorActionPreference = 'stop'
-        Add-PSSnapin -Name Microsoft.EnterpriseManagement.OperationsManager.Client
-        [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.EnterpriseManagement.OperationsManager")
-        [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.EnterpriseManagement.OperationsManager.Common")
-        Set-Location "OperationsManagerMonitoring::" 
-        $MG = New-ManagementGroupConnection -ConnectionString:$rms
-        Set-Location $rms 
-        }
-    catch
-    {
-        Return $Error[0]
-        }
-    }
