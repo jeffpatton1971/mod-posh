@@ -37,6 +37,7 @@ if ($Host.Name -eq 'ConsoleHost')
             #
             # Nope, clone it!
             #
+            Set-Location C:\GitHub
             git clone https://github.com/dahlbyk/posh-git.git
             }
         else
@@ -46,10 +47,33 @@ if ($Host.Name -eq 'ConsoleHost')
             #
             Import-Module C:\GitHub\posh-git\posh-git.psm1
             }
+        #
+        # Have we cloned CShell
+        #
+        if (!(Test-Path C:\GitHub\CShell))
+        {
+            #
+            # Nope, clone it!
+            #
+            Set-Location C:\GitHub
+            git clone https://github.com/lukebuehler/CShell.git
+            #
+            # This needs to be set to true in order to build
+            #
+            $env:EnableNuGetPackageRestore = $True
+            #
+            # Build the CShell Release
+            #
+            C:\GitHub\CShell\Build\build-release.cmd
+            #
+            # Start it so we can pin it
+            #
+            C:\GitHub\CShell\Bin\Release\CShell.exe
+            }
         }
     catch
     {
-        Write-Error "Please download GitHub for Windows at https://windows.github.com/"
+        Write-Error $Error[0]
         }
     }
 
