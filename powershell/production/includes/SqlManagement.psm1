@@ -650,13 +650,23 @@ function Get-SqlDatabase
 Function Get-SQLInstance 
 {
     <#
-    http://www.powershellmagazine.com/2013/08/06/pstip-retrieve-all-sql-instance-names-on-local-and-remote-computers/
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER ComputerName
+        .EXAMPLE
+        .NOTES
+            FunctionName : Get-SqlInstance
+            Created by   : jspatton
+            Date Coded   : 06/11/2014 11:23:41
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#Get-SqlInstance
+        .LINK
+            http://www.powershellmagazine.com/2013/08/06/pstip-retrieve-all-sql-instance-names-on-local-and-remote-computers/
     #>
     [CmdletBinding()] 
     param 
         (
-        [string]$ComputerName = $env:COMPUTERNAME,
-        [string]$InstanceName
+        [string]$ComputerName = $env:COMPUTERNAME
         )
     Begin
     {
@@ -665,24 +675,12 @@ Function Get-SQLInstance
     {
         try 
         {
-            $reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', $ComputerName)
-            $regKey= $reg.OpenSubKey("SOFTWARE\\Microsoft\\Microsoft SQL Server\\Instance Names\\SQL" )
-            $instances = $regkey.GetValueNames()
- 
-            if ($InstanceName) 
+            $RegistryHKLM = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', $ComputerName)
+            $Subkey = $RegistryHKLM.OpenSubKey("SOFTWARE\\Microsoft\\Microsoft SQL Server\\Instance Names\\SQL")
+            if ($Subkey)
             {
-                if ($instances -contains $InstanceName) 
-                {
-                    return $true
-                    } 
-                else 
-                {
-                    return $false
-                    }
-            } 
-            else 
-            {
-                $instances
+                $SqlInstances = $Subkey.GetValueNames()
+                Return $SqlInstances
                 }
             }
         catch 
