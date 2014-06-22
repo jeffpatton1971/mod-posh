@@ -122,9 +122,26 @@ Function Get-SqlVersion
 {
     <#
         .SYNOPSIS
+            Get the SQL version running
         .DESCRIPTION
-        .PARAMETER
+            This function queries the SQL Server and returns the version of
+            SQL that is installed.
+        .PARAMETER ComputerName
+            The name of the SQL server to connect to
+        .PARAMETER Instance
+            The instance name is used to resolve to a particular TCP/IP port number on 
+            which a database instance is hosted
+        .PARAMETER ConnectionString
+            A connection string used to connect to the SQL server that is build
+            by the other functions
+        .PARAMETER Credential
+            A credential object if we need to authenticate with a SQL account
         .EXAMPLE
+            Get-SqlVersion
+
+            Description
+            -----------
+            This example shows the basic syntax of the command.
         .NOTES
             FunctionName : Get-SqlVersion
             Created by   : jspatton
@@ -651,9 +668,20 @@ Function Get-SQLInstance
 {
     <#
         .SYNOPSIS
+            Get a list of installed SQL instances
         .DESCRIPTION
+            This function will query the registry of the local or remote computer and
+            return all instance names stored in the Software\Microsoft\Microsoft SQL Server\Instance Names\SQL
+            registry subkey.
         .PARAMETER ComputerName
+            The name of the computer to connect to, defaults to local computername
         .EXAMPLE
+            Get-SqlInstance
+
+            Description
+            -----------
+            This example shows the default syntax of the command, using the default
+            value for ComputerName.
         .NOTES
             FunctionName : Get-SqlInstance
             Created by   : jspatton
@@ -686,7 +714,6 @@ Function Get-SQLInstance
         catch 
         {
             Write-Error $_.Exception.Message
-            return $false
             }
         }
     End
