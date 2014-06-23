@@ -122,9 +122,26 @@ Function Get-SqlVersion
 {
     <#
         .SYNOPSIS
+            Get the SQL version running
         .DESCRIPTION
-        .PARAMETER
+            This function queries the SQL Server and returns the version of
+            SQL that is installed.
+        .PARAMETER ComputerName
+            The name of the SQL server to connect to
+        .PARAMETER Instance
+            The instance name is used to resolve to a particular TCP/IP port number on 
+            which a database instance is hosted
+        .PARAMETER ConnectionString
+            A connection string used to connect to the SQL server that is build
+            by the other functions
+        .PARAMETER Credential
+            A credential object if we need to authenticate with a SQL account
         .EXAMPLE
+            Get-SqlVersion
+
+            Description
+            -----------
+            This example shows the basic syntax of the command.
         .NOTES
             FunctionName : Get-SqlVersion
             Created by   : jspatton
@@ -650,13 +667,34 @@ function Get-SqlDatabase
 Function Get-SQLInstance 
 {
     <#
-    http://www.powershellmagazine.com/2013/08/06/pstip-retrieve-all-sql-instance-names-on-local-and-remote-computers/
+        .SYNOPSIS
+            Get a list of installed SQL instances
+        .DESCRIPTION
+            This function will query the registry of the local or remote computer and
+            return all instance names stored in the Software\Microsoft\Microsoft SQL Server\Instance Names\SQL
+            registry subkey.
+        .PARAMETER ComputerName
+            The name of the computer to connect to, defaults to local computername
+        .EXAMPLE
+            Get-SqlInstance
+
+            Description
+            -----------
+            This example shows the default syntax of the command, using the default
+            value for ComputerName.
+        .NOTES
+            FunctionName : Get-SqlInstance
+            Created by   : jspatton
+            Date Coded   : 06/11/2014 11:23:41
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/SqlManagement#Get-SqlInstance
+        .LINK
+            http://www.powershellmagazine.com/2013/08/06/pstip-retrieve-all-sql-instance-names-on-local-and-remote-computers/
     #>
     [CmdletBinding()] 
     param 
         (
-        [string]$ComputerName = $env:COMPUTERNAME,
-        [string]$InstanceName
+        [string]$ComputerName = $env:COMPUTERNAME
         )
     Begin
     {
@@ -665,30 +703,17 @@ Function Get-SQLInstance
     {
         try 
         {
-            $reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', $ComputerName)
-            $regKey= $reg.OpenSubKey("SOFTWARE\\Microsoft\\Microsoft SQL Server\\Instance Names\\SQL" )
-            $instances = $regkey.GetValueNames()
- 
-            if ($InstanceName) 
+            $RegistryHKLM = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', $ComputerName)
+            $Subkey = $RegistryHKLM.OpenSubKey("SOFTWARE\\Microsoft\\Microsoft SQL Server\\Instance Names\\SQL")
+            if ($Subkey)
             {
-                if ($instances -contains $InstanceName) 
-                {
-                    return $true
-                    } 
-                else 
-                {
-                    return $false
-                    }
-            } 
-            else 
-            {
-                $instances
+                $SqlInstances = $Subkey.GetValueNames()
+                Return $SqlInstances
                 }
             }
         catch 
         {
             Write-Error $_.Exception.Message
-            return $false
             }
         }
     End
