@@ -367,15 +367,39 @@ Function Get-WindowsUpdateHistory
  {
     <#
         .SYNOPSIS
+            Return a list of attempted updates
         .DESCRIPTION
-        .PARAMETER
+            This function returns a list of updates that have been installed
+            on the local system. You can filter the objects based on their
+            properties. See the links section for the list of properties
+            available and their meanings. 
         .EXAMPLE
+            Get-WindowsUpdateHistory 
+                |Where-Object {$_.ResultCode -eq 4} 
+                |Select-Object -Property Title, SupportUrl, Date
+
+            Title                                   SupportUrl                              Date
+            -----                                   ----------                              ----
+            Security Update for Internet Explore... http://support.microsoft.com            6/17/2014 9:05:07 AM
+            Cumulative Security Update for Inter... http://support.microsoft.com            6/17/2014 8:34:46 AM
+            Cumulative Security Update for Inter... http://support.microsoft.com            4/23/2013 8:54:12 PM
+            Security Update for Internet Explore... http://support.microsoft.com            2/10/2012 3:40:06 PM
+            Update for Internet Explorer 8 Compa... http://support.microsoft.com/kb/2598845 2/10/2012 3:39:19 PM
+            Update for Windows Server 2008 R2 x6... http://support.microsoft.com            2/10/2012 3:37:54 PM
+
+            Description
+            -----------
+            This example shows using the Get-WindowsUpdateHistory function and filtering the output based on
+            ResultCode (4 = failed) and then selecting the title, url and date of the failed update
+
         .NOTES
             FunctionName : Get-WindowsUpdateHistory
             Created by   : jspatton
             Date Coded   : 06/26/2014 09:09:15
         .LINK
             https://code.google.com/p/mod-posh/wiki/WindowsUpdateLibrary#Get-WindowsUpdateHistory
+        .LINK
+            http://msdn.microsoft.com/en-us/library/windows/desktop/aa386400(v=vs.85).aspx
     #>
     [CmdletBinding()]
     Param
