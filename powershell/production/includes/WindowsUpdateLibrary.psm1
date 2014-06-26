@@ -363,5 +363,35 @@ Function Connect-WindowsUpdateServer
         return $UpdateServer
         }
     }
-
+Function Get-WindowsUpdateHistory
+ {
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : Get-WindowsUpdateHistory
+            Created by   : jspatton
+            Date Coded   : 06/26/2014 09:09:15
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/WindowsUpdateLibrary#Get-WindowsUpdateHistory
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        )
+    Begin
+    {
+        }
+    Process
+    {
+        $UpdateSession = New-Object -ComObject 'Microsoft.Update.Session'
+        $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
+        return $UpdateSearcher.QueryHistory(1,$UpdateSearcher.GetTotalHistoryCount())
+        }
+    End
+    {
+        }
+    }
 Export-ModuleMember *
