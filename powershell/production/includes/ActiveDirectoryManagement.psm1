@@ -172,13 +172,13 @@ Function Add-UserToLocalGroup
         [string]$UserName,
         [Parameter(Mandatory=$true)]
         [string]$LocalGroup,
-        [string]$UserDomain
+        [string]$UserDomain = $null
         )
     Begin
     {
-        if ($UserDomain -eq $null)
+        if (!($UserDomain))
         {
-            $UserDomain = [string]([ADSI] "").name
+            $UserDomain = [string]([ADSI]"").name
             }
         }        
     Process
