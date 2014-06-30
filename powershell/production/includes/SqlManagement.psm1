@@ -711,11 +711,10 @@ Function Get-SQLInstance
                 foreach ($SqlInstance in $SqlInstances)
                 {
                     $InstanceID = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL').$SqlInstance
-                    $Instance = New-Object -TypeName psobject -Property @{
+                    New-Object -TypeName psobject -Property @{
                         InstanceName = $SqlInstance
                         InstanceId = $InstanceID
                         } |Select-Object -Property InstanceName, InstanceId
-                    Return $Instance
                     }
                 }
             }
