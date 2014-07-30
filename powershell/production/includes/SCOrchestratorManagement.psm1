@@ -489,7 +489,7 @@ Function Start-scoRunbook
                     Write-Debug "Split the id property on a single tick mark, and return the second element";
                     Write-Verbose "Get the GUID inside the id property";
                     $ParamId = $Parameters.id.Split("'")[1];
-                    $rbParameters = @{$ParamId = $Value.Values}
+                    $rbParameters = @{$ParamId = ($Value.GetEnumerator()| Select-Object -ExpandProperty Value)};
                     }
                 else
                 {
