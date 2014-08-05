@@ -82,7 +82,7 @@ Begin
         Try
         {
             Import-Module GroupPolicy
-            $DeptGPOs = Get-GPO -All |Where-Object {$_.DisplayName -like "*$($DeptCode)*"}
+            $DeptGPOs = Get-GPO |Where-Object {$_.DisplayName -like "*$($DeptCode)*"}
             
             Foreach ($DeptGPO in $DeptGPOs)
             {
