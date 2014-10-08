@@ -2070,7 +2070,7 @@ Function New-Password
             The main portion of this code was lifted from Peter Provost's site, I modified it
             to handle varying length, and count.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/Untitled3#New-Password
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#New-Password
         .LINK
             http://www.peterprovost.org/blog/2007/06/22/Quick-n-Dirty-PowerShell-Password-Generator/
         .LINK
@@ -2159,7 +2159,7 @@ function Connect-Rdp
             Created by   : jspatton
             Date Coded   : 06/23/2014 08:48:25
         .LINK
-            https://code.google.com/p/mod-posh/wiki/Untitled1#Connect-RDP
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Connect-RDP
         .LINK
             http://www.powershellmagazine.com/2014/04/18/automatic-remote-desktop-connection/
     #>
@@ -2194,6 +2194,78 @@ function Connect-Rdp
             # logon credential
             mstsc.exe /v $Computer /f
             }
+        }
+    }
+Function Get-NetShare
+{
+    <#
+        .SYNOPSIS
+            Return a list of shares without using WMI
+        .DESCRIPTION
+            This function returns a list of shares using the old net view command. This
+            works well in situations where a fierwall may be blocking access.
+        .PARAMETER ComputerName
+            The name of the server that has file or print shares
+        .PARAMETER Type
+            This will be either Print or Disk
+                Print returns printer shares
+                Disk returns file shares
+        .EXAMPLE
+            Get-NetShare -ComputerName server-01 -Type Print
+
+            Server      Share   Path
+            ------      -----   ----
+            server-01   hp01    \\server-01\hp01
+            server-01   hp02    \\server-01\hp02
+            server-01   hp03    \\server-01\hp03
+
+            Description
+            -----------
+            This example shows the basic usage for this function
+        .NOTES
+            FunctionName : Get-NetShares
+            Created by   : jspatton
+            Date Coded   : 10/08/2014 11:08:30
+        .LINK
+            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-NetShares
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [parameter(Mandatory = $true)]
+        [string]$ComputerName,
+        [ValidateSet("Print", "Disk", IgnoreCase = $true)]
+        [parameter(Mandatory = $true)]
+        [string]$Type = "Print"
+        )
+    Begin
+    {
+    Write-Verbose "Getting share from server"
+    $List = net view "\\$($Server)" |Select-String $Type
+    Write-Verbose "$($List)"
+        }
+    Process
+    {
+        foreach ($Entry in $List)
+        {
+            Write-Verbose "Converting regex to string"
+            $Line = $Entry.ToString();
+            Write-Debug $Line
+            Write-Verbose "Building share property"
+            $Share = $Line.Substring(0,$Line.IndexOf($Type)).trim()
+            Write-Verbose "Building Description property"
+            $Description = $Line.Substring($Line.IndexOf($Type),$Line.Length-$Line.IndexOf($Type)).Replace($Type,"").Trim()
+            $Path = "\\$($Server)\$($Share)"
+            New-Object -TypeName psobject -Property @{
+                Server = $Server
+                Share = $Share
+                Description = $Description
+                Path = $Path
+                } |Select-Object -Property Server, Share, Description, Path
+            }
+        }
+    End
+    {
         }
     }
 Export-ModuleMember *
