@@ -2307,7 +2307,7 @@ Function Get-WinEventTail
     [CmdletBinding()]
     Param
         (
-        [string]$LogName = 'Application',
+        [string]$LogName = 'System',
         [int]$ShowExisting = 10
         )
     Begin
@@ -2315,23 +2315,23 @@ Function Get-WinEventTail
         if ($ShowExisting -gt 0)
         {
             $Data = Get-WinEvent -LogName $LogName -MaxEvents $ShowExisting
-            $Data | Sort-Object RecordId
+            $Data |Sort-Object -Property RecordId
             $Index1 = $Data[0].RecordId
             }
         else
         {
-            $Index1 = (Get-WinEvent -LogName $LogName -max 1).RecordId
+            $Index1 = (Get-WinEvent -LogName $LogName -MaxEvents 1).RecordId
             }
         }
     Process
     {
         while ($true)
         {
-            start-sleep -Seconds 1
-            $Index2  = (Get-WinEvent -LogName $LogName -max 1).RecordId
+            Start-Sleep -Seconds 1
+            $Index2  = (Get-WinEvent -LogName $LogName -MaxEvents 1).RecordId
             if ($Index2 -gt $Index1)
             {
-                Get-WinEvent -LogName $LogName -max ($Index2 - $Index1) | Sort-Object RecordId
+                Get-WinEvent -LogName $LogName -MaxEvents ($Index2 - $Index1) |Sort-Object -Property RecordId
                 }
             $Index1 = $Index2
             }
