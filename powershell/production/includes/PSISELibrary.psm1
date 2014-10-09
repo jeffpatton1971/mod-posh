@@ -22,7 +22,7 @@ Function Replace-TabsWithSpace
             that doesn't tab shift like it should. Since I've been doing some PowerShell ISE stuff lately
             I decided to write a little function that works as an Add-On menu.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Replace-TabsWithSpace
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Replace-TabsWithSpace
     #>
     [CmdletBinding()]
     Param
@@ -82,7 +82,7 @@ Function New-CommentBlock
             Created by   : Jeff Patton
             Date Coded   : 09/13/2011 12:28:10
         .LINK
-            https://code.google.com/p/mod-posh/wiki/PSISELibrary#New-CommentBlock
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#New-CommentBlock
     #>
     [CmdletBinding()]
     Param
@@ -103,7 +103,7 @@ Function New-CommentBlock
             "           Created by   : $($env:username)`r`n"
             "           Date Coded   : $(Get-Date)`r`n"
             "       .LINK`r`n"
-            "           https://code.google.com/p/mod-posh/wiki/$($WikiPage)`r`n"
+            "           https://github.com/jeffpatton1971/mod-posh/wiki/$($WikiPage)`r`n"
             "    #>`r`n")
         if ($InstallMenu)
         {
@@ -166,7 +166,7 @@ Function New-Script
             Created by   : Jeff Patton
             Date Coded   : 09/13/2011 13:37:24
         .LINK
-            https://code.google.com/p/mod-posh/wiki/PSISELibrary#New-Script
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#New-Script
     #>
     [CmdletBinding()]
     Param
@@ -196,7 +196,7 @@ Function New-Script
         "           102 = Warning`r`n"
         "           104 = Information`r`n"
         "   .LINK`r`n"
-        "       https://code.google.com/p/mod-posh/wiki/Production/$($ScriptName)`r`n"
+        "       https://github.com/jeffpatton1971/mod-posh/wiki/Production/$($ScriptName)`r`n"
         "#>`r`n"
         "[CmdletBinding()]`r`n"
         "Param`r`n"
@@ -304,7 +304,7 @@ Function New-Function
             Created by   : Jeff Patton
             Date Coded   : 09/13/2011 13:37:24
         .LINK
-            https://code.google.com/p/mod-posh/wiki/PSISELibrary#New-Function
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#New-Function
     #>
     [CmdletBinding()]
     Param
@@ -329,7 +329,7 @@ Function New-Function
         "           Created by   : $($env:username)`r`n"
         "           Date Coded   : $(Get-Date)`r`n"
         "       .LINK`r`n"
-        "           https://code.google.com/p/mod-posh/wiki/$($WikiPage)#$($FunctionName)`r`n"
+        "           https://github.com/jeffpatton1971/mod-posh/wiki/$($WikiPage)#$($FunctionName)`r`n"
         "   #>`r`n"
         "[CmdletBinding()]`r`n"
         "Param`r`n"
@@ -397,7 +397,7 @@ Function Edit-File
             we'll try and open the file in the PowerShell ISE otherwise give
             the user a polite message telling them what to do.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Edit-File
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Edit-File
     #>    
     Param
         (
@@ -467,7 +467,7 @@ Function Save-All
             at once. Decided to write a function to save them all since there
             isn't one currently available.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Save-All
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Save-All
     #>
     [CmdletBinding()]
     Param
@@ -522,7 +522,7 @@ Function Set-SecureString
             Created by   : jspatton
             Date Coded   : 03/01/2012 13:45:13
         .LINK
-            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Set-SecureString
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Set-SecureString
     #>
     [CmdletBinding()]
     Param
@@ -560,7 +560,7 @@ Function Get-SecureString
             Created by   : jspatton
             Date Coded   : 03/01/2012 13:51:53
         .LINK
-            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Get-SecureString
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Get-SecureString
     #>
     [CmdletBinding()]
     Param
@@ -607,7 +607,7 @@ Function Print-IseFile
             My change was not opening the script in Notepad, I don't 
             mind the non-monospaced fonts.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Print-IseFile
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Print-IseFile
     #>
     [CmdletBinding()]
     Param
@@ -666,7 +666,7 @@ Function Print-SelectedText
             The idea for this came from 
             http://jdhitsolutions.com/blog/2011/09/friday-fun-add-a-print-menu-to-the-powershell-ise/
         .LINK
-            https://code.google.com/p/mod-posh/wiki/PSISELibrary#Print-SelectedText
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Print-SelectedText
     #>
     [CmdletBinding()]
     Param

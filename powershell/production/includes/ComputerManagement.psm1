@@ -23,7 +23,7 @@ Function New-LocalUser
             -----------
             Creates a user named MyUserAccount on MyComputer.
 		.LINK
-			https://code.google.com/p/mod-posh/wiki/ComputerManagement#New-LocalUser
+			https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#new-localuser
 	#>
     [CmdletBinding()]
 	Param
@@ -79,7 +79,7 @@ Function Set-Pass
 		.EXAMPLE
 			Set-Pass -ComputerName MyComputer -UserName MyUserAccount -Password N3wP@ssw0rd
 		.LINK
-			https://code.google.com/p/mod-posh/wiki/ComputerManagement#Set-Pass
+			https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Set-Pass
 	#>
     [CmdletBinding()]
 	Param
@@ -130,7 +130,7 @@ Function Add-LocalUserToGroup
 		.EXAMPLE
 			Add-LocalUserToGroup -ComputerName MyComputer -User MyUserAccount -Group Administrators
 		.LINK
-			https://code.google.com/p/mod-posh/wiki/ComputerManagement#Add-LocalUserToGroup
+			https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Add-LocalUserToGroup
 	#>
     [CmdletBinding()]
 	Param
@@ -211,7 +211,7 @@ Function New-ScheduledTask
 		New-ScheduledTask -TaskName "Reboot Computer" -TaskRun "shutdown /r" -TaskSchedule ONCE `
         -StartTime "18:00:00" -StartDate "03/16/2011" -TaskUser SYSTEM -Server MyDesktopPC
 	.LINK
-		https://code.google.com/p/mod-posh/wiki/ComputerManagement#New-ScheduledTask
+		https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#New-ScheduledTask
 	#>
     [CmdletBinding()]		
 	Param
@@ -271,7 +271,7 @@ Function Remove-UserFromLocalGroup
             -----------
             This example removes a user from the local users group.
 		.LINK
-			https://code.google.com/p/mod-posh/wiki/ComputerManagement#Remove-UserFromLocalGroup
+			https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Remove-UserFromLocalGroup
 	#>
     [CmdletBinding()]		
 	Param
@@ -384,7 +384,7 @@ Function Get-Services
 			-----------
 			This example shows how to specify a remote computer and credentials to authenticate with.
 		.LINK
-			https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-Services
+			https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-Services
 	#>
     [CmdletBinding()]		
 	Param
@@ -478,7 +478,7 @@ Function Get-NonStandardServiceAccounts
 			Powershell may need to be run elevated to run this script.
 			UAC may need to be disabled to run this script.
 		.LINK
-			https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-NonStandardServiceAccounts
+			https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-NonStandardServiceAccounts
 	#>
     [CmdletBinding()]		
 	Param
@@ -539,7 +539,7 @@ Function Remove-LocalUser
         .NOTES
             The user context the script is run under must be able to delete accounts on the remote computer
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Remove-LocalUser
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Remove-LocalUser
     #>
     [CmdletBinding()]        
     Param
@@ -617,7 +617,7 @@ Function Get-LocalUserAccounts
         .NOTES
             You will need to provide credentials when running this against computers in a diffrent domain.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-LocalUserAccounts
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-LocalUserAccounts
     #>
     [CmdletBinding()]        
     Param
@@ -676,7 +676,7 @@ Function Get-PendingUpdates
             Date Created: 05Mar2011
             RPC Dynamic Ports need to be enabled on inbound remote servers.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-PendingUpdates
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-PendingUpdates
     #> 
     [CmdletBinding()]
     Param
@@ -735,7 +735,7 @@ Function Get-ServiceTag
         .NOTES
             This space intentionally left blank.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-ServiceTag
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-ServiceTag
     #>
     [CmdletBinding()]    
     Param
@@ -792,7 +792,7 @@ Function Backup-EventLogs
         .NOTES
             May need to be a user with rights to access various logs, such as security on remote computer.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Backup-EventLogs
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Backup-EventLogs
     #>
     [CmdletBinding()]
     Param
@@ -890,7 +890,7 @@ Function Export-EventLog
             
             The folder and filename that you specify will be created on the remote machine.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Export-EventLog
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Export-EventLog
     #>
     [CmdletBinding()]
      Param
@@ -1016,7 +1016,7 @@ Function Get-SiSReport
             This function will return nothing if the drive being analyzed does not have SiS enabled
             This function will return a message if the sisadmin command returns any error
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-SiSReport
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-SiSReport
     #>
     [CmdletBinding()]
     Param
@@ -1087,7 +1087,7 @@ Function Get-PaperCutLogs
             and you can generate graphs based on which printer is used the most, how much paper  
             is consumed by each printer and so on.  
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-PaperCutLogs
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-PaperCutLogs
     #>
     [CmdletBinding()]
     Param
@@ -1180,7 +1180,7 @@ Function Set-ShutdownMethod
         .NOTES
             You will need proper credentials on the remote machine for this to work.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Set-ShutdownMethod
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Set-ShutdownMethod
     #>
     [CmdletBinding()]
     PARAM
@@ -1254,7 +1254,7 @@ Function Get-PrinterLogs
             The following log will need to be enabled before logs can be generated by the server:
             "Microsoft-Windows-PrintService/Operational"
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-PrinterLogs
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-PrinterLogs
     #>
     [CmdletBinding()]
     Param
@@ -1338,7 +1338,7 @@ Function Get-OpenSessions
             Created by   : Jeff Patton
             Date Coded   : 09/26/2011 11:35:40
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-OpenSessions
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-OpenSessions
     #>
     [CmdletBinding()]
     Param
@@ -1402,7 +1402,7 @@ Function Get-OpenFiles
             Created by   : Jeff Patton
             Date Coded   : 09/26/2011 13:01:38
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-OpenFiles
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-OpenFiles
     #>
     [CmdletBinding()]
     Param
@@ -1477,7 +1477,7 @@ Function Get-RDPLoginEvents
             The user account supplied in $Credentials needs to have permission to view this log
             No output is returned if the log is empty.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-RDPLoginEvents
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-RDPLoginEvents
     #>
     [cmdletbinding()]    
     Param
@@ -1612,7 +1612,7 @@ Function Get-InvalidLogonAttempts
             19  IpAddress ##.###.###.### 
             20  IpPort 51144 
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-InvalidLogonAttempts
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-InvalidLogonAttempts
     #>
     [cmdletBinding()]
     Param
@@ -1692,7 +1692,7 @@ Function Get-UpTime
             Created by   : jspatton
             Date Coded   : 10/19/2011 11:22:34
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-UpTime
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-UpTime
         .LINK
             http://msdn.microsoft.com/en-us/library/aa394591(VS.85).aspx  
     #>
@@ -1794,7 +1794,7 @@ Function Get-MappedDrives
             Created by   : jspatton
             Date Coded   : 03/20/2012 16:03:52
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-MappedDrives
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-MappedDrives
     #>
     [CmdletBinding()]
     Param
@@ -1909,7 +1909,7 @@ Function Get-DiskUsage
             If you don't have access to read the contents of a given folder
             the function returns 0.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-DiskUsage
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-DiskUsage
     #>
     [CmdletBinding()]
     Param
@@ -2006,7 +2006,7 @@ Function Enum-NameSpaces
             Created by   : jspatton
             Date Coded   : 05/21/2012 12:50:50
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Enum-NameSpaces
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Enum-NameSpaces
     #>
     [CmdletBinding()]
     Param
@@ -2070,7 +2070,7 @@ Function New-Password
             The main portion of this code was lifted from Peter Provost's site, I modified it
             to handle varying length, and count.
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#New-Password
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#New-Password
         .LINK
             http://www.peterprovost.org/blog/2007/06/22/Quick-n-Dirty-PowerShell-Password-Generator/
         .LINK
@@ -2159,7 +2159,7 @@ function Connect-Rdp
             Created by   : jspatton
             Date Coded   : 06/23/2014 08:48:25
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Connect-RDP
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Connect-RDP
         .LINK
             http://www.powershellmagazine.com/2014/04/18/automatic-remote-desktop-connection/
     #>
@@ -2227,7 +2227,7 @@ Function Get-NetShare
             Created by   : jspatton
             Date Coded   : 10/08/2014 11:08:30
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-NetShares
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-NetShares
     #>
     [CmdletBinding()]
     Param
@@ -2300,7 +2300,7 @@ Function Get-WinEventTail
             Created by   : jspatton
             Date Coded   : 10/09/2014 13:20:22
         .LINK
-            https://code.google.com/p/mod-posh/wiki/ComputerManagement#Get-WinEventTail
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-WinEventTail
         .LINK
             http://stackoverflow.com/questions/15262196/powershell-tail-windows-event-log-is-it-possible
     #>
