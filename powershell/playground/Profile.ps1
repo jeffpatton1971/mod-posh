@@ -32,6 +32,13 @@ if ($Host.Name -eq 'ConsoleHost')
         #
         # Have we cloned posh-git
         #
+        if (!(Test-Path C:\GitHub))
+        {
+            #
+            # Create it!
+            #
+            New-Item C:\GitHub -ItemType Directory -Force
+            }
         if (!(Test-Path C:\GitHub\posh-git))
         {
             #
