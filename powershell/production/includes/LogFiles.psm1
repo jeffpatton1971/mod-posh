@@ -23,6 +23,17 @@
         .PARAMETER Message
             This is the message that will be stored in the log
         .EXAMPLE
+            Write-LogFile -LogName PowerShellTesting -Source Testing -EventID 0 -EntryType Information -Message "This is a test"
+
+            Description
+            -----------
+            This example shows the basic syntax of the function
+        .EXAMPLE
+            Write-LogFile -LogFile C:\Logs -LogName PowerShellTesting -Source Testing -EventID 0 -EntryType Information -Message "This is a test"
+
+            Description
+            -----------
+            This example shows how to specify a location for the logfile
         .NOTES
             FunctionName : Write-LogFile
             Created by   : jspatton
@@ -134,13 +145,20 @@ Function Get-LogFile
     Process
     {
         $Headers = "LogName","Source","Time","EventID","EntryType","Message"
-        if ($EntryType)
+        if ($EntryType -and !($Source))
         {
             Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property EntryType -eq $EntryType
+            break
             }
-        if ($Source)
+        if ($Source -and !($EntryType))
         {
             Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property Source -eq $Source
+            break
+            }
+        if ($Source -and $EntryType)
+        {
+            Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property Source -eq $Source |Where-Object -Property EntryType -eq $EntryType
+            break
             }
         else
         {
