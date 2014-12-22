@@ -113,7 +113,7 @@
             {
                 $myType = "Generic Certificate"
                 }
-            return $Return |Where-Object -Property Type -eq $myType
+            return $Return |Where-Object {$_.Type -eq $myType}
             }
         }
     }
