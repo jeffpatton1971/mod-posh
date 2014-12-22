@@ -32,6 +32,13 @@ if ($Host.Name -eq 'ConsoleHost')
         #
         # Have we cloned posh-git
         #
+        if (!(Test-Path C:\GitHub))
+        {
+            #
+            # Create it!
+            #
+            New-Item C:\GitHub -ItemType Directory -Force
+            }
         if (!(Test-Path C:\GitHub\posh-git))
         {
             #
@@ -64,7 +71,8 @@ if ($Host.Name -eq 'ConsoleHost')
             #
             # Build the CShell Release
             #
-            C:\GitHub\CShell\Build\build-release.cmd
+            Set-Location C:\GitHub\CShell\Build\
+            .\build-release.cmd
             #
             # Start it so we can pin it
             #
