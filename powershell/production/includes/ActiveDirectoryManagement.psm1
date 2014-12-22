@@ -108,9 +108,18 @@ Function Get-ADObjects
                     $objResult = New-Object -TypeName PSObject
                     foreach ($ADProperty in $ADProperties)
                     {
-                        Add-Member -InputObject $objResult -MemberType NoteProperty -Name $ADProperty -Value $ADObject.Properties.($ADProperty.ToLower())
+                        if ($ADProperty -eq "pwdlastset")
+                        {
+                            [datetime]$Value = [datetime]::FromFileTime(([System.Int64]([string]$ADObject.Properties.($ADProperty.ToLower()))))
+                            }
+                        else
+                        {
+                            [string]$Value = $ADObject.Properties.($ADProperty.ToLower())
+                            }
+                        Add-Member -InputObject $objResult -MemberType NoteProperty -Name $ADProperty -Value $Value
                         }
-                    Add-Member -InputObject $objResult -MemberType NoteProperty -Name 'adsPath' -Value $ADObject.Properties.adspath
+                    [string]$Value = $ADObject.Properties.adspath
+                    Add-Member -InputObject $objResult -MemberType NoteProperty -Name 'adsPath' -Value $Value
                     $ADObjects += $objResult
                     }
                 }

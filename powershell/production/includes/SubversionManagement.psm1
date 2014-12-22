@@ -617,7 +617,7 @@ Function New-WikiPage
         )
     Begin
     {
-        $FilesToOpen = Get-ChildItem $Filespec -Filter "*.ps1"
+        $FilesToOpen = Get-ChildItem $Filespec -Filter "*.ps*1"
         }
     Process
     {
@@ -632,95 +632,64 @@ Function New-WikiPage
                     . $PoshFile.FullName
                     Write-Verbose "Read the contents of $($PoshFile.FullName)"
                     $Library = Get-Content $PoshFile.FullName
-                    $LibraryName = "$($PoshFile.Name.Substring(0,$PoshFile.Name.Length-4))"
+                    $LibraryName = $PoshFile.BaseName
                     foreach ($Line in $Library)
                     {
                         if ($Line -like "Function*")
                         {
-                            $FunctionName = ($Line.Remove(0,9)).Trim()
+                            $FunctionName = $Line.Replace("Function","").Trim()
                             Write-Verbose $FunctionName
-                            if (($FunctionName -cmatch "-[A-Z]([^A-Z]*)[A-Z]([^A-Z]*)") -ne $true)
+                            Write-Output "# $($FunctionName)"
+                            Write-Output ""
+                            $HelpOutput = Get-Help $FunctionName -Full
+                            Write-Output "**NAME**"
+                            Write-Output ""
+                            Write-Output $HelpOutput.Name
+                            Write-Output ""
+                            Write-Output "**SYNOPSIS**"
+                            Write-Output ""
+                            Write-Output $HelpOutput.Synopsis
+                            Write-Output ""
+                            Write-Output "**SYNTAX**"
+                            Write-Output ""
+                            Write-Output $HelpOutput.syntax
+                            Write-Output ""
+                            Write-Output "**DESCRIPTION**"
+                            Write-Output ""
+                            Write-Output $HelpOutput.description.text
+                            Write-Output ""
+                            Write-Output "**PARAMETERS**"
+                            foreach ($Parameter in $HelpOutput.parameters.parameter)
                             {
-                                Write-Output "== $($FunctionName) =="
+                                Write-Output "`t-$($Parameter.name) <$($Parameter.type.name)>"
+                                Write-Output "`t`t$($Parameter.description.text)"
+                                Write-Output ""
+                                Write-Output "`t`tRequired?                    $($Parameter.required)"
+                                Write-Output "`t`tPosition?                    $($Parameter.position)"
+                                Write-Output "`t`tDefault value                $($Parameter.defaultValue)"
+                                Write-Output "`t`tAccept pipeline input?       $($Parameter.pipelineInput)"
+                                Write-Output "`t`tAccept wildcard characters?  $($Parameter.globbing)"
+                                Write-Output ""
                                 }
-                            else
+                            Write-Output ""
+                            Write-Output "**Notes**"
+                            Write-Output ""
+                            Write-Output $HelpOutput.alertSet.alert.text
+                            Write-Output ""
+                            foreach ($Example in $HelpOutput.examples.example)
                             {
-                                $ThisVerb = $FunctionName.Substring(0,$FunctionName.IndexOfAny("-"))
-                                $ThisCommand = $FunctionName.Substring($FunctionName.IndexOfAny("-")+1,($FunctionName.Length)-($FunctionName.IndexOfAny("-")+1))
-                                Write-Verbose "==$($ThisVerb)-!$($ThisCommand)=="
-                                Write-Output "==$($ThisVerb)-!$($ThisCommand)=="
+                                Write-Output "`t$($Example.title)"
+                                Write-Output ""
+                                $Intro = [string]$Example.introduction.text
+                                $Code = [string]$Example.code
+                                Write-Output "`t$($Intro+$Code)"
+                                $Remarks = [string]$Example.remarks.text
+                                Write-Output "`t$($Remarks)"
+                                Write-Output ""
                                 }
-                            Write-Output "{{{"
-                            Get-Help $FunctionName -Full
-                            Write-Output "}}}"
+                            Write-Output ""
                             }
                         }
-                    }
-                else
-                {
-                    Write-Output "= !$($PoshFile.Name) ="
-                    Write-Output "{{{"
-                    Get-Help $PoshFile.FullName -Full
-                    Write-Output "}}}"
-                    }
-                }
-            else
-            {
-                if ($LibraryFile -eq $true)
-                {
-                    Write-Verbose "Dot source $($PoshFile.FullName)"
-                    . $PoshFile.FullName
-                    Write-Verbose "Read the contents of $($PoshFile.FullName)"
-                    $Library = Get-Content $PoshFile.FullName
-                    $LibraryName = "$($PoshFile.Name.Substring(0,$PoshFile.Name.Length-4))"
-                    if (($LibraryName.IndexOfAny("-")) -gt -1)
-                    {
-                        $WikiFileName = $LibraryName.Replace("-","")
-                        }
-                    else
-                    {
-                        $WikiFileName = $LibraryName
-                        }
-                    foreach ($Line in $Library)
-                    {
-                        if ($Line -like "Function*")
-                        {
-                            $FunctionName = ($Line.Remove(0,9)).Trim()
-                            Write-Verbose $FunctionName
-                            if (($FunctionName -cmatch "-[A-Z][A-Z]") -eq $true)
-                            {
-                                "== $($FunctionName) ==" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
-                                }
-                            else
-                            {
-                                $ThisVerb = $FunctionName.Substring(0,$FunctionName.IndexOfAny("-"))
-                                $ThisCommand = $FunctionName.Substring($FunctionName.IndexOfAny("-")+1,($FunctionName.Length)-($FunctionName.IndexOfAny("-")+1))
-                                Write-Verbose "==$($ThisVerb)-!$($ThisCommand)=="
-                                "==$($ThisVerb)-!$($ThisCommand)==" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
-                                }
-                            "{{{" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
-                            Write-Verbose "Get-Help $($FunctionName)"
-                            Get-Help $FunctionName -Full |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
-                            "}}}" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
-                            }
-                        }
-                    }
-                else
-                {
-                    if (($PoshFile.Name.IndexOfAny("-")) -gt -1)
-                    {
-                        $WikiFileName = $PoshFile.Name.Replace("-","")
-                        $WikiFileName = $WikiFileName.Replace(".ps1","")
-                        }
-                    else
-                    {
-                        $WikiFileName = $PoshFile.Name.Replace(".ps1","")
-                        }
-                    "= !$($PoshFile.Name) =" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
-                    "{{{" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
-                    Write-Verbose "Get-Help $($PoshFile.FullName)"
-                    Get-Help $PoshFile.FullName -Full |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
-                    "}}}" |Out-File ".\$($WikiFileName).wiki" -Append -encoding ASCII
                     }
                 }
             }
