@@ -95,6 +95,47 @@ Function Get-LogFile
             A string representing what kind of entry to be used, this can be any 
             valid string
         .EXAMPLE
+            Get-LogFile -LogName PowerShellTesting
+
+
+            LogName   : PowerShellTesting
+            Source    : Testing
+            Time      : 12/22/2014 11:54:50
+            EventID   : 0
+            EntryType : Information
+            Message   : This is a test
+
+            Description
+            -----------
+            This shows the basic syntax of the command and what is returned
+        .EXAMPLE
+            Get-LogFile -LogName PowerShellTesting -Source Testing
+
+
+            LogName   : PowerShellTesting
+            Source    : Testing
+            Time      : 12/22/2014 11:54:50
+            EventID   : 0
+            EntryType : Information
+            Message   : This is a test
+
+            Description
+            -----------
+            This shows using the -Source param to return all the "testing" sources
+        .EXAMPLE
+            Get-LogFile -LogName PowerShellTesting -EntryType Information
+
+
+            LogName   : PowerShellTesting
+            Source    : Testing
+            Time      : 12/22/2014 11:54:50
+            EventID   : 0
+            EntryType : Information
+            Message   : This is a test
+
+            Description
+            -----------
+            This shows using the -EntryType param to return all "Information" types
         .NOTES
             FunctionName : Get-LogFile
             Created by   : jspatton
@@ -173,13 +214,24 @@ Function Get-LogSource
 {
     <#
         .SYNOPSIS
+            Returns a list of sources for a log
         .DESCRIPTION
+            This function returns all the sources that are used in a given logfile
         .PARAMETER LogPath
             This is the location where your logfile will be stored, if blank it will
             default to C:\LogFiles
         .PARAMETER LogName
             This becomes the name of the logfile
         .EXAMPLE
+            Get-LogSource -LogName PowerShellTesting
+
+            Source
+            ------
+            Testing
+
+            Description
+            -----------
+            This example shows the syntax of the command and it's output
         .NOTES
             FunctionName : Get-LogSource
             Created by   : jspatton
@@ -216,13 +268,31 @@ Function Backup-Logfile
 {
     <#
         .SYNOPSIS
+            A function to backup/archive a log file
         .DESCRIPTION
+            This function will allow you to backup/archive the logfile. It simply
+            renames the logfile with the name and time and date of when it was backed up.
+
+            This can be useful to run on a schedule to roll the file every X time interval.
         .PARAMETER LogPath
             This is the location where your logfile will be stored, if blank it will
             default to C:\LogFiles
         .PARAMETER LogName
             This becomes the name of the logfile
         .EXAMPLE
+            Backup-Logfile -LogName PowerShellTesting
+
+
+                Directory: C:\LogFiles\PowerShellTesting
+
+
+            Mode                LastWriteTime     Length Name
+            ----                -------------     ------ ----
+            -a---        12/22/2014  11:54 AM        154 20141224-085806_PowerShellTesting.log
+
+            Description
+            -----------
+            This example shows the basic syntax and output of the function.
         .NOTES
             FunctionName : Backup-Logfile
             Created by   : jspatton
@@ -275,5 +345,6 @@ Function Backup-Logfile
         }
     End
     {
+        $CurrentLog
         }
     }
