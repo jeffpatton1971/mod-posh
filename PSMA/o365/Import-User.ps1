@@ -65,7 +65,10 @@ Process
         Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Setting up Schema Properties $($MASchemaProperties)"
 
         $RootDSE = (([ADSI]"").distinguishedName)
+        Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Setting RootDSE : $($RootDSE)"
+
         $SearchFilter = "(&(objectClass=user)(objectCategory=person))"
+        Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Setting searchfilter : $($SearchFilter)"
 
         if (($OperationType -eq "Full") -or ($RunStepCustomData -match '^$'))
         {
