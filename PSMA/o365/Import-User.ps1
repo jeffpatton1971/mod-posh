@@ -40,6 +40,7 @@ Begin
     try
     {
         Import-Module C:\Scripts\LogFiles.psm1
+        Import-Module C:\Scripts\ActiveDirectoryManagement.psm1
         }
     catch
     {
@@ -64,17 +65,12 @@ Process
         Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Setting up Schema Properties $($MASchemaProperties)"
 
         $RootDSE = (([ADSI]"").distinguishedName)
-        $Domain = New-Object System.DirectoryServices.DirectoryEntry "LDAP://$($RootDSE)", $Username, $Password
-        Write-LogFile -LogName $LogName -Source $Source -EventID 101 -EntryType $EntryType -Message "Connecting to Domain : $($RootDSE.defaultNamingContext)"
-
-        $Searcher = New-Object System.DirectoryServices.DirectorySearcher $Domain, "(&(objectClass=user)(objectCategory=person))", $DeltaPropertiesToLoad, 2
-        $Searcher.Tombstone = ($OperationType -match 'Delta')
-        $Searcher.CacheResults = $false
-        Write-LogFile -LogName $LogName -Source $Source -EventID 101 -EntryType $EntryType -Message "Setting up Directory Searcher"
+        $SearchFilter = "(&(objectClass=user)(objectCategory=person))"
 
         if (($OperationType -eq "Full") -or ($RunStepCustomData -match '^$'))
         {
             $Searcher.DirectorySynchronization = New-Object System.DirectoryServices.DirectorySynchronization
+            $Results = Get-ADObjects -ADSPath $RootDSE -SearchFilter $SearchFilter -SearchScope Subtree -ADProperties $DeltaPropertiesToLoad
             Write-LogFile -LogName $LogName -Source $Source -EventID 101 -EntryType $EntryType -Message "Reset the directory synchronization cookie for full imports (or no watermark"
             }
         else
@@ -82,10 +78,9 @@ Process
             $Cookie = [System.Convert]::FromBase64String($RunStepCustomData)
             Write-LogFile -LogName $LogName -Source $Source -EventID 101 -EntryType $EntryType -Message "Get watermark from last run and pass to searcher object"
             $SyncCookie = ,$Cookie
-            $Searcher.DirectorySynchronization = New-Object System.DirectoryServices.DirectorySynchronization $SyncCookie
+            $Results = Get-ADObjects -ADSPath $RootDSE -SearchFilter $SearchFilter -SearchScope Subtree -ADProperties $DeltaPropertiesToLoad -DirSync $SyncCookie
             }
 
-        $Results = $Searcher.FindAll()
         Write-LogFile -LogName $LogName -Source $Source -EventID 101 -EntryType $EntryType -Message "Query AD for objects, found : $($Results.Count)"
 
         foreach ($Result in $Results)
