@@ -76,7 +76,10 @@ Function Get-ADObjects
         [string]$SearchFilter = "(objectCategory=computer)",
         [ValidateSet("Base","OneLevel","Subtree")]
         [string]$SearchScope = "Subtree",
-        [array]$ADProperties
+        [array]$ADProperties,
+        [bool]$CacheResults = $False,
+        [bool]$Tombstone = $false,
+        $DirSync
         )
     Begin
     {
@@ -90,43 +93,29 @@ Function Get-ADObjects
         Try
         {
             $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
-            $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
-            $DirectorySearcher.SearchRoot = $DirectoryEntry
-            $DirectorySearcher.PageSize = 1000
-            $DirectorySearcher.Filter = $SearchFilter
-            $DirectorySearcher.SearchScope = $SearchScope
-
-            if ($ADProperties -ne $null)
+            if ($ADProperties)
             {
-                foreach ($Property in $ADProperties)
-                    {
-                        [void]$DirectorySearcher.PropertiesToLoad.Add($Property)
-                        }
-                $ADObjects = @()
-                foreach ($ADObject in $DirectorySearcher.FindAll())
-                {
-                    $objResult = New-Object -TypeName PSObject
-                    foreach ($ADProperty in $ADProperties)
-                    {
-                        if ($ADProperty -eq "pwdlastset")
-                        {
-                            [datetime]$Value = [datetime]::FromFileTime(([System.Int64]([string]$ADObject.Properties.($ADProperty.ToLower()))))
-                            }
-                        else
-                        {
-                            [string]$Value = $ADObject.Properties.($ADProperty.ToLower())
-                            }
-                        Add-Member -InputObject $objResult -MemberType NoteProperty -Name $ADProperty -Value $Value
-                        }
-                    [string]$Value = $ADObject.Properties.adspath
-                    Add-Member -InputObject $objResult -MemberType NoteProperty -Name 'adsPath' -Value $Value
-                    $ADObjects += $objResult
-                    }
+                $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher $DirectoryEntry, $SearchFilter, $AdProperties
                 }
             else
             {
-                $ADObjects = $DirectorySearcher.FindAll()
+                $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher
+                $DirectorySearcher.SearchRoot = $DirectoryEntry
+                $DirectorySearcher.PageSize = 1000
+                $DirectorySearcher.Filter = $SearchFilter
                 }
+            $DirectorySearcher.SearchScope = $SearchScope
+            $DirectorySearcher.CacheResults = $CacheResults
+            $DirectorySearcher.Tombstone = $TombStone
+            if ($DirSync)
+            {
+                $DirectorySearcher.DirectorySynchronization = New-Object System.DirectoryServices.DirectorySynchronization $DirSync
+                }
+            else
+            {
+                $DirectorySearcher.DirectorySynchronization = New-Object System.DirectoryServices.DirectorySynchronization
+                }
+            $DirectorySearcher.FindAll()
             }
         Catch
         {
