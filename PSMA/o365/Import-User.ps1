@@ -52,6 +52,7 @@ Process
     try
     {
         $ErrorActionPreference = "Stop"
+        $Error.Clear()
         $LogName = "PMA-Office365-Import"
         $Source = "Import"
         $EntryType = "Information"
@@ -110,8 +111,7 @@ Process
 
                 $obj.objectguidstring = [string]([guid]$Result.PSBase.Properties.objectguid[0])
                 $obj.objectsidstring = [string](New-Object System.Security.Principal.SecurityIdentifier($DirEntry.Properties["objectSid"][0],0))
-                $MASchemaProperties |ForEach-Object
-                {
+                $MASchemaProperties |ForEach-Object {
                     if ($DirEntry.Properties.Contains($_))
                     {
                         $obj.$_ = $DirEntry.Properties[$_][0]
