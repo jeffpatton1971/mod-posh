@@ -18,59 +18,46 @@
     .LINK
         http://blog.goverco.com/p/psmaschema.html
  #>
-[CmdletBinding()]
-Param
-(
-)
-Begin
+try
 {
-    try
-    {
-        Import-Module C:\Scripts\LogFiles.psm1
-        }
-    catch
-    {
-        Write-Error $Error[0]
-        break
-        }
+    Import-Module C:\Scripts\LogFiles.psm1
     }
-Process
+catch
 {
-    try
-    {
-        $LogName = "PMA-Office365-Schema"
-        $Source = "Setup"
-        $EntryType = "Information"
-        Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Setting up schema for use with dirsync"
+    Write-Error $Error[0]
+    break
+    }
+try
+{
+    $LogName = "PMA-Office365-Schema"
+    $Source = "Setup"
+    $EntryType = "Information"
+    Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Setting up schema for use with dirsync"
     
-        $obj = New-Object -TypeName psobject
-        @(
-            @{Name = "Anchor-id"; Type = "Binary"; Value = 1}
-            @{Name = "objectClass"; Type = "String"; Value = "person"}
-            @{Name = "objectguidstring"; Type = "String"; Value = ""}
-            @{Name = "objectsidstring"; Type = "String"; Value = ""}
-            @{Name = "samaccountname"; Type = "String"; Value = ""}
-            @{Name = "msds-cloudextensionattribute1"; Type = "String"; Value = ""}
-        )| ForEach-Object {
-                Write-LogFile -LogName $LogName -Source $Source -EventID 101 -EntryType $EntryType -Message "Adding $($_.Name)|$($_.Type) with Value $($_.Value) to the schema"
-                $obj |Add-Member -MemberType NoteProperty -Name "$($_.Name)|$($_.Type)" -Value $_.Value
-            }
-        }
-    catch
-    {
-        Write-LogFile -LogName $LogName -Source $Source -EventID 102 -EntryType "Error" -Message $Error[0].Exception
-        break
+    $obj = New-Object -TypeName psobject
+    @(
+        @{Name = "Anchor-id"; Type = "Binary"; Value = 1}
+        @{Name = "objectClass"; Type = "String"; Value = "person"}
+        @{Name = "objectguidstring"; Type = "String"; Value = ""}
+        @{Name = "objectsidstring"; Type = "String"; Value = ""}
+        @{Name = "samaccountname"; Type = "String"; Value = ""}
+        @{Name = "msds-cloudextensionattribute1"; Type = "String"; Value = ""}
+    )| ForEach-Object {
+            Write-LogFile -LogName $LogName -Source $Source -EventID 101 -EntryType $EntryType -Message "Adding $($_.Name)|$($_.Type) with Value $($_.Value) to the schema"
+            $obj |Add-Member -MemberType NoteProperty -Name "$($_.Name)|$($_.Type)" -Value $_.Value
         }
     }
-End
+catch
 {
-    if ($obj.'Anchor-id|Binary')
-    {
-        Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Setup complete"
-        return $obj
-        }
-    else
-    {
-        Write-LogFile -LogName $LogName -Source $Source -EventID 102 -EntryType "Error" -Message "Object empty, please see earlier error message"
-        }
+    Write-LogFile -LogName $LogName -Source $Source -EventID 102 -EntryType "Error" -Message $Error[0].Exception
+    break
+    }
+if ($obj.'Anchor-id|Binary')
+{
+    Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Setup complete"
+    return $obj
+    }
+else
+{
+    Write-LogFile -LogName $LogName -Source $Source -EventID 102 -EntryType "Error" -Message "Object empty, please see earlier error message"
     }
