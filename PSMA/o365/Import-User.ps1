@@ -52,6 +52,7 @@ Process
     try
     {
         $ErrorActionPreference = "Stop"
+        $Error.Clear()
         $LogName = "PMA-Office365-Import"
         $Source = "Import"
         $EntryType = "Information"
@@ -62,8 +63,8 @@ Process
         $MASchemaProperties = @("objectClass","objectguidstring","objectsidstring","samaccountname","msds-cloudextensionattribute1")
         Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Setting up Schema Properties $($MASchemaProperties)"
 
-        $RootDSE = [adsi]("LDAP://RootDSE")
-        $Domain = New-Object System.DirectoryServices.DirectoryEntry "LDAP://$($RootDSE.defaultNamingContext)", $Username, $Password
+        $RootDSE = (([ADSI]"").distinguishedName)
+        $Domain = New-Object System.DirectoryServices.DirectoryEntry "LDAP://$($RootDSE)", $Username, $Password
         Write-LogFile -LogName $LogName -Source $Source -EventID 101 -EntryType $EntryType -Message "Connecting to Domain : $($RootDSE.defaultNamingContext)"
 
         $Searcher = New-Object System.DirectoryServices.DirectorySearcher $Domain, "(&(objectClass=user)(objectCategory=person))", $DeltaPropertiesToLoad, 2
@@ -110,8 +111,7 @@ Process
 
                 $obj.objectguidstring = [string]([guid]$Result.PSBase.Properties.objectguid[0])
                 $obj.objectsidstring = [string](New-Object System.Security.Principal.SecurityIdentifier($DirEntry.Properties["objectSid"][0],0))
-                $MASchemaProperties |ForEach-Object
-                {
+                $MASchemaProperties |ForEach-Object {
                     if ($DirEntry.Properties.Contains($_))
                     {
                         $obj.$_ = $DirEntry.Properties[$_][0]

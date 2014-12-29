@@ -33,6 +33,7 @@ Begin
     try
     {
         $ErrorActionPreference = "Stop"
+        $Error.Clear()
 
         Import-Module C:\Scripts\LogFiles.psm1
         Import-Module MSOnline -Force
@@ -49,7 +50,7 @@ Begin
         Connect-MsolService -Credential $Creds
         Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Connected to Office 365"
 
-        $AccountSku = Get-MsolAccounSku |Where-Object -Property AccountSkuId -eq "$($o365Tenant):STANDARDWOFFPACK_STUDENT"
+        $AccountSku = Get-MsolAccountSku |Where-Object -Property AccountSkuId -eq "$($o365Tenant):STANDARDWOFFPACK_STUDENT"
         $o365Sku = New-MsolLicenseOptions -AccountSkuid $AccountSku.AccountSkuid -DisabledPlans $DisabledPlans
         }
     catch
@@ -63,6 +64,8 @@ Process
     try
     {
         $ErrorActionPreference = "Stop"
+        $Error.Clear()
+
         $User = $_.DN
         Write-LogFile -LogName $LogName -Source $Source -EventID 101 -EntryType $EntryType -Message "Processing user : $($User)"
 
