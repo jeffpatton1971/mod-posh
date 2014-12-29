@@ -63,8 +63,8 @@ Process
         $MASchemaProperties = @("objectClass","objectguidstring","objectsidstring","samaccountname","msds-cloudextensionattribute1")
         Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Setting up Schema Properties $($MASchemaProperties)"
 
-        $RootDSE = [adsi]("LDAP://RootDSE")
-        $Domain = New-Object System.DirectoryServices.DirectoryEntry "LDAP://$($RootDSE.defaultNamingContext)", $Username, $Password
+        $RootDSE = (([ADSI]"").distinguishedName)
+        $Domain = New-Object System.DirectoryServices.DirectoryEntry "LDAP://$($RootDSE)", $Username, $Password
         Write-LogFile -LogName $LogName -Source $Source -EventID 101 -EntryType $EntryType -Message "Connecting to Domain : $($RootDSE.defaultNamingContext)"
 
         $Searcher = New-Object System.DirectoryServices.DirectorySearcher $Domain, "(&(objectClass=user)(objectCategory=person))", $DeltaPropertiesToLoad, 2
