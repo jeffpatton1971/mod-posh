@@ -72,7 +72,7 @@ Process
 
         if (($OperationType -eq "Full") -or ($RunStepCustomData -match '^$'))
         {
-            $Results = Get-ADObjects -ADSPath $RootDSE -SearchFilter $SearchFilter -SearchScope Subtree -ADProperties $DeltaPropertiesToLoad
+            $Results = Get-ADObjects -ADSPath $RootDSE -SearchFilter $SearchFilter -SearchScope Subtree -ADProperties $DeltaPropertiesToLoad -DirSync $null
             Write-LogFile -LogName $LogName -Source $Source -EventID 101 -EntryType $EntryType -Message "Reset the directory synchronization cookie for full imports (or no watermark)"
             }
         else
