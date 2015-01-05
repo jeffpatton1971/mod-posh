@@ -33,15 +33,15 @@ try
     $Source = "Setup"
     $EntryType = "Information"
     Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Setting up schema for use with dirsync"
-    
+    $MASchemaProperties = @("objectguidstring","objectsidstring","sAMAccountName","msDS-cloudExtensionAttribute1")
     $obj = New-Object -TypeName psobject
     @(
         @{Name = "Anchor-id"; Type = "Binary"; Value = 1}
         @{Name = "objectClass"; Type = "String"; Value = "person"}
         @{Name = "objectguidstring"; Type = "String"; Value = ""}
         @{Name = "objectsidstring"; Type = "String"; Value = ""}
-        @{Name = "samaccountname"; Type = "String"; Value = ""}
-        @{Name = "msds-cloudextensionattribute1"; Type = "String"; Value = ""}
+        @{Name = "sAMAccountName"; Type = "String"; Value = ""}
+        @{Name = "msDS-cloudExtensionAttribute1"; Type = "String"; Value = ""}
     )| ForEach-Object {
             Write-LogFile -LogName $LogName -Source $Source -EventID 101 -EntryType $EntryType -Message "Adding $($_.Name)|$($_.Type) with Value $($_.Value) to the schema"
             $obj |Add-Member -MemberType NoteProperty -Name "$($_.Name)|$($_.Type)" -Value $_.Value
