@@ -79,6 +79,7 @@ Function Get-ADObjects
         [array]$ADProperties,
         [bool]$CacheResults = $False,
         [bool]$Tombstone = $false,
+        [System.Management.Automation.PSCredential]$Credential,
         $DirSync
         )
     Begin
@@ -92,7 +93,14 @@ Function Get-ADObjects
     {
         Try
         {
-            $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
+            if ($Credential)
+            {
+                $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath, $Credential.GetNetworkCredential().UserName, $Credential.GetNetworkCredential().Password)
+                }
+            else
+            {
+                $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath)
+                }
             if ($ADProperties)
             {
                 $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher $DirectoryEntry, $SearchFilter, $AdProperties
