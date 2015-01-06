@@ -1211,6 +1211,7 @@ Function Set-ADObjectProperties
             try
             {
                 $ADObject.SetInfo()
+                $ADObject.RefreshCache()
                 }
             catch
             {
