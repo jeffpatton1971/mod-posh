@@ -95,7 +95,7 @@ Function Get-ADObjects
         {
             if ($Credential)
             {
-                $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath, $Credential.GetNetworkCredential().UserName, $Credential.GetNetworkCredential().Password)
+                $DirectoryEntry = New-Object System.DirectoryServices.DirectoryEntry($ADSPath, $Credential.UserName, $Credential.Password)
                 }
             else
             {
@@ -119,10 +119,6 @@ Function Get-ADObjects
             {
                 $DirectorySearcher.DirectorySynchronization = New-Object System.DirectoryServices.DirectorySynchronization $DirSync
                 }
-            else
-            {
-                $DirectorySearcher.DirectorySynchronization = New-Object System.DirectoryServices.DirectorySynchronization
-                }
             $DirectorySearcher.FindAll()
             }
         Catch
@@ -132,7 +128,6 @@ Function Get-ADObjects
         }
     End
     {
-        Return $ADObjects
         }
     }    
 Function Add-UserToLocalGroup
@@ -1179,7 +1174,7 @@ Function Set-ADObjectProperties
     {
         if ($ADObject -notmatch "LDAP://*")
         {
-            $ADObject = "LDAP://$($UserDN)"
+            $ADObject = "LDAP://$($Adobject)"
             }
         Write-Verbose "Storing the object as a Directory Entry so we can modify it."
         $ADObject = New-Object DirectoryServices.DirectoryEntry $ADObject
@@ -1221,6 +1216,51 @@ Function Set-ADObjectProperties
             {
                 Return $Error[0].Exception.InnerException.Message.ToString().Trim()
                 }
+            }
+        }
+    End
+    {
+        }
+    }
+Function Rename-Adobject
+{
+<#
+    .SYNOPSIS
+    .DESCRIPTION
+    .PARAMETER
+    .EXAMPLE
+    .NOTES
+        FunctionName : Rename-Adobject
+        Created by   : jspatton
+        Date Coded   : 01/06/2015 10:16:39
+    .LINK
+        https://github.com/jeffpatton1971/mod-posh/wiki/ActiveDirectoryManagement#Rename-Adobject
+#>
+    [CmdletBinding()]
+    Param
+        (
+        $Adobject,
+        $Name
+        )
+    Begin
+    {
+        if ($ADObject -notmatch "LDAP://*")
+        {
+            $ADObject = "LDAP://$($Adobject)"
+            }
+        Write-Verbose "Storing the object as a Directory Entry so we can modify it."
+        $ADObject = New-Object DirectoryServices.DirectoryEntry $ADObject
+        }
+    Process
+    {
+        try
+        {
+            $ErrorActionPreference = "Stop"
+            $Adobject.Rename("cn=$($Name)")
+            }
+        catch
+        {
+            Write-Error $Error[0]
             }
         }
     End
