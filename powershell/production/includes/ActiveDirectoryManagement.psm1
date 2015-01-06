@@ -1228,9 +1228,25 @@ Function Rename-Adobject
 {
 <#
     .SYNOPSIS
+        Rename an object in Active Directory
     .DESCRIPTION
-    .PARAMETER
+        This function will rename the object provided. It updates the cn,
+        the sAMAccountName and the userPrincipalName to represent the passed
+        in Name parameter.
+    .PARAMETER Adobject
+        An LDAP path
+    .PARAMETER Name
+        The new name
     .EXAMPLE
+        PS C:\Windows\system32> Rename-Adobject -Adobject $Adobject.Path -Name zomg
+
+
+        distinguishedName : {CN=zomg,OU=testing,DC=company,DC=com}
+        Path              : LDAP://cn=zomg,OU=testing,DC=company,DC=com
+
+        Description
+        -----------
+        This shows the basic syntax of this function
     .NOTES
         FunctionName : Rename-Adobject
         Created by   : jspatton
