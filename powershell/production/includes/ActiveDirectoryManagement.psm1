@@ -1220,6 +1220,7 @@ Function Set-ADObjectProperties
         }
     End
     {
+        return $ADObject
         }
     }
 Function Rename-Adobject
@@ -1256,7 +1257,16 @@ Function Rename-Adobject
         try
         {
             $ErrorActionPreference = "Stop"
+            $sAMAccountName = $Adobject.sAMAccountName.ToString()
+            $userPrincipalName = $Adobject.userPrincipalName.ToString()
+            $path = $Adobject.Path.ToString()
             $Adobject.Rename("cn=$($Name)")
+            $Adobject.Put("sAMAccountName",$Name)
+            $Adobject.SetInfo()
+            $Adobject.RefreshCache()
+            $Adobject.Put("userPrincipalName",$userPrincipalName.Replace($sAMAccountName,$Name))
+            $Adobject.SetInfo()
+            $Adobject.RefreshCache()
             }
         catch
         {
@@ -1265,6 +1275,7 @@ Function Rename-Adobject
         }
     End
     {
+        return $Adobject
         }
     }
 Function Get-GPO
