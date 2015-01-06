@@ -33,7 +33,6 @@ try
     $Source = "Setup"
     $EntryType = "Information"
     Write-LogFile -LogName $LogName -Source $Source -EventID 100 -EntryType $EntryType -Message "Setting up schema for use with dirsync"
-    $MASchemaProperties = @("objectguidstring","objectsidstring","sAMAccountName","msDS-cloudExtensionAttribute1")
     $obj = New-Object -TypeName psobject
     @(
         @{Name = "Anchor-id"; Type = "Binary"; Value = 1}
