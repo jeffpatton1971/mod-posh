@@ -1215,7 +1215,7 @@ Function Set-ADObjectProperties
                 }
             catch
             {
-                Return $Error[0].Exception.InnerException.Message.ToString().Trim()
+                Return $Error[0]
                 }
             }
         }
