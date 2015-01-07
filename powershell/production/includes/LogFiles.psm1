@@ -94,6 +94,8 @@ Function Get-LogFile
         .PARAMETER EntryType
             A string representing what kind of entry to be used, this can be any 
             valid string
+        .PARAMETER GUI
+            If present pipe output to gridview
         .EXAMPLE
             Get-LogFile -LogName PowerShellTesting
 
