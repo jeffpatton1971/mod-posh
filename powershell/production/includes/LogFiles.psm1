@@ -149,7 +149,8 @@ Function Get-LogFile
         [string]$LogPath = "C:\LogFiles",
         [string]$LogName,
         [string]$Source,
-        [string]$EntryType
+        [string]$EntryType,
+        [switch]$GUI
         )
     Begin
     {
@@ -188,22 +189,50 @@ Function Get-LogFile
         $Headers = "LogName","Source","Time","EventID","EntryType","Message"
         if ($EntryType -and !($Source))
         {
-            Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property EntryType -eq $EntryType
+            if ($GUI)
+            {
+                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property EntryType -eq $EntryType |Out-GridView
+                }
+            else
+            {
+                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property EntryType -eq $EntryType
+                }
             break
             }
         if ($Source -and !($EntryType))
         {
-            Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property Source -eq $Source
+            if ($GUI)
+            {
+                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property Source -eq $Source |Out-GridView
+                }
+            else
+            {
+                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property Source -eq $Source
+                }
             break
             }
         if ($Source -and $EntryType)
         {
-            Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property Source -eq $Source |Where-Object -Property EntryType -eq $EntryType
+            if ($GUI)
+            {
+                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property Source -eq $Source |Where-Object -Property EntryType -eq $EntryType |Out-GridView
+                }
+            else
+            {
+                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property Source -eq $Source |Where-Object -Property EntryType -eq $EntryType
+                }
             break
             }
         else
         {
-            Import-Csv $LogFile -Header $Headers -Delimiter $Delim
+            if ($GUI)
+            {
+                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Out-GridView
+                }
+            else
+            {
+                Import-Csv $LogFile -Header $Headers -Delimiter $Delim
+                }
             }
         }
     End
