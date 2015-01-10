@@ -2340,4 +2340,102 @@ Function Get-WinEventTail
     {
         }
     }
+function Eject-CdDrive
+{
+    <#
+        .SYNOPSIS
+            A function to eject the CD Drive
+        .DESCRIPTION
+            This function uses the shell.application comObject to
+            eject one or more CD rom drives. I had the need to eject several CDroms
+            from servers and wanted an easier way to do it. I found a sample
+            in the Technet gallery (see link) and modified to suite my
+            needs.
+        .PARAMETER Drive
+            If present it will eject the drive corresponding to the drive letter
+        .EXAMPLE
+            Eject-CdDrive
+
+
+            Application  : System.__ComObject
+            Parent       : System.__ComObject
+            Name         : DVD RW Drive (E:)
+            Path         : E:\
+            GetLink      : 
+            GetFolder    : System.__ComObject
+            IsLink       : False
+            IsFolder     : True
+            IsFileSystem : True
+            IsBrowsable  : False
+            ModifyDate   : 12/30/1899 12:00:00 AM
+            Size         : 0
+            Type         : CD Drive
+
+            Description
+            -----------
+            This example shows how to eject any cdrom on the system
+        .EXAMPLE
+            Eject-CdDrive -Drive E:
+
+
+            Application  : System.__ComObject
+            Parent       : System.__ComObject
+            Name         : DVD RW Drive (E:)
+            Path         : E:\
+            GetLink      : 
+            GetFolder    : System.__ComObject
+            IsLink       : False
+            IsFolder     : True
+            IsFileSystem : True
+            IsBrowsable  : False
+            ModifyDate   : 12/30/1899 12:00:00 AM
+            Size         : 0
+            Type         : CD Drive
+
+            Description
+            -----------
+            This example shows how to eject the CD labled E: from the system
+        .NOTES
+            FunctionName : Eject-CdDrive
+            Created by   : Jeffrey
+            Date Coded   : 01/10/2015 08:33:30
+        .LINK
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Eject-CdDrive
+        .LINK
+            https://gallery.technet.microsoft.com/scriptcenter/7d81af29-1cae-4dbb-8027-cd96a985f311
+    #>
+    [CmdletBinding()]
+    param
+    (
+    [string]$Drive
+    )
+    Begin
+    {
+        $sApplication = new-object -com Shell.Application
+        $MyComputer = 17
+        }
+    Process
+    {
+        if ($Drive)
+        {
+            $Cdrom = $sApplication.Namespace(17).ParseName($Drive)
+            $Cdrom.InvokeVerb("Eject")
+            $Cdrom
+            }
+        else
+        {
+            $Cdrom = $sApplication.NameSpace($MyComputer).Items() |Where-Object -Property Type -eq 'CD Drive'
+            foreach ($Cd in $Cdrom)
+            {
+                $Cd.InvokeVerb('Eject')
+                $cd
+                }
+            }
+        }
+    end
+    {
+        [System.Runtime.Interopservices.Marshal]::ReleaseComObject($sApplication) |Out-Null
+        Remove-Variable sApplication
+        }
+    }
 Export-ModuleMember *
