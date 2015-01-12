@@ -37,6 +37,10 @@
     This should be run elevated
 .LINK
     https://gist.github.com/jeffpatton1971/d8460a45117192817ef3
+.LINK
+    http://community.zenoss.org/docs/DOC-4517
+.LINK
+    http://tech.lanesnotes.com/2010/07/how-to-delegate-services-control-in.html
 #>
 [CmdletBinding()]
 Param
@@ -97,6 +101,9 @@ Process
     $sSDDL = $scSDDL.Substring($scSDDL.IndexOf("S:"),($scSDDL.Length) - ($scSDDL.IndexOf("S:")))
     $newSDDL = "$($dSDDL)$($mySDDL)$($sSDDL)"
     Start-Process -FilePath cmd.exe -ArgumentList "/c sc sdset SCMANAGER $($newSDDL)"
+    #
+    # Open Remote Administration firewall ports
+    #
     Start-Process -FilePath netsh -ArgumentList "firewall set service remoteadmin enable"
     }
 End
