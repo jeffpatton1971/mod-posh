@@ -2493,6 +2493,8 @@ Function Grant-ServicePermission
             https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Grant-ServicePermission
         .LINK
             http://jacob.ludriks.com/manipulating-sddls-through-powershell/
+        .LINK
+            http://tech.lanesnotes.com/2010/07/how-to-delegate-services-control-in.html
     #>
     [CmdletBinding()]
     Param
