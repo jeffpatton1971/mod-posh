@@ -91,7 +91,12 @@ Process
     #
     # Configure non-admin access to services
     #
-    Start-Process -FilePath cmd.exe -ArgumentList "/c sc sdset SCMANAGER D:(A;;CCLCRPRC;;;AU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)S:(AU;FA;KA;;;WD)(AU;OIIOFA;GA;;;WD)"
+    $scSDDL = (Invoke-Expression -Command "cmd /c sc sdshow SCMANAGER")|ForEach-Object {if ($_){$_}}
+    $dSDDL = $scSDDL.Substring(0, $scSDDL.IndexOf("S:"))
+    $mySDDL = "(A;;CCLCRPRC;;;$($sid))"
+    $sSDDL = $scSDDL.Substring($scSDDL.IndexOf("S:"),($scSDDL.Length) - ($scSDDL.IndexOf("S:")))
+    $newSDDL = "$($dSDDL)$($mySDDL)$($sSDDL)"
+    Start-Process -FilePath cmd.exe -ArgumentList "/c sc sdset SCMANAGER $($newSDDL)"
     Start-Process -FilePath netsh -ArgumentList "firewall set service remoteadmin enable"
     }
 End
