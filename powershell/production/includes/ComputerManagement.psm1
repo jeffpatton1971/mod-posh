@@ -2438,4 +2438,133 @@ function Eject-CdDrive
         Remove-Variable sApplication
         }
     }
+Function Grant-ServicePermission
+{
+    <#
+        .SYNOPSIS
+            Grant permissions on a service to a user
+        .DESCRIPTION
+            This function will grant permissions on a given service to the specified
+            principal. This is useful when you need to grant non-admin users access
+            to specific services.
+        .PARAMETER Name
+            The name of the service to grant permission on, or SCMANAGER to grant
+            users initial access
+        .PARAMETER Principal
+            The DOMAIN\Username of the user to gran permissions to.
+        .EXAMPLE
+            Grant-ServicePermission -Name SCMANAGER -Principal COMPANY\User01
+
+
+            Message   : Permissions set successfully for COMPANY\User01 on scmanager
+            Principal : COMPANY\User01
+            Service   : scmanager
+            SID       : S-1-5-21-8675309-1078081533-682003330-233119
+            Previous  : D:(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)(A;;CC;;;AC)...
+            Current   : D:(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)(A;;CC;;;AC)...
+
+            Description
+            -----------
+            Grant permissions on SCMANAGER for user01 to access services in general
+
+        .EXAMPLE
+            Grant-ServicePermission -Name spooler -Principal COMPANY\User01
+
+
+            Message   : Permissions set successfully for COMPANY\User01 on spooler
+            Principal : COMPANY\User01
+            Service   : spooler
+            SID       : S-1-5-21-8675309-1078081533-682003330-233119
+            Previous  : D:(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)(A;;CC;;;AC)...
+            Current   : D:(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)(A;;CC;;;AC)...
+
+            Description
+            -----------
+            Grant permissions on SPOOLER for user01 to access the spooler service
+
+        .NOTES
+            FunctionName : Grant-ServicePermission
+            Created by   : jspatton
+            Date Coded   : 01/12/2015 13:25:53
+
+            I borrowed nearly all this code from jacob's blog linked below. I've simply re-coded
+            it to fit in with my functions, and output an object and throw errors and such.
+        .LINK
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Grant-ServicePermission
+        .LINK
+            http://jacob.ludriks.com/manipulating-sddls-through-powershell/
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$Name,
+        [Parameter(Mandatory=$true)]
+        [string]$Principal
+        )
+    Begin
+    {
+        $ServiceResult = Get-Service -Name $Name -ErrorAction SilentlyContinue
+        Write-Verbose "Name : $($Name)"
+        Write-Verbose "Principal : $($Principal)"
+        if (!($ServiceResult) -and ($Name.ToUpper() -ne "SCMANAGER"))
+        {
+            throw "Service doesn't exist"
+            break
+            }
+        try
+        {
+            $ErrorActionPreference = "Stop"
+            $Error.Clear()
+            $ID = new-object System.Security.Principal.NTAccount($Principal)
+            $SidString = $ID.Translate([System.Security.Principal.SecurityIdentifier]).toString()
+            }
+        catch
+        {
+            throw $Error
+            break
+            }
+        }
+    Process
+    {
+        try
+        {
+            $ErrorActionPreference = "Stop"
+            $Error.Clear()
+            $scSDDL = (Invoke-Expression -Command "cmd /c sc sdshow SCMANAGER")|ForEach-Object {if ($_){$_}}
+            Write-Verbose "Current SDDL : $($scSDDL)"
+            $dSDDL = $scSDDL.Substring(0, $scSDDL.IndexOf("S:"))
+            $mySDDL = "(A;;CCLCRPRC;;;$($SidString))"
+            Write-Verbose "User SDDL : $($mySDDL)"
+            $sSDDL = $scSDDL.Substring($scSDDL.IndexOf("S:"),($scSDDL.Length) - ($scSDDL.IndexOf("S:")))
+            $newSDDL = "$($dSDDL)$($mySDDL)$($sSDDL)"
+            Write-Verbose "Updated SDDL : $($newSDDL)"
+            $Result = cmd /c "sc.exe sdset $($Name) $($newSDDL)"
+            }
+        catch
+        {
+            throw $Error
+            break
+            }
+        }
+    End
+    {
+        if ($Result -notlike "*SUCCESS*")
+        {
+            throw "Permissions not set`r`n cmd /c sc.exe sdset $($Name) $($newSDDL)"
+            break
+            }
+        else
+        {
+            New-Object -TypeName psobject -Property @{
+                Message = "Permissions set successfully for $($Principal) on $($Name)"
+                Principal = $Principal
+                Service = $Name
+                SID = $SidString
+                Previous = $scSDDL
+                Current = $newSDDL
+                } |Select-Object -Property Message, Principal, Service, SID, Previous, Current
+            }
+        }
+    }
 Export-ModuleMember *
