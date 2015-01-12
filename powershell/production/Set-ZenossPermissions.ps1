@@ -105,6 +105,10 @@ Process
     # Open Remote Administration firewall ports
     #
     Start-Process -FilePath netsh -ArgumentList "firewall set service remoteadmin enable"
+    #
+    # Restart WMI Service
+    #
+    Restart-Service -Name Winmgmt -Force
     }
 End
 {
