@@ -2569,4 +2569,89 @@ Function Grant-ServicePermission
             }
         }
     }
+Function Grant-RegistryPermission
+{
+    <#
+        .SYNOPSIS
+            Grant permissions on registry paths
+        .DESCRIPTION
+            This function allows you to set permissions on registry paths on a computer. Using
+            the parameters you can specify the rights, inheritance and propagation of the rights.
+        .PARAMETER Path
+            A registry path
+        .PARAMETER Principal
+            Username in DOMAIN\User format
+        .PARAMETER Rights
+            Specifies the access control rights that can be applied to registry objects. See
+            http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.registryrights(v=vs.110).aspx
+        .PARAMETER Inheritance
+            Inheritance flags specify the semantics of inheritance for access control entries (ACEs). See
+            http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.inheritanceflags(v=vs.110).aspx
+        .PARAMETER Propagation
+            Specifies how Access Control Entries (ACEs) are propagated to child objects. These flags are significant 
+            only if inheritance flags are present. See
+            http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.propagationflags(v=vs.110).aspx
+        .EXAMPLE
+            Grant-RegistryPermission -Path HKCU:\Environment\ -Principal DOMAIN\User01 -Rights FullControl
+            
+            Path                                    Owner               Access
+            ----                                    -----               ------
+            Microsoft.PowerShell.Core\Registry::... NT AUTHORITY\SYSTEM NT AUTHORITY\RESTRICTED Allow  ReadK...
+
+            Description
+            -----------
+            This example grants full control to the environment key for user01
+        .NOTES
+            FunctionName : Grant-RegistryPermission
+            Created by   : jspatton
+            Date Coded   : 01/12/2015 14:53:41
+
+            I lifted this almost completely from iheartpowershell's blog, this appears to be the first
+            iteration of this function, I have since found it copied verbatim onto other blogs, so I feel
+            the need to give credit where credit is due.
+
+            I modified this function to build the identity from a username, and pass in the identityrefernce
+            object to the rule.
+        .LINK
+            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Grant-RegistryPermission
+        .LINK
+            http://www.iheartpowershell.com/2011/09/grant-registry-permissions.html
+        .LINK
+            http://msdn.microsoft.com/en-us/library/ms147899(v=vs.110).aspx
+        .LINK
+            http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.registryrights(v=vs.110).aspx
+        .LINK
+            http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.inheritanceflags(v=vs.110).aspx
+        .LINK
+            http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.propagationflags(v=vs.110).aspx
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [Parameter(Mandatory=$true)]
+        [string] $Path,
+        [Parameter(Mandatory=$true)]
+        [string] $Principal,
+        [Parameter(Mandatory=$true)]
+        [Security.AccessControl.RegistryRights] $Rights,
+        [Security.AccessControl.InheritanceFlags] $Inheritance = [Security.AccessControl.InheritanceFlags]::None,
+        [Security.AccessControl.PropagationFlags] $Propagation = [Security.AccessControl.PropagationFlags]::None
+        )
+    Begin
+    {
+        $Identity = new-object System.Security.Principal.NTAccount($Principal)
+        $IdentityReference = $Identity.Translate([System.Security.Principal.SecurityIdentifier])
+        }
+    Process
+    {
+        $RegistryAccessRule = New-Object Security.AccessControl.RegistryAccessRule $IdentityReference, $Rights, $Inheritance, $Propagation, Allow
+        $Acl = Get-Acl $Path
+        $Acl.AddAccessRule($RegistryAccessRule)
+        Set-Acl -Path $Path -Acl $Acl
+        }
+    End
+    {
+        Get-Acl $Path
+        }
+    }
 Export-ModuleMember *
