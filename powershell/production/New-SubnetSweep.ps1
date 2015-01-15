@@ -83,16 +83,18 @@ Process
             {
                 Write-Verbose "Attempting to connect to $($IPAddress)"
                 $IP = Test-Connection -ComputerName $IPAddress -Count 1 -ErrorAction Stop
-                Write-Verbose "Get MAC address informatino from Arp"
+                Write-Verbose "Get MAC address information from Arp"
                 $Mac = (& arp -a $IP.Address)
                 Write-Verbose "Strip Arp data down to just a MAC"
-                $MacAddress = ($mac | ? { $_ -match $IP.Address } ) -match "([0-9A-F]{2}([:-][0-9A-F]{2}){5})"
-                if ($Matches)
+                $MacAddress = ($Mac |Where-Object {$_ -match $IP.Address}).Trim()
+                $MacAddress = $MacAddress.Substring($MacAddress.IndexOf("-")-2,17)
+                if ($MacAddress -match "([0-9A-F]{2}([:-][0-9A-F]{2}){5})")
                 {
                     try
                     {
                         Write-Verbose "Validate that $($MacAddress) is a properly formatted MAC address"
-                        $mac = [system.net.networkinformation.physicaladdress]::parse($Matches[0].ToUpper())
+                        $mac = [system.net.networkinformation.physicaladdress]::parse($MacAddress.ToUpper())
+                        Write-Verbose "MAC Address $($Mac) is valid"
                         }
                     catch
                     {
@@ -128,13 +130,17 @@ Process
                 $Name = [System.Net.Dns]::GetHostEntry($IP.Address)
                 Write-Verbose "Creating return object for output"
                 $IPAddress = [System.Net.IPAddress]([System.Net.IPAddress]::Parse($IP.Address).GetType())
-                $ThisHost = New-Object -TypeName PSObject -Property @{
+                Write-Verbose "IpAddress $($IPAddress)"
+                Write-Verbose "Name $($Name)"
+                Write-Verbose "Mac $($Mac)"
+                Write-Verbose "Portlist $($PortList)"
+                New-Object -TypeName PSObject -Property @{
                     IP = $IPAddress
                     Name = $Name
                     MAC = $Mac
                     PortList = $PortList
                     }
-                $Report += $ThisHost
+                #$Report += $ThisHost
                 }
             catch
             {
@@ -148,7 +154,7 @@ Process
         }
 End
     {
-        Return $Report
+        #Return $Report
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
         Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message	
         }
