@@ -21,6 +21,11 @@
 .PARAMETER NumberOfImages
     How many images to return. n = 1 would return only one, n = 2 would 
     return two, and so on.
+.PARAMETER Resolution
+    You will need to know the proper resolution and it needs to be in this format
+        1366x768
+        1920x1080
+    If it's wrong it will most likely fail.
 .EXAMPLE
     .\Get-BingImage.ps1 -DownloadPath C:\TEMP\BingImages -Market en-US -Index 0 -NumberOfImages 1
 
@@ -41,6 +46,25 @@
     Description
     -----------
     Get today's Bing Background image and download it to C:\TEMP\Bingimages
+.EXAMPLE
+    .\Get-BingImage.ps1 -Market en-US -Index 18 -NumberOfImages 8 -Resolution 1920x1080
+
+    startdate     : 20150111
+    fullstartdate : 201501110000
+    enddate       : 20150112
+    url           : /az/hprichbg/rb/SmooCave_EN-US10358472670_1366x768.jpg
+    urlBase       : /az/hprichbg/rb/SmooCave_EN-US10358472670
+    copyright     : Smoo Cave in Durness, Scotland (© GS/Gallery Stock)
+    copyrightlink : http://www.bing.com/search?q=Smoo+Cave&form=hpcapt&filters=HpDate:%2220150111_0800%22
+    drk           : 1
+    top           : 1
+    bot           : 1
+    hotspots      : hotspots
+    messages      : 
+
+    Description
+    -----------
+    This sample shows how to get a higher resolution image using the Resolution param.
 .NOTES
     ScriptName : Get-BingImage.ps1
     Created By : Jeffrey
@@ -65,7 +89,8 @@ Param
     [ValidateRange(0,18)]
     [int]$Index,
     [ValidateRange(1,8)]
-    [int]$NumberOfImages
+    [int]$NumberOfImages,
+    [string]$Resolution
 )
 Begin
 {
@@ -95,7 +120,14 @@ Process
         Write-Debug $Request.Content;
         foreach ($ImageData in $ResponseContent.images.image)
         {
-            [System.Uri]$DownloadUri = New-Object System.Uri "$($BingUrl)$($ImageData.url)";
+            if ($Resolution)
+            {
+                [System.Uri]$DownloadUri = New-Object System.Uri "$($BingUrl)$($ImageData.urlBase)_$($Resolution).jpg";
+                }
+            else
+            {
+                [System.Uri]$DownloadUri = New-Object System.Uri "$($BingUrl)$($ImageData.url)";
+                }
             $ImageFileName = $DownloadUri.Segments[$DownloadUri.Segments.Count -1];
             $ImageFileName = "$($ImageFileName.Split("_")[0])_$($ImageData.startdate)_$($Market)_$($ImageFileName.Split("_")[$ImageFileName.Split("_").Count -1])";
             Invoke-WebRequest -Uri $DownloadUri -OutFile "$($DownloadPath)\$($ImageFileName)";
