@@ -67,11 +67,25 @@
             }
         $LogFileName = "$($LogName.Replace(' ','-')).log"
         $LogFile = "$($LogPath)\$($LogName)\$($LogFileName)"
+        if (!(Test-Path $LogFile))
+        {
+            $TempEventRecord = 1
+            }
+        else
+        {
+            $TempLog = Get-LogFile -LogPath $LogPath -LogName $LogName -MaxEvents 1
+            [int]$TempEventRecord = [System.Convert]::ToInt16($TempLog.EventRecord)
+            Write-Verbose $TempEventRecord
+            [int]$TempEventRecord += 1
+            Write-Verbose $TempEventRecord
+            Remove-Variable TempLog
+            }
+        $EventRecord = "{0:D8}" -f $TempEventRecord
         $Delim = [char]0xFE
         }
     Process
     {
-        "$($LogName)$($Delim)$($Source)$($Delim)$(Get-Date)$($Delim)$($EventID)$($Delim)$($EntryType)$($Delim)$($Message)" |Out-File $LogFile -Append
+        "$($EventRecord)$($Delim)$($LogName)$($Delim)$($Source)$($Delim)$(Get-Date)$($Delim)$($EventID)$($Delim)$($EntryType)$($Delim)$($Message)" |Out-File $LogFile -Append
         }
     End
     {
@@ -89,13 +103,6 @@ Function Get-LogFile
             default to C:\LogFiles
         .PARAMETER LogName
             This becomes the name of the logfile
-        .PARAMETER Source
-            This is how you identify the source of a given entry in the log
-        .PARAMETER EntryType
-            A string representing what kind of entry to be used, this can be any 
-            valid string
-        .PARAMETER GUI
-            If present pipe output to gridview
         .EXAMPLE
             Get-LogFile -LogName PowerShellTesting
 
@@ -110,34 +117,6 @@ Function Get-LogFile
             Description
             -----------
             This shows the basic syntax of the command and what is returned
-        .EXAMPLE
-            Get-LogFile -LogName PowerShellTesting -Source Testing
-
-
-            LogName   : PowerShellTesting
-            Source    : Testing
-            Time      : 12/22/2014 11:54:50
-            EventID   : 0
-            EntryType : Information
-            Message   : This is a test
-
-            Description
-            -----------
-            This shows using the -Source param to return all the "testing" sources
-        .EXAMPLE
-            Get-LogFile -LogName PowerShellTesting -EntryType Information
-
-
-            LogName   : PowerShellTesting
-            Source    : Testing
-            Time      : 12/22/2014 11:54:50
-            EventID   : 0
-            EntryType : Information
-            Message   : This is a test
-
-            Description
-            -----------
-            This shows using the -EntryType param to return all "Information" types
         .NOTES
             FunctionName : Get-LogFile
             Created by   : jspatton
@@ -150,9 +129,7 @@ Function Get-LogFile
         (
         [string]$LogPath = "C:\LogFiles",
         [string]$LogName,
-        [string]$Source,
-        [string]$EntryType,
-        [switch]$GUI
+        [int]$MaxEvents
         )
     Begin
     {
@@ -185,57 +162,31 @@ Function Get-LogFile
             break
             }
         $Delim = [char]0xFE
+        $Headers = "EventRecord","LogName","Source","Time","EventID","EntryType","Message"
+        $Result = Get-Content $LogFile -Delimiter $Delim -TotalCount $Headers.Count
+        if ($Result[0] -eq "$($LogName)$($Delim)")
+        {
+            throw "EventRecord is missing, run Update-LogFile -LogPath $($LogPath) -LogName $($LogName)"
+            break
+            }
+        Write-Verbose "Opening $($LogFile)"
+        $TempLog = Import-Csv -Path $LogFile -Header $Headers -Delimiter $Delim
+        if ($TempLog.Count -gt 1)
+        {
+            [array]::Reverse($TempLog)
+            }
+        Write-Verbose "Found $($TempLog.Count) log entries"
         }
     Process
     {
-        $Headers = "LogName","Source","Time","EventID","EntryType","Message"
-        if ($EntryType -and !($Source))
+        if ($MaxEvents)
         {
-            if ($GUI)
+            if ($TempLog.GetType().Name -ne "PSCustomObject")
             {
-                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property EntryType -eq $EntryType |Out-GridView
-                }
-            else
-            {
-                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property EntryType -eq $EntryType
-                }
-            break
-            }
-        if ($Source -and !($EntryType))
-        {
-            if ($GUI)
-            {
-                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property Source -eq $Source |Out-GridView
-                }
-            else
-            {
-                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property Source -eq $Source
-                }
-            break
-            }
-        if ($Source -and $EntryType)
-        {
-            if ($GUI)
-            {
-                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property Source -eq $Source |Where-Object -Property EntryType -eq $EntryType |Out-GridView
-                }
-            else
-            {
-                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Where-Object -Property Source -eq $Source |Where-Object -Property EntryType -eq $EntryType
-                }
-            break
-            }
-        else
-        {
-            if ($GUI)
-            {
-                Import-Csv $LogFile -Header $Headers -Delimiter $Delim |Out-GridView
-                }
-            else
-            {
-                Import-Csv $LogFile -Header $Headers -Delimiter $Delim
+                $TempLog = $TempLog[0..($MaxEvents -1)]
                 }
             }
+        $TempLog
         }
     End
     {
@@ -379,3 +330,160 @@ Function Backup-Logfile
         $CurrentLog
         }
     }
+Function Update-LogFile
+{
+    <#
+        .SYNOPSIS
+            Returns information from a logfile
+        .DESCRIPTION
+            This function reads in a logfile and displays the information back out as objects.
+        .PARAMETER LogPath
+            This is the location where your logfile will be stored, if blank it will
+            default to C:\LogFiles
+        .PARAMETER LogName
+            This becomes the name of the logfile
+        .EXAMPLE
+            Get-LogFile -LogName PowerShellTesting
+
+
+            LogName   : PowerShellTesting
+            Source    : Testing
+            Time      : 12/22/2014 11:54:50
+            EventID   : 0
+            EntryType : Information
+            Message   : This is a test
+
+            Description
+            -----------
+            This shows the basic syntax of the command and what is returned
+        .NOTES
+            FunctionName : Get-LogFile
+            Created by   : jspatton
+            Date Coded   : 01/29/2015 12:04:19
+        .LINK
+            https://github.com/jeffpatton1971/mod-posh/wiki/LogFiles#Get-LogFile
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [string]$LogPath = "C:\LogFiles",
+        [string]$LogName
+        )
+    Begin
+    {
+        if (!(Test-Path $LogPath))
+        {
+            #
+            # No logfiles found 
+            #
+            Write-Error "No logfile found"
+            break
+            }
+        $LogName = $LogName.Replace('.','_')
+        $LogName = $LogName.Replace(' ','-')
+        if (!(Test-Path "$($LogPath)\$($LogName)"))
+        {
+            #
+            # Source not found
+            #
+            Write-Error "Logname not found"
+            break
+            }
+        $LogFileName = "$($LogName.Replace(' ','-')).log"
+        $LogFile = "$($LogPath)\$($LogName)\$($LogFileName)"
+        if (!(Test-Path $LogFile))
+        {
+            #
+            # LogName not found
+            #
+            Write-Error "LogFile not found"
+            break
+            }
+        $Delim = [char]0xFE
+        }
+    Process
+    {
+        $Headers = "LogName","Source","Time","EventID","EntryType","Message"
+        $TempLog = Import-Csv $LogFile -Header $Headers -Delimiter $Delim
+        $EventRecord = 1
+        Remove-Item $LogFile
+        New-Item $LogFile -ItemType file
+        foreach ($TempEntry in $TempLog)
+        {
+            $NewEventRecord = "{0:D8}" -f $EventRecord
+            "$($NewEventRecord)$($Delim)$($TempEntry.LogName)$($Delim)$($TempEntry.Source)$($Delim)$($TempEntry.Time)$($Delim)$($TempEntry.EventID)$($Delim)$($TempEntry.EntryType)$($Delim)$($TempEntry.Message)" |Out-File $LogFile -Append
+            [int]$EventRecord += 1
+            }
+        }
+    End
+    {
+        Remove-Variable TempLog
+        }
+    }
+Function Get-LogFileTail
+{
+    <#
+        .SYNOPSIS
+            Tail a log file
+        .DESCRIPTION
+            This function will tail the logfile created by Write-LogFile included
+            within this module LogFiles
+        .PARAMETER LogPath
+            This is the location where your logfile will be stored, if blank it will
+            default to C:\LogFiles
+        .PARAMETER LogName
+            This becomes the name of the logfile
+        .PARAMETER ShowExisting
+            An integer to show the number of events to start with, the default is 10
+        .EXAMPLE
+        .NOTES
+            FunctionName : Get-LogFileTail
+            Created by   : jspatton
+            Date Coded   : 01/29/2015 14:38:22
+        .LINK
+            https://github.com/jeffpatton1971/mod-posh/wiki/LogFiles#Get-LogFileTail
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [string]$LogPath = "C:\LogFiles",
+        [string]$LogName,
+        [int]$ShowExisting
+        )
+    Begin
+    {
+        if ($ShowExisting -gt 0)
+        {
+            $Data = Get-LogFile -LogPath $LogPath -LogName $LogName -MaxEvents $ShowExisting
+            $Data |Sort-Object -Property EventRecord
+            [int]$Index1 = [System.Convert]::ToInt16($Data[0].EventRecord)
+            Write-Verbose "Index1 is $($Index1)"
+            }
+        else
+        {
+            [int]$Index1 = [System.Convert]::ToInt16((Get-LogFile -LogPath $LogPath -LogName $LogName -MaxEvents 1).EventRecord)
+            Write-Verbose "Index1 is $($Index1)"
+            }
+        }
+    Process
+    {
+        while ($true)
+        {
+            Start-Sleep -Seconds 1
+            Write-Verbose "get 1 entry"
+            [int]$Index2  = [System.Convert]::ToInt16((Get-LogFile -LogPath $LogPath -LogName $LogName -MaxEvents 1).EventRecord)
+            Write-Verbose "Index2 is $($Index2)"
+            if ($Index2 -gt $Index1)
+            {
+                Write-Verbose "Index2 - Index1 = $(($Index2) - $($index1))"
+                Get-LogFile -LogPath $LogPath -LogName $LogName -MaxEvents ($Index2 - $Index1) |Sort-Object -Property EventRecord
+                }
+            $Index1 = $Index2
+            }
+        }
+    End
+    {
+        }
+    }
+
+Export-ModuleMember *
