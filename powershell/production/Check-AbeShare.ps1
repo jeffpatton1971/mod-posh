@@ -43,7 +43,7 @@ Begin
                 Write-Verbose "Check if Deny Read or Deny Full is set"
                 $DenyFull = $Acl.Access |Where-Object {
                                          (($_.AccessControlType -eq "Deny") -and 
-                                         ($_.FileSystemRights -like '*Read*'-or '*full*'))}
+                                         (($_.FileSystemRights -like '*Read*') -or ($_.FileSystemRights -like '*full*')))}
                 }
             catch
             {
@@ -72,7 +72,7 @@ Begin
                                 $IsInherited = $Acl.Access |Where-Object {
                                                             ($_.IsInherited -eq $false) -and 
                                                             (($_.AccessControlType -eq "Allow") -and 
-                                                            ($_.FileSystemRights -like '*Read*'-or '*full*'))}
+                                                            (($_.FileSystemRights -like '*Read*') -or ($_.FileSystemRights -like '*full*')))}
                                 if ($IsInherited)
                                 {
                                     Write-Verbose "This path could break ABE"
