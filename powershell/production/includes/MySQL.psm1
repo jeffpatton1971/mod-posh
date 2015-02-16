@@ -170,7 +170,7 @@ Function Disconnect-MySqlServer
     [CmdletBinding()]
     Param
         (
-        [MySql.Data.MySqlClient.MySqlConnection]$Connection
+        [MySql.Data.MySqlClient.MySqlConnection]$Connection=$Global:MySQLConnection
         )
     Begin
     {
@@ -179,6 +179,120 @@ Function Disconnect-MySqlServer
     {
         $Connection.Close();
         $Connection
+        }
+    End
+    {
+        }
+    }
+Function Select-MySqlDatabase
+{
+    <#
+        .SYNOPSIS
+            Set the default database to work with
+        .DESCRIPTION
+            This function sets the default database to use, this value is 
+            pulled from the connection object on functions that have database 
+            as a parameter.
+        .PARAMETER Connection
+        .PARAMETER Database
+        .EXAMPLE
+            # jspatton@IT08082 | 16:35:02 | 02-16-2015 | C:\projects\mod-posh\powershell\production $
+            Connect-MySqlServer -Credential (Get-Credential)
+
+            cmdlet Get-Credential at command pipeline position 1
+            Supply values for the following parameters:
+            Credential
+
+
+            ServerThread      : 12
+            DataSource        : localhost
+            ConnectionTimeout : 15
+            Database          :
+            UseCompression    : False
+            State             : Open
+            ServerVersion     : 5.6.22-log
+            ConnectionString  : server=localhost;port=3306;User Id=root
+            IsPasswordExpired : False
+            Site              :
+            Container         :
+
+
+
+            # jspatton@IT08082 | 16:35:13 | 02-16-2015 | C:\projects\mod-posh\powershell\production $
+            Get-MySqlDatabase
+
+            Database
+            --------
+            information_schema
+            mynewdb
+            mysql
+            mytest
+            performance_schema
+            test
+            testing
+            wordpressdb
+            wordpressdb1
+            wordpressdb2
+
+
+            # jspatton@IT08082 | 16:35:24 | 02-16-2015 | C:\projects\mod-posh\powershell\production $
+            Select-MySqlDatabase -Database mytest
+
+
+            ServerThread      : 12
+            DataSource        : localhost
+            ConnectionTimeout : 15
+            Database          : mytest
+            UseCompression    : False
+            State             : Open
+            ServerVersion     : 5.6.22-log
+            ConnectionString  : server=localhost;port=3306;User Id=root
+            IsPasswordExpired : False
+            Site              :
+            Container         :
+
+            Description
+            -----------
+            This example shows connecting to MySQL Server, you can see there is no value for database. 
+            Then we list all the databases on the server, and finally we select the mytest database. 
+            The output of the command shows that we are now using mytest.
+        .NOTES
+            FunctionName : Select-MySqlDatabase
+            Created by   : jspatton
+            Date Coded   : 02/16/2015 16:29:43
+        .LINK
+            https://github.com/jeffpatton1971/mod-posh/wiki/MySQL#Select-MySqlDatabase
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [MySql.Data.MySqlClient.MySqlConnection]$Connection=$Global:MySQLConnection,
+        [parameter(Mandatory = $true)]
+        [string]$Database
+        )
+    Begin
+    {
+        }
+    Process
+    {
+        try
+        {
+            if (Get-MySqlDatabase -Connection $Connection -Name $Database)
+            {
+                $Connection.ChangeDatabase($Database);
+                }
+            else
+            {
+                throw "Unknown database $($Database)";
+                }
+            $Global:MySQLConnection = $Connection;
+            $Connection;
+            }
+        catch
+        {
+            $Error[0];
+            break
+            }
         }
     End
     {
