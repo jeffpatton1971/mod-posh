@@ -1,5 +1,52 @@
 <#
     .SYNOPSIS
+        Template script
+    .DESCRIPTION
+        This script sets up the basic framework that I use for all my scripts.
+    .PARAMETER
+    .EXAMPLE
+    .NOTES
+        ScriptName : Clone-Vm
+        Created By : Jeffrey
+        Date Coded : 02/05/2015 15:40:08
+        ScriptName is used to register events for this script
+ 
+        ErrorCodes
+            100 = Success
+            101 = Error
+            102 = Warning
+            104 = Information
+    .LINK
+        https://github.com/jeffpatton1971/mod-posh/wiki/Production/Clone-Vm
+ #>
+[CmdletBinding()]
+Param
+   (
+ 
+    )
+ Begin
+   {
+        $ScriptName = $MyInvocation.MyCommand.ToString()
+        $ScriptPath = $MyInvocation.MyCommand.Path
+        $Username = $env:USERDOMAIN + "\" + $env:USERNAME
+ 
+        New-EventLog -Source $ScriptName -LogName 'Windows Powershell' -ErrorAction SilentlyContinue
+ 
+        $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
+        Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
+ 
+        #	Dotsource in the functions you need.
+        }
+ Process
+    {
+       }
+ End
+    {
+       $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
+        Write-EventLog -LogName 'Windows Powershell' -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message	
+        }
+<#
+    .SYNOPSIS
         A script that will clone a GM to a new VM
     .DESCRIPTION
         This script will take several parameters to create a brand new vm
