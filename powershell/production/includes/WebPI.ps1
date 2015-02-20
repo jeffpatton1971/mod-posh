@@ -25,8 +25,16 @@ Function Get-WebPiProduct
             WebPI. If the All switch is present the function will return everything, otherwise
             the function will attempt to get the product requested or find matches via
             wildcard. The function tries to match the product entered against the title property.
-        .PARAMETER Product
-            The name of the produdct you are interested in
+        .PARAMETER Title
+            Get one or more products that match the Title provided
+        .PARAMETER ProductId
+            Get the product that has the provided ProductId
+        .PARAMETER ListKeywords
+            Get a list of available keywords associated with products
+        .PARAMETER Keyword
+            Get one or more products associated with the Keyword
+        .PARAMETER All
+            Get all products
         .EXAMPLE
             Get-WebPiProduct -All
 
@@ -46,7 +54,7 @@ Function Get-WebPiProduct
             This will return all products that are available from WebPI. This can be filtered with a where
             clause if needed.            
         .EXAMPLE
-            Get-WebPiProduct -Product "Windows Azure"
+            Get-WebPiProduct -Title "Windows Azure"
 
 
             AllDependencies       : {http://www.microsoft.com/web/webpi/4.2/WebProductList.xml,
@@ -67,7 +75,7 @@ Function Get-WebPiProduct
             -----------            
             This will return any product that matches "Windows Azure" unless there is a single product called that.
         .EXAMPLE
-            Get-WebPiProduct -Product "Windows Azure Storage"
+            Get-WebPiProduct -ProductId watk-PRESENTATION-WindowsAzureStorage
 
 
             AllDependencies       : {}
@@ -108,6 +116,54 @@ Function Get-WebPiProduct
             Description
             -----------
             This returns a single matching product
+        .EXAMPLE
+            Get-WebPiProduct -ListKeywords
+
+            Id
+            --
+            Server
+            FrameworkRuntime
+            Database
+            ProductTools
+            ProductSpotlight
+            WindowsAzure
+            Sharepoint
+            Office
+            Lightswitch
+            Blogs
+            ContentMgmt
+            eCommerce
+            Galleries
+            Tools
+            Wiki
+            Forums
+            ASPNET
+            ASPNET4
+            PHP
+            SQL
+            MySQL
+            VistaDB
+            SQLite
+            FlatFile
+            SQLCE
+            AzureReady
+            KatalReady
+            AppFrameworks
+
+            Description
+            -----------
+            Get a list of keywords that are associated with products. This list is case-sensitive.
+        .EXAMPLE
+            Get-WebPiProduct -Keyword KatalReady |Select-Object -Property Title, ProductId, Keywords
+
+            Title                                   ProductId                               Keywords
+            -----                                   ---------                               --------
+            Drupal Commerce Kickstart               drupalcommercesql                       {eCommerce, ContentMgmt, PHP, SQL...}
+            DasBlog                                 DasBlog                                 {AzureReady, KatalReady, Blogs}
+
+            Description
+            -----------
+            Return a list of products related to a keyword, the keyword is case-sensitive
         .NOTES
             FunctionName : Get-WebPiProduct
             Created by   : Jeffrey
@@ -120,7 +176,15 @@ Function Get-WebPiProduct
     [CmdletBinding()]
     Param
         (
-        [string]$Product,
+        [Parameter(ParameterSetName='title')]
+        [string]$Title,
+        [Parameter(ParameterSetName='productid')]
+        [string]$ProductId,
+        [Parameter(ParameterSetName='listkeywords')]
+        [switch]$ListKeywords,
+        [Parameter(ParameterSetName='keyword')]
+        [string]$Keyword,
+        [Parameter(ParameterSetName='all')]
         [switch]$All
         )
     Begin
@@ -133,29 +197,25 @@ Function Get-WebPiProduct
             Write-Verbose "Return all the products available";
             $Global:WebPIProductManager.Products;
             }
-        else
+        if ($Title)
         {
-            Write-Verbose "Get the product $($Product)";
-            $ProductId = $Global:WebPIProductManager.Products |Where-Object -Property Title -eq $Product |Select-Object -ExpandProperty ProductID;
-            if (!($ProductId))
-            {
-                Write-Verbose "$($Product) not found, try wildcard";
-                $ProductId = $Global:WebPIProductManager.Products |Where-Object -Property Title -like "*$($Product)*" |Select-Object -ExpandProperty ProductID;
-                }
-            if ($ProductId.GetType().BaseType.Name -eq "Array")
-            {
-                Write-Verbose "Multiple products found";
-                foreach ($ID in $ProductId)
-                {
-                    Write-Verbose "Return Product object";
-                    $Global:WebPIProductManager.GetProduct($ID);
-                    }
-                }
-            else
-            {
-                Write-Verbose "Return Product object";
-                return $Global:WebPIProductManager.GetProduct($ProductId);
-                }
+            Write-Verbose "Return all the products that match Title = $($Title)";
+            $Global:WebPIProductManager.Products |Where-Object -Property Title -Like "*$($Title)*";
+            }
+        if ($ProductId)
+        {
+            Write-Verbose "Return the product with ProductId = $($ProductId)";
+            $Global:WebPIProductManager.GetProduct($ProductId);
+            }
+        if ($ListKeywords)
+        {
+            Write-Verbose "Return a list of keywords for products";
+            $Global:WebPIProductManager.Keywords |Select-Object -Property Id;
+            }
+        if ($Keyword)
+        {
+            Write-Verbose "Return all the products that match Keyword = $($Keyword)";
+            $Global:WebPIProductManager.GetKeyword($Keyword) |Select-Object -ExpandProperty Products;
             }
         }
     End
