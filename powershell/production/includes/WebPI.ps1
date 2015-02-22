@@ -241,7 +241,7 @@ Function Install-WebPiProduct
         (
         [Parameter(Mandatory=$True,ValueFromPipeline=$True)]
         [Microsoft.Web.PlatformInstaller.Product]$Product,
-        [ValidateSet('en', 'fr', 'es', 'de', 'it', 'ja', 'ko', 'ru', 'zh-cn', 'zh-tw', 'cs', 'pl', 'tr', 'pt-br', 'he', 'zh-hk', 'pt-pt')]
+        [ValidateSet('en','fr','es','de','it','ja','ko','ru','zh-cn','zh-tw','cs','pl','tr','pt-br','he','zh-hk','pt-pt')]
         [string]$LanguageID
         )
     Begin
@@ -268,14 +268,23 @@ Function Install-WebPiProduct
             Write-Verbose "Load the product installer";
             $InstallManager.Load($ProductInstaller);
 
-            Show-WebPiInstallerContextStatus -InstallManager $InstallManager;
+            if ($InstallManager.InstallerContexts)
+            {
+                $InstallManager.InstallerContexts | Out-String -Stream | Write-Verbose
+                }
+
             [System.Management.Automation.PSReference]$Reference = $null;
             foreach ($InstallerContext in $InstallManager.InstallerContexts)
             {
                 Write-Verbose "Download installer";
                 $InstallManager.DownloadInstallerFile($InstallerContext, $Reference)
                 }
-            Show-WebPiInstallerContextStatus -InstallManager $InstallManager;
+
+            if ($InstallManager.InstallerContexts)
+            {
+                $InstallManager.InstallerContexts | Out-String -Stream | Write-Verbose
+                }
+
             [Microsoft.Web.PlatformInstaller.InstallationState]$preStatus = $InstallManager.InstallerContexts.InstallationState
             Write-Verbose "Start Installation";
             $InstallManager.StartInstallation();
@@ -307,48 +316,83 @@ Function Install-WebPiProduct
     {
         }
     }
-
-function Show-WebPiInstallerContextStatus
-{
-    [CmdletBinding()]
-    param
-    (
-    [Microsoft.Web.PlatformInstaller.InstallManager]$InstallManager
-    )
-    if ($InstallManager.InstallerContexts)
-    {
-        $InstallManager.InstallerContexts | Out-String -Stream | Write-Verbose
-        }
-    }
 function Test-WebPiInstallationStatus
 {
+    <#
+        .SYNOPSIS
+            Test installation status
+        .DESCRIPTION
+            This function is used to check the status of a given installation method.
+        .PARAMETER ProductId
+            A string containing the ProductID of the product to be installed
+        .PARAMETER InstallManager
+            An InstallManager object that is used for testing and writing output
+        .PARAMETER PreStatus
+            An object representing the PreStatus of a given installation
+        .PARAMETER PostStatus
+            An object representing the PostStatus of a given installation
+        .EXAMPLE
+            $InstallManager.StartSynchronousInstallation();
+            if (Test-WebPiInstallationStatus -ProductId $p.ProductId `
+                                             -InstallManager $InstallManager `
+                                             -PreStatus $preStatus `
+                                             -PostStatus $InstallManager.InstallerContexts.InstallationState)
+            {
+                return;
+                }
+            
+            Description
+            -----------
+            This is an example of use for this function. It is used inside the Install-WebPiPackage
+            to test a given installation method. This may not be useful outisde of the 
+            Install-WebPiPackage function.
+        .NOTES
+            FunctionName : Test-WebPiInstallationStatus
+            Created by   : Jeffrey
+            Date Coded   : 02/20/2015 09:45:37
+
+            This function was borrowed from guitarrapc I have modified this to accept a 
+            parameter InstallManager. The original code used a global InstallManager.
+            I have also modified the function to test for the existence of logfiles, as 
+            I've noticed that a handful of pacakges don't have a logfiles property.
+            I have also modified the function to drop a psobject of the result instead
+            of using writeline.
+        .LINK
+            https://github.com/jeffpatton1971/mod-posh/wiki/WebPI#Test-WebPiInstallationStatus
+        .LINK
+            https://github.com/guitarrapc/WebPlatformInstaller/blob/master/WebPlatformInstaller/WebPlatformInstaller.ps1#L362
+    #>
     [OutputType([bool])] 
     [CmdletBinding()]
     param
     (
-    [parameter(Mandatory = 0, Position = 0, ValueFromPipelineByPropertyName = 1)]
+    [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
     [string]$ProductId,
+    [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
     [Microsoft.Web.PlatformInstaller.InstallManager]$InstallManager,
-    [parameter(Mandatory = 0, Position = 0, ValueFromPipelineByPropertyName = 1)]
+    [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
     [Microsoft.Web.PlatformInstaller.InstallationState]$PreStatus,
-    [parameter(Mandatory = 0, Position = 0, ValueFromPipelineByPropertyName = 1)]
+    [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
     [Microsoft.Web.PlatformInstaller.InstallationState]$PostStatus
     )
-    # Skip
     if ($postStatus -eq $preStatus)
     {
-        Write-Verbose "Installation not begin"
+        Write-Verbose "Installation not started"
         return $false
         }
-
-    # Monitor
-    Show-WebPiInstallerContextStatus -InstallManager $InstallManager
+    if ($InstallManager.InstallerContexts)
+    {
+        $InstallManager.InstallerContexts | Out-String -Stream | Write-Verbose
+        }
     while($postStatus -ne [Microsoft.Web.PlatformInstaller.InstallationState]::InstallCompleted)
     {
         Start-Sleep -Milliseconds 100
         $postStatus = $InstallManager.InstallerContexts.InstallationState
         }
-    Show-WebPiInstallerContextStatus -InstallManager $InstallManager
+    if ($InstallManager.InstallerContexts)
+    {
+        $InstallManager.InstallerContexts | Out-String -Stream | Write-Verbose
+        }
     if ($postStatus -eq [Microsoft.Web.PlatformInstaller.InstallationState]::InstallCompleted)
     {
         if ($InstallManager.InstallerContexts.Installer.LogFiles)
