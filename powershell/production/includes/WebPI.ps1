@@ -242,7 +242,7 @@ Function Install-WebPiProduct
         [Parameter(Mandatory=$True,ValueFromPipeline=$True)]
         [Microsoft.Web.PlatformInstaller.Product]$Product,
         [ValidateSet('en','fr','es','de','it','ja','ko','ru','zh-cn','zh-tw','cs','pl','tr','pt-br','he','zh-hk','pt-pt')]
-        [string]$LanguageID
+        [string]$LanguageID = "en"
         )
     Begin
     {
@@ -267,12 +267,13 @@ Function Install-WebPiProduct
             $ProductInstaller.Add($ProductInstall);
             Write-Verbose "Load the product installer";
             $InstallManager.Load($ProductInstaller);
-
+            Write-Verbose "Test for context and then output"
+            Write-Output $InstallManager
             if ($InstallManager.InstallerContexts)
             {
                 $InstallManager.InstallerContexts | Out-String -Stream | Write-Verbose
                 }
-
+            Write-Verbose "Setting up psreference object"
             [System.Management.Automation.PSReference]$Reference = $null;
             foreach ($InstallerContext in $InstallManager.InstallerContexts)
             {
