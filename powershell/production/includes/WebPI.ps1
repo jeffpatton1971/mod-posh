@@ -226,9 +226,21 @@ Function Install-WebPiProduct
 {
     <#
         .SYNOPSIS
+            Install a pacakge with WebPI
         .DESCRIPTION
-        .PARAMETER
+            This function will install a package using the WebPi API. This makes the task
+            of installing a whole host of applications, tools and add-on's extremely simple.
+        .PARAMETER Product
+            A WebPi Product object representing the product(s) to be installed
+        .PARAMETER LanguageID
+            The language to use for installation, the default is 'en' (English)
         .EXAMPLE
+            Get-WebPiProduct -ProductId OfficeToolsForVS2013Update1 |Install-WebPiProduct
+
+            Description
+            -----------
+            This example shows how to pass a WebPi product into Install-WebPiProduct to install
+            Office Tools for VisualStudio 2013.
         .NOTES
             FunctionName : Install-WebPiProduct
             Created by   : Jeffrey
@@ -267,23 +279,21 @@ Function Install-WebPiProduct
             $ProductInstaller.Add($ProductInstall);
             Write-Verbose "Load the product installer";
             $InstallManager.Load($ProductInstaller);
-            Write-Verbose "Test for context and then output"
-            Write-Output $InstallManager
             if ($InstallManager.InstallerContexts)
             {
-                $InstallManager.InstallerContexts | Out-String -Stream | Write-Verbose
+                $InstallManager.InstallerContexts |Out-String -Stream |Write-Verbose
                 }
             Write-Verbose "Setting up psreference object"
             [System.Management.Automation.PSReference]$Reference = $null;
             foreach ($InstallerContext in $InstallManager.InstallerContexts)
             {
                 Write-Verbose "Download installer";
-                $InstallManager.DownloadInstallerFile($InstallerContext, $Reference)
+                $InstallManager.DownloadInstallerFile($InstallerContext, $Reference) |Write-Verbose
                 }
 
             if ($InstallManager.InstallerContexts)
             {
-                $InstallManager.InstallerContexts | Out-String -Stream | Write-Verbose
+                $InstallManager.InstallerContexts |Out-String -Stream |Write-Verbose
                 }
 
             [Microsoft.Web.PlatformInstaller.InstallationState]$preStatus = $InstallManager.InstallerContexts.InstallationState
@@ -383,7 +393,7 @@ function Test-WebPiInstallationStatus
         }
     if ($InstallManager.InstallerContexts)
     {
-        $InstallManager.InstallerContexts | Out-String -Stream | Write-Verbose
+        $InstallManager.InstallerContexts |Out-String -Stream |Write-Verbose
         }
     while($postStatus -ne [Microsoft.Web.PlatformInstaller.InstallationState]::InstallCompleted)
     {
@@ -392,7 +402,7 @@ function Test-WebPiInstallationStatus
         }
     if ($InstallManager.InstallerContexts)
     {
-        $InstallManager.InstallerContexts | Out-String -Stream | Write-Verbose
+        $InstallManager.InstallerContexts |Out-String -Stream |Write-Verbose
         }
     if ($postStatus -eq [Microsoft.Web.PlatformInstaller.InstallationState]::InstallCompleted)
     {
