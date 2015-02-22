@@ -2,11 +2,9 @@
 {
     $ErrorActionPreference = "Stop";
     $Error.Clear();
-    Write-Verbose "Loading Microsoft.Web.Platforminstaller assembly";
     [reflection.assembly]::LoadWithPartialName("Microsoft.Web.PlatformInstaller") |Out-Null;
-    Write-Verbose "Creating a global ProductManager object";
     $Global:WebPIProductManager = New-Object Microsoft.Web.PlatformInstaller.ProductManager;
-    Write-Verbose "Loading the ProductManager, this may take a few secongs";
+    Write-Host "Loading the ProductManager, this may take a few secongs";
     $Global:WebPIProductManager.Load();
     }
 catch
@@ -425,3 +423,5 @@ function Test-WebPiInstallationStatus
         return $false
         }
     }
+
+Export-ModuleMember -Function "Get-WebPiProduct","Install-WebPiProduct"
