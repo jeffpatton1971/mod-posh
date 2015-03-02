@@ -13,6 +13,39 @@ catch
     Write-Error "Please install WebPI from here : http://www.microsoft.com/web/downloads/platform.aspx";
     break;
     }
+Function Get-WebPiLauncher
+{
+    <#
+        .SYNOPSIS
+        .DESCRIPTION
+        .PARAMETER
+        .EXAMPLE
+        .NOTES
+            FunctionName : Get-WebPiLauncher
+            Created by   : Jeffrey
+            Date Coded   : 02/22/2015 21:59:23
+        .LINK
+            https://github.com/jeffpatton1971/mod-posh/wiki/WebPI#Get-WebPiLauncher
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [string]$Url = "http://go.microsoft.com/fwlink/?LinkId=255386"
+        )
+    Begin
+    {
+        [System.Net.WebClient]$WebClient = New-Object System.Net.WebClient;
+        $Path = (Get-Item .\).FullName;
+        }
+    Process
+    {
+        $WebClient.DownloadFile($Url, "$($Path)\wpilauncher.exe");
+        }
+    End
+    {
+        return (Get-Item "$($Path)\wpilauncher.exe");
+        }
+    }
 Function Get-WebPiProduct
 {
     <#
@@ -171,6 +204,7 @@ Function Get-WebPiProduct
         .LINK
             https://github.com/jeffpatton1971/mod-posh/wiki/WebPI#Get-WebPiProduct
     #>
+    [OutputType([Microsoft.Web.PlatformInstaller.Product[]])]
     [CmdletBinding()]
     Param
         (
@@ -208,7 +242,7 @@ Function Get-WebPiProduct
         if ($ListKeywords)
         {
             Write-Verbose "Return a list of keywords for products";
-            $Global:WebPIProductManager.Keywords |Select-Object -Property Id;
+            $Global:WebPIProductManager.Keywords |Select-Object -Property Id |Sort-Object -Property Id;
             }
         if ($Keyword)
         {
@@ -246,11 +280,13 @@ Function Install-WebPiProduct
         .LINK
             https://github.com/jeffpatton1971/mod-posh/wiki/WebPI#Install-WebPiProduct
     #>
+    [OutputType([Microsoft.Web.PlatformInstaller.Product])]
     [CmdletBinding()]
     Param
         (
-        [Parameter(Mandatory=$True,ValueFromPipeline=$True)]
+        [Parameter(Mandatory=$True,ValueFromPipeline=$True,Position=1)]
         [Microsoft.Web.PlatformInstaller.Product]$Product,
+        [Parameter(Mandatory=$False,Position=2)]
         [ValidateSet('en','fr','es','de','it','ja','ko','ru','zh-cn','zh-tw','cs','pl','tr','pt-br','he','zh-hk','pt-pt')]
         [string]$LanguageID = "en"
         )
@@ -288,38 +324,37 @@ Function Install-WebPiProduct
                 Write-Verbose "Download installer";
                 $InstallManager.DownloadInstallerFile($InstallerContext, $Reference) |Write-Verbose
                 }
-
             if ($InstallManager.InstallerContexts)
             {
                 $InstallManager.InstallerContexts |Out-String -Stream |Write-Verbose
                 }
-
             [Microsoft.Web.PlatformInstaller.InstallationState]$preStatus = $InstallManager.InstallerContexts.InstallationState
-            Write-Verbose "Start Installation";
+            Write-Verbose "Try StartInstallation method";
             $InstallManager.StartInstallation();
-            if (Test-WebPiInstallationStatus -ProductId $p.ProductId -InstallManager $InstallManager -PreStatus $preStatus -PostStatus $InstallManager.InstallerContexts.InstallationState)
+            if (Test-WebPiInstallationStatus -ProductId $p.ProductId -InstallManager $InstallManager -PreStatus $preStatus)
             {
                 return;
                 }
             else
             {
-                Write-Verbose "Start Application Installation";
+                Write-Verbose "Try StartApplicationInstallation method";
                 $InstallManager.StartApplicationInstallation();
-                if (Test-WebPiInstallationStatus -ProductId $p.ProductId -InstallManager $InstallManager -PreStatus $preStatus -PostStatus $InstallManager.InstallerContexts.InstallationState)
+                if (Test-WebPiInstallationStatus -ProductId $p.ProductId -InstallManager $InstallManager -PreStatus $preStatus)
                 {
                     return;
                     }
                 else
                 {
-                    Write-Verbose "Start Synchronous Installation";
+                    Write-Verbose "Try StartSynchronousInstallation method";
                     $InstallManager.StartSynchronousInstallation();
-                    if (Test-WebPiInstallationStatus -ProductId $p.ProductId -InstallManager $InstallManager -PreStatus $preStatus -PostStatus $InstallManager.InstallerContexts.InstallationState)
+                    if (Test-WebPiInstallationStatus -ProductId $p.ProductId -InstallManager $InstallManager -PreStatus $preStatus)
                     {
                         return;
                         }
                     }
                 }
             }
+        Return $Product;
         }
     End
     {
@@ -342,10 +377,7 @@ function Test-WebPiInstallationStatus
             An object representing the PostStatus of a given installation
         .EXAMPLE
             $InstallManager.StartSynchronousInstallation();
-            if (Test-WebPiInstallationStatus -ProductId $p.ProductId `
-                                             -InstallManager $InstallManager `
-                                             -PreStatus $preStatus `
-                                             -PostStatus $InstallManager.InstallerContexts.InstallationState)
+            if (Test-WebPiInstallationStatus -ProductId $p.ProductId -InstallManager $InstallManager -PreStatus $preStatus)
             {
                 return;
                 }
@@ -371,7 +403,7 @@ function Test-WebPiInstallationStatus
         .LINK
             https://github.com/guitarrapc/WebPlatformInstaller/blob/master/WebPlatformInstaller/WebPlatformInstaller.ps1#L362
     #>
-    [OutputType([bool])] 
+    [OutputType([bool])]
     [CmdletBinding()]
     param
     (
@@ -380,48 +412,56 @@ function Test-WebPiInstallationStatus
     [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
     [Microsoft.Web.PlatformInstaller.InstallManager]$InstallManager,
     [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
-    [Microsoft.Web.PlatformInstaller.InstallationState]$PreStatus,
-    [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
-    [Microsoft.Web.PlatformInstaller.InstallationState]$PostStatus
+    [Microsoft.Web.PlatformInstaller.InstallationState]$PreStatus
     )
-    if ($postStatus -eq $preStatus)
+    Begin
     {
-        Write-Verbose "Installation not started"
-        return $false
+        $postStatus = $InstallManager.InstallerContexts.InstallationState;
         }
-    if ($InstallManager.InstallerContexts)
+    Process
     {
-        $InstallManager.InstallerContexts |Out-String -Stream |Write-Verbose
-        }
-    while($postStatus -ne [Microsoft.Web.PlatformInstaller.InstallationState]::InstallCompleted)
-    {
-        Start-Sleep -Milliseconds 100
-        $postStatus = $InstallManager.InstallerContexts.InstallationState
-        }
-    if ($InstallManager.InstallerContexts)
-    {
-        $InstallManager.InstallerContexts |Out-String -Stream |Write-Verbose
-        }
-    if ($postStatus -eq [Microsoft.Web.PlatformInstaller.InstallationState]::InstallCompleted)
-    {
-        if ($InstallManager.InstallerContexts.Installer.LogFiles)
+        if ($postStatus -eq $preStatus)
         {
-            $LogFiles = $InstallManager.InstallerContexts.Installer.LogFiles
-            $LogPath = ($LogFiles | Select-Object -Last 1)
-            New-Object -TypeName psobject -Property @{
-                ProductId = $ProductId
-                Status = "Installation Completed"
-                Log = $LogPath
-                } |Select-Object -Property ProductId, Status, Log
-            Write-Verbose ("Latest Log file is '{0}'." -f (Get-Content -Path $LogPath -Encoding UTF8 -Raw))
+            Write-Verbose "Installation not started"
+            return $false
             }
-        Write-Verbose "No logfiles found";
-        return $true
+        if ($InstallManager.InstallerContexts)
+        {
+            $InstallManager.InstallerContexts |Out-String -Stream |Write-Verbose
+            }
+        while($postStatus -ne [Microsoft.Web.PlatformInstaller.InstallationState]::InstallCompleted)
+        {
+            Start-Sleep -Milliseconds 100
+            $postStatus = $InstallManager.InstallerContexts.InstallationState
+            }
+        if ($InstallManager.InstallerContexts)
+        {
+            $InstallManager.InstallerContexts |Out-String -Stream |Write-Verbose
+            }
+        if ($postStatus -eq [Microsoft.Web.PlatformInstaller.InstallationState]::InstallCompleted)
+        {
+            if (($InstallManager.InstallerContexts.Installer |Select-Object -ExpandProperty LogFiles))
+            {
+                $LogFiles = $InstallManager.InstallerContexts.Installer.LogFiles
+                $LogPath = ($LogFiles | Select-Object -Last 1)
+                New-Object -TypeName psobject -Property @{
+                    ProductId = $ProductId
+                    Status = "Installation Completed"
+                    Log = $LogPath
+                    } |Select-Object -Property ProductId, Status, Log;
+                Write-Verbose ("Latest Log file is '{0}'." -f (Get-Content -Path $LogPath -Encoding UTF8 -Raw))
+                }
+            Write-Verbose "No logfiles found";
+            return $true
+            }
+        else
+        {
+            return $false
+            }
         }
-    else
+    End
     {
-        return $false
         }
     }
 
-Export-ModuleMember -Function "Get-WebPiProduct","Install-WebPiProduct"
+Export-ModuleMember -Function "Get-WebPiProduct","Install-WebPiProduct","Get-WebPiLauncher";
