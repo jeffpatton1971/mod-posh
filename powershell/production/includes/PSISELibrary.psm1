@@ -700,5 +700,59 @@ Function Print-SelectedText
     {
         }
     }
+Function Import-WebModule
+{
+    <#
+        .SYNOPSIS
+            Import a module from a webpage
+        .DESCRIPTION
+            This function will import your powershell module file from a url on the internet.
+        .PARAMETER Url
+            A valid url for your PowerShell module
+        .PARAMETER Name
+            A name for your module
+        .EXAMPLE
+            Import-WebModule -Url https://gist.githubusercontent.com/jeffpatton1971/7e01d00da887badf290d/raw/4413e4e79308851ca01e75cf26618e273dd95e43/mlbposh.psm1 -Name mlbPosh
+
+            CommandType     Name                                               Version    Source
+            -----------     ----                                               -------    ------
+            Function        ConvertTo-Linescore                                0.0        mlbPosh
+            Function        Find-Player                                        0.0        mlbPosh
+            Function        Get-Game                                           0.0        mlbPosh
+            Function        Get-Grid                                           0.0        mlbPosh
+            Function        Get-PlayerData                                     0.0        mlbPosh
+            Function        Get-Schedule                                       0.0        mlbPosh
+            Function        Get-Score                                          0.0        mlbPosh
+
+        .NOTES
+            FunctionName : Import-WebModule
+            Created by   : Jeffrey
+            Date Coded   : 04/13/2015 23:05:17
+        .LINK
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Import-WebModule
+    #>
+    [CmdletBinding()]
+    Param
+        (
+        [Parameter(Mandatory=$true)]
+        [string]$Url,
+        [Parameter(Mandatory=$true)]
+        [string]$Name
+        )
+    Begin
+    {
+        $Script = Invoke-WebRequest -Uri $Url |Select-Object -ExpandProperty Content;
+        $Scriptblock = $ExecutionContext.InvokeCommand.NewScriptBlock($Script);
+        New-Module -Name $Name -ScriptBlock $Scriptblock |Import-Module
+        Get-Command -Module $Name
+        }
+    Process
+    {
+ 
+        }
+    End
+    {
+        }
+    }
 
 Export-ModuleMember *
