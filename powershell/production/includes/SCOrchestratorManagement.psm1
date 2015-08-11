@@ -195,6 +195,8 @@ Function Get-scoJob
         [parameter(Mandatory = $true)]
         [string]$ManagementServer = $null,
         [string]$Id = $null,
+        [ValidateSet("Canceled", "Completed", "Running")]
+        [string]$Status,
         [pscredential]$Credential = $null
         )
     Begin
@@ -212,7 +214,7 @@ Function Get-scoJob
         if ($Id)
         {
             Write-Verbose "Filter out result based on the Id, and return the entry element";
-            Return $Jobs |Where-Object {$_.id -like $Id};
+            Return $Jobs |Where-Object {$_.id -like "*$($Id)*"};
             }
         else
         {
