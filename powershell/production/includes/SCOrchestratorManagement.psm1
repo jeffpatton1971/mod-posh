@@ -63,10 +63,12 @@
             Write-Verbose "Paginate to see if there are more than 50 runbooks";
             $Entries = @();
             $Entries += $WebFeeds.feed.entry;
+            Write-Verbose "Add first 50 runbooks to return collection";
             # ?`$skip=50&`$top=50"
             $Skip = 50;
             do
             {
+                Write-Verbose "Get the next 50 runbooks";
                 $Paginate = "?`$skip=$($Skip)&`$top=50";
                 [byte[]]$WebResponse = $WebClient.DownloadData("$($scoUri)/$($Paginate)");
                 [System.Xml.XmlDocument]$WebFeeds = [System.Text.Encoding]::ASCII.GetString($WebResponse);
