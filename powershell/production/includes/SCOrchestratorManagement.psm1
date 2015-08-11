@@ -29,6 +29,7 @@
         (
         [parameter(Mandatory = $true)]
         [string]$scoUri = $null,
+        [string]$Filter,
         [pscredential]$Credential = $null
         )
     Begin
@@ -195,7 +196,7 @@ Function Get-scoJob
         [parameter(Mandatory = $true)]
         [string]$ManagementServer = $null,
         [string]$Id = $null,
-        [ValidateSet("Canceled", "Completed", "Running")]
+        [ValidateSet("Canceled", "Completed", "Running", "Pending")]
         [string]$Status,
         [pscredential]$Credential = $null
         )
@@ -207,19 +208,20 @@ Function Get-scoJob
         Write-Verbose "Build the url string to pass to Get-scoWebfeed";
         [string]$WebServiceUrl = "http://$($ManagementServer):81/Orchestrator2012/Orchestrator.svc/Jobs";
         Write-Debug "Store the response for processing";
-        $Jobs = Get-scoWebFeed -scoUri $WebServiceUrl -Credential $Credential;
+        $Filter = "`$filter=Status eq '$($Status)'"
+        $Jobs = Get-scoWebFeed -scoUri "$($WebServiceUrl)/?$($Filter)" -Credential $Credential;
         }
     End
     {
         if ($Id)
         {
             Write-Verbose "Filter out result based on the Id, and return the entry element";
-            Return $Jobs |Where-Object {$_.id -like "*$($Id)*"};
+            $Jobs |Where-Object {$_.id -like "*$($Id)*"};
             }
         else
         {
             Write-Verbose "Return the entry element";
-            Return $Jobs;
+            $Jobs;
             }
         }
     }
