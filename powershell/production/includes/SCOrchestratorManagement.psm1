@@ -54,7 +54,28 @@
         Write-Debug "Using System.Text.Encoding to get the string and storing it in a System.Xml.XmlDocument";
         [System.Xml.XmlDocument]$WebFeeds = [System.Text.Encoding]::ASCII.GetString($WebResponse);
         Write-Verbose "Return just the feed element from the server";
-        Return $WebFeeds.feed;
+        if ($WebFeeds.feed.entry.count -lt 50)
+        {
+            Return $WebFeeds.feed.entry;
+            }
+        else
+        {
+            Write-Verbose "Paginate to see if there are more than 50 runbooks";
+            $Entries = @();
+            $Entries += $WebFeeds.feed.entry;
+            # ?`$skip=50&`$top=50"
+            $Skip = 50;
+            do
+            {
+                $Paginate = "?`$skip=$($Skip)&`$top=50";
+                [byte[]]$WebResponse = $WebClient.DownloadData("$($scoUri)/$($Paginate)");
+                [System.Xml.XmlDocument]$WebFeeds = [System.Text.Encoding]::ASCII.GetString($WebResponse);
+                $Entries += $WebFeeds.feed.entry;
+                $Skip += 50;
+                }
+            until ($WebFeeds.feed.entry.count -lt 50)
+            Return $Entries
+            }
         }
     End
     {
@@ -120,12 +141,12 @@ Function Get-scoRunbook
         if ($Title)
         {
             Write-Verbose "Filter out result based on the Title, and return the entry element";
-            Return $Runbooks.entry |Where-Object {$_.title.InnerText -like "*$($Title)"};
+            Return $Runbooks |Where-Object {$_.title.InnerText -like "*$($Title)"};
             }
         else
         {
             Write-Verbose "Return the entry element";
-            Return $Runbooks.entry;
+            Return $Runbooks;
             }
         }
     }
@@ -189,12 +210,12 @@ Function Get-scoJob
         if ($Id)
         {
             Write-Verbose "Filter out result based on the Id, and return the entry element";
-            Return $Jobs.entry |Where-Object {$_.id -like $Id};
+            Return $Jobs |Where-Object {$_.id -like $Id};
             }
         else
         {
             Write-Verbose "Return the entry element";
-            Return $Jobs.entry;
+            Return $Jobs;
             }
         }
     }
@@ -243,7 +264,7 @@ Function Get-scoFolder
     End
     {
         Write-Verbose "Return the entry element";
-        Return $Folders.entry;
+        Return $Folders;
         }
     }
 Function Get-scoActivity
@@ -291,7 +312,7 @@ Function Get-scoActivity
     End
     {
         Write-Verbose "Return the entry element";
-        Return $Activities.entry;
+        Return $Activities;
         }
     }
 Function Get-scoStatistics
@@ -339,7 +360,7 @@ Function Get-scoStatistics
     End
     {
         Write-Verbose "Return the entry element";
-        Return $Statistics.entry;
+        Return $Statistics;
         }
     }
 Function Get-scoParameter
@@ -388,7 +409,7 @@ Function Get-scoParameter
     End
     {
         Write-Verbose "Return the entry element";
-        Return $Parameters.entry;
+        Return $Parameters;
         }
     }
 Function Start-scoRunbook
@@ -456,7 +477,7 @@ Function Start-scoRunbook
             "Object[]"
             {
                 Write-Verbose "There is more than one Parameter for this Runbook";
-                if ($Parameters.entry.Count -eq $Value.Count)
+                if ($Parameters.Count -eq $Value.Count)
                 {
                     foreach ($Parameter in $Parameters)
                     {
@@ -476,7 +497,7 @@ Function Start-scoRunbook
                     }
                 else
                 {
-                    Write-Error "Number of Parameters ($($Parameters.entry.count)) do not match the number of Values ($($Value.Count))";
+                    Write-Error "Number of Parameters ($($Parameters.count)) do not match the number of Values ($($Value.Count))";
                     break;
                     }
                 }
@@ -493,7 +514,7 @@ Function Start-scoRunbook
                     }
                 else
                 {
-                    Write-Error "Number of Parameters ($($Parameters.entry.count)) do not match the number of Values ($($Value.Count))";
+                    Write-Error "Number of Parameters ($($Parameters.count)) do not match the number of Values ($($Value.Count))";
                     break;
                     }
                 }
