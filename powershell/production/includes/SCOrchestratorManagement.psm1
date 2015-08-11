@@ -30,6 +30,7 @@
         [parameter(Mandatory = $true)]
         [string]$scoUri = $null,
         [string]$Filter,
+        [switch]$Paging,
         [pscredential]$Credential = $null
         )
     Begin
@@ -51,15 +52,18 @@
             $WebClient.Credentials = $Credential;
             }
         Write-Debug "Downloading the byte data from the server";
-        [byte[]]$WebResponse = $WebClient.DownloadData($scoUri);
+        if ($Filter)
+        {
+            [byte[]]$WebResponse = $WebClient.DownloadData("$($scoUri)$($Filter)");
+            }
+        else
+        {
+            [byte[]]$WebResponse = $WebClient.DownloadData($scoUri);
+            }
         Write-Debug "Using System.Text.Encoding to get the string and storing it in a System.Xml.XmlDocument";
         [System.Xml.XmlDocument]$WebFeeds = [System.Text.Encoding]::ASCII.GetString($WebResponse);
         Write-Verbose "Return just the feed element from the server";
-        if ($WebFeeds.feed.entry.count -lt 50)
-        {
-            Return $WebFeeds.feed.entry;
-            }
-        else
+        if ($Paging)
         {
             Write-Verbose "Paginate to see if there are more than 50 runbooks";
             $Entries = @();
@@ -78,6 +82,10 @@
                 }
             until ($WebFeeds.feed.entry.count -lt 50)
             Return $Entries
+            }
+        else
+        {
+            Return $WebFeeds.feed.entry;
             }
         }
     End
