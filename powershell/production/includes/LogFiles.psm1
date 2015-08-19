@@ -48,6 +48,7 @@
         [string]$LogName,
         [string]$Source,
         [string]$EventID,
+        [string]$CorrelationID,
         [string]$EntryType,
         [string]$Message
         )
@@ -85,10 +86,55 @@
         }
     Process
     {
-        "$($EventRecord)$($Delim)$($LogName)$($Delim)$($Source)$($Delim)$(Get-Date)$($Delim)$($EventID)$($Delim)$($EntryType)$($Delim)$($Message)" |Out-File $LogFile -Append
+        do
+        {
+            "$($EventRecord)$($Delim)$($LogName)$($Delim)$($Source)$($Delim)$(Get-Date)$($Delim)$($EventID)$($Delim)$($CorrelationID)$($Delim)$($EntryType)$($Delim)$($Message)" |Out-File $LogFile -Append
+            }
+        while (Test-FileOpen -Path $LogFile)
         }
     End
     {
+        }
+    }
+Function Test-FileOpen
+{
+    <#
+        .SYNOPSIS
+            Test if a file is open
+        .Description
+            Test if a file is open for writing, used in Write-LogFile to avoid IOException
+            file in use by another process.
+        .EXAMPLE
+            Test-FileOpen -Path C:\LogFiles\testing\testing.log
+            True
+        .NOTES
+            FunctionName : Test-FileOpen
+            Created by   : jspatton
+            Date Coded   : 08/09/2015 11:00:00
+        .LINK
+            https://github.com/jeffpatton1971/mod-posh/wiki/LogFiles#Test-FileOpen
+        .LINK
+            http://poshcode.org/2236
+    #>
+    [CmdletBinding()]
+    Param
+    (
+    [Parameter(Mandatory=$true,ValueFromPipeline=$true,Position=0)]
+    [psobject]$Path
+    )
+    Process
+    {
+        try
+        {
+            $File = Get-Item $Path -Force;
+            $Stream = $File.OpenWrite();
+            $Stream.Close() |Out-Null;
+            return $true;
+            }
+        catch
+        {
+            return $false;
+            }
         }
     }
 Function Get-LogFile
@@ -162,7 +208,7 @@ Function Get-LogFile
             break
             }
         $Delim = [char]0xFE
-        $Headers = "EventRecord","LogName","Source","Time","EventID","EntryType","Message"
+        $Headers = "EventRecord","LogName","Source","Time","EventID","CorrelationID","EntryType","Message"
         $Result = Get-Content $LogFile -Delimiter $Delim -TotalCount $Headers.Count
         if ($Result[0] -eq "$($LogName)$($Delim)")
         {
@@ -322,8 +368,12 @@ Function Backup-Logfile
         }
     Process
     {
-        $CurrentLog = Get-Item $LogFile
-        $CurrentLog.MoveTo("$($CurrentLog.DirectoryName)\$($Archive)_$($CurrentLog.Name)")
+        do
+        {
+            $CurrentLog = Get-Item $LogFile
+            $CurrentLog.MoveTo("$($CurrentLog.DirectoryName)\$($Archive)_$($CurrentLog.Name)")
+            }
+        while (Test-FileOpen -Path $LogFile)
         }
     End
     {
@@ -403,7 +453,7 @@ Function Update-LogFile
         }
     Process
     {
-        $Headers = "LogName","Source","Time","EventID","EntryType","Message"
+        $Headers = "LogName","Source","Time","EventID","CorrelationID","EntryType","Message"
         $TempLog = Import-Csv $LogFile -Header $Headers -Delimiter $Delim
         $EventRecord = 1
         Remove-Item $LogFile
@@ -411,7 +461,7 @@ Function Update-LogFile
         foreach ($TempEntry in $TempLog)
         {
             $NewEventRecord = "{0:D8}" -f $EventRecord
-            "$($NewEventRecord)$($Delim)$($TempEntry.LogName)$($Delim)$($TempEntry.Source)$($Delim)$($TempEntry.Time)$($Delim)$($TempEntry.EventID)$($Delim)$($TempEntry.EntryType)$($Delim)$($TempEntry.Message)" |Out-File $LogFile -Append
+            "$($NewEventRecord)$($Delim)$($TempEntry.LogName)$($Delim)$($TempEntry.Source)$($Delim)$($TempEntry.Time)$($Delim)$($TempEntry.EventID)$($Delim)$($TempEntry.CorrelationID)$($Delim)$($TempEntry.EntryType)$($Delim)$($TempEntry.Message)" |Out-File $LogFile -Append
             [int]$EventRecord += 1
             }
         }
