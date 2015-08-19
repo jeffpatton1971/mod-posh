@@ -86,11 +86,7 @@
         }
     Process
     {
-        do
-        {
-            "$($EventRecord)$($Delim)$($LogName)$($Delim)$($Source)$($Delim)$(Get-Date)$($Delim)$($EventID)$($Delim)$($CorrelationID)$($Delim)$($EntryType)$($Delim)$($Message)" |Out-File $LogFile -Append
-            }
-        while (Test-FileOpen -Path $LogFile)
+        "$($EventRecord)$($Delim)$($LogName)$($Delim)$($Source)$($Delim)$(Get-Date)$($Delim)$($EventID)$($Delim)$($CorrelationID)$($Delim)$($EntryType)$($Delim)$($Message)" |Out-File $LogFile -Append
         }
     End
     {
@@ -368,12 +364,8 @@ Function Backup-Logfile
         }
     Process
     {
-        do
-        {
-            $CurrentLog = Get-Item $LogFile
-            $CurrentLog.MoveTo("$($CurrentLog.DirectoryName)\$($Archive)_$($CurrentLog.Name)")
-            }
-        while (Test-FileOpen -Path $LogFile)
+        $CurrentLog = Get-Item $LogFile
+        $CurrentLog.MoveTo("$($CurrentLog.DirectoryName)\$($Archive)_$($CurrentLog.Name)")
         }
     End
     {
