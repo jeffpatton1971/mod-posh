@@ -60,10 +60,11 @@ Begin
         $ScriptPath = $MyInvocation.MyCommand.Path
         $Username = $env:USERDOMAIN + "\" + $env:USERNAME
  
-        New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
+        #New-EventLog -Source $ScriptName -LogName $LogName -ErrorAction SilentlyContinue
  
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nStarted: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
+        
+        #Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message
  
         #	Dotsource in the functions you need.
         $Report = @()
@@ -145,7 +146,7 @@ Process
             catch
             {
                 $Message = $Error[0].InvocationInfo.Line
-                Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
+#                Write-EventLog -LogName $LogName -Source $ScriptName -EventID "101" -EntryType "Error" -Message $Message
                 $IP = $null
                 $Mac = $null
                 $MacAddress = $null
@@ -156,5 +157,6 @@ End
     {
         #Return $Report
         $Message = "Script: " + $ScriptPath + "`nScript User: " + $Username + "`nFinished: " + (Get-Date).toString()
-        Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message	
+        
+        #Write-EventLog -LogName $LogName -Source $ScriptName -EventID "104" -EntryType "Information" -Message $Message	
         }

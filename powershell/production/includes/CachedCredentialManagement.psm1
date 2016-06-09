@@ -271,3 +271,117 @@ Function Remove-CachedCredential
             }
         }
     }
+Export-ModuleMember *
+Function Invoke-CmdKey
+{
+	<#
+	#>
+	[CmdletBinding()]
+	Param
+	(
+		[Parameter(ParameterSetName='Get')]
+		[switch]$List,
+		[Parameter(ParameterSetName='Get')]
+		[Parameter(ParameterSetName='New',Mandatory=$true)]
+		[Parameter(ParameterSetName='Remove',Mandatory=$true)]
+		[string]$TargetName,
+		[Parameter(ParameterSetName='New')]
+		[switch]$Create,
+		[Parameter(ParameterSetName='New',Mandatory=$true)]
+		[ValidateSet('Domain','Generic')]
+		[string]$Type,
+		[Parameter(ParameterSetName='New',Mandatory=$true)]
+		[System.Management.Automation.PSCredential]$Credential,
+		[Parameter(ParameterSetName='Remove')]
+		[switch]$Delete
+	)
+	Begin
+	{
+		$CmdKey = 'C:\WINDOWS\System32\cmdkey.exe';
+		Write-Verbose "Entering $($PSCmdlet.ParameterSetName) mode";
+		switch ($PSCmdlet.ParameterSetName)
+		{
+			'Get'
+			{
+				$CmdKey += " /list";
+				if ($TargetName)
+				{
+					Write-Verbose "TargetName present";
+					$CmdKey += ":$($TargetName)";
+				}
+			}
+			'New'
+			{
+				Write-Verbose "Configuring cmdkey for $($Type) mode";
+				switch ($Type)
+				{
+					'Domain'
+					{
+						$CmdKey += " /add:$($TargetName)";
+					}
+					'Generic'
+					{
+						$CmdKey += " /generic:$($TargetName)";
+					}
+				}
+				$CmdKey += " /user:$($Credential.UserName) /pass:$($Credential.GetNetworkCredential().Password)";
+			}
+			'Remove'
+			{
+				$CmdKey += " /delete:$($TargetName)";
+			}
+			default
+			{
+				throw "Invalid parameter";
+			}
+		}
+	}
+	Process
+	{
+		Write-Verbose $CmdKey;
+		Invoke-Expression -Command $CmdKey;
+	}
+	End
+	{
+
+	}
+}
+
+Function Parse-CmdKey
+{
+	[CmdletBinding()]
+	Param
+	(
+		[object]$Output
+	)
+	Begin
+	{
+
+	}
+	Process
+	{
+		foreach ($Entry in $Output)
+		{
+			$Line = $Entry.Trim()
+			if ($Line)
+			{
+				if ($Line -match "Target:")
+				{
+					$Target = $Line
+				}
+				if ($Line -match "Type:")
+				{
+					$Type = $Line
+				}
+				if ($Line -match "User:")
+				{
+					$User = $Line
+				}
+			}
+		}
+	}
+	End
+	{
+
+	}
+}
