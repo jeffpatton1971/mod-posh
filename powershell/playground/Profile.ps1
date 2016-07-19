@@ -9,7 +9,6 @@
 #>
 $Global:Admin="$"
 $Global:SubversionClient="svn"
-$Global:PoshDrive = "C:"
 $Global:CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $Global:principal = new-object System.Security.principal.windowsprincipal($Global:CurrentUser)
 if ($Host.Name -eq 'ConsoleHost')
@@ -22,29 +21,7 @@ if ($Host.Name -eq 'ConsoleHost')
     #
     # Start transcription
     #
-    try
-    {
-        #
-        # Weird error on Windows 10 Build 10547, Start-Transcript fails to start, 
-        # catch the error and start it again and it works...
-        #
-        $ErrorActionPreference = "Stop"
-        #
-        # Log folder exist?
-        #
-        if (!(Test-Path "$($Global:PoshDrive)\Logs"))
-        {
-            #
-            # Create it
-            #
-            New-Item "$($Global:PoshDrive)\Logs" -ItemType Directory -Force
-            }
-        Start-Transcript -OutputDirectory "$($Global:PoshDrive)\Logs"
-        }
-    catch
-    {
-        Start-Transcript -OutputDirectory "$($Global:PoshDrive)\Logs"
-        }
+    Start-Transcript
 
     try
     {
@@ -55,19 +32,19 @@ if ($Host.Name -eq 'ConsoleHost')
         #
         # Have we cloned posh-git
         #
-        if (!(Test-Path "$($Global:PoshDrive)\GitHub"))
+        if (!(Test-Path C:\GitHub))
         {
             #
             # Create it!
             #
-            New-Item "$($Global:PoshDrive)\GitHub" -ItemType Directory -Force
+            New-Item C:\GitHub -ItemType Directory -Force
             }
-        if (!(Test-Path "$($Global:PoshDrive)\GitHub\posh-git"))
+        if (!(Test-Path C:\GitHub\posh-git))
         {
             #
             # Nope, clone it!
             #
-            Set-Location "$($Global:PoshDrive)\GitHub"
+            Set-Location C:\GitHub
             git clone https://github.com/dahlbyk/posh-git.git
             }
         else
@@ -75,17 +52,17 @@ if ($Host.Name -eq 'ConsoleHost')
             #
             # Yup, import it!
             #
-            Import-Module "$($Global:PoshDrive)\GitHub\posh-git\posh-git.psm1"
+            Import-Module C:\GitHub\posh-git\posh-git.psm1
             }
         #
         # Have we cloned CShell
         #
-        if (!(Test-Path "$($Global:PoshDrive)\GitHub\CShell"))
+        if (!(Test-Path C:\GitHub\CShell))
         {
             #
             # Nope, clone it!
             #
-            Set-Location "$($Global:PoshDrive)\GitHub"
+            Set-Location C:\GitHub
             git clone https://github.com/lukebuehler/CShell.git
             #
             # This needs to be set to true in order to build
@@ -94,12 +71,12 @@ if ($Host.Name -eq 'ConsoleHost')
             #
             # Build the CShell Release
             #
-            Set-Location "$($Global:PoshDrive)\GitHub\CShell\Build\"
+            Set-Location C:\GitHub\CShell\Build\
             .\build-release.cmd
             #
             # Start it so we can pin it
             #
-            "$($Global:PoshDrive)\GitHub\CShell\Bin\Release\CShell.exe"
+            C:\GitHub\CShell\Bin\Release\CShell.exe
             }
         }
     catch
@@ -111,7 +88,7 @@ if ($Host.Name -eq 'ConsoleHost')
 #
 # Move me into my code location
 #
-Set-Location "$($Global:PoshDrive)\projects\mod-posh\powershell\production"
+Set-Location "C:\projects\mod-posh\powershell\production"
 
 #
 # Dot source in my functions
@@ -122,7 +99,7 @@ foreach ($file in Get-ChildItem .\includes\*.psm1){Import-Module $file.fullname}
 # Create my Credentials Object
 #
 $Password = Get-SecureString -FilePath C:\Users\$($env:USERNAME)\cred.txt
-$Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "$($env:USERDOMAIN)\$($env:USERNAME)", $Password
+$Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "$($env:USERDOMAIN)\$($env:USERNAME)_a", $Password
 #
 # Don't keep this in memory please!
 #
@@ -141,12 +118,13 @@ if ($Global:principal.IsInRole("Administrators"))
 Function prompt 
 {
     $Now = $(get-date).Tostring("HH:mm:ss | MM-dd-yyy")
+    $FreeSpace = [math]::Round(((Get-PSDrive ((pwd).drive |Select-Object -ExpandProperty name) |Select-Object -ExpandProperty Free)/1gb),2)
     #
     # I use GIT now for most everything and this allows my prompt to have nifty colors that represent
     # the status of various files
     #
     $Host.UI.RawUI.ForegroundColor = $GitPromptSettings.DefaultForegroundColor
-    Write-Host "# $($env:username)@$($env:computername) | $($Now) | $(Get-Location) $Global:Admin " -NoNewLine
+    Write-Host "# $($env:username)@$($env:computername) | $($Now) | [$($FreeSpace)GB] $(Get-Location) $Global:Admin " -NoNewLine
     #
     # This writes the actual status of the repo (if i'm in one) at the tail end of the cmdline
     #
