@@ -741,10 +741,22 @@ Function Import-WebModule
         )
     Begin
     {
-        $Script = Invoke-WebRequest -Uri $Url |Select-Object -ExpandProperty Content;
-        $Scriptblock = $ExecutionContext.InvokeCommand.NewScriptBlock($Script);
-        New-Module -Name $Name -ScriptBlock $Scriptblock |Import-Module
-        Get-Command -Module $Name
+        try
+        {
+            $ErrorActionPreference = "Stop";
+            $Error.Clear();
+            Write-Verbose $Url;
+            Write-Verbose $Name;
+            $Script = Invoke-WebRequest -Uri $Url |Select-Object -ExpandProperty Content;
+            Write-Verbose $Script
+            $Scriptblock = $ExecutionContext.InvokeCommand.NewScriptBlock($Script);
+            Write-Verbose $ExecutionContext;
+            New-Module -Name $Name -ScriptBlock $Scriptblock |Import-Module
+            }
+        catch
+        {
+            throw $Error
+            }
         }
     Process
     {
