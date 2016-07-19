@@ -30,6 +30,8 @@ try
     Invoke-WebRequest -Uri https://raw.githubusercontent.com/jeffpatton1971/mod-posh/master/powershell/playground/Start-RSDataProcessing.ps1 -OutFile C:\Retrosheet\Common\PowerShell\Start-RSDataProcessing.ps1
     Invoke-WebRequest -Uri https://gist.githubusercontent.com/jeffpatton1971/ee2ed12189506ccae173/raw/d84e3d016f4327a80326c15839e7825d99b23362/retrosheet_zip_files.TXT -OutFile C:\Retrosheet\Data\Zipped\retrosheet_zip_files.TXT
 
+    $Global:RSPath = 'C:\Retrosheet';
+    $Global:RSDataPath = "$($Global:RSPath)\Data";
     Write-Host "Launch C:\Retrosheet\Common\PowerShell\Start-RSDataProcessing.ps1 to begin setting up RetroSheet datafiles."
     }
 catch
