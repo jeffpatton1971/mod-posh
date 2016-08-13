@@ -8,7 +8,6 @@
 	
 #>
 $Global:Admin="$"
-$Global:SubversionClient="svn"
 $Global:CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $Global:principal = new-object System.Security.principal.windowsprincipal($Global:CurrentUser)
 if ($Host.Name -eq 'ConsoleHost')
@@ -98,12 +97,14 @@ foreach ($file in Get-ChildItem .\includes\*.psm1){Import-Module $file.fullname}
 #
 # Create my Credentials Object
 #
-$Password = Get-SecureString -FilePath C:\Users\$($env:USERNAME)\cred.txt
-$Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "$($env:USERDOMAIN)\$($env:USERNAME)_a", $Password
+# I don't do this anymore so it's not needed.
+#
+# $Password = Get-SecureString -FilePath C:\Users\$($env:USERNAME)\cred.txt
+# $Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "$($env:USERDOMAIN)\$($env:USERNAME)_a", $Password
 #
 # Don't keep this in memory please!
 #
-Remove-Variable Password
+# Remove-Variable Password
 #
 # Change prompt to # if i have admin rights
 #
@@ -129,5 +130,8 @@ Function prompt
     # This writes the actual status of the repo (if i'm in one) at the tail end of the cmdline
     #
     Write-VcsStatus
+    #
+    # The return is the bit that removes the PS>
+    #
     return "`n"
     }
