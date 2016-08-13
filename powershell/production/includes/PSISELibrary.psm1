@@ -416,7 +416,8 @@ Function Edit-File
             {
                 if ($POSHEditor -ne $null)
                 {
-                    Invoke-Expression "$POSHEditor $File"
+                    # Invoke-Expression "$POSHEditor $File"
+                    Start-Process -FilePath $POSHEditor -ArgumentList $File
                     }
                 else
                 {
