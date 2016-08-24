@@ -15,7 +15,7 @@ if ($Host.Name -eq 'ConsoleHost')
     #
     # Set default editor
     #
-    $Global:POSHEditor = 'c:\windows\notepad.exe'
+    $Global:POSHEditor = 'C:\Program Files (x86)\Microsoft VS Code\bin\code.cmd'
     
     #
     # Start transcription
