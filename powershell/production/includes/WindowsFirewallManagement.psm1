@@ -250,5 +250,39 @@ Function New-FWPortOpening
         $FwProfile.GloballyOpenPorts.Add($FwPort)
         }
     }
+Function Get-FirewallLog
+{
+    [CmdletBinding()]
+    param 
+    (
+    [string]$LogFile,
+    [switch]$Recent
+    )
+    try 
+    {
+        $ErrorActionPreference = 'Stop';
+        $Error.Clear();
 
+        #http://technet.microsoft.com/en-us/library/cc758040(v=WS.10).aspx
+
+        $Headers = @("date","time","action","protocol","src-ip","dst-ip","src-port","dst-port","size","tcpflags","tcpsyn","tcpack","tcpwin","icmptype","icmpcode","info","path");
+        $Delimiter = " ";
+
+        if ($Recent)
+        {
+            $LogFileAttribs = Get-ChildItem $LogFile;
+            $LastWriteTime = $LogFileAttribs.LastWriteTime;
+            Import-Csv -Path $LogFile -Delimiter $Delimiter -Header $Headers |ForEach-Object {if ($_.date -notlike "#*"){$Date = Get-Date("$($_.date) $($_.time)");if ($LastWriteTime -lt $Date){$_}}};
+        }
+        else 
+        {
+            Import-Csv -LiteralPath $LogFile -Header $Headers -Delimiter $Delimiter;
+        }
+        
+    }
+    catch 
+    {
+        throw $_;
+    }
+}
 Export-ModuleMember *
