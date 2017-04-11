@@ -185,4 +185,62 @@ Function Get-NetstatReport
         }
     }
 
+function Test-NetworkPort
+{
+    <#
+        .SYNOPSIS
+            Test if a port is open on a given computer/ip
+        .DESCRIPTION
+            This function returns true/false for a given computer and port combination
+        .PARAMETER Computer
+            The name or ip address of the computer to test
+        .PARAMETER Port 
+            The port to test
+        .PARAMETER UDP
+            A switch to test for UDP ports
+        .EXAMPLE
+            Test-NetworkPort -Port 22
+            True
+
+            Test-NetworkPort -Port 123
+            False
+
+            DESCRIPTION
+            -----------
+            The basic syntax of the function
+    #>
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory=$false)]
+        [string]$Computer = 'localhost',
+        [Parameter(Mandatory=$true)]
+        [int]$Port,
+        [Parameter(Mandatory=$false)]
+        [switch]$UDP
+    )
+
+    try 
+    {
+        $ErrorActionPreference = 'Stop';
+        $Error.Clear();
+        
+        if ($UDP)
+        {
+            (New-Object System.Net.Sockets.UdpClient).Connect($Computer, $Port)
+        }
+        else 
+        {
+            (New-Object System.Net.Sockets.TcpClient).Connect($Computer, $Port)
+        }
+        
+        return $true;
+    }
+    catch 
+    {
+        Write-Verbose $_.exception.innerexception;
+        return $false;
+    }
+}
+
 Export-ModuleMember *
