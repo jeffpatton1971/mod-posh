@@ -2654,4 +2654,28 @@ Function Grant-RegistryPermission
         Get-Acl $Path
         }
     }
+function New-Credential
+{
+    [CmdletBinding()]
+	Param
+		(
+		[Parameter(Mandatory=$true)]
+		[string]$Username,
+		[Parameter(Mandatory=$true)]
+		[string]$Password
+        )
+    begin
+    {
+
+    }
+    process 
+    {
+        $secpasswd = ConvertTo-SecureString $Password -AsPlainText -Force
+        New-Object System.Management.Automation.PSCredential ($Username, $secpasswd)
+    }
+    end 
+    {
+
+    }
+}
 Export-ModuleMember *
