@@ -2081,7 +2081,8 @@ Function New-Password
         (
         [int]$Length = 32,
         [int]$Count = 10,
-        [switch]$Strong
+        [switch]$Strong,
+        [switch]$asSecureString
         )
     Begin
     {
@@ -2108,12 +2109,20 @@ Function New-Password
             $result = ""
             for( $i=0; $i -lt $Length; $i++ )
             {
-                $result += $Characters[ $bytes[$i] % $Characters.Length ]	
+                $result += $Characters[ $bytes[$i] % $Characters.Length ]
                 }
-            $Password = New-Object -TypeName PSobject -Property @{
-                Password = $result
+            if ($asSecureString)
+            {
+                $result = (ConvertTo-SecureString -String $result -AsPlainText -Force)
+                $Passwords += $result
                 }
-            $Passwords += $Password
+            else
+            {
+                $Password = New-Object -TypeName PSobject -Property @{
+                    Password = $result
+                    }
+                $Passwords += $Password                    
+                }
             }
         }
     End

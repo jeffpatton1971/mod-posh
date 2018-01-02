@@ -580,6 +580,26 @@ Function Get-SecureString
         Return $SecureString
         }
     }
+Function Resolve-SecureString
+{
+    [CmdletBinding()]
+    param 
+    (
+        [parameter(Position=0,Mandatory=$true,ValueFromPipeline=$true)]
+        [securestring]$SecureString
+    )
+    process 
+    {
+        try
+        {
+            $SecureString |ForEach-Object {[System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($_))}
+        }
+        catch 
+        {
+            throw $_
+        }
+    }
+}
 Function Print-IseFile
 {
     <#
