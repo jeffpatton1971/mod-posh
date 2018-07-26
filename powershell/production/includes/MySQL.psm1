@@ -1329,7 +1329,7 @@ function Invoke-MySqlParamQuery
             $command.Prepare()
             Write-Verbose "Adding parameters";
             for($i = 0; $i -lt $parameters.Count; $i++){
-                $command.Parameters.AddWithValue($Parameters[$i], $values[$i])
+                $tmp = $command.Parameters.AddWithValue($Parameters[$i], $values[$i])
             }
             Write-Verbose "Creating DataAdapter with Command object";
 			[MySql.Data.MySqlClient.MySqlDataAdapter]$dataAdapter = New-Object MySql.Data.MySqlClient.MySqlDataAdapter($command)
