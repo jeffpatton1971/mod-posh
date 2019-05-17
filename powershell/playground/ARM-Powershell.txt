@@ -1,0 +1,31 @@
+$Test = New-Object -TypeName psobject -Property @{name='';location='';tags=@{};plan=@{};properties=@{}};
+$Test.plan = New-Object -TypeName psobject -Property @{name='';publisher='';product=''}
+$Test.properties = New-Object -TypeName psobject -Property @{licenseType='';availabilitySet=@{};hardwareProfile=@{};storageProfile=@{};osProfile=@{};networkProfile=@{};diagnosticsProfile=@{}};
+$Test.properties.availabilitySet = New-Object -TypeName psobject -Property @{id=''};
+$Test.properties.hardwareProfile = New-Object -TypeName psobject -Property @{vmSize=''};
+$Test.properties.storageProfile = New-Object -TypeName psobject -Property @{imageReference=@{};osDisk=@{};dataDisks=@()};
+$Test.properties.storageProfile.imageReference = New-Object -TypeName psobject -Property @{id='';publisher='';offer='';sku='';version=''};
+$Test.properties.storageProfile.osDisk = New-Object -TypeName psobject -Property @{name='';Uri='';caching='';createOption='';diskSizeGB=0;osType='';encryptionSettings=@{}};
+$Test.properties.storageProfile.osDisk.encryptionSettings = New-Object -TypeName psobject -Property @{enabled=$false;diskEncryptionKey=@{};keyEncryptionKey=@{}};
+$Test.properties.storageProfile.osDisk.encryptionSettings.diskEncryptionKey = New-Object -TypeName psobject -Property @{sourceVault=(New-Object -TypeName psobject -Property @{id=''});secretUrl=''};
+$Test.properties.storageProfile.osDisk.encryptionSettings.keyEncryptionKey = New-Object -TypeName psobject -Property @{sourceVault=(New-Object -TypeName psobject -Property @{id=''});keyUrl=''};
+$Test.properties.storageProfile.dataDisks += (New-Object -TypeName psobject -Property @{name='';diskSizeGB='';caching='';lun=0;vhd='';createOption=''});
+$Test.properties.osProfile = New-Object -TypeName psobject -Property @{computerName='';adminUsername='';adminPassword='System.Security.SecureString';customData='';windowsConfiguration=@{};linuxConfiguration=@{};secrets=@()};
+$Test.properties.osProfile.windowsConfiguration = New-Object -TypeName psobject -Property @{provisionVMAgent=$false;winRM=@{};additionalUnattendContent=@{};enableAutomaticUpdates=$false;timeZone=''};
+$Test.properties.osProfile.windowsConfiguration.winRM = New-Object -TypeName psobject -Property @{listeners=@()}
+$Test.properties.osProfile.windowsConfiguration.winRM.listeners += (New-Object -TypeName psobject -Property @{protocol='';certificateUrl=''})
+$Test.properties.osProfile.linuxConfiguration = New-Object -TypeName psobject -Property @{disablePasswordAuthentication=$false;ssh=@{}};
+$Test.properties.osProfile.linuxConfiguration.ssh = New-Object -TypeName psobject -Property @{publicKeys=@()};
+$Test.properties.osProfile.linuxConfiguration.ssh.publicKeys += (New-Object -TypeName psobject -Property @{path='';keyData=''});
+$Test.properties.osProfile.windowsConfiguration.additionalUnattendContent = New-Object -TypeName psobject -Property @{pass='';component='';settingName='';content=''};
+$Test.properties.osProfile.secrets += (New-Object -TypeName psobject -Property @{sourceVault=(New-Object -TypeName psobject -Property @{id=''});vaultCertificates=@()});
+$Test.properties.osProfile.secrets[0].vaultCertificates += (New-Object -TypeName psobject -Property @{certificateUrl='';certificateStore=''});
+$Test.properties.networkProfile = New-Object -TypeName psobject -Property @{networkInterfaces=@()};
+$Test.properties.networkProfile.networkInterfaces += (New-Object -TypeName psobject -Property @{id='';primary=$false});
+$Test.properties.diagnosticsProfile = New-Object -TypeName psobject -Property @{bootDiagnostics=@{}};
+$Test.properties.diagnosticsProfile.bootDiagnostics = New-Object -TypeName psobject -Property @{enable=$false;storageUri=''};
+
+
+Import-Module D:\CODE\projects\AzureTemplateModule\bin\Debug\AzureTemplateModule.dll
+$Template = New-ComputeTemplate -Name test -Location eastus -OsProfile (New-OsProfile -ComputerName testing -AdminUserName pooper -AdminPassword ('Pass12345' |ConvertTo-SecureString -AsPlainText -Force) -ProvisionVmAgent -WinRm (Add-WinRmListener -Protocol http -CertificateUrl test) -EnableAutomaticUpdates -TimeZone (Get-TimeZone -Id 'Central Standard Time').DisplayName)
+$Template = New-ComputeTemplate -Name test -Location eastus -OsProfile (New-OsProfile -ComputerName testing -AdminUserName poop -DisablePasswordAuthentication -SshPublicKey (New-PulickKey -KeyData 123 -Path 123))
