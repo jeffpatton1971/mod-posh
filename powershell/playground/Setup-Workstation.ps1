@@ -1,6 +1,6 @@
 ﻿if ($Global:principal.IsInRole("Administrators"))  {
     # Get my current profile
-    Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/jeffpatton1971/mod-posh/blob/master/powershell/playground/Profile.ps1" -OutFile $PROFILE;
+    Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/jeffpatton1971/mod-posh/master/powershell/playground/Profile.ps1" -OutFile $PROFILE;
     # Get USB DVD Tool
     Invoke-WebRequest -UseBasicParsing -Uri "https://download.microsoft.com/download/C/4/8/C48F6E20-FE20-41C6-8C1C-408FE7B49A3A/Windows7-USB-DVD-Download-Tool-Installer-en-US.exe" -OutFile .\Windows7-USB-DVD-tool.exe;
     # Get Exchange Web Services
