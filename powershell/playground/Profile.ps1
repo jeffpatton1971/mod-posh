@@ -74,7 +74,7 @@ Set-Location "C:\projects\mod-posh\powershell\production"
 #
 # Dot source in my functions
 #
-foreach ($file in Get-ChildItem .\includes\*.psm1){Import-Module $file.fullname}
+Get-ChildItem .\includes\*.psm1 |ForEach-Object {Import-Module $_.FullName}
 
 #
 # Create my Credentials Object
