@@ -25,33 +25,15 @@ if ($Host.Name -eq 'ConsoleHost')
     try
     {
         #
-        # Load up GitHub Shell Extensions
+        # Do we have posh-git
         #
-        . (Resolve-Path "$env:LOCALAPPDATA\GitHub\shell.ps1")
-        #
-        # Have we cloned posh-git
-        #
+        Import-Module -Name posh-git
         if (!(Test-Path C:\GitHub))
         {
             #
             # Create it!
             #
             New-Item C:\GitHub -ItemType Directory -Force
-            }
-        if (!(Test-Path C:\GitHub\posh-git))
-        {
-            #
-            # Nope, clone it!
-            #
-            Set-Location C:\GitHub
-            git clone https://github.com/dahlbyk/posh-git.git
-            }
-        else
-        {
-            #
-            # Yup, import it!
-            #
-            Import-Module C:\GitHub\posh-git\posh-git.psm1
             }
         #
         # Have we cloned CShell
@@ -124,7 +106,7 @@ Function prompt
     # I use GIT now for most everything and this allows my prompt to have nifty colors that represent
     # the status of various files
     #
-    $Host.UI.RawUI.ForegroundColor = $GitPromptSettings.DefaultForegroundColor
+    # $Host.UI.RawUI.ForegroundColor = $GitPromptSettings.DefaultForegroundColor
     Write-Host "# $($env:username)@$($env:computername) | $($Now) | [$($FreeSpace)GB] $(Get-Location) $Global:Admin " -NoNewLine
     #
     # This writes the actual status of the repo (if i'm in one) at the tail end of the cmdline
