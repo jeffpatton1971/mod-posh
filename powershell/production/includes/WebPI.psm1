@@ -4,7 +4,7 @@
     $Error.Clear();
     [reflection.assembly]::LoadWithPartialName("Microsoft.Web.PlatformInstaller") |Out-Null;
     $Global:WebPIProductManager = New-Object Microsoft.Web.PlatformInstaller.ProductManager;
-    Write-Host "Loading the ProductManager, this may take a few secongs";
+    Write-Host "Loading the ProductManager, this may take a few seconds";
     $Global:WebPIProductManager.Load();
     }
 catch
