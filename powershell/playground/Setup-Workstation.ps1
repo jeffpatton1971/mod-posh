@@ -1,41 +1,21 @@
-﻿# Get my current profile
-New-Item $profile -ItemType File -Force
-$myProfile = "https://github.com/jeffpatton1971/mod-posh/blob/master/powershell/playground/Profile.ps1"
-$webclient = New-Object Net.Webclient
-$webClient.UseDefaultCredentials = $true
-$webClient.DownloadFile($myProfile, $profile)
-# Copy my profile to the console profile location
-Copy-Item $profile "$($Env:USERPROFILE)\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
-
-$Downloads = @()
-$ThisFile = New-Object -TypeName PSobject -Property @{
-    URL = "http://downloads.sourceforge.net/project/win32svn/1.7.5/Setup-Subversion-1.7.5.msi"
-    FileName = "$($Env:USERPROFILE)\Setup-Svn.msi"
-    }
-$Downloads += $ThisFile
-$ThisFile = New-Object -TypeName PSobject -Property @{
-    Url = "http://www.opera.com/download/get.pl?id=34630&location=321&nothanks=yes&sub=marine"
-    FileName = "$($Env:USERPROFILE)\Setup-Opera.exe"
-    }
-$Downloads += $ThisFile
-$ThisFile = New-Object -TypeName PSObject -Property @{
-    Url = "http://images2.store.microsoft.com/prod/clustera/framework/w7udt/1.0/en-us/Windows7-USB-DVD-tool.exe"
-    FileName = "$($Env:USERPROFILE)\Setup-Win7UsbTool.exe"
-    }
-$Downloads += $ThisFile
-$ThisFile = New-Object -TypeName PSObject -Property @{
-    Url = "http://download.microsoft.com/download/5/E/4/5E456B4C-78D4-4E6C-BC84-CA7FE87BB117/WebServicesSDK.msi"
-    FileName = "$($Env:USERPROFILE)\Setup-EWS.msi"
-    }
-$Downloads += $ThisFile
-
-foreach ($Download in $Downloads)
-{
-    try
-    {
-        $webclient.DownloadFile($Download.Url, $Download.FileName)
-        }
-    catch
-    {
-        }
-    }
+﻿if ($Global:principal.IsInRole("Administrators"))  {
+    # Get my current profile
+    Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/jeffpatton1971/mod-posh/blob/master/powershell/playground/Profile.ps1" -OutFile $PROFILE;
+    # Get USB DVD Tool
+    Invoke-WebRequest -UseBasicParsing -Uri "https://download.microsoft.com/download/C/4/8/C48F6E20-FE20-41C6-8C1C-408FE7B49A3A/Windows7-USB-DVD-Download-Tool-Installer-en-US.exe" -OutFile .\Windows7-USB-DVD-tool.exe;
+    # Get Exchange Web Services
+    Invoke-WebRequest -UseBasicParsing -Uri "http://download.microsoft.com/download/5/E/4/5E456B4C-78D4-4E6C-BC84-CA7FE87BB117/WebServicesSDK.msi" -OutFile .\WebServicesSDK.msi;
+    # Get WebPI
+    Invoke-WebRequest -UseBasicParsing -Uri "https://download.microsoft.com/download/8/4/9/849DBCF2-DFD9-49F5-9A19-9AEE5B29341A/WebPlatformInstaller_x64_en-US.msi" -OutFile .\WebPlatformInstaller_x64_en-US.msi;
+    # Get GithubDesktop
+    Invoke-WebRequest -UseBasicParsing -Uri "https://desktop.githubusercontent.com/releases/2.4.3-539849ed/GitHubDesktopSetup.exe" -OutFile .\GitHubDesktopSetup.exe;
+    # Get VsCode
+    Invoke-WebRequest -UseBasicParsing -Uri "https://az764295.vo.msecnd.net/stable/ff915844119ce9485abfe8aa9076ec76b5300ddd/VSCodeUserSetup-x64-1.44.2.exe" -OutFile .\VSCodeUserSetup-x64-1.44.2.exe;
+    # Get Posh-Git
+    Install-Module -Name posh-git -AllowClobber;
+    Write-Host "You will need to install Visual Studio in order to compile CShell"
+    # Get C-Shell
+    git clone https://github.com/lukebuehler/CShell.git
+} else {
+    Write-Host "Please launch PowerShell as an Administrator" -ForegroundColor Red;
+}
