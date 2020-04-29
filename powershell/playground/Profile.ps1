@@ -10,83 +10,29 @@
 $Global:Admin="$"
 $Global:CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $Global:principal = new-object System.Security.principal.windowsprincipal($Global:CurrentUser)
-if ($Host.Name -eq 'ConsoleHost')
-{
+if ($Host.Name -eq 'ConsoleHost') {
     #
     # Set default editor
     #
-    $Global:POSHEditor = 'C:\Program Files (x86)\Microsoft VS Code\bin\code.cmd'
+    $Global:POSHEditor = "$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin\code.cmd"
     
     #
     # Start transcription
     #
     Start-Transcript
-
-    try
-    {
-        #
-        # Do we have posh-git
-        #
-        Import-Module -Name posh-git
-        if (!(Test-Path C:\GitHub))
-        {
-            #
-            # Create it!
-            #
-            New-Item C:\GitHub -ItemType Directory -Force
-            }
-        #
-        # Have we cloned CShell
-        #
-        if (!(Test-Path C:\GitHub\CShell))
-        {
-            #
-            # Nope, clone it!
-            #
-            Set-Location C:\GitHub
-            git clone https://github.com/lukebuehler/CShell.git
-            #
-            # This needs to be set to true in order to build
-            #
-            $env:EnableNuGetPackageRestore = $True
-            #
-            # Build the CShell Release
-            #
-            Set-Location C:\GitHub\CShell\Build\
-            .\build-release.cmd
-            #
-            # Start it so we can pin it
-            #
-            C:\GitHub\CShell\Bin\Release\CShell.exe
-            }
-        }
-    catch
-    {
-        Write-Error $Error[0]
-        }
-    }
-
+}
+#
+# Import posh-git
+#
+Import-Module -Name posh-git;
 #
 # Move me into my code location
 #
 Set-Location "C:\projects\mod-posh\powershell\production"
-
 #
 # Dot source in my functions
 #
 Get-ChildItem .\includes\*.psm1 |ForEach-Object {Import-Module $_.FullName}
-
-#
-# Create my Credentials Object
-#
-# I don't do this anymore so it's not needed.
-#
-# $Password = Get-SecureString -FilePath C:\Users\$($env:USERNAME)\cred.txt
-# $Credentials = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "$($env:USERDOMAIN)\$($env:USERNAME)_a", $Password
-#
-# Don't keep this in memory please!
-#
-# Remove-Variable Password
 #
 # Change prompt to # if i have admin rights
 #
@@ -98,8 +44,7 @@ if ($Global:principal.IsInRole("Administrators"))
 #
 # Setup my custom prompt
 #
-Function prompt 
-{
+Function prompt {
     $Now = $(get-date).Tostring("HH:mm:ss | MM-dd-yyy")
     $FreeSpace = [math]::Round(((Get-PSDrive ((pwd).drive |Select-Object -ExpandProperty name) |Select-Object -ExpandProperty Free)/1gb),2)
     #
@@ -116,4 +61,4 @@ Function prompt
     # The return is the bit that removes the PS>
     #
     return "`n"
-    }
+}
