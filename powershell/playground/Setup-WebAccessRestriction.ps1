@@ -24,65 +24,69 @@
 [CmdletBinding(PositionalBinding = $true)]
 [OutputType([Object])]
 param (
- [Parameter(Mandatory = $true, Position = 0)]
- [string]$ResourceGroupName,
- [Parameter(Mandatory = $true, Position = 1)]
- [string]$WebAppName,
- [Parameter(ValueFromPipeline, Position = 2)]
- [string]$AllowedRange,
- [Parameter(Mandatory = $true, Position = 3)]
- [int]$Priority,
- [ValidateSet("Allow", "Deny")]
- [Parameter(Position = 4)]
- [string]$Action = 'Allow'
+  [Parameter(Mandatory = $true, Position = 0)]
+  [string]$ResourceGroupName,
+  [Parameter(Mandatory = $true, Position = 1)]
+  [string]$WebAppName,
+  [Parameter(ValueFromPipeline, Position = 2)]
+  [string]$AllowedRange,
+  [Parameter(Mandatory = $true, Position = 3)]
+  [int]$Priority,
+  [ValidateSet("Allow", "Deny")]
+  [Parameter(Position = 4)]
+  [string]$Action = 'Allow'
 )
 begin {
- $newPriority = $Priority;
+  $newPriority = $Priority;
 }
 process {
- try {
-  $ErrorActionPreference = 'Stop';
-  $Error.Clear();
+  try {
 
-  Write-Verbose "Check for existing rules in $($WebAppName)";
-  $ExistingRules = Get-AzWebAppAccessRestrictionConfig -ResourceGroupName $ResourceGroupName -Name $WebAppName -Debug:$false;
-  Write-Debug $ExistingRules;
+    $ErrorActionPreference = $MyInvocation.BoundParameters.ContainsKey('ErrorAction');
+    $Error.Clear();
 
-  Write-Verbose "Setup rule";
+    Write-Verbose "Check for existing rules in $($WebAppName)";
+    $ExistingRules = Get-AzWebAppAccessRestrictionConfig -ResourceGroupName $ResourceGroupName -Name $WebAppName -Debug:$false;
+    Write-Debug $ExistingRules;
 
-  $Rule = [Microsoft.Azure.Commands.WebApps.Models.PSAccessRestriction]::new();
-  $Rule.RuleName = "$($Action)_$($AllowedRange)";
-  $Rule.Description = "$($Action) $($AllowedRange)";
-  $Rule.Priority = $newPriority;
-  $Rule.Action = $Action;
-  $Rule.IpAddress = $AllowedRange;
+    Write-Verbose "Setup rule";
 
-  Write-Debug $Rule;
+    $Rule = [Microsoft.Azure.Commands.WebApps.Models.PSAccessRestriction]::new();
+    $Rule.RuleName = "$($Action)_$($AllowedRange)";
+    $Rule.Description = "$($Action) $($AllowedRange)";
+    $Rule.Priority = $newPriority;
+    $Rule.Action = $Action;
+    $Rule.IpAddress = $AllowedRange;
 
-  if ($ExistingRules.MainSiteAccessRestrictions |Where-Object -Property Priority -eq $newPriority) {
-   $PSCmdlet.ThrowTerminatingError(
-    [System.Management.Automation.ErrorRecord]::new(
-      ([System.Exception]"Existing rule with that priority found"),
-      'AccessRule',
-      [System.Management.Automation.ErrorCategory]::OpenError,
-      $MyObject
-    )
-  )
-  } else {
-   Add-AzWebAppAccessRestrictionRule `
-   -ResourceGroupName $ResourceGroupName `
-   -WebAppName $WebAppName `
-   -Name $Rule.RuleName `
-   -Description $Rule.Description `
-   -Priority $Rule.Priority `
-   -Action $Rule.Action `
-   -IpAddress $Rule.IpAddress;
+    Write-Debug $Rule;
+    Write-Verbose "Adding $($Rule.Rulename)";
+
+    if ($ExistingRules.MainSiteAccessRestrictions | Where-Object -Property Priority -eq $newPriority) {
+      $PSCmdlet.ThrowTerminatingError(
+        [System.Management.Automation.ErrorRecord]::new(
+          ([System.Exception]"Existing rule with that priority found"),
+          'AccessRule',
+          [System.Management.Automation.ErrorCategory]::OpenError,
+          $MyObject
+        )
+      )
+    }
+    else {
+      Add-AzWebAppAccessRestrictionRule `
+        -ResourceGroupName $ResourceGroupName `
+        -WebAppName $WebAppName `
+        -Name $Rule.RuleName `
+        -Description $Rule.Description `
+        -Priority $Rule.Priority `
+        -Action $Rule.Action `
+        -IpAddress $Rule.IpAddress `
+        -ErrorAction $ErrorActionPreference;
+    }
+
+    Write-Verbose "Incrementing Priority by 5"
+    $newPriority += 5;
   }
-
-  Write-Verbose "Incrementing Priority by 5"
-   $newPriority += 5;
- }
- catch {
-  throw $_;
- }
+  catch {
+    throw $_;
+  }
 }
