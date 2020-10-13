@@ -42,7 +42,7 @@ begin {
 process {
   try {
 
-    $ErrorActionPreference = $MyInvocation.BoundParameters.ContainsKey('ErrorAction');
+    #$ErrorActionPreference = $MyInvocation.BoundParameters.ContainsKey('ErrorAction');
     $Error.Clear();
 
     Write-Verbose "Check for existing rules in $($WebAppName)";
