@@ -15,6 +15,7 @@
     [Setting up Git](https://medium.com/analytics-vidhya/how-i-put-my-mind-under-version-control-24caea37b8a5)
     [Link to Original bash](https://gist.github.com/tallguyjenks/ca3339b8b5353159f631836268e3f791#file-zk_sync-sh)
     [Schedule Task](https://techgenix.com/how-to-schedule-powershell-scripts/)
+    [Microsoft Task WIki](https://social.technet.microsoft.com/wiki/contents/articles/53833.run-powershell-script-with-windows-task-scheduler.aspx)
 #>
 param (
     [string]$Path
