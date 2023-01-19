@@ -170,7 +170,7 @@ function ConvertFrom-TfLog {
       $Record.FileName = $Entry[2].Trim().Split(' ')[1].Trim();
       $Record.Variable = $Entry[2].Trim().Split('"')[1].Trim();
       $Record.Details = ($Entry[5] + $Entry[6]).Trim();
-
+      $Record.Raw = ($Entry | Out-String);
       Write-Output $Record | Select-Object -Property 'type', 'message', 'filename', 'modulename', 'variable', 'details', 'raw';
      }
      default
