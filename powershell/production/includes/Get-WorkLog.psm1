@@ -88,9 +88,24 @@ function Get-FirstDateOfWeek {
 }
 
 function Get-IssueQuery {
- param()
+ param(
+  [switch]$Today,
+  [switch]$ThisWeek
+ )
+
  $StartOfWeek = Get-FirstDateOfWeek -Year ((Get-Date).AddDays(-7).Year);
  $EndOfWeek = $StartOfWeek.AddDays(4);
+
+ if ($Today) {
+  $StartOfWeek = Get-Date;
+  $EndOfWeek = Get-Date;
+ }
+
+ if ($ThisWeek)
+ {
+  $StartOfWeek = (Get-Date).AddDays(-( [int](Get-Date).DayOfWeek -1));
+  $EndOfWeek = $StartOfWeek.AddDays(4);
+  }
 
  $StartOfWeekShort = (Get-Date ($StartOfWeek) -Format yyyy-MM-dd);
  $EndOfWeekShort = (Get-Date ($EndOfWeek) -Format yyyy-MM-dd);
