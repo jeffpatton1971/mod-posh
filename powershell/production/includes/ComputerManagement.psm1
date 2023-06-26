@@ -1,28 +1,28 @@
 Function New-LocalUser {
  <#
-  .SYNOPSIS
-   Create a new user account on the local computer.
-  .DESCRIPTION
-   This function will create a user account on the local computer.
-  .PARAMETER Computer
-   The NetBIOS name of the computer that you will create the account on.
-  .PARAMETER User
-   The user name of the account that will be created.
-  .PARAMETER Password
-   The password for the account, this must follow password policies enforced
-   on the destination computer.
-  .PARAMETER Description
-   A description of what this account will be used for.
-  .NOTES
-   You will need to run this with either UAC disabled or from an elevated prompt.
-  .EXAMPLE
-            New-LocalUser -ComputerName MyComputer -User MyUserAccount -Password MyP@ssw0rd -Description "Account."
+ .SYNOPSIS
+ Create a new user account on the local computer.
+ .DESCRIPTION
+ This function will create a user account on the local computer.
+ .PARAMETER Computer
+ The NetBIOS name of the computer that you will create the account on.
+ .PARAMETER User
+ The user name of the account that will be created.
+ .PARAMETER Password
+ The password for the account, this must follow password policies enforced
+ on the destination computer.
+ .PARAMETER Description
+ A description of what this account will be used for.
+ .NOTES
+ You will need to run this with either UAC disabled or from an elevated prompt.
+ .EXAMPLE
+ New-LocalUser -ComputerName MyComputer -User MyUserAccount -Password MyP@ssw0rd -Description "Account."
 
-            Description
-            -----------
-            Creates a user named MyUserAccount on MyComputer.
-  .LINK
-   https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#new-localuser
+ Description
+ -----------
+ Creates a user named MyUserAccount on MyComputer.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#new-localuser
  #>
  [CmdletBinding()]
  Param
@@ -56,23 +56,23 @@ Function New-LocalUser {
 }
 Function Set-Pass {
  <#
-  .SYNOPSIS
-   Change the password of an existing user account.
-  .DESCRIPTION
-   This function will change the password for an existing user account.
-  .PARAMETER ComputerName
-   The NetBIOS name of the computer that you will add the account to.
-  .PARAMETER UserName
-   The user name of the account that will be created.
-  .PARAMETER Password
-   The password for the account, this must follow password policies enforced
-   on the destination computer.
-  .NOTES
-   You will need to run this with either UAC disabled or from an elevated prompt.
-  .EXAMPLE
-   Set-Pass -ComputerName MyComputer -UserName MyUserAccount -Password N3wP@ssw0rd
-  .LINK
-   https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Set-Pass
+ .SYNOPSIS
+ Change the password of an existing user account.
+ .DESCRIPTION
+ This function will change the password for an existing user account.
+ .PARAMETER ComputerName
+ The NetBIOS name of the computer that you will add the account to.
+ .PARAMETER UserName
+ The user name of the account that will be created.
+ .PARAMETER Password
+ The password for the account, this must follow password policies enforced
+ on the destination computer.
+ .NOTES
+ You will need to run this with either UAC disabled or from an elevated prompt.
+ .EXAMPLE
+ Set-Pass -ComputerName MyComputer -UserName MyUserAccount -Password N3wP@ssw0rd
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Set-Pass
  #>
  [CmdletBinding()]
  Param
@@ -102,22 +102,22 @@ Function Set-Pass {
 }
 Function Add-LocalUserToGroup {
  <#
-  .SYNOPSIS
-   Add an existing user to a local group.
-  .DESCRIPTION
-   This function will add an existing user to an existing group.
-  .PARAMETER Computer
-   The NetBIOS name of the computer that you will add the account to.
-  .PARAMETER User
-   The user name of the account that will be created.
-  .PARAMETER Group
-   The name of an existing group to add this user to.
-  .NOTES
-   You will need to run this with either UAC disabled or from an elevated prompt.
-  .EXAMPLE
-   Add-LocalUserToGroup -ComputerName MyComputer -User MyUserAccount -Group Administrators
-  .LINK
-   https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Add-LocalUserToGroup
+ .SYNOPSIS
+ Add an existing user to a local group.
+ .DESCRIPTION
+ This function will add an existing user to an existing group.
+ .PARAMETER Computer
+ The NetBIOS name of the computer that you will add the account to.
+ .PARAMETER User
+ The user name of the account that will be created.
+ .PARAMETER Group
+ The name of an existing group to add this user to.
+ .NOTES
+ You will need to run this with either UAC disabled or from an elevated prompt.
+ .EXAMPLE
+ Add-LocalUserToGroup -ComputerName MyComputer -User MyUserAccount -Group Administrators
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Add-LocalUserToGroup
  #>
  [CmdletBinding()]
  Param
@@ -147,52 +147,52 @@ Function Add-LocalUserToGroup {
 Function New-ScheduledTask {
  <#
  .SYNOPSIS
-  Create a Scheduled Task on a computer.
+ Create a Scheduled Task on a computer.
  .DESCRIPTION
-  Create a Scheduled Task on a local or remote computer.
+ Create a Scheduled Task on a local or remote computer.
  .PARAMETER TaskName
-  Specifies a name for the task.
+ Specifies a name for the task.
  .PARAMETER TaskRun
-  Specifies the program or command that the task runs. Type
-  the fully qualified path and file name of an executable file,
-  script file, or batch file. If you omit the path, SchTasks.exe
-  assumes that the file is in the Systemroot\System32 directory.
+ Specifies the program or command that the task runs. Type
+ the fully qualified path and file name of an executable file,
+ script file, or batch file. If you omit the path, SchTasks.exe
+ assumes that the file is in the Systemroot\System32 directory.
  .PARAMETER TaskSchedule
-  Specifies the schedule type. Valid values are
-   MINUTE
-   HOURLY
-   DAILY
-   WEEKLY
-   MONTHLY
-   ONCE
-   ONSTART
-   ONLOGON
-   ONIDLE
+ Specifies the schedule type. Valid values are
+ MINUTE
+ HOURLY
+ DAILY
+ WEEKLY
+ MONTHLY
+ ONCE
+ ONSTART
+ ONLOGON
+ ONIDLE
  .PARAMETER StartTime
-  Specifies the time of day that the task starts in HH:MM:SS 24-hour
-  format. The default value is the current local time when the command
-  completes. The /st parameter is valid with MINUTE, HOURLY, DAILY,
-  WEEKLY, MONTHLY, and ONCE schedules. It is required with a ONCE
-  schedule.
+ Specifies the time of day that the task starts in HH:MM:SS 24-hour
+ format. The default value is the current local time when the command
+ completes. The /st parameter is valid with MINUTE, HOURLY, DAILY,
+ WEEKLY, MONTHLY, and ONCE schedules. It is required with a ONCE
+ schedule.
  .PARAMETER StartDate
-  Specifies the date that the task starts in MM/DD/YYYY format. The
-  default value is the current date. The /sd parameter is valid with all
-  schedules, and is required for a ONCE schedule.
+ Specifies the date that the task starts in MM/DD/YYYY format. The
+ default value is the current date. The /sd parameter is valid with all
+ schedules, and is required for a ONCE schedule.
  .PARAMETER TaskUser
-  Runs the tasks with the permission of the specified user account. By
-  default, the task runs with the permissions of the user logged on to the
-  computer running SchTasks.
+ Runs the tasks with the permission of the specified user account. By
+ default, the task runs with the permissions of the user logged on to the
+ computer running SchTasks.
  .PARAMETER Server
-  The NetBIOS name of the computer to create the scheduled task on.
+ The NetBIOS name of the computer to create the scheduled task on.
  .NOTES
-  You will need to run this with either UAC disabled or from an elevated prompt.
-  The full syntax of the command can be found here:
-   http://technet.microsoft.com/en-us/library/bb490996.aspx
+ You will need to run this with either UAC disabled or from an elevated prompt.
+ The full syntax of the command can be found here:
+ http://technet.microsoft.com/en-us/library/bb490996.aspx
  .EXAMPLE
-  New-ScheduledTask -TaskName "Reboot Computer" -TaskRun "shutdown /r" -TaskSchedule ONCE `
-        -StartTime "18:00:00" -StartDate "03/16/2011" -TaskUser SYSTEM -Server MyDesktopPC
+ New-ScheduledTask -TaskName "Reboot Computer" -TaskRun "shutdown /r" -TaskSchedule ONCE `
+ -StartTime "18:00:00" -StartDate "03/16/2011" -TaskUser SYSTEM -Server MyDesktopPC
  .LINK
-  https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#New-ScheduledTask
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#New-ScheduledTask
  #>
  [CmdletBinding()]
  Param
@@ -223,32 +223,32 @@ Function New-ScheduledTask {
 }
 Function Remove-UserFromLocalGroup {
  <#
-  .SYNOPSIS
-   Removes a user/group from a local computer group.
-  .DESCRIPTION
-   Removes a user/group from a local computer group.
-  .PARAMETER Computer
-   Name of the computer to connect to.
-  .PARAMETER User
-   Name of the user or group to remove.
-  .PARAMETER GroupName
-   Name of the group where that the user/group is a member of.
-  .NOTES
-   You will need to run this with either UAC disabled or from an elevated prompt.
-  .EXAMPLE
-   Remove-UserFromLocalGroup -ComputerName MyComputer -UserName RandomUser
+ .SYNOPSIS
+ Removes a user/group from a local computer group.
+ .DESCRIPTION
+ Removes a user/group from a local computer group.
+ .PARAMETER Computer
+ Name of the computer to connect to.
+ .PARAMETER User
+ Name of the user or group to remove.
+ .PARAMETER GroupName
+ Name of the group where that the user/group is a member of.
+ .NOTES
+ You will need to run this with either UAC disabled or from an elevated prompt.
+ .EXAMPLE
+ Remove-UserFromLocalGroup -ComputerName MyComputer -UserName RandomUser
 
-            Description
-            -----------
-            This example removes a user from the local administrators group.
-        .Example
-            Remove-UserFromLocalGroup -ComputerName MyComputer -UserName RandomUser -GroupName Users
+ Description
+ -----------
+ This example removes a user from the local administrators group.
+ .Example
+ Remove-UserFromLocalGroup -ComputerName MyComputer -UserName RandomUser -GroupName Users
 
-            Description
-            -----------
-            This example removes a user from the local users group.
-  .LINK
-   https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Remove-UserFromLocalGroup
+ Description
+ -----------
+ This example removes a user from the local users group.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Remove-UserFromLocalGroup
  #>
  [CmdletBinding()]
  Param
@@ -272,92 +272,92 @@ Function Remove-UserFromLocalGroup {
 }
 Function Get-Services {
  <#
-  .SYNOPSIS
-   Get a list of services
-  .DESCRIPTION
-   This function returns a list of services on a given computer. This list can be filtered based on the
-   given StartMode  (ie. Running, Stopped) as well as filtered on StartMode (ie. Auto, Manual).
-  .PARAMETER State
-   Most often this will be either Running or Stopped, but possible values include
-    Running
-    Stopped
-    Paused
-  .PARAMETER StartMode
-   Most often this will be either Auto or Manual, but possible values include
-    Auto
-    Manual
-    Disabled
-  .PARAMETER Computer
-   The NetBIOS name of the computer to retrieve services from
-  .NOTES
-   Depending on how you are setup you may need to provide credentials in order to access remote machines
-   You may need to have UAC disabled or run PowerShell as an administrator to see services locally
-  .EXAMPLE
-   Get-Services |Format-Table -AutoSize
+ .SYNOPSIS
+ Get a list of services
+ .DESCRIPTION
+ This function returns a list of services on a given computer. This list can be filtered based on the
+ given StartMode  (ie. Running, Stopped) as well as filtered on StartMode (ie. Auto, Manual).
+ .PARAMETER State
+ Most often this will be either Running or Stopped, but possible values include
+ Running
+ Stopped
+ Paused
+ .PARAMETER StartMode
+ Most often this will be either Auto or Manual, but possible values include
+ Auto
+ Manual
+ Disabled
+ .PARAMETER Computer
+ The NetBIOS name of the computer to retrieve services from
+ .NOTES
+ Depending on how you are setup you may need to provide credentials in order to access remote machines
+ You may need to have UAC disabled or run PowerShell as an administrator to see services locally
+ .EXAMPLE
+ Get-Services |Format-Table -AutoSize
 
-   ExitCode Name                 ProcessId StartMode State   Status
-   -------- ----                 --------- --------- -----   ------
-     0 atashost                  1380 Auto      Running OK
-     0 AudioEndpointBuilder       920 Auto      Running OK
-     0 AudioSrv                   880 Auto      Running OK
-     0 BFE                       1236 Auto      Running OK
-     0 BITS                       964 Auto      Running OK
-     0 CcmExec                   2308 Auto      Running OK
-     0 CryptSvc                  1088 Auto      Running OK
+ ExitCode Name                 ProcessId StartMode State   Status
+ -------- ----                 --------- --------- -----   ------
+ 0 atashost                  1380 Auto      Running OK
+ 0 AudioEndpointBuilder       920 Auto      Running OK
+ 0 AudioSrv                   880 Auto      Running OK
+ 0 BFE                       1236 Auto      Running OK
+ 0 BITS                       964 Auto      Running OK
+ 0 CcmExec                   2308 Auto      Running OK
+ 0 CryptSvc                  1088 Auto      Running OK
 
-   Description
-   -----------
-   This example shows the default options in place
-  .EXAMPLE
-   Get-Services -State "stopped" |Format-Table -AutoSize
+ Description
+ -----------
+ This example shows the default options in place
+ .EXAMPLE
+ Get-Services -State "stopped" |Format-Table -AutoSize
 
-   ExitCode Name                           ProcessId StartMode State   Status
-   -------- ----                           --------- --------- -----   ------
-     0 AppHostSvc                             0 Auto      Stopped OK
-     0 clr_optimization_v4.0.30319_32         0 Auto      Stopped OK
-     0 clr_optimization_v4.0.30319_64         0 Auto      Stopped OK
-     0 MMCSS                                  0 Auto      Stopped OK
-     0 Net Driver HPZ12                       0 Auto      Stopped OK
-     0 Pml Driver HPZ12                       0 Auto      Stopped OK
-     0 sppsvc                                 0 Auto      Stopped OK
+ ExitCode Name                           ProcessId StartMode State   Status
+ -------- ----                           --------- --------- -----   ------
+ 0 AppHostSvc                             0 Auto      Stopped OK
+ 0 clr_optimization_v4.0.30319_32         0 Auto      Stopped OK
+ 0 clr_optimization_v4.0.30319_64         0 Auto      Stopped OK
+ 0 MMCSS                                  0 Auto      Stopped OK
+ 0 Net Driver HPZ12                       0 Auto      Stopped OK
+ 0 Pml Driver HPZ12                       0 Auto      Stopped OK
+ 0 sppsvc                                 0 Auto      Stopped OK
 
-   Description
-   -----------
-   This example shows the output when specifying the state parameter
-  .EXAMPLE
-   Get-Services -State "stopped" -StartMode "disabled" |Format-Table -AutoSize
+ Description
+ -----------
+ This example shows the output when specifying the state parameter
+ .EXAMPLE
+ Get-Services -State "stopped" -StartMode "disabled" |Format-Table -AutoSize
 
-   ExitCode Name                           ProcessId StartMode State   Status
-   -------- ----                           --------- --------- -----   ------
-    1077 clr_optimization_v2.0.50727_32         0 Disabled  Stopped OK
-    1077 clr_optimization_v2.0.50727_64         0 Disabled  Stopped OK
-    1077 CscService                             0 Disabled  Stopped OK
-    1077 Mcx2Svc                                0 Disabled  Stopped OK
-    1077 MSSQLServerADHelper100                 0 Disabled  Stopped OK
-    1077 NetMsmqActivator                       0 Disabled  Stopped OK
-    1077 NetPipeActivator                       0 Disabled  Stopped OK
+ ExitCode Name                           ProcessId StartMode State   Status
+ -------- ----                           --------- --------- -----   ------
+ 1077 clr_optimization_v2.0.50727_32         0 Disabled  Stopped OK
+ 1077 clr_optimization_v2.0.50727_64         0 Disabled  Stopped OK
+ 1077 CscService                             0 Disabled  Stopped OK
+ 1077 Mcx2Svc                                0 Disabled  Stopped OK
+ 1077 MSSQLServerADHelper100                 0 Disabled  Stopped OK
+ 1077 NetMsmqActivator                       0 Disabled  Stopped OK
+ 1077 NetPipeActivator                       0 Disabled  Stopped OK
 
-   Description
-   -----------
-   This example shows how to specify a different state and startmode.
-  .EXAMPLE
-   Get-Services -Computer dpm -Credential "Domain\Administrator" |Format-Table -AutoSize
+ Description
+ -----------
+ This example shows how to specify a different state and startmode.
+ .EXAMPLE
+ Get-Services -Computer dpm -Credential "Domain\Administrator" |Format-Table -AutoSize
 
-   ExitCode Name                   ProcessId StartMode State   Status
-   -------- ----                   --------- --------- -----   ------
-     0 AppHostSvc                  1152 Auto      Running OK
-     0 BFE                          564 Auto      Running OK
-     0 CryptSvc                    1016 Auto      Running OK
-     0 DcomLaunch                   600 Auto      Running OK
-     0 Dhcp                         776 Auto      Running OK
-     0 Dnscache                    1016 Auto      Running OK
-     0 DPMAMService                1184 Auto      Running OK
+ ExitCode Name                   ProcessId StartMode State   Status
+ -------- ----                   --------- --------- -----   ------
+ 0 AppHostSvc                  1152 Auto      Running OK
+ 0 BFE                          564 Auto      Running OK
+ 0 CryptSvc                    1016 Auto      Running OK
+ 0 DcomLaunch                   600 Auto      Running OK
+ 0 Dhcp                         776 Auto      Running OK
+ 0 Dnscache                    1016 Auto      Running OK
+ 0 DPMAMService                1184 Auto      Running OK
 
-   Description
-   -----------
-   This example shows how to specify a remote computer and credentials to authenticate with.
-  .LINK
-   https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-Services
+ Description
+ -----------
+ This example shows how to specify a remote computer and credentials to authenticate with.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-Services
  #>
  [CmdletBinding()]
  Param
@@ -387,64 +387,64 @@ Function Get-Services {
 }
 Function Get-NonStandardServiceAccounts {
  <#
-  .SYNOPSIS
-   Return a list of services using Non-Standard accounts.
-  .DESCRIPTION
-   This function returns a list of services from local or remote coputers that have non-standard
-   user accounts for logon credentials.
-  .PARAMETER Computer
-   The NetBIOS name of the computer to pull services from.
-  .PARAMETER Credentials
-   The DOMAIN\USERNAME of an account with permissions to access services.
-  .PARAMETER Filter
-   This is a pipe (|) seperated list of accounts to filter out of the returned services list.
-  .EXAMPLE
-   Get-NonStandardServiceAccounts
+ .SYNOPSIS
+ Return a list of services using Non-Standard accounts.
+ .DESCRIPTION
+ This function returns a list of services from local or remote coputers that have non-standard
+ user accounts for logon credentials.
+ .PARAMETER Computer
+ The NetBIOS name of the computer to pull services from.
+ .PARAMETER Credentials
+ The DOMAIN\USERNAME of an account with permissions to access services.
+ .PARAMETER Filter
+ This is a pipe (|) seperated list of accounts to filter out of the returned services list.
+ .EXAMPLE
+ Get-NonStandardServiceAccounts
 
-   StartName                         Name                             DisplayName
-   ---------                         ----                             -----------
-   .\Jeff Patton                     MyService                        My Test Service
+ StartName                         Name                             DisplayName
+ ---------                         ----                             -----------
+ .\Jeff Patton                     MyService                        My Test Service
 
-   Description
-   -----------
-   This example shows no parameters provided
-  .EXAMPLE
-   Get-NonStandardServiceAccounts -Computer dpm -Credentials $Credentials
+ Description
+ -----------
+ This example shows no parameters provided
+ .EXAMPLE
+ Get-NonStandardServiceAccounts -Computer dpm -Credentials $Credentials
 
-   StartName                         Name                             DisplayName
-   ---------                         ----                             -----------
-   .\MICROSOFT$DPM$Acct              MSSQL$MS$DPM2007$                SQL Server (MS$DPM2007$)
-   .\MICROSOFT$DPM$Acct              MSSQL$MSDPM2010                  SQL Server (MSDPM2010)
-   NT AUTHORITY\NETWORK SERVICE      MSSQLServerADHelper100           SQL Active Directory Helper S...
-   NT AUTHORITY\NETWORK SERVICE      ReportServer$MSDPM2010           SQL Server Reporting Services...
-   .\MICROSOFT$DPM$Acct              SQLAgent$MS$DPM2007$             SQL Server Agent (MS$DPM2007$)
-   .\MICROSOFT$DPM$Acct              SQLAgent$MSDPM2010               SQL Server Agent (MSDPM2010)
+ StartName                         Name                             DisplayName
+ ---------                         ----                             -----------
+ .\MICROSOFT$DPM$Acct              MSSQL$MS$DPM2007$                SQL Server (MS$DPM2007$)
+ .\MICROSOFT$DPM$Acct              MSSQL$MSDPM2010                  SQL Server (MSDPM2010)
+ NT AUTHORITY\NETWORK SERVICE      MSSQLServerADHelper100           SQL Active Directory Helper S...
+ NT AUTHORITY\NETWORK SERVICE      ReportServer$MSDPM2010           SQL Server Reporting Services...
+ .\MICROSOFT$DPM$Acct              SQLAgent$MS$DPM2007$             SQL Server Agent (MS$DPM2007$)
+ .\MICROSOFT$DPM$Acct              SQLAgent$MSDPM2010               SQL Server Agent (MSDPM2010)
 
-   Description
-   -----------
-   This example shows all parameters in use
-  .EXAMPLE
-   Get-NonStandardServiceAccounts -Computer dpm -Credentials $Credentials `
-   -Filter "localsystem|NT Authority\LocalService|NT Authority\NetworkService|NT AUTHORITY\NETWORK SERVICE"
+ Description
+ -----------
+ This example shows all parameters in use
+ .EXAMPLE
+ Get-NonStandardServiceAccounts -Computer dpm -Credentials $Credentials `
+ -Filter "localsystem|NT Authority\LocalService|NT Authority\NetworkService|NT AUTHORITY\NETWORK SERVICE"
 
-   StartName                         Name                             DisplayName
-   ---------                         ----                             -----------
-   .\MICROSOFT$DPM$Acct              MSSQL$MS$DPM2007$                SQL Server (MS$DPM2007$)
-   .\MICROSOFT$DPM$Acct              MSSQL$MSDPM2010                  SQL Server (MSDPM2010)
-   .\MICROSOFT$DPM$Acct              SQLAgent$MS$DPM2007$             SQL Server Agent (MS$DPM2007$)
-   .\MICROSOFT$DPM$Acct              SQLAgent$MSDPM2010               SQL Server Agent (MSDPM2010)
+ StartName                         Name                             DisplayName
+ ---------                         ----                             -----------
+ .\MICROSOFT$DPM$Acct              MSSQL$MS$DPM2007$                SQL Server (MS$DPM2007$)
+ .\MICROSOFT$DPM$Acct              MSSQL$MSDPM2010                  SQL Server (MSDPM2010)
+ .\MICROSOFT$DPM$Acct              SQLAgent$MS$DPM2007$             SQL Server Agent (MS$DPM2007$)
+ .\MICROSOFT$DPM$Acct              SQLAgent$MSDPM2010               SQL Server Agent (MSDPM2010)
 
-   Description
-   -----------
-   This example uses the Filter parameter to filter out NT AUTHORITY\NETWORK SERVICE account from the
-   preceeding example.
+ Description
+ -----------
+ This example uses the Filter parameter to filter out NT AUTHORITY\NETWORK SERVICE account from the
+ preceeding example.
 
-   The back-tick (`) was used for readability purposes only.
-  .NOTES
-   Powershell may need to be run elevated to run this script.
-   UAC may need to be disabled to run this script.
-  .LINK
-   https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-NonStandardServiceAccounts
+ The back-tick (`) was used for readability purposes only.
+ .NOTES
+ Powershell may need to be run elevated to run this script.
+ UAC may need to be disabled to run this script.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-NonStandardServiceAccounts
  #>
  [CmdletBinding()]
  Param
@@ -480,25 +480,25 @@ Function Get-NonStandardServiceAccounts {
 }
 Function Remove-LocalUser {
  <#
-        .SYNOPSIS
-            Delete a user account from the local computer.
-        .DESCRIPTION
-            This function will delete a user account from the local computer
-        .PARAMETER ComputerName
-            The NetBIOS name of the computer the account is found on
-        .PARAMETER UserName
-            The username to delete
-        .EXAMPLE
-            Remove-LocalUser -ComputerName Desktop -UserName TestAcct
+ .SYNOPSIS
+ Delete a user account from the local computer.
+ .DESCRIPTION
+ This function will delete a user account from the local computer
+ .PARAMETER ComputerName
+ The NetBIOS name of the computer the account is found on
+ .PARAMETER UserName
+ The username to delete
+ .EXAMPLE
+ Remove-LocalUser -ComputerName Desktop -UserName TestAcct
 
-            Description
-            -----------
-            Basic syntax of the command.
-        .NOTES
-            The user context the script is run under must be able to delete accounts on the remote computer
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Remove-LocalUser
-    #>
+ Description
+ -----------
+ Basic syntax of the command.
+ .NOTES
+ The user context the script is run under must be able to delete accounts on the remote computer
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Remove-LocalUser
+ #>
  [CmdletBinding()]
  Param
  (
@@ -534,40 +534,40 @@ Function Remove-LocalUser {
 }
 Function Get-LocalUserAccounts {
  <#
-        .SYNOPSIS
-            Return a list of local user accounts.
-        .DESCRIPTION
-            This function returns the Name and SID of any local user accounts that are found
-            on the remote computer.
-        .PARAMETER ComputerName
-            The NetBIOS name of the remote computer
-        .EXAMPLE
-            Get-LocalUserAccounts -ComputerName Desktop-PC01
+ .SYNOPSIS
+ Return a list of local user accounts.
+ .DESCRIPTION
+ This function returns the Name and SID of any local user accounts that are found
+ on the remote computer.
+ .PARAMETER ComputerName
+ The NetBIOS name of the remote computer
+ .EXAMPLE
+ Get-LocalUserAccounts -ComputerName Desktop-PC01
 
-            Name                                                      SID
-            ----                                                      ---
-            Administrator                                             S-1-5-21-1168524473-3979117187-4153115970-500
-            Guest                                                     S-1-5-21-1168524473-3979117187-4153115970-501
+ Name                                                      SID
+ ----                                                      ---
+ Administrator                                             S-1-5-21-1168524473-3979117187-4153115970-500
+ Guest                                                     S-1-5-21-1168524473-3979117187-4153115970-501
 
-            Description
-            -----------
-            This example shows the basic usage
-        .EXAMPLE
-            Get-LocalUserAccounts -ComputerName citadel -Credentials $Credentials
+ Description
+ -----------
+ This example shows the basic usage
+ .EXAMPLE
+ Get-LocalUserAccounts -ComputerName citadel -Credentials $Credentials
 
-            Name                                                      SID
-            ----                                                      ---
-            Administrator                                             S-1-5-21-1168524473-3979117187-4153115970-500
-            Guest                                                     S-1-5-21-1168524473-3979117187-4153115970-501
+ Name                                                      SID
+ ----                                                      ---
+ Administrator                                             S-1-5-21-1168524473-3979117187-4153115970-500
+ Guest                                                     S-1-5-21-1168524473-3979117187-4153115970-501
 
-            Description
-            -----------
-            This example shows using the optional Credentials variable to pass administrator credentials
-        .NOTES
-            You will need to provide credentials when running this against computers in a diffrent domain.
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-LocalUserAccounts
-    #>
+ Description
+ -----------
+ This example shows using the optional Credentials variable to pass administrator credentials
+ .NOTES
+ You will need to provide credentials when running this against computers in a diffrent domain.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-LocalUserAccounts
+ #>
  [CmdletBinding()]
  Param
  (
@@ -600,24 +600,24 @@ Function Get-LocalUserAccounts {
 }
 Function Get-PendingUpdates {
  <#
-        .SYNOPSIS
-            Retrieves the updates waiting to be installed from WSUS
-        .DESCRIPTION
-            Retrieves the updates waiting to be installed from WSUS
-        .PARAMETER ComputerName
-            Computer or computers to find updates for.
-        .EXAMPLE
-            Get-PendingUpdates
-            Description
-            -----------
-            Retrieves the updates that are available to install on the local system
-        .NOTES
-            Author: Boe Prox
-            Date Created: 05Mar2011
-            RPC Dynamic Ports need to be enabled on inbound remote servers.
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-PendingUpdates
-    #>
+ .SYNOPSIS
+ Retrieves the updates waiting to be installed from WSUS
+ .DESCRIPTION
+ Retrieves the updates waiting to be installed from WSUS
+ .PARAMETER ComputerName
+ Computer or computers to find updates for.
+ .EXAMPLE
+ Get-PendingUpdates
+ Description
+ -----------
+ Retrieves the updates that are available to install on the local system
+ .NOTES
+ Author: Boe Prox
+ Date Created: 05Mar2011
+ RPC Dynamic Ports need to be enabled on inbound remote servers.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-PendingUpdates
+ #>
  [CmdletBinding()]
  Param
  (
@@ -647,28 +647,28 @@ Function Get-PendingUpdates {
 }
 Function Get-ServiceTag {
  <#
-        .SYNOPSIS
-            Get the serial number (Dell ServiceTag) from Win32_BIOS
-        .DESCRIPTION
-            This function grabs the SerialNumber property from Win32_BIOS for the
-            provided ComputerName
-        .PARAMETER ComputerName
-            The NetBIOS name of the computer.
-        .EXAMPLE
-            Get-ServiceTag -ComputerName Desktop-01
+ .SYNOPSIS
+ Get the serial number (Dell ServiceTag) from Win32_BIOS
+ .DESCRIPTION
+ This function grabs the SerialNumber property from Win32_BIOS for the
+ provided ComputerName
+ .PARAMETER ComputerName
+ The NetBIOS name of the computer.
+ .EXAMPLE
+ Get-ServiceTag -ComputerName Desktop-01
 
-            SerialNumber
-            ------------
-            1AB2CD3
+ SerialNumber
+ ------------
+ 1AB2CD3
 
-            Description
-            -----------
-            An example showing the only parameter.
-        .NOTES
-            This space intentionally left blank.
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-ServiceTag
-    #>
+ Description
+ -----------
+ An example showing the only parameter.
+ .NOTES
+ This space intentionally left blank.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-ServiceTag
+ #>
  [CmdletBinding()]
  Param
  (
@@ -700,24 +700,24 @@ Function Get-ServiceTag {
 }
 Function Backup-EventLogs {
  <#
-        .SYNOPSIS
-            Backup Eventlogs from remote computer
-        .DESCRIPTION
-            This function copies event log files from a remote computer to a backup location.
-        .PARAMETER ComputerName
-            The NetBIOS name of the computer to connect to.
-        .PARAMETER LogPath
-            The path to the logs you wish to backup. The default logpath "C:\Windows\system32\winevt\Logs"
-            is used if left blank.
-        .PARAMETER BackupPath
-            The location to copy the logs to.
-        .EXAMPLE
-            Backup-EventLogs -ComputerName dc1
-        .NOTES
-            May need to be a user with rights to access various logs, such as security on remote computer.
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Backup-EventLogs
-    #>
+ .SYNOPSIS
+ Backup Eventlogs from remote computer
+ .DESCRIPTION
+ This function copies event log files from a remote computer to a backup location.
+ .PARAMETER ComputerName
+ The NetBIOS name of the computer to connect to.
+ .PARAMETER LogPath
+ The path to the logs you wish to backup. The default logpath "C:\Windows\system32\winevt\Logs"
+ is used if left blank.
+ .PARAMETER BackupPath
+ The location to copy the logs to.
+ .EXAMPLE
+ Backup-EventLogs -ComputerName dc1
+ .NOTES
+ May need to be a user with rights to access various logs, such as security on remote computer.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Backup-EventLogs
+ #>
  [CmdletBinding()]
  Param
  (
@@ -745,70 +745,70 @@ Function Backup-EventLogs {
 }
 Function Export-EventLog {
  <#
-        .SYNOPSIS
-            Export an Eventlog from a local or remote computer
-        .DESCRIPTION
-            This function will export the logname you specify to the folder
-            and filename that you provide. The exported file is in the native
-            format for Event logs.
+ .SYNOPSIS
+ Export an Eventlog from a local or remote computer
+ .DESCRIPTION
+ This function will export the logname you specify to the folder
+ and filename that you provide. The exported file is in the native
+ format for Event logs.
 
-            This function leverages the System.Diagnostics.Eventing.Reader class
-            to export the log of the local or remote computer.
-        .PARAMETER ComputerName
-           Type the NetBIOS name, an Internet Protocol (IP) address, or the fully
-           qualified domain name of the computer. The default value is the local
-           computer.
+ This function leverages the System.Diagnostics.Eventing.Reader class
+ to export the log of the local or remote computer.
+ .PARAMETER ComputerName
+ Type the NetBIOS name, an Internet Protocol (IP) address, or the fully
+ qualified domain name of the computer. The default value is the local
+ computer.
 
-           This parameter accepts only one computer name at a time. To find event logs
-           or events on multiple computers, use a ForEach statement.
+ This parameter accepts only one computer name at a time. To find event logs
+ or events on multiple computers, use a ForEach statement.
 
-           To get events and event logs from remote computers, the firewall port for
-           the event log service must be configured to allow remote access.
-        .PARAMETER Credential
-            Specifies a user account that has permission to perform this action. The
-            default value is the current user.
-        .PARAMETER ListLog
-            If present the function will list all the logs currently available on the
-            computer.
-        .PARAMETER LogName
-            Export messages from the specified LogName
-        .PARAMETER Destination
-            The full path and filename to where the log should be exported to.
-        .EXAMPLE
-            Export-EventLogs -ComputerName sql -Credential (Get-Credential) -LogName Application -Destination 'C:\LogFiles1\Application.evtx'
+ To get events and event logs from remote computers, the firewall port for
+ the event log service must be configured to allow remote access.
+ .PARAMETER Credential
+ Specifies a user account that has permission to perform this action. The
+ default value is the current user.
+ .PARAMETER ListLog
+ If present the function will list all the logs currently available on the
+ computer.
+ .PARAMETER LogName
+ Export messages from the specified LogName
+ .PARAMETER Destination
+ The full path and filename to where the log should be exported to.
+ .EXAMPLE
+ Export-EventLogs -ComputerName sql -Credential (Get-Credential) -LogName Application -Destination 'C:\LogFiles1\Application.evtx'
 
-            Description
-            -----------
-            This example shows how to export the Application log from a computer named SQL and save
-            the file as Application.evtx in a folder called LogFiles. This also shows how to use
-            the Get-Credential cmdlet to pass credentials into the function.
-        .EXAMPLE
-            Export-EventLog -ListLog
-            Application
-            HardwareEvents
-            Internet Explorer
-            Key Management Service
-            Media Center
+ Description
+ -----------
+ This example shows how to export the Application log from a computer named SQL and save
+ the file as Application.evtx in a folder called LogFiles. This also shows how to use
+ the Get-Credential cmdlet to pass credentials into the function.
+ .EXAMPLE
+ Export-EventLog -ListLog
+ Application
+ HardwareEvents
+ Internet Explorer
+ Key Management Service
+ Media Center
 
-            Description
-            -----------
-            This example shows how to list the lognames on the local computer
-        .EXAMPLE
-            Export-EventLog -LogName Application -Destination C:\Logs\App.evtxExport-EventLog -LogName Application -Destination C:\Logs\App.evtx
+ Description
+ -----------
+ This example shows how to list the lognames on the local computer
+ .EXAMPLE
+ Export-EventLog -LogName Application -Destination C:\Logs\App.evtxExport-EventLog -LogName Application -Destination C:\Logs\App.evtx
 
-            Description
-            -----------
-            This example shows how to export the Application log on the local computer to
-            a folder on the local computer.
-        .NOTES
-            FunctionName : Export-EventLogs
-            Created by   : jspatton
-            Date Coded   : 04/30/2012 12:36:12
+ Description
+ -----------
+ This example shows how to export the Application log on the local computer to
+ a folder on the local computer.
+ .NOTES
+ FunctionName : Export-EventLogs
+ Created by   : jspatton
+ Date Coded   : 04/30/2012 12:36:12
 
-            The folder and filename that you specify will be created on the remote machine.
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Export-EventLog
-    #>
+ The folder and filename that you specify will be created on the remote machine.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Export-EventLog
+ #>
  [CmdletBinding()]
  Param
  (
@@ -887,34 +887,34 @@ Function Export-EventLog {
 }
 Function Get-SiSReport {
  <#
-        .SYNOPSIS
-            Get the overall SIS usage information.
-        .DESCRIPTION
-            This function uses the sisadmin command to get the usage
-            information for a SIS enabled drive.
-        .PARAMETER SisDisk
-            The drive letter of a disk that has SiS enabled
-        .EXAMPLE
-            Get-SiSReport -SisDisk o
+ .SYNOPSIS
+ Get the overall SIS usage information.
+ .DESCRIPTION
+ This function uses the sisadmin command to get the usage
+ information for a SIS enabled drive.
+ .PARAMETER SisDisk
+ The drive letter of a disk that has SiS enabled
+ .EXAMPLE
+ Get-SiSReport -SisDisk o
 
-            LinkFiles             : 20004
-            Used                  : 442378481664
-            Disk                  : o
-            InaccessibleLinkFiles : 0
-            CommonStoreFiles      : 6678
-            SpaceSaved            : 7708860 KB
-            Free                  : 0
+ LinkFiles             : 20004
+ Used                  : 442378481664
+ Disk                  : o
+ InaccessibleLinkFiles : 0
+ CommonStoreFiles      : 6678
+ SpaceSaved            : 7708860 KB
+ Free                  : 0
 
-            Description
-            -----------
-            This example shows the basic usage of the command
+ Description
+ -----------
+ This example shows the basic usage of the command
 
-        .NOTES
-            This function will return nothing if the drive being analyzed does not have SiS enabled
-            This function will return a message if the sisadmin command returns any error
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-SiSReport
-    #>
+ .NOTES
+ This function will return nothing if the drive being analyzed does not have SiS enabled
+ This function will return a message if the sisadmin command returns any error
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-SiSReport
+ #>
  [CmdletBinding()]
  Param
  (
@@ -952,32 +952,32 @@ Function Get-SiSReport {
 }
 Function Get-PaperCutLogs {
  <#
-        .SYNOPSIS
-            Get PaperCut logs from all print servers
-        .DESCRIPTION
-            Return the PaperCut logs from all print servers.
-        .PARAMETER PrintServers
-            The FQDN of the print servers
-        .EXAMPLE
-            Get-PaperCutLogs |Export-Csv -Path .\PrintLog.csv
+ .SYNOPSIS
+ Get PaperCut logs from all print servers
+ .DESCRIPTION
+ Return the PaperCut logs from all print servers.
+ .PARAMETER PrintServers
+ The FQDN of the print servers
+ .EXAMPLE
+ Get-PaperCutLogs |Export-Csv -Path .\PrintLog.csv
 
-            Description
-            -----------
-            This example shows the basic usage of the command. The output is piped into
-            a spreadsheet on the local computer for further analysis.
-        .NOTES
-            You must have downlaoded and installed the latest version of PaperCut Print Logger
-            for this to work.
+ Description
+ -----------
+ This example shows the basic usage of the command. The output is piped into
+ a spreadsheet on the local computer for further analysis.
+ .NOTES
+ You must have downlaoded and installed the latest version of PaperCut Print Logger
+ for this to work.
 
-            http://www.papercut.com/products/free_software/print_logger/#
+ http://www.papercut.com/products/free_software/print_logger/#
 
-            The resulting data will encompass all months that the servers have been logging data
-            for, currently this goes back about 3 years. The CSV output can be opened in Excel
-            and you can generate graphs based on which printer is used the most, how much paper
-            is consumed by each printer and so on.
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-PaperCutLogs
-    #>
+ The resulting data will encompass all months that the servers have been logging data
+ for, currently this goes back about 3 years. The CSV output can be opened in Excel
+ and you can generate graphs based on which printer is used the most, how much paper
+ is consumed by each printer and so on.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-PaperCutLogs
+ #>
  [CmdletBinding()]
  Param
  (
@@ -1022,47 +1022,47 @@ Function Get-PaperCutLogs {
 }
 Function Set-ShutdownMethod {
  <#
-        .SYNOPSIS
-            Execute the Win32Shutdown method on a remote computer
-        .DESCRIPTION
-            This function executes the Win32Shutdown method on a remote computer. This
-            can be either an IP, NetBIOS name or FQDN. Use the ShutdownMethod param to
-            specify the type of shutdown.
-        .PARAMETER ComputerName
-            The IP, NetBIOS or FQDN of the remote computer.
-        .PARAMETER ShutdownMethod
-            Win32Shutdown accepts one of the following in32's
-                0 = Logoff (Default)
-                1 = Shutdown
-                2 = Reboot
-                4 = Force Logoff (Doesn't work)
-                8 = PowerOff
+ .SYNOPSIS
+ Execute the Win32Shutdown method on a remote computer
+ .DESCRIPTION
+ This function executes the Win32Shutdown method on a remote computer. This
+ can be either an IP, NetBIOS name or FQDN. Use the ShutdownMethod param to
+ specify the type of shutdown.
+ .PARAMETER ComputerName
+ The IP, NetBIOS or FQDN of the remote computer.
+ .PARAMETER ShutdownMethod
+ Win32Shutdown accepts one of the following in32's
+ 0 = Logoff (Default)
+ 1 = Shutdown
+ 2 = Reboot
+ 4 = Force Logoff (Doesn't work)
+ 8 = PowerOff
 
-            For more information see the following MSDN article
-            http://msdn.microsoft.com/en-us/library/aa376868(VS.85).aspx
-        .EXAMPLE
-            Set-ShutdownMethod -ComputerName Desktop-pc01
+ For more information see the following MSDN article
+ http://msdn.microsoft.com/en-us/library/aa376868(VS.85).aspx
+ .EXAMPLE
+ Set-ShutdownMethod -ComputerName Desktop-pc01
 
-            Description
-            -----------
-            This is the default syntax for this command
-        .EXAMPLE
-            Set-ShutdownMethod -ComputerName Desktop-pc01 -ShutdownMethod 0
+ Description
+ -----------
+ This is the default syntax for this command
+ .EXAMPLE
+ Set-ShutdownMethod -ComputerName Desktop-pc01 -ShutdownMethod 0
 
-            Description
-            -----------
-            This is the only syntax for this command
-        .EXAMPLE
-            Get-WmiObject -Class Win32_ServerSession -ComputerName $ComputerName | Set-ShutdownMethod
+ Description
+ -----------
+ This is the only syntax for this command
+ .EXAMPLE
+ Get-WmiObject -Class Win32_ServerSession -ComputerName $ComputerName | Set-ShutdownMethod
 
-            Description
-            -----------
-            An example showing how to pipe information into the function.
-        .NOTES
-            You will need proper credentials on the remote machine for this to work.
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Set-ShutdownMethod
-    #>
+ Description
+ -----------
+ An example showing how to pipe information into the function.
+ .NOTES
+ You will need proper credentials on the remote machine for this to work.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Set-ShutdownMethod
+ #>
  [CmdletBinding()]
  PARAM
  (
@@ -1092,43 +1092,43 @@ Function Set-ShutdownMethod {
 }
 Function Get-PrinterLogs {
  <#
-        .SYNOPSIS
-            Get a log of all printing from a given server.
-        .DESCRIPTION
-            This function will return a log of all the printing that has occurred on
-            a given print server.
-        .PARAMETER LogName
-            The default log for printing on Windows Server 2008 R2 is specified.
-        .PARAMETER ComputerName
-            The name of your print server.
-        .EXAMPLE
-            Get-PrinterLogs -ComputerName ps
+ .SYNOPSIS
+ Get a log of all printing from a given server.
+ .DESCRIPTION
+ This function will return a log of all the printing that has occurred on
+ a given print server.
+ .PARAMETER LogName
+ The default log for printing on Windows Server 2008 R2 is specified.
+ .PARAMETER ComputerName
+ The name of your print server.
+ .EXAMPLE
+ Get-PrinterLogs -ComputerName ps
 
-            Size     : 96060
-            Time     : 8/16/2011 5:01:09 PM
-            User     : MyAccount
-            Job      : 62
-            Client   : \\10.133.5.143
-            Port     : Desktop-PC01.company.com
-            Printer  : HP-Laser
-            Pages    : 1
-            Document : Microsoft Office Outlook - Memo Style
+ Size     : 96060
+ Time     : 8/16/2011 5:01:09 PM
+ User     : MyAccount
+ Job      : 62
+ Client   : \\10.133.5.143
+ Port     : Desktop-PC01.company.com
+ Printer  : HP-Laser
+ Pages    : 1
+ Document : Microsoft Office Outlook - Memo Style
 
-            Description
-            -----------
-            This example shows the basic usage of the command.
-        .EXAMPLE
-            Get-PrinterLogs -ComputerName ps |Export-Csv -Path .\PrintLogs.csv
+ Description
+ -----------
+ This example shows the basic usage of the command.
+ .EXAMPLE
+ Get-PrinterLogs -ComputerName ps |Export-Csv -Path .\PrintLogs.csv
 
-            Description
-            -----------
-            This is the syntax that I would see being used the most.
-        .NOTES
-            The following log will need to be enabled before logs can be generated by the server:
-            "Microsoft-Windows-PrintService/Operational"
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-PrinterLogs
-    #>
+ Description
+ -----------
+ This is the syntax that I would see being used the most.
+ .NOTES
+ The following log will need to be enabled before logs can be generated by the server:
+ "Microsoft-Windows-PrintService/Operational"
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-PrinterLogs
+ #>
  [CmdletBinding()]
  Param
  (
@@ -1178,32 +1178,32 @@ Function Get-PrinterLogs {
 }
 Function Get-OpenSessions {
  <#
-        .SYNOPSIS
-            Return a list of open sessions
-        .DESCRIPTION
-            This function returns a list of open session on a given server. The output is
-            similar to that of the Manage Open Sessions dialog in the Share and Storage
-            Management console.
-        .PARAMETER ComputerName
-            This is the FQDN or NetBIOS name of the computer
-        .EXAMPLE
-            Get-OpenSessions -ComputerName fs
+ .SYNOPSIS
+ Return a list of open sessions
+ .DESCRIPTION
+ This function returns a list of open session on a given server. The output is
+ similar to that of the Manage Open Sessions dialog in the Share and Storage
+ Management console.
+ .PARAMETER ComputerName
+ This is the FQDN or NetBIOS name of the computer
+ .EXAMPLE
+ Get-OpenSessions -ComputerName fs
 
-            User          Computer         ConnectTime     IdleTime
-            ----          --------         -----------     --------
-            user1         10.10.1.62              1615            1
-            user2         10.10.1.156             7529           17
+ User          Computer         ConnectTime     IdleTime
+ ----          --------         -----------     --------
+ user1         10.10.1.62              1615            1
+ user2         10.10.1.156             7529           17
 
-            Description
-            -----------
-            This example shows the basic usage of the command.
-        .NOTES
-            FunctionName : Get-OpenSessions
-            Created by   : Jeff Patton
-            Date Coded   : 09/26/2011 11:35:40
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-OpenSessions
-    #>
+ Description
+ -----------
+ This example shows the basic usage of the command.
+ .NOTES
+ FunctionName : Get-OpenSessions
+ Created by   : Jeff Patton
+ Date Coded   : 09/26/2011 11:35:40
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-OpenSessions
+ #>
  [CmdletBinding()]
  Param
  (
@@ -1235,32 +1235,32 @@ Function Get-OpenSessions {
 }
 Function Get-OpenFiles {
  <#
-        .SYNOPSIS
-            Get a list of files open on the server
-        .DESCRIPTION
-            This function returns a list of files open on a given server. The output is
-            similar to that of the Manage Open Files from the Share and Storage Management
-            console.
-        .PARAMETER ComputerName
-            The NetBIOS or FQDN of the computer
-        .EXAMPLE
-            Get-OpenFiles -ComputerName fs
+ .SYNOPSIS
+ Get a list of files open on the server
+ .DESCRIPTION
+ This function returns a list of files open on a given server. The output is
+ similar to that of the Manage Open Files from the Share and Storage Management
+ console.
+ .PARAMETER ComputerName
+ The NetBIOS or FQDN of the computer
+ .EXAMPLE
+ Get-OpenFiles -ComputerName fs
 
-            User          Path                              LockCount
-            ----          ----                              ---------
-            User1         F:\Users\User1\Documents\Data\...         0
-            User2         P:\Public                                 0
+ User          Path                              LockCount
+ ----          ----                              ---------
+ User1         F:\Users\User1\Documents\Data\...         0
+ User2         P:\Public                                 0
 
-            Description
-            -----------
-            This example shows the basic usage of this command.
-        .NOTES
-            FunctionName : Get-OpenFiles
-            Created by   : Jeff Patton
-            Date Coded   : 09/26/2011 13:01:38
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-OpenFiles
-    #>
+ Description
+ -----------
+ This example shows the basic usage of this command.
+ .NOTES
+ FunctionName : Get-OpenFiles
+ Created by   : Jeff Patton
+ Date Coded   : 09/26/2011 13:01:38
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-OpenFiles
+ #>
  [CmdletBinding()]
  Param
  (
@@ -1291,44 +1291,44 @@ Function Get-OpenFiles {
 }
 Function Get-RDPLoginEvents {
  <#
-        .SYNOPSIS
-            Return Remote Desktop login attempts
-        .DESCRIPTION
-            This function returns login attempts from the Microsoft Windows TerminalServices RemoteConnectionManager
-            log. The specific events are logged as EventID 1149, and they are logged whether or not the user actually
-            gets to the desktop.
-        .PARAMETER ComputerName
-            This is the NetBIOS name of the computer to pull events from.
-        .PARAMETER Credentials
-            A user account with the ability to retreive these events.
-        .EXAMPLE
-            Get-RDPLoginEvents -Credentials $Credentials |Export-Csv -Path C:\logfiles\RDP-Attempts.csv
+ .SYNOPSIS
+ Return Remote Desktop login attempts
+ .DESCRIPTION
+ This function returns login attempts from the Microsoft Windows TerminalServices RemoteConnectionManager
+ log. The specific events are logged as EventID 1149, and they are logged whether or not the user actually
+ gets to the desktop.
+ .PARAMETER ComputerName
+ This is the NetBIOS name of the computer to pull events from.
+ .PARAMETER Credentials
+ A user account with the ability to retreive these events.
+ .EXAMPLE
+ Get-RDPLoginEvents -Credentials $Credentials |Export-Csv -Path C:\logfiles\RDP-Attempts.csv
 
-            Description
-            -----------
-            This example show piping the output of the function to Export-Csv to create a file suitable for import
-            into Excel, or some other spreadsheet software.
-        .EXAMPLE
-            Get-RDPLoginEvents -Credentials $Credentials -ComputerName MyPC |Format-Table
+ Description
+ -----------
+ This example show piping the output of the function to Export-Csv to create a file suitable for import
+ into Excel, or some other spreadsheet software.
+ .EXAMPLE
+ Get-RDPLoginEvents -Credentials $Credentials -ComputerName MyPC |Format-Table
 
-            SourceNetworkAddress        Domain           TimeCreated                User
-            --------------------        ------           -----------                ----
-            192.168.1.1                 MyPC...          4/30/2011 8:20:02 AM       Administrator...
-            192.168.1.1                 MyPC...          4/28/2011 4:53:01 PM       Administrator...
-            192.168.1.1                 MyPC...          4/21/2011 2:01:42 PM       Administrator...
-            192.168.1.1                 MyPC...          4/19/2011 11:42:59 AM      Administrator...
-            192.168.1.1                 MyPC...          4/19/2011 10:30:52 AM      Administrator...
+ SourceNetworkAddress        Domain           TimeCreated                User
+ --------------------        ------           -----------                ----
+ 192.168.1.1                 MyPC...          4/30/2011 8:20:02 AM       Administrator...
+ 192.168.1.1                 MyPC...          4/28/2011 4:53:01 PM       Administrator...
+ 192.168.1.1                 MyPC...          4/21/2011 2:01:42 PM       Administrator...
+ 192.168.1.1                 MyPC...          4/19/2011 11:42:59 AM      Administrator...
+ 192.168.1.1                 MyPC...          4/19/2011 10:30:52 AM      Administrator...
 
-            Description
-            -----------
-            This example shows piping the output to Format-Table
-        .NOTES
-            The Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational needs to be enabled
-            The user account supplied in $Credentials needs to have permission to view this log
-            No output is returned if the log is empty.
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-RDPLoginEvents
-    #>
+ Description
+ -----------
+ This example shows piping the output to Format-Table
+ .NOTES
+ The Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational needs to be enabled
+ The user account supplied in $Credentials needs to have permission to view this log
+ No output is returned if the log is empty.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-RDPLoginEvents
+ #>
  [cmdletbinding()]
  Param
  (
@@ -1372,88 +1372,88 @@ Function Get-RDPLoginEvents {
 }
 Function Get-InvalidLogonAttempts {
  <#
-        .SYNOPSIS
-            Return a list of invalid logon attempts.
-        .DESCRIPTION
-            This function queries the security log of a given computer and
-            retrieves Event ID 4625, failed logon attempt.
-        .PARAMETER ComputerName
-            The name of the computer to pull logs from
-        .PARAMETER LogName
-            The name of the Event Log.
+ .SYNOPSIS
+ Return a list of invalid logon attempts.
+ .DESCRIPTION
+ This function queries the security log of a given computer and
+ retrieves Event ID 4625, failed logon attempt.
+ .PARAMETER ComputerName
+ The name of the computer to pull logs from
+ .PARAMETER LogName
+ The name of the Event Log.
 
-            You will notice that I have set the LogName to Security, since
-            this particular script was designed to find a specific entry.
-            This can be modified to suit your needs.
-        .PARAMETER EventID
-            The Event ID to return.
+ You will notice that I have set the LogName to Security, since
+ this particular script was designed to find a specific entry.
+ This can be modified to suit your needs.
+ .PARAMETER EventID
+ The Event ID to return.
 
-            You will notice that I have set the EventID to 4625, since
-            this particular script was designed to find those particular
-            entries. This can be modified to suit your needs.
-        .EXAMPLE
-            Get-InvalidLogonAttempts -ComputerName Desktop-pc1 -LogName 'Security' -EventID 4625
+ You will notice that I have set the EventID to 4625, since
+ this particular script was designed to find those particular
+ entries. This can be modified to suit your needs.
+ .EXAMPLE
+ Get-InvalidLogonAttempts -ComputerName Desktop-pc1 -LogName 'Security' -EventID 4625
 
-            Message        MachineName    TimeCreated   IpAddress         LogonType TargetUserNam IpPort
-                                                                                    e
-            -------        -----------    -----------   ---------         --------- ------------- ------
-            An account ... Desktop-pc1... 10/26/2011... ##.###.###...            10 Daniel        62581
-            An account ... Desktop-pc1... 10/26/2011... ##.###.###...            10 Daniel        11369
-            An account ... Desktop-pc1... 10/26/2011... ##.###.###...            10 Daniel        47575
-            An account ... Desktop-pc1... 10/26/2011... ##.###.###...            10 Daniel        51144
+ Message        MachineName    TimeCreated   IpAddress         LogonType TargetUserNam IpPort
+ e
+ -------        -----------    -----------   ---------         --------- ------------- ------
+ An account ... Desktop-pc1... 10/26/2011... ##.###.###...            10 Daniel        62581
+ An account ... Desktop-pc1... 10/26/2011... ##.###.###...            10 Daniel        11369
+ An account ... Desktop-pc1... 10/26/2011... ##.###.###...            10 Daniel        47575
+ An account ... Desktop-pc1... 10/26/2011... ##.###.###...            10 Daniel        51144
 
-            Description
-            -----------
-            This is the basic syntax of the command, the output is returned to stdin.
-        .EXAMPLE
-            Get-InvalidLogonAttempts |Export-Csv -Path .\InvalidLoginAttempts.csv
+ Description
+ -----------
+ This is the basic syntax of the command, the output is returned to stdin.
+ .EXAMPLE
+ Get-InvalidLogonAttempts |Export-Csv -Path .\InvalidLoginAttempts.csv
 
-            Description
-            -----------
-            This example shows redirecting the output through the Export-CSV command to get
-            a csv file.
-        .NOTES
-            ScriptName : Get-InvalidLogonAttempts
-            Created By : jspatton
-            Date Coded : 10/26/2011 11:20:58
-            ScriptName is used to register events for this script
-            LogName is used to determine which classic log to write to
+ Description
+ -----------
+ This example shows redirecting the output through the Export-CSV command to get
+ a csv file.
+ .NOTES
+ ScriptName : Get-InvalidLogonAttempts
+ Created By : jspatton
+ Date Coded : 10/26/2011 11:20:58
+ ScriptName is used to register events for this script
+ LogName is used to determine which classic log to write to
 
-            ErrorCodes
-                100 = Success
-                101 = Error
-                102 = Warning
-                104 = Information
+ ErrorCodes
+ 100 = Success
+ 101 = Error
+ 102 = Warning
+ 104 = Information
 
-            If you adjust theh script to look for event id's other than 4625, you will
-            want to examine the Event Properties. This is similar to viewing the
-            "Friendly" view of an event in the event log. Below are all the properties
-            for Event ID 4625.
+ If you adjust theh script to look for event id's other than 4625, you will
+ want to examine the Event Properties. This is similar to viewing the
+ "Friendly" view of an event in the event log. Below are all the properties
+ for Event ID 4625.
 
-            00  SubjectUserSid S-1-5-18
-            01  SubjectUserName NODE1$
-            02  SubjectDomainName SOECS
-            03  SubjectLogonId 0x3e7
-            04  TargetUserSid S-1-0-0
-            05  TargetUserName Daniel
-            06  TargetDomainName NODE1
-            07  Status 0xc000006d
-            08  FailureReason %%2313
-            09  SubStatus 0xc0000064
-            10  LogonType 10
-            11  LogonProcessName User32
-            12  AuthenticationPackageName Negotiate
-            13  WorkstationName NODE1
-            14  TransmittedServices -
-            15  LmPackageName -
-            16  KeyLength 0
-            17  ProcessId 0x3278
-            18  ProcessName C:\Windows\System32\winlogon.exe
-            19  IpAddress ##.###.###.###
-            20  IpPort 51144
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-InvalidLogonAttempts
-    #>
+ 00  SubjectUserSid S-1-5-18
+ 01  SubjectUserName NODE1$
+ 02  SubjectDomainName SOECS
+ 03  SubjectLogonId 0x3e7
+ 04  TargetUserSid S-1-0-0
+ 05  TargetUserName Daniel
+ 06  TargetDomainName NODE1
+ 07  Status 0xc000006d
+ 08  FailureReason %%2313
+ 09  SubStatus 0xc0000064
+ 10  LogonType 10
+ 11  LogonProcessName User32
+ 12  AuthenticationPackageName Negotiate
+ 13  WorkstationName NODE1
+ 14  TransmittedServices -
+ 15  LmPackageName -
+ 16  KeyLength 0
+ 17  ProcessId 0x3278
+ 18  ProcessName C:\Windows\System32\winlogon.exe
+ 19  IpAddress ##.###.###.###
+ 20  IpPort 51144
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-InvalidLogonAttempts
+ #>
  [cmdletBinding()]
  Param
  (
@@ -1491,46 +1491,46 @@ Function Get-InvalidLogonAttempts {
 }
 Function Get-UpTime {
  <#
-        .SYNOPSIS
-            Get uptime of one or more computers
-        .DESCRIPTION
-            This script uses Win32_ComputerSystem to determine how long your system has been running.
-        .PARAMETER ComputerName
-            One or more computer names
-        .EXAMPLE
-            Get-UpTime -ComputerName ".", "server01" |Sort-Object -Property Days -Descending
+ .SYNOPSIS
+ Get uptime of one or more computers
+ .DESCRIPTION
+ This script uses Win32_ComputerSystem to determine how long your system has been running.
+ .PARAMETER ComputerName
+ One or more computer names
+ .EXAMPLE
+ Get-UpTime -ComputerName ".", "server01" |Sort-Object -Property Days -Descending
 
-            ComputerName Days Hours Minutes
-            ------------ ---- ----- -------
-            server01       39    18      25
-            Desktop01       0     1      38
+ ComputerName Days Hours Minutes
+ ------------ ---- ----- -------
+ server01       39    18      25
+ Desktop01       0     1      38
 
-            Description
-            -----------
-            This example shows using the function with an array of computer names, and sorting the output
-            descending order by days.
-        .EXAMPLE
-            $Servers | foreach {Get-UpTime $_.Properties.name} |Sort-Object -Property Days -Descending
+ Description
+ -----------
+ This example shows using the function with an array of computer names, and sorting the output
+ descending order by days.
+ .EXAMPLE
+ $Servers | foreach {Get-UpTime $_.Properties.name} |Sort-Object -Property Days -Descending
 
-            ComputerName    Days Hours Minutes
-            ------------    ---- ----- -------
-            server01         144    22      58
-            server02         144    22      16
-            server03         144    23       9
-            server04         139    22      42
+ ComputerName    Days Hours Minutes
+ ------------    ---- ----- -------
+ server01         144    22      58
+ server02         144    22      16
+ server03         144    23       9
+ server04         139    22      42
 
-            Description
-            -----------
-            This example shows passing in computer computer names from an object.
-        .NOTES
-            FunctionName : Get-UpTime
-            Created by   : jspatton
-            Date Coded   : 10/19/2011 11:22:34
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-UpTime
-        .LINK
-            http://msdn.microsoft.com/en-us/library/aa394591(VS.85).aspx
-    #>
+ Description
+ -----------
+ This example shows passing in computer computer names from an object.
+ .NOTES
+ FunctionName : Get-UpTime
+ Created by   : jspatton
+ Date Coded   : 10/19/2011 11:22:34
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-UpTime
+ .LINK
+ http://msdn.microsoft.com/en-us/library/aa394591(VS.85).aspx
+ #>
  [CmdletBinding()]
  Param
  (
@@ -1577,50 +1577,50 @@ Function Get-UpTime {
 }
 Function Get-MappedDrives {
  <#
-        .SYNOPSIS
-            Return a list of mapped network drives on the computer
-        .DESCRIPTION
-            This function returns a list of mapped network drives from the
-            local or remote computer.
-        .PARAMETER ComputerName
-            The name of the computer to get the list from.
-        .PARAMETER Credentials
-            A credentials object to pass if needed.
-        .EXAMPLE
-            Get-MappedDrives
+ .SYNOPSIS
+ Return a list of mapped network drives on the computer
+ .DESCRIPTION
+ This function returns a list of mapped network drives from the
+ local or remote computer.
+ .PARAMETER ComputerName
+ The name of the computer to get the list from.
+ .PARAMETER Credentials
+ A credentials object to pass if needed.
+ .EXAMPLE
+ Get-MappedDrives
 
-            Caption      : V:
-            FreeSpace    : 4129467170816
-            Name         : V:
-            ProviderName : \\users2.company.com\homedir4\jspatton
-            Size         : 10737418240
-            VolumeName   : 236
+ Caption      : V:
+ FreeSpace    : 4129467170816
+ Name         : V:
+ ProviderName : \\users2.company.com\homedir4\jspatton
+ Size         : 10737418240
+ VolumeName   : 236
 
-            Description
-            -----------
-            This is the basic syntax of the command.
-        .EXAMPLE
-            Get-MappedDrives -ComputerName Desktop-PC01
+ Description
+ -----------
+ This is the basic syntax of the command.
+ .EXAMPLE
+ Get-MappedDrives -ComputerName Desktop-PC01
 
-            Caption      : U:
-            FreeSpace    : 134377222144
-            Name         : U:
-            ProviderName : \\people.company.com\i\jspatton
-            Size         : 687194767360
-            VolumeName   : IGroup
+ Caption      : U:
+ FreeSpace    : 134377222144
+ Name         : U:
+ ProviderName : \\people.company.com\i\jspatton
+ Size         : 687194767360
+ VolumeName   : IGroup
 
-            Description
-            -----------
-            This syntax shows passing the optional ComputerName parameter. If this is
-            not the local computer and you didn't pass the Credentials object, you
-            will be prompted.
-        .NOTES
-            FunctionName : Get-MappedDrives
-            Created by   : jspatton
-            Date Coded   : 03/20/2012 16:03:52
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-MappedDrives
-    #>
+ Description
+ -----------
+ This syntax shows passing the optional ComputerName parameter. If this is
+ not the local computer and you didn't pass the Credentials object, you
+ will be prompted.
+ .NOTES
+ FunctionName : Get-MappedDrives
+ Created by   : jspatton
+ Date Coded   : 03/20/2012 16:03:52
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-MappedDrives
+ #>
  [CmdletBinding()]
  Param
  (
@@ -1663,67 +1663,67 @@ Function Get-MappedDrives {
 }
 Function Get-DiskUsage {
  <#
-        .SYNOPSIS
-            Get the disk usage of a given path
-        .DESCRIPTION
-            This function returns the disk usage of a given path
-        .PARAMETER Path
-            The path to check
-        .EXAMPLE
-            Get-DiskUsage -Dir c:\
+ .SYNOPSIS
+ Get the disk usage of a given path
+ .DESCRIPTION
+ This function returns the disk usage of a given path
+ .PARAMETER Path
+ The path to check
+ .EXAMPLE
+ Get-DiskUsage -Dir c:\
 
-            FolderName              FolderSize
-            ----------              ----------
-            C:\dcam                        204
-            C:\DPMLogs                 1166251
-            C:\inetpub                       0
-            C:\PerfLogs                      0
-            C:\Program Files         504195070
-            C:\Program Files (x86)  2747425666
-            C:\repository             10294506
-            C:\SCRATCH                       0
-            C:\scripts                 2218148
-            C:\TEMP                          0
-            C:\Trail                         0
-            C:\Users               16198918163
-            C:\Windows             18163280116
+ FolderName              FolderSize
+ ----------              ----------
+ C:\dcam                        204
+ C:\DPMLogs                 1166251
+ C:\inetpub                       0
+ C:\PerfLogs                      0
+ C:\Program Files         504195070
+ C:\Program Files (x86)  2747425666
+ C:\repository             10294506
+ C:\SCRATCH                       0
+ C:\scripts                 2218148
+ C:\TEMP                          0
+ C:\Trail                         0
+ C:\Users               16198918163
+ C:\Windows             18163280116
 
-            Description
-            -----------
-            This shows the basic syntax of the command
-        .EXAMPLE
-            Get-DiskUsage -Dir c:\ |Sort-Object -Property FolderSize
+ Description
+ -----------
+ This shows the basic syntax of the command
+ .EXAMPLE
+ Get-DiskUsage -Dir c:\ |Sort-Object -Property FolderSize
 
-            FolderName              FolderSize
-            ----------              ----------
-            C:\SCRATCH                       0
-            C:\Trail                         0
-            C:\TEMP                          0
-            C:\PerfLogs                      0
-            C:\inetpub                       0
-            C:\dcam                        204
-            C:\DPMLogs                 1166251
-            C:\scripts                 2218148
-            C:\repository             10294506
-            C:\Program Files         504195070
-            C:\Program Files (x86)  2747425666
-            C:\Users               16198918163
-            C:\Windows             18163345365
+ FolderName              FolderSize
+ ----------              ----------
+ C:\SCRATCH                       0
+ C:\Trail                         0
+ C:\TEMP                          0
+ C:\PerfLogs                      0
+ C:\inetpub                       0
+ C:\dcam                        204
+ C:\DPMLogs                 1166251
+ C:\scripts                 2218148
+ C:\repository             10294506
+ C:\Program Files         504195070
+ C:\Program Files (x86)  2747425666
+ C:\Users               16198918163
+ C:\Windows             18163345365
 
-            Description
-            -----------
-            This example shows piping the output through Sort-Object
+ Description
+ -----------
+ This example shows piping the output through Sort-Object
 
-        .NOTES
-            FunctionName : Get-DiskUsage
-            Created by   : jspatton
-            Date Coded   : 03/21/2012 10:29:24
+ .NOTES
+ FunctionName : Get-DiskUsage
+ Created by   : jspatton
+ Date Coded   : 03/21/2012 10:29:24
 
-            If you don't have access to read the contents of a given folder
-            the function returns 0.
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-DiskUsage
-    #>
+ If you don't have access to read the contents of a given folder
+ the function returns 0.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-DiskUsage
+ #>
  [CmdletBinding()]
  Param
  (
@@ -1757,61 +1757,61 @@ Function Get-DiskUsage {
 }
 Function Get-NameSpaces {
  <#
-        .SYNOPSIS
-            Return a collection of classes from a namespace
-        .DESCRIPTION
-            This function will return a collection of classes from the provided namespace.
-            This method uses SWbemLocator to connect to a computer, the resulting
-            SWbemServices object is used to return the SubclassesOf() the given namespace.
-        .PARAMETER NameSpace
-            The WMI namespace to enumerate
-        .PARAMETER ComputerName
-            The computer to connect to
-        .EXAMPLE
-            Get-NameSpaces -Namespace 'root\ccm' -ComputerName 'sccm'
+ .SYNOPSIS
+ Return a collection of classes from a namespace
+ .DESCRIPTION
+ This function will return a collection of classes from the provided namespace.
+ This method uses SWbemLocator to connect to a computer, the resulting
+ SWbemServices object is used to return the SubclassesOf() the given namespace.
+ .PARAMETER NameSpace
+ The WMI namespace to enumerate
+ .PARAMETER ComputerName
+ The computer to connect to
+ .EXAMPLE
+ Get-NameSpaces -Namespace 'root\ccm' -ComputerName 'sccm'
 
-            Path            : \\SCCM\ROOT\ccm:__NAMESPACE
-            RelPath         : __NAMESPACE
-            Server          : SCCM
-            Namespace       : ROOT\ccm
-            ParentNamespace : ROOT
-            DisplayName     : WINMGMTS:{authenticationLevel=pkt,impersonationLevel=impersonate}!\\SCCM\ROOT\ccm:__NAMESPACE
-            Class           : __NAMESPACE
-            IsClass         : True
-            IsSingleton     : False
-            Keys            : System.__ComObject
-            Security_       : System.__ComObject
-            Locale          :
-            Authority       :
+ Path            : \\SCCM\ROOT\ccm:__NAMESPACE
+ RelPath         : __NAMESPACE
+ Server          : SCCM
+ Namespace       : ROOT\ccm
+ ParentNamespace : ROOT
+ DisplayName     : WINMGMTS:{authenticationLevel=pkt,impersonationLevel=impersonate}!\\SCCM\ROOT\ccm:__NAMESPACE
+ Class           : __NAMESPACE
+ IsClass         : True
+ IsSingleton     : False
+ Keys            : System.__ComObject
+ Security_       : System.__ComObject
+ Locale          :
+ Authority       :
 
-            Description
-            -----------
-            A simple example showing usage and output of the command.
-        .EXAMPLE
-            Get-NameSpaces -Namespace $NameSpace -ComputerName $ComputerName |Select-Object -Property Class
+ Description
+ -----------
+ A simple example showing usage and output of the command.
+ .EXAMPLE
+ Get-NameSpaces -Namespace $NameSpace -ComputerName $ComputerName |Select-Object -Property Class
 
-            Class
-            -----
-            __SystemClass
-            __thisNAMESPACE
-            __NAMESPACE
-            __Provider
-            __Win32Provider
-            __ProviderRegistration
-            __EventProviderRegistration
-            __EventConsumerProviderRegistration
+ Class
+ -----
+ __SystemClass
+ __thisNAMESPACE
+ __NAMESPACE
+ __Provider
+ __Win32Provider
+ __ProviderRegistration
+ __EventProviderRegistration
+ __EventConsumerProviderRegistration
 
-            Description
-            -----------
-            This example shows piping the output of the Get-Namespaces function to Select-Object to return
-            one of the properties of a class.
-        .NOTES
-            FunctionName : Get-NameSpaces
-            Created by   : jspatton
-            Date Coded   : 05/21/2012 12:50:50
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-NameSpaces
-    #>
+ Description
+ -----------
+ This example shows piping the output of the Get-Namespaces function to Select-Object to return
+ one of the properties of a class.
+ .NOTES
+ FunctionName : Get-NameSpaces
+ Created by   : jspatton
+ Date Coded   : 05/21/2012 12:50:50
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-NameSpaces
+ #>
  [CmdletBinding()]
  Param
  (
@@ -1837,45 +1837,45 @@ Function Get-NameSpaces {
 }
 Function New-Password {
  <#
-        .SYNOPSIS
-            Create a new password
-        .DESCRIPTION
-            This function creates a password using the cryptographic Random Number Generator see the
-            MSDN link for more details.
-        .PARAMETER Length
-            An integer that defines how long the password should be
-        .PARAMETER Count
-            An integer that defines how many passwords to create
-        .PARAMETER Strong
-            A switch that if present will include special characters
-        .EXAMPLE
-            New-Password -Length 64 -Count 5 -Strong
+ .SYNOPSIS
+ Create a new password
+ .DESCRIPTION
+ This function creates a password using the cryptographic Random Number Generator see the
+ MSDN link for more details.
+ .PARAMETER Length
+ An integer that defines how long the password should be
+ .PARAMETER Count
+ An integer that defines how many passwords to create
+ .PARAMETER Strong
+ A switch that if present will include special characters
+ .EXAMPLE
+ New-Password -Length 64 -Count 5 -Strong
 
-            Password
-            --------
-            UkQfV)RHwcQ3a)s8Z#QwSCLxlI*y28kEPmcQUVM2HrACf@PxRJDLk4ffge#1m_8j
-            XfAwZOh_lrzLE8NwkSTPs5#LNkW4uZ0Wm_ST5UzERqhY45)HBpN$_@@MxDeLiosW
-            h(BN(y^Gip&pU$KJpAAajgopQyoSbCn41m53mc__wV@q$DY5a$iN&O0fnf9hvO1&
-            tXkFwY_pe(VIFf$R2^bKyKy)D_H6q^Nz7MgSDylXrV2GIkyiFVnvfbd9KENFuHQz
-            &6LPlWRB$#yqD@!IEuJ9JcMTKrsA_t(AbWRGTLx@2Fw__j08n(TGi6wgPE6XlLWg
+ Password
+ --------
+ UkQfV)RHwcQ3a)s8Z#QwSCLxlI*y28kEPmcQUVM2HrACf@PxRJDLk4ffge#1m_8j
+ XfAwZOh_lrzLE8NwkSTPs5#LNkW4uZ0Wm_ST5UzERqhY45)HBpN$_@@MxDeLiosW
+ h(BN(y^Gip&pU$KJpAAajgopQyoSbCn41m53mc__wV@q$DY5a$iN&O0fnf9hvO1&
+ tXkFwY_pe(VIFf$R2^bKyKy)D_H6q^Nz7MgSDylXrV2GIkyiFVnvfbd9KENFuHQz
+ &6LPlWRB$#yqD@!IEuJ9JcMTKrsA_t(AbWRGTLx@2Fw__j08n(TGi6wgPE6XlLWg
 
-            Description
-            ===========
-            This example creates 5 strong passwords that are 64 characters long
-        .NOTES
-            FunctionName : New-Password
-            Created by   : jspatton
-            Date Coded   : 05/01/2013 12:20:00
+ Description
+ ===========
+ This example creates 5 strong passwords that are 64 characters long
+ .NOTES
+ FunctionName : New-Password
+ Created by   : jspatton
+ Date Coded   : 05/01/2013 12:20:00
 
-            The main portion of this code was lifted from Peter Provost's site, I modified it
-            to handle varying length, and count.
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#New-Password
-        .LINK
-            http://www.peterprovost.org/blog/2007/06/22/Quick-n-Dirty-PowerShell-Password-Generator/
-        .LINK
-            http://msdn.microsoft.com/en-us/library/system.security.cryptography.rngcryptoserviceprovider.aspx
-    #>
+ The main portion of this code was lifted from Peter Provost's site, I modified it
+ to handle varying length, and count.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#New-Password
+ .LINK
+ http://www.peterprovost.org/blog/2007/06/22/Quick-n-Dirty-PowerShell-Password-Generator/
+ .LINK
+ http://msdn.microsoft.com/en-us/library/system.security.cryptography.rngcryptoserviceprovider.aspx
+ #>
  [CmdletBinding()]
  Param
  (
@@ -1922,45 +1922,45 @@ Function New-Password {
 }
 function Connect-Rdp {
  <#
-        .SYNOPSIS
-            Connect to one or more computers over RDP
-        .DESCRIPTION
-            To securely cache login credentials, you can use the command line utility
-            cmdkey.exe. With this utility, you can save a username and a password for
-            a given remote connection. Windows will then securely cache the information
-            and automatically use it when needed.
-        .PARAMETER ComputerName
-            The hostname or IP address of the computer to connect to
-        .PARAMETER Credential
-            A credential object that contains a valid username and password for
-            the remote computer
-        .EXAMPLE
-            Connect-Rdp -ComputerName Server-01 -Credential Company.com\Administrator
+ .SYNOPSIS
+ Connect to one or more computers over RDP
+ .DESCRIPTION
+ To securely cache login credentials, you can use the command line utility
+ cmdkey.exe. With this utility, you can save a username and a password for
+ a given remote connection. Windows will then securely cache the information
+ and automatically use it when needed.
+ .PARAMETER ComputerName
+ The hostname or IP address of the computer to connect to
+ .PARAMETER Credential
+ A credential object that contains a valid username and password for
+ the remote computer
+ .EXAMPLE
+ Connect-Rdp -ComputerName Server-01 -Credential Company.com\Administrator
 
-            Description
-            -----------
-            The basic syntax showing a connection to a single machine
-        .EXAMPLE
-            Connect-Rdp -ComputerName Server-01, 192.168.1.2, server-03.company.com -Credential COMPANY\Administrator
+ Description
+ -----------
+ The basic syntax showing a connection to a single machine
+ .EXAMPLE
+ Connect-Rdp -ComputerName Server-01, 192.168.1.2, server-03.company.com -Credential COMPANY\Administrator
 
-            Description
-            -----------
-            This example shows connecting to multiple servers at once.
-        .EXAMPLE
-            "server-04","server-06" |Connect-Rdp -Credential $Credentials
+ Description
+ -----------
+ This example shows connecting to multiple servers at once.
+ .EXAMPLE
+ "server-04","server-06" |Connect-Rdp -Credential $Credentials
 
-            Description
-            -----------
-            This example shows passing the computernames over the pipe
-        .NOTES
-            FunctionName : Connect-RDP
-            Created by   : jspatton
-            Date Coded   : 06/23/2014 08:48:25
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Connect-RDP
-        .LINK
-            http://www.powershellmagazine.com/2014/04/18/automatic-remote-desktop-connection/
-    #>
+ Description
+ -----------
+ This example shows passing the computernames over the pipe
+ .NOTES
+ FunctionName : Connect-RDP
+ Created by   : jspatton
+ Date Coded   : 06/23/2014 08:48:25
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Connect-RDP
+ .LINK
+ http://www.powershellmagazine.com/2014/04/18/automatic-remote-desktop-connection/
+ #>
  [CmdletBinding()]
  param
  (
@@ -1993,36 +1993,36 @@ function Connect-Rdp {
 }
 Function Get-NetShare {
  <#
-        .SYNOPSIS
-            Return a list of shares without using WMI
-        .DESCRIPTION
-            This function returns a list of shares using the old net view command. This
-            works well in situations where a fierwall may be blocking access.
-        .PARAMETER ComputerName
-            The name of the server that has file or print shares
-        .PARAMETER Type
-            This will be either Print or Disk
-                Print returns printer shares
-                Disk returns file shares
-        .EXAMPLE
-            Get-NetShare -ComputerName server-01 -Type Print
+ .SYNOPSIS
+ Return a list of shares without using WMI
+ .DESCRIPTION
+ This function returns a list of shares using the old net view command. This
+ works well in situations where a fierwall may be blocking access.
+ .PARAMETER ComputerName
+ The name of the server that has file or print shares
+ .PARAMETER Type
+ This will be either Print or Disk
+ Print returns printer shares
+ Disk returns file shares
+ .EXAMPLE
+ Get-NetShare -ComputerName server-01 -Type Print
 
-            Server      Share   Path
-            ------      -----   ----
-            server-01   hp01    \\server-01\hp01
-            server-01   hp02    \\server-01\hp02
-            server-01   hp03    \\server-01\hp03
+ Server      Share   Path
+ ------      -----   ----
+ server-01   hp01    \\server-01\hp01
+ server-01   hp02    \\server-01\hp02
+ server-01   hp03    \\server-01\hp03
 
-            Description
-            -----------
-            This example shows the basic usage for this function
-        .NOTES
-            FunctionName : Get-NetShares
-            Created by   : jspatton
-            Date Coded   : 10/08/2014 11:08:30
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-NetShares
-    #>
+ Description
+ -----------
+ This example shows the basic usage for this function
+ .NOTES
+ FunctionName : Get-NetShares
+ Created by   : jspatton
+ Date Coded   : 10/08/2014 11:08:30
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-NetShares
+ #>
  [CmdletBinding()]
  Param
  (
@@ -2060,39 +2060,39 @@ Function Get-NetShare {
 }
 Function Get-WinEventTail {
  <#
-        .SYNOPSIS
-            A tail cmdlet for Eventlogs
-        .DESCRIPTION
-            This function will allow you to tail Windows Event Logs. You specify
-            a Logname for either the original logs, Application, System and Security or
-            the new format for the newer logs Microsoft-Windows-PowerShell/Operational
-        .PARAMETER LogName
-            Specify a valid Windows Eventlog name
-        .PARAMETER ShowExisting
-            An integer to show the number of events to start with, the default is 10
-        .EXAMPLE
-            Get-WinEventTail -LogName Application
+ .SYNOPSIS
+ A tail cmdlet for Eventlogs
+ .DESCRIPTION
+ This function will allow you to tail Windows Event Logs. You specify
+ a Logname for either the original logs, Application, System and Security or
+ the new format for the newer logs Microsoft-Windows-PowerShell/Operational
+ .PARAMETER LogName
+ Specify a valid Windows Eventlog name
+ .PARAMETER ShowExisting
+ An integer to show the number of events to start with, the default is 10
+ .EXAMPLE
+ Get-WinEventTail -LogName Application
 
 
-               ProviderName: ESENT
+ ProviderName: ESENT
 
-            TimeCreated                     Id LevelDisplayName Message
-            -----------                     -- ---------------- -------
-            10/9/2014 11:55:51 AM          102 Information      svchost (7528) Instance: ...
-            10/9/2014 11:55:51 AM          105 Information      svchost (7528) Instance: ...
-            10/9/2014 11:55:51 AM          326 Information      svchost (7528) Instance: ...
-            10/9/2014 12:05:49 PM          327 Information      svchost (7528) Instance: ...
-            10/9/2014 12:05:49 PM          103 Information      svchost (7528) Instance: ...
+ TimeCreated                     Id LevelDisplayName Message
+ -----------                     -- ---------------- -------
+ 10/9/2014 11:55:51 AM          102 Information      svchost (7528) Instance: ...
+ 10/9/2014 11:55:51 AM          105 Information      svchost (7528) Instance: ...
+ 10/9/2014 11:55:51 AM          326 Information      svchost (7528) Instance: ...
+ 10/9/2014 12:05:49 PM          327 Information      svchost (7528) Instance: ...
+ 10/9/2014 12:05:49 PM          103 Information      svchost (7528) Instance: ...
 
-        .NOTES
-            FunctionName : Get-WinEventTail
-            Created by   : jspatton
-            Date Coded   : 10/09/2014 13:20:22
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-WinEventTail
-        .LINK
-            http://stackoverflow.com/questions/15262196/powershell-tail-windows-event-log-is-it-possible
-    #>
+ .NOTES
+ FunctionName : Get-WinEventTail
+ Created by   : jspatton
+ Date Coded   : 10/09/2014 13:20:22
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Get-WinEventTail
+ .LINK
+ http://stackoverflow.com/questions/15262196/powershell-tail-windows-event-log-is-it-possible
+ #>
  [CmdletBinding()]
  Param
  (
@@ -2124,67 +2124,67 @@ Function Get-WinEventTail {
 }
 function Open-CdDrive {
  <#
-        .SYNOPSIS
-            A function to eject the CD Drive
-        .DESCRIPTION
-            This function uses the shell.application comObject to
-            eject one or more CD rom drives. I had the need to eject several CDroms
-            from servers and wanted an easier way to do it. I found a sample
-            in the Technet gallery (see link) and modified to suite my
-            needs.
-        .PARAMETER Drive
-            If present it will eject the drive corresponding to the drive letter
-        .EXAMPLE
-            Open-CdDrive
+ .SYNOPSIS
+ A function to eject the CD Drive
+ .DESCRIPTION
+ This function uses the shell.application comObject to
+ eject one or more CD rom drives. I had the need to eject several CDroms
+ from servers and wanted an easier way to do it. I found a sample
+ in the Technet gallery (see link) and modified to suite my
+ needs.
+ .PARAMETER Drive
+ If present it will eject the drive corresponding to the drive letter
+ .EXAMPLE
+ Open-CdDrive
 
 
-            Application  : System.__ComObject
-            Parent       : System.__ComObject
-            Name         : DVD RW Drive (E:)
-            Path         : E:\
-            GetLink      :
-            GetFolder    : System.__ComObject
-            IsLink       : False
-            IsFolder     : True
-            IsFileSystem : True
-            IsBrowsable  : False
-            ModifyDate   : 12/30/1899 12:00:00 AM
-            Size         : 0
-            Type         : CD Drive
+ Application  : System.__ComObject
+ Parent       : System.__ComObject
+ Name         : DVD RW Drive (E:)
+ Path         : E:\
+ GetLink      :
+ GetFolder    : System.__ComObject
+ IsLink       : False
+ IsFolder     : True
+ IsFileSystem : True
+ IsBrowsable  : False
+ ModifyDate   : 12/30/1899 12:00:00 AM
+ Size         : 0
+ Type         : CD Drive
 
-            Description
-            -----------
-            This example shows how to eject any cdrom on the system
-        .EXAMPLE
-            Open-CdDrive -Drive E:
+ Description
+ -----------
+ This example shows how to eject any cdrom on the system
+ .EXAMPLE
+ Open-CdDrive -Drive E:
 
 
-            Application  : System.__ComObject
-            Parent       : System.__ComObject
-            Name         : DVD RW Drive (E:)
-            Path         : E:\
-            GetLink      :
-            GetFolder    : System.__ComObject
-            IsLink       : False
-            IsFolder     : True
-            IsFileSystem : True
-            IsBrowsable  : False
-            ModifyDate   : 12/30/1899 12:00:00 AM
-            Size         : 0
-            Type         : CD Drive
+ Application  : System.__ComObject
+ Parent       : System.__ComObject
+ Name         : DVD RW Drive (E:)
+ Path         : E:\
+ GetLink      :
+ GetFolder    : System.__ComObject
+ IsLink       : False
+ IsFolder     : True
+ IsFileSystem : True
+ IsBrowsable  : False
+ ModifyDate   : 12/30/1899 12:00:00 AM
+ Size         : 0
+ Type         : CD Drive
 
-            Description
-            -----------
-            This example shows how to eject the CD labled E: from the system
-        .NOTES
-            FunctionName : Open-CdDrive
-            Created by   : Jeffrey
-            Date Coded   : 01/10/2015 08:33:30
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Open-CdDrive
-        .LINK
-            https://gallery.technet.microsoft.com/scriptcenter/7d81af29-1cae-4dbb-8027-cd96a985f311
-    #>
+ Description
+ -----------
+ This example shows how to eject the CD labled E: from the system
+ .NOTES
+ FunctionName : Open-CdDrive
+ Created by   : Jeffrey
+ Date Coded   : 01/10/2015 08:33:30
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Open-CdDrive
+ .LINK
+ https://gallery.technet.microsoft.com/scriptcenter/7d81af29-1cae-4dbb-8027-cd96a985f311
+ #>
  [CmdletBinding()]
  param
  (
@@ -2215,61 +2215,61 @@ function Open-CdDrive {
 }
 Function Grant-ServicePermission {
  <#
-        .SYNOPSIS
-            Grant permissions on a service to a user
-        .DESCRIPTION
-            This function will grant permissions on a given service to the specified
-            principal. This is useful when you need to grant non-admin users access
-            to specific services.
-        .PARAMETER Name
-            The name of the service to grant permission on, or SCMANAGER to grant
-            users initial access
-        .PARAMETER Principal
-            The DOMAIN\Username of the user to gran permissions to.
-        .EXAMPLE
-            Grant-ServicePermission -Name SCMANAGER -Principal COMPANY\User01
+ .SYNOPSIS
+ Grant permissions on a service to a user
+ .DESCRIPTION
+ This function will grant permissions on a given service to the specified
+ principal. This is useful when you need to grant non-admin users access
+ to specific services.
+ .PARAMETER Name
+ The name of the service to grant permission on, or SCMANAGER to grant
+ users initial access
+ .PARAMETER Principal
+ The DOMAIN\Username of the user to gran permissions to.
+ .EXAMPLE
+ Grant-ServicePermission -Name SCMANAGER -Principal COMPANY\User01
 
 
-            Message   : Permissions set successfully for COMPANY\User01 on scmanager
-            Principal : COMPANY\User01
-            Service   : scmanager
-            SID       : S-1-5-21-8675309-1078081533-682003330-233119
-            Previous  : D:(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)(A;;CC;;;AC)...
-            Current   : D:(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)(A;;CC;;;AC)...
+ Message   : Permissions set successfully for COMPANY\User01 on scmanager
+ Principal : COMPANY\User01
+ Service   : scmanager
+ SID       : S-1-5-21-8675309-1078081533-682003330-233119
+ Previous  : D:(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)(A;;CC;;;AC)...
+ Current   : D:(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)(A;;CC;;;AC)...
 
-            Description
-            -----------
-            Grant permissions on SCMANAGER for user01 to access services in general
+ Description
+ -----------
+ Grant permissions on SCMANAGER for user01 to access services in general
 
-        .EXAMPLE
-            Grant-ServicePermission -Name spooler -Principal COMPANY\User01
+ .EXAMPLE
+ Grant-ServicePermission -Name spooler -Principal COMPANY\User01
 
 
-            Message   : Permissions set successfully for COMPANY\User01 on spooler
-            Principal : COMPANY\User01
-            Service   : spooler
-            SID       : S-1-5-21-8675309-1078081533-682003330-233119
-            Previous  : D:(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)(A;;CC;;;AC)...
-            Current   : D:(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)(A;;CC;;;AC)...
+ Message   : Permissions set successfully for COMPANY\User01 on spooler
+ Principal : COMPANY\User01
+ Service   : spooler
+ SID       : S-1-5-21-8675309-1078081533-682003330-233119
+ Previous  : D:(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)(A;;CC;;;AC)...
+ Current   : D:(A;;CC;;;AU)(A;;CCLCRPRC;;;IU)(A;;CCLCRPRC;;;SU)(A;;CCLCRPWPRC;;;SY)(A;;KA;;;BA)(A;;CC;;;AC)...
 
-            Description
-            -----------
-            Grant permissions on SPOOLER for user01 to access the spooler service
+ Description
+ -----------
+ Grant permissions on SPOOLER for user01 to access the spooler service
 
-        .NOTES
-            FunctionName : Grant-ServicePermission
-            Created by   : jspatton
-            Date Coded   : 01/12/2015 13:25:53
+ .NOTES
+ FunctionName : Grant-ServicePermission
+ Created by   : jspatton
+ Date Coded   : 01/12/2015 13:25:53
 
-            I borrowed nearly all this code from jacob's blog linked below. I've simply re-coded
-            it to fit in with my functions, and output an object and throw errors and such.
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Grant-ServicePermission
-        .LINK
-            http://jacob.ludriks.com/manipulating-sddls-through-powershell/
-        .LINK
-            http://tech.lanesnotes.com/2010/07/how-to-delegate-services-control-in.html
-    #>
+ I borrowed nearly all this code from jacob's blog linked below. I've simply re-coded
+ it to fit in with my functions, and output an object and throw errors and such.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Grant-ServicePermission
+ .LINK
+ http://jacob.ludriks.com/manipulating-sddls-through-powershell/
+ .LINK
+ http://tech.lanesnotes.com/2010/07/how-to-delegate-services-control-in.html
+ #>
  [CmdletBinding()]
  Param
  (
@@ -2335,59 +2335,59 @@ Function Grant-ServicePermission {
 }
 Function Grant-RegistryPermission {
  <#
-        .SYNOPSIS
-            Grant permissions on registry paths
-        .DESCRIPTION
-            This function allows you to set permissions on registry paths on a computer. Using
-            the parameters you can specify the rights, inheritance and propagation of the rights.
-        .PARAMETER Path
-            A registry path
-        .PARAMETER Principal
-            Username in DOMAIN\User format
-        .PARAMETER Rights
-            Specifies the access control rights that can be applied to registry objects. See
-            http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.registryrights(v=vs.110).aspx
-        .PARAMETER Inheritance
-            Inheritance flags specify the semantics of inheritance for access control entries (ACEs). See
-            http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.inheritanceflags(v=vs.110).aspx
-        .PARAMETER Propagation
-            Specifies how Access Control Entries (ACEs) are propagated to child objects. These flags are significant
-            only if inheritance flags are present. See
-            http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.propagationflags(v=vs.110).aspx
-        .EXAMPLE
-            Grant-RegistryPermission -Path HKCU:\Environment\ -Principal DOMAIN\User01 -Rights FullControl
+ .SYNOPSIS
+ Grant permissions on registry paths
+ .DESCRIPTION
+ This function allows you to set permissions on registry paths on a computer. Using
+ the parameters you can specify the rights, inheritance and propagation of the rights.
+ .PARAMETER Path
+ A registry path
+ .PARAMETER Principal
+ Username in DOMAIN\User format
+ .PARAMETER Rights
+ Specifies the access control rights that can be applied to registry objects. See
+ http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.registryrights(v=vs.110).aspx
+ .PARAMETER Inheritance
+ Inheritance flags specify the semantics of inheritance for access control entries (ACEs). See
+ http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.inheritanceflags(v=vs.110).aspx
+ .PARAMETER Propagation
+ Specifies how Access Control Entries (ACEs) are propagated to child objects. These flags are significant
+ only if inheritance flags are present. See
+ http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.propagationflags(v=vs.110).aspx
+ .EXAMPLE
+ Grant-RegistryPermission -Path HKCU:\Environment\ -Principal DOMAIN\User01 -Rights FullControl
 
-            Path                                    Owner               Access
-            ----                                    -----               ------
-            Microsoft.PowerShell.Core\Registry::... NT AUTHORITY\SYSTEM NT AUTHORITY\RESTRICTED Allow  ReadK...
+ Path                                    Owner               Access
+ ----                                    -----               ------
+ Microsoft.PowerShell.Core\Registry::... NT AUTHORITY\SYSTEM NT AUTHORITY\RESTRICTED Allow  ReadK...
 
-            Description
-            -----------
-            This example grants full control to the environment key for user01
-        .NOTES
-            FunctionName : Grant-RegistryPermission
-            Created by   : jspatton
-            Date Coded   : 01/12/2015 14:53:41
+ Description
+ -----------
+ This example grants full control to the environment key for user01
+ .NOTES
+ FunctionName : Grant-RegistryPermission
+ Created by   : jspatton
+ Date Coded   : 01/12/2015 14:53:41
 
-            I lifted this almost completely from iheartpowershell's blog, this appears to be the first
-            iteration of this function, I have since found it copied verbatim onto other blogs, so I feel
-            the need to give credit where credit is due.
+ I lifted this almost completely from iheartpowershell's blog, this appears to be the first
+ iteration of this function, I have since found it copied verbatim onto other blogs, so I feel
+ the need to give credit where credit is due.
 
-            I modified this function to build the identity from a username, and pass in the identityrefernce
-            object to the rule.
-        .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Grant-RegistryPermission
-        .LINK
-            http://www.iheartpowershell.com/2011/09/grant-registry-permissions.html
-        .LINK
-            http://msdn.microsoft.com/en-us/library/ms147899(v=vs.110).aspx
-        .LINK
-            http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.registryrights(v=vs.110).aspx
-        .LINK
-            http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.inheritanceflags(v=vs.110).aspx
-        .LINK
-            http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.propagationflags(v=vs.110).aspx
-    #>
+ I modified this function to build the identity from a username, and pass in the identityrefernce
+ object to the rule.
+ .LINK
+ https://github.com/jeffpatton1971/mod-posh/wiki/ComputerManagement#Grant-RegistryPermission
+ .LINK
+ http://www.iheartpowershell.com/2011/09/grant-registry-permissions.html
+ .LINK
+ http://msdn.microsoft.com/en-us/library/ms147899(v=vs.110).aspx
+ .LINK
+ http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.registryrights(v=vs.110).aspx
+ .LINK
+ http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.inheritanceflags(v=vs.110).aspx
+ .LINK
+ http://msdn.microsoft.com/en-us/library/system.security.accesscontrol.propagationflags(v=vs.110).aspx
+ #>
  [CmdletBinding()]
  Param
  (
