@@ -90,25 +90,39 @@ function Get-FirstDateOfWeek {
 function Get-IssueQuery {
  param(
   [switch]$Today,
-  [switch]$ThisWeek
+  [switch]$ThisWeek,
+  [switch]$LastWeek,
+  [switch]$CurrentWork
  )
 
- $StartOfWeek = Get-FirstDateOfWeek -Year ((Get-Date).AddDays(-7).Year);
- $EndOfWeek = $StartOfWeek.AddDays(4);
+ if ($LastWeek) {
+  $StartOfWeek = Get-FirstDateOfWeek -Year ((Get-Date).AddDays(-7).Year);
+  $EndOfWeek = $StartOfWeek.AddDays(4);
+  $StartOfWeekShort = (Get-Date ($StartOfWeek) -Format yyyy-MM-dd);
+  $EndOfWeekShort = (Get-Date ($EndOfWeek) -Format yyyy-MM-dd);
+
+  return 'project = MPCSUPENG AND worklogAuthor in (currentUser()) and worklogDate >= "' + $StartOfWeekShort + '" AND worklogDate <= "' + $EndOfWeekShort + '"'
+ }
 
  if ($Today) {
   $StartOfWeek = Get-Date;
   $EndOfWeek = Get-Date;
+  $StartOfWeekShort = (Get-Date ($StartOfWeek) -Format yyyy-MM-dd);
+  $EndOfWeekShort = (Get-Date ($EndOfWeek) -Format yyyy-MM-dd);
+
+  return 'project = MPCSUPENG AND worklogAuthor in (currentUser()) and worklogDate >= "' + $StartOfWeekShort + '" AND worklogDate <= "' + $EndOfWeekShort + '"'
  }
 
- if ($ThisWeek)
- {
-  $StartOfWeek = (Get-Date).AddDays(-( [int](Get-Date).DayOfWeek -1));
+ if ($ThisWeek) {
+  $StartOfWeek = (Get-Date).AddDays( - ( [int](Get-Date).DayOfWeek - 1));
   $EndOfWeek = $StartOfWeek.AddDays(4);
-  }
+  $StartOfWeekShort = (Get-Date ($StartOfWeek) -Format yyyy-MM-dd);
+  $EndOfWeekShort = (Get-Date ($EndOfWeek) -Format yyyy-MM-dd);
 
- $StartOfWeekShort = (Get-Date ($StartOfWeek) -Format yyyy-MM-dd);
- $EndOfWeekShort = (Get-Date ($EndOfWeek) -Format yyyy-MM-dd);
+  return 'project = MPCSUPENG AND worklogAuthor in (currentUser()) and worklogDate >= "' + $StartOfWeekShort + '" AND worklogDate <= "' + $EndOfWeekShort + '"'
+ }
 
- return 'project = MPCSUPENG AND worklogAuthor in (currentUser()) and worklogDate >= "' + $StartOfWeekShort + '" AND worklogDate <= "' + $EndOfWeekShort + '"'
+ if ($CurrentWork) {
+  return 'project=MPCSUPENG AND (status="New" OR status="In Progress" Or status="Waiting")AND assignee=currentuser()'
+ }
 }
