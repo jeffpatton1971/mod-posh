@@ -1,4 +1,4 @@
-Function Replace-TabsWithSpace
+Function Switch-TabsWithSpace
 {
     <#
         .SYNOPSIS
@@ -11,8 +11,8 @@ Function Replace-TabsWithSpace
         .PARAMETER InstallMenu
             Specifies if you want to install this as a PSIE add-on menu
         .EXAMPLE
-            Replace-TabsWithSpace -InstallMenu $true
-            
+            Switch-TabsWithSpace -InstallMenu $true
+
             Description
             -----------
             Installs the function as a menu item.
@@ -22,7 +22,7 @@ Function Replace-TabsWithSpace
             that doesn't tab shift like it should. Since I've been doing some PowerShell ISE stuff lately
             I decided to write a little function that works as an Add-On menu.
         .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Replace-TabsWithSpace
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Switch-TabsWithSpace
     #>
     [CmdletBinding()]
     Param
@@ -37,7 +37,7 @@ Function Replace-TabsWithSpace
             Write-Verbose "Try to install the menu item, and error out if there's an issue."
             try
             {
-                $psISE.CurrentPowerShellTab.AddOnsMenu.SubMenus.Add("Replace Tabs with Space",{Replace-TabsWithSpace},"Ctrl+Alt+R") | Out-Null
+                $psISE.CurrentPowerShellTab.AddOnsMenu.SubMenus.Add("Replace Tabs with Space",{Switch-TabsWithSpace},"Ctrl+Alt+R") | Out-Null
                 }
             catch
             {
@@ -73,7 +73,7 @@ Function New-CommentBlock
             Specifies if you want to install this as a PSIE add-on menu
         .EXAMPLE
             New-CommentBlock -InstallMenu $true
-            
+
             Description
             -----------
             Installs the function as a menu item.
@@ -151,13 +151,13 @@ Function New-Script
             This is the name of the new script.
         .EXAMPLE
             New-Script -ScriptName "New-ImprovedScript"
-            
+
             Description
             -----------
             This example shows calling the function with the ScriptName parameter
         .EXAMPLE
             New-Script -InstallMenu $true
-            
+
             Description
             -----------
             Installs the function as a menu item.
@@ -189,7 +189,7 @@ Function New-Script
         "       Created By : $($env:Username)`r`n"
         "       Date Coded : $(Get-Date)`r`n"
         "       ScriptName is used to register events for this script`r`n"
-        "`r`n"        
+        "`r`n"
         "       ErrorCodes`r`n"
         "           100 = Success`r`n"
         "           101 = Error`r`n"
@@ -201,7 +201,7 @@ Function New-Script
         "[CmdletBinding()]`r`n"
         "Param`r`n"
         "   (`r`n"
-        "`r`n"    
+        "`r`n"
         "   )`r`n"
         "Begin`r`n"
         "   {`r`n"
@@ -251,7 +251,7 @@ Function New-Script
                     $ScriptName += ".ps1"
                     }
                 New-Item -Path (Get-Location) -Name $ScriptName -ItemType File |Out-Null
-                $NewScript = $psISE.CurrentPowerShellTab.Files.Add((Get-ChildItem $ScriptName)) 
+                $NewScript = $psISE.CurrentPowerShellTab.Files.Add((Get-ChildItem $ScriptName))
                 $NewScript.Editor.InsertText($TemplateScript)
                 $NewScript.Editor.InsertText(($NewScript.Editor.Select(22,1,22,2) -replace " ",""))
                 $NewScript.Editor.InsertText(($NewScript.Editor.Select(23,1,23,2) -replace " ",""))
@@ -289,13 +289,13 @@ Function New-Function
             This is the name of the new function.
         .EXAMPLE
             New-Function -FunctionName "New-ImprovedFunction"
-            
+
             Description
             -----------
             This example shows calling the function with the FunctionName parameter
         .EXAMPLE
             New-Function -InstallMenu $true
-            
+
             Description
             -----------
             Installs the function as a menu item.
@@ -398,7 +398,7 @@ Function Edit-File
             the user a polite message telling them what to do.
         .LINK
             https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Edit-File
-    #>    
+    #>
     Param
         (
         [Parameter(ValueFromPipeline=$true)]
@@ -455,7 +455,7 @@ Function Save-All
             This function will save all unsaved files in the editor
         .EXAMPLE
             Save-All
-            
+
             Description
             -----------
             The only syntax for the command.
@@ -463,7 +463,7 @@ Function Save-All
             FunctionName : Save-All
             Created by   : jspatton
             Date Coded   : 02/13/2012 15:08:51
-            
+
             Routinely I have a need to have open and be editing several files
             at once. Decided to write a function to save them all since there
             isn't one currently available.
@@ -491,10 +491,10 @@ Function Save-All
             Write-Verbose "Check if $($PSFile.DisplayName) is saved"
             if ($psfile.IsSaved -eq $false)
             {
-                Write-Verbose "Saving $($PSFile.DisplayName)" 
+                Write-Verbose "Saving $($PSFile.DisplayName)"
                 $PSFile.Save()
                 }
-            
+
             }
         }
     End
@@ -514,7 +514,7 @@ Function Set-SecureString
             The full path and filename to send the encrypted contents to
         .EXAMPLE
             Set-SecureString -FilePath C:\Users\Auser\AdminCredentials.txt
-            
+
             Description
             -----------
             This is the only syntax for this command.
@@ -583,24 +583,24 @@ Function Get-SecureString
 Function Resolve-SecureString
 {
     [CmdletBinding()]
-    param 
+    param
     (
         [parameter(Position=0,Mandatory=$true,ValueFromPipeline=$true)]
         [securestring]$SecureString
     )
-    process 
+    process
     {
         try
         {
             $SecureString |ForEach-Object {[System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($_))}
         }
-        catch 
+        catch
         {
             throw $_
         }
     }
 }
-Function Print-IseFile
+Function Write-IseFile
 {
     <#
         .SYNOPSIS
@@ -609,26 +609,26 @@ Function Print-IseFile
             This simple script will print the currently opened
             file in the ISE to the default printer.
         .PARAMETER InstallMenu
-            If this switch is passed a new menu item will appear 
+            If this switch is passed a new menu item will appear
             under Add-ons
         .EXAMPLE
-            Print-IseFile
-            
+            Write-IseFile
+
             Description
             -----------
             The default syntax of the command
         .NOTES
-            FunctionName : Print-IseFile
+            FunctionName : Write-IseFile
             Created by   : jspatton
             Date Coded   : 05/03/2012 09:49:01
-            
+
             This function was inspired by
-            http://jdhitsolutions.com/blog/2011/09/friday-fun-add-a-print-menu-to-the-powershell-ise/
-            
-            My change was not opening the script in Notepad, I don't 
+            http://jdhitsolutions.com/blog/2011/09/friday-fun-add-a-Write-menu-to-the-powershell-ise/
+
+            My change was not opening the script in Notepad, I don't
             mind the non-monospaced fonts.
         .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Print-IseFile
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Write-IseFile
     #>
     [CmdletBinding()]
     Param
@@ -650,7 +650,7 @@ Function Print-IseFile
         {
             $true
             {
-                $psISE.CurrentPowerShellTab.AddOnsMenu.submenus.Add("Print Script",{Print-ISEFile},"CTRL+ALT+P") | Out-Null
+                $psISE.CurrentPowerShellTab.AddOnsMenu.submenus.Add("Print Script",{Write-ISEFile},"CTRL+ALT+P") | Out-Null
                 }
             default
             {
@@ -662,32 +662,32 @@ Function Print-IseFile
     {
         }
     }
-Function Print-SelectedText
+Function Write-SelectedText
 {
     <#
         .SYNOPSIS
             Print text selected in the ISE
         .DESCRIPTION
-            This simple function will send whatever text is currently 
+            This simple function will send whatever text is currently
             selected in the PowerShell ISE to the printer.
         .PARAMETER InstallMenu
-            If this switch is passed a new menu item will appear 
+            If this switch is passed a new menu item will appear
             under Add-ons
         .EXAMPLE
-            Print-SelectedText
-            
+            Write-SelectedText
+
             Description
             -----------
             The default syntax of the command
         .NOTES
-            FunctionName : Print-SelectedText
+            FunctionName : Write-SelectedText
             Created by   : jspatton
             Date Coded   : 05/03/2012 09:55:00
-            
-            The idea for this came from 
-            http://jdhitsolutions.com/blog/2011/09/friday-fun-add-a-print-menu-to-the-powershell-ise/
+
+            The idea for this came from
+            http://jdhitsolutions.com/blog/2011/09/friday-fun-add-a-Write-menu-to-the-powershell-ise/
         .LINK
-            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Print-SelectedText
+            https://github.com/jeffpatton1971/mod-posh/wiki/PSISELibrary#Write-SelectedText
     #>
     [CmdletBinding()]
     Param
@@ -709,7 +709,7 @@ Function Print-SelectedText
         {
             $true
             {
-                $psISE.CurrentPowerShellTab.AddOnsMenu.submenus.Add("Print Selected",{Print-SelectedText},"CTRL+ALT+S") | Out-Null
+                $psISE.CurrentPowerShellTab.AddOnsMenu.submenus.Add("Print Selected",{Write-SelectedText},"CTRL+ALT+S") | Out-Null
                 }
             default
             {
@@ -781,7 +781,7 @@ Function Import-WebModule
         }
     Process
     {
- 
+
         }
     End
     {
