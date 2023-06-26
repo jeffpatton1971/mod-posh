@@ -32,11 +32,11 @@ Function Update-Repo
         .LINK
             https://code.google.com/p/mod-posh/wiki/SubversionManagement#Update-Repo
     #>
-    [CmdletBinding()]    
+    [CmdletBinding()]
     Param
         (
         [string]$WorkingPath = (Get-Location).Path
-        )    
+        )
     Begin
     {
         $TSvnCommand = "TortoiseProc.exe /command:update /path:`"$($WorkingPath)`""
@@ -74,7 +74,7 @@ Function New-Repo
         .SYNOPSIS
             Create a new repository folder.
         .DESCRIPTION
-            This function will checkout the repository specified on the command line to a 
+            This function will checkout the repository specified on the command line to a
             folder on your hard-drive.
         .PARAMETER RepoURL
             The URL of your subversion repository
@@ -110,7 +110,7 @@ Function New-Repo
         [string]$UserName,
         [string]$WorkingPath = (Get-Location).Path,
         [string]$TargetFolder
-        )    
+        )
     Begin
     {
         $CheckoutPath = "$($WorkingPath)\$($TargetFolder)"
@@ -173,7 +173,7 @@ Function Add-RepoItem
         (
         [Parameter(Mandatory=$true)]
         [string]$FileName
-        )    
+        )
     Begin
     {
         $FilePath = (Get-ChildItem $FileName).FullName
@@ -236,7 +236,7 @@ Function Remove-RepoItem
         (
         [Parameter(Mandatory=$true)]
         [string]$FileName
-        )    
+        )
     Begin
     {
         $FilePath = (Get-ChildItem $FileName).FullName
@@ -277,7 +277,7 @@ Function Set-RepoProps
         .DESCRIPTION
             This function will allow you to set the properties for items under source control. The
             default PropSet sets the mime-type to text/plain.
-            
+
             For a list of examples see: http://svnbook.red-bean.com/en/1.0/re23.html
         .PARAMETER FileName
             The filename and extension of the file to remove from the repository
@@ -315,7 +315,7 @@ Function Set-RepoProps
         [string]$PropSet = "svn:mime-type 'text/plain'",
         [Parameter(Mandatory=$true)]
         [string]$FileName
-        )    
+        )
     Begin
     {
         $FilePath = (Get-ChildItem $FileName).FullName
@@ -348,7 +348,7 @@ Function Set-RepoProps
         Return $?
         }
     }
-Function Commit-RepoItem
+Function Write-RepoItem
 {
     <#
         .SYNOPSIS
@@ -360,7 +360,7 @@ Function Commit-RepoItem
         .PARAMETER Commitmessage
             This is the log message to pass in with the commit.
         .EXAMPLE
-            Commit-RepoItem -FileName .\template.ps1 -CommitMessage "Setting the mime-type to text/plain"
+            Write-RepoItem -FileName .\template.ps1 -CommitMessage "Setting the mime-type to text/plain"
             Sending        template.ps1
 
             Committed revision 383.
@@ -375,7 +375,7 @@ Function Commit-RepoItem
             Define $SubversionClient in your $profile, the two possible values I check are:
                 svn, tortoise
         .LINK
-            https://code.google.com/p/mod-posh/wiki/SubversionManagement#Commit-RepoItem
+            https://code.google.com/p/mod-posh/wiki/SubversionManagement#Write-RepoItem
     #>
     [CmdletBinding()]
     Param
@@ -384,7 +384,7 @@ Function Commit-RepoItem
         [string]$FileName,
         [Parameter(Mandatory=$true)]
         [string]$CommitMessage
-        )    
+        )
     Begin
     {
         $FilePath = (Get-ChildItem $FileName).FullName
@@ -468,7 +468,7 @@ Function Get-SvnInfo
             FunctionName : Get-SvnInfo
             Created by   : jspatton
             Date Coded   : 02/02/2012 16:22:28
-            
+
             This function checks to see what the value of $SubversionClient is before executing
             the update.
             Define $SubversionClient in your $profile, the two possible values I check are:
@@ -476,7 +476,7 @@ Function Get-SvnInfo
         .LINK
             https://code.google.com/p/mod-posh/wiki/SubversionManagement#Get-SvnInfo
     #>
-    [CmdletBinding()]    
+    [CmdletBinding()]
     Param
         (
         [string]$WorkingPath = (Get-Location).Path
@@ -515,7 +515,7 @@ Function Get-SvnInfo
                 $Colon = $Item.IndexOfAny(":")
                 $FieldName = ($Item.Substring(0,$Item.IndexOfAny(":"))).Trim()
                 $FieldData  = ($Item.Substring($Item.IndexOfAny(":") +2, ($Item.Length)-$Item.IndexOfAny(":") -2)).Trim()
-                
+
                 switch ($FieldName)
                 {
                     'Path'
