@@ -11,10 +11,10 @@ Function Get-WindowsUpdate
             an easy way for administrators to script update management.
         .PARAMETER Criteria
             This is a specialized query for getting a list of updates. The default setting
-            will return a list of software updates that are not installed. Pleae see the 
+            will return a list of software updates that are not installed. Pleae see the
             Link section for a URL that documents that syntax for you.
         .PARAMETER FromMicrosoft
-            This switch if present will force the WUA agent to talk directly to 
+            This switch if present will force the WUA agent to talk directly to
             Microsoft Update servers.
         .EXAMPLE
             Get-WindowsUpdate
@@ -32,15 +32,15 @@ Function Get-WindowsUpdate
             from this example will be direct from Microsoft. You can verify by checking the
             log file, C:\Windows\WindowsUpdate.log
         .EXAMPLE
-            Get-WindowsUpdate -FromMicrosoft -Criteria "(IsInstalled=0 AND 
-                                                         CategoryIDs contains 'E6CF1350-C01B-414D-A61F-263D14D133B4') 
-                                                     OR (IsInstalled=0 AND 
+            Get-WindowsUpdate -FromMicrosoft -Criteria "(IsInstalled=0 AND
+                                                         CategoryIDs contains 'E6CF1350-C01B-414D-A61F-263D14D133B4')
+                                                     OR (IsInstalled=0 AND
                                                          CategoryIDs contains '0FA1201D-4330-4FA8-8AE9-B877473B6441')"
 
             Description
             -----------
             This example shows how to query Microsoft for a list of Critical and Security updates
-            that are not already installed on the local computer. I have grouped not installed 
+            that are not already installed on the local computer. I have grouped not installed
             critical updates together and not installled security updates together. Then tied
             both of those with an OR, so it will find not installed criticals OR not installed
             security updates.
@@ -135,13 +135,13 @@ Function Start-WindowsUpdateDownload
         return $UpdatesToDownload
         }
     }
-Function Accept-WindowsUpdateEULA
+Function Set-WindowsUpdateEULA
 {
     <#
         .SYNOPSIS
             Accept the EULA for updates
         .DESCRIPTION
-            This function accepts an UpdateCollection and allows you to accept the EULA 
+            This function accepts an UpdateCollection and allows you to accept the EULA
             on each update passed in.
 
             This function leverages the Microsoft.Update comobjects in order to provide
@@ -151,18 +151,18 @@ Function Accept-WindowsUpdateEULA
         .PARAMETER AcceptEULA
             A switch that if present will accept the EULA
         .EXAMPLE
-            Get-WindowsUpdate |Accept-WindowsUpdateEULA -AcceptEULA $true
+            Get-WindowsUpdate |Set-WindowsUpdateEULA -AcceptEULA $true
 
             Description
             -----------
             This example shows how to pass a collection of updates into the function on the
             pipeline and accept the EULA for each update.
         .NOTES
-            FunctionName : Accept-WindowsUpdateEULA
+            FunctionName : Set-WindowsUpdateEULA
             Created by   : jspatton
             Date Coded   : 08/23/2013 09:27:47
         .LINK
-            https://code.google.com/p/mod-posh/wiki/WindowsUpdateLibrary#Accept-WindowsUpdateEULA
+            https://code.google.com/p/mod-posh/wiki/WindowsUpdateLibrary#Set-WindowsUpdateEULA
     #>
     [CmdletBinding()]
     Param
@@ -194,7 +194,7 @@ Function Install-WindowsUpdate
         .SYNOPSIS
             Install an update that has been downloaded
         .DESCRIPTION
-            This function will install a list of updates that have been downloaded to the 
+            This function will install a list of updates that have been downloaded to the
             local computer.
 
             This function leverages the Microsoft.Update comobjects in order to provide
@@ -323,7 +323,7 @@ Function Connect-WindowsUpdateServer
                 $ServerName = (& hostname)
                 $isLocal = $true
                 $PortNumber = 8530
-                }    
+                }
             }
         catch
         {
@@ -372,10 +372,10 @@ Function Get-WindowsUpdateHistory
             This function returns a list of updates that have been installed
             on the local system. You can filter the objects based on their
             properties. See the links section for the list of properties
-            available and their meanings. 
+            available and their meanings.
         .EXAMPLE
-            Get-WindowsUpdateHistory 
-                |Where-Object {$_.ResultCode -eq 4} 
+            Get-WindowsUpdateHistory
+                |Where-Object {$_.ResultCode -eq 4}
                 |Select-Object -Property Title, SupportUrl, Date
 
             Title                                   SupportUrl                              Date
