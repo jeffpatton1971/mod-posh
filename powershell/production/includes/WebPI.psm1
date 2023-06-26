@@ -1,4 +1,8 @@
-﻿try
+﻿if ($PSVersionTable['PSEdition'] -eq 'Core')
+{
+ return
+}
+try
 {
     $ErrorActionPreference = "Stop";
     $Error.Clear();
@@ -83,7 +87,7 @@ Function Get-WebPiProduct
             Description
             -----------
             This will return all products that are available from WebPI. This can be filtered with a where
-            clause if needed.            
+            clause if needed.
         .EXAMPLE
             Get-WebPiProduct -Title "Windows Azure"
 
@@ -103,7 +107,7 @@ Function Get-WebPiProduct
             ...
 
             Description
-            -----------            
+            -----------
             This will return any product that matches "Windows Azure" unless there is a single product called that.
         .EXAMPLE
             Get-WebPiProduct -ProductId watk-PRESENTATION-WindowsAzureStorage
@@ -381,20 +385,20 @@ function Test-WebPiInstallationStatus
             {
                 return;
                 }
-            
+
             Description
             -----------
             This is an example of use for this function. It is used inside the Install-WebPiPackage
-            to test a given installation method. This may not be useful outisde of the 
+            to test a given installation method. This may not be useful outisde of the
             Install-WebPiPackage function.
         .NOTES
             FunctionName : Test-WebPiInstallationStatus
             Created by   : Jeffrey
             Date Coded   : 02/20/2015 09:45:37
 
-            This function was borrowed from guitarrapc I have modified this to accept a 
+            This function was borrowed from guitarrapc I have modified this to accept a
             parameter InstallManager. The original code used a global InstallManager.
-            I have also modified the function to test for the existence of logfiles, as 
+            I have also modified the function to test for the existence of logfiles, as
             I've noticed that a handful of pacakges don't have a logfiles property.
             I have also modified the function to drop a psobject of the result instead
             of using writeline.
