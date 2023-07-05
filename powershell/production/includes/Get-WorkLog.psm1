@@ -37,7 +37,7 @@ class JiraDocumentContent {
  }
 }
 class JiraTimeTracking {
- [string] $originalEstimate = '300'
+ [string] $originalEstimate = '5'
  JiraTimeTracking () {}
  JiraTimeTracking ([int]$OriginalEstimate) {
   $this.OriginalEstimate = $OriginalEstimate;
