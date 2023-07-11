@@ -251,6 +251,8 @@ function New-Task {
   [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
   [string]$Priority,
   [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+  [int]$OriginalEstimate,
+  [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
   [string]$IssueType,
   [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
   [string]$ComponentName,
@@ -286,6 +288,7 @@ function New-Task {
    $Issue.Fields.Assignee = New-Object JiraId $jiraUser.accountId;
    $Issue.fields.description.Content[0].content[0].text = $Description;
    $Issue.Fields.Components = New-Object JiraId $jiraComponent.ID;
+   $Issue.Fields.TimeTracking.OriginalEstimate = $OriginalEstimate;
    $Issue.Fields.customfield_10000 = $ActiveSprint.id;
    $Issue.Fields.customfield_10001 = $EpicName;
    $Issue.Fields.IssueType = New-Object JiraId $jiraIssue.ID;
