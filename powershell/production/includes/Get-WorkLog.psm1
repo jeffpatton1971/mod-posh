@@ -207,7 +207,10 @@ function Get-IssueQuery {
   [switch]$Today,
   [switch]$ThisWeek,
   [switch]$LastWeek,
-  [switch]$CurrentWork
+  [switch]$CurrentWork,
+  [switch]$Custom,
+  [DateTime]$StartDate,
+  [DateTime]$EndDate
  )
 
  if ($LastWeek) {
@@ -231,6 +234,15 @@ function Get-IssueQuery {
  if ($ThisWeek) {
   $StartOfWeek = (Get-Date).AddDays( - ( [int](Get-Date).DayOfWeek - 1));
   $EndOfWeek = $StartOfWeek.AddDays(4);
+  $StartOfWeekShort = (Get-Date ($StartOfWeek) -Format yyyy-MM-dd);
+  $EndOfWeekShort = (Get-Date ($EndOfWeek) -Format yyyy-MM-dd);
+
+  return 'project = MPCSUPENG AND worklogAuthor in (currentUser()) and worklogDate >= "' + $StartOfWeekShort + '" AND worklogDate <= "' + $EndOfWeekShort + '"'
+ }
+
+ if ($Custom) {
+  $StartOfWeek = $StartDate;
+  $EndOfWeek = $EndDate;
   $StartOfWeekShort = (Get-Date ($StartOfWeek) -Format yyyy-MM-dd);
   $EndOfWeekShort = (Get-Date ($EndOfWeek) -Format yyyy-MM-dd);
 
