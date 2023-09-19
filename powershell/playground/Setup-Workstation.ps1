@@ -16,6 +16,9 @@
     Write-Host "You will need to install Visual Studio in order to compile CShell"
     # Get C-Shell
     git clone https://github.com/lukebuehler/CShell.git
+    # ADO Artifacts Credential Provider
+    iex "& { $(irm https://aka.ms/install-artifacts-credprovider.ps1) }"
+    iex "& { $(irm https://aka.ms/install-artifacts-credprovider.ps1) } -AddNetfx"
 } else {
     Write-Host "Please launch PowerShell as an Administrator" -ForegroundColor Red;
 }
